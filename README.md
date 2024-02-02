@@ -8,9 +8,13 @@ Repository for the process of internature.
 
 ## understanding
 
+### telegram
 - У меня вопрос по структуре заданий. Правильно я понимаю, что базовое задание (включает 4 задачи) пишется на стеке OpenGL, Imgui.NET; а основное задание (включает 5 задач) пишется на SharpDX, WinForms?
 Из файла заданий не очень понятно.
-- Да, всё верно.<br><br>
+- Да, всё верно.
+
+
+### codeium
 - i want to make gui app on c# and on debian. can i do this?
 - Yes, you can create a GUI app using C# on Debian. One way to do this is by using the Mono framework, which is compatible with C# and runs on Debian and other Linux distributions. You can use the GTK# toolkit for building cross-platform GUI applications in C#.
 - what is OpenTK?
