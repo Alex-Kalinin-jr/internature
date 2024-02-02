@@ -5,3 +5,6 @@ SharpDX
 как привязать ImGui к OpenTK можно найти тут: https://github.com/Altair200333/OpenTK-ImGUI.NET)
 
 https://github.com/opentk/opentk
+
+
+1) i want to make gui app on c# and on debian. can i do this?
