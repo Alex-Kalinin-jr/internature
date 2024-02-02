@@ -1,0 +1,7 @@
+SharpDX
+
+Задания выполняются на языке C#, в качестве той самой обвязки вокруг OpenGL выступает OpenTK, 
+а интерфейс на WPF и/или ImGui (позволяет очень просто делать интерактивный интерфейс, 
+как привязать ImGui к OpenTK можно найти тут: https://github.com/Altair200333/OpenTK-ImGUI.NET)
+
+https://github.com/opentk/opentk
