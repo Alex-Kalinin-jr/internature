@@ -1,2 +1,40 @@
 https://code.visualstudio.com/docs/csharp/get-started - разворачиваем окружение
-https://learn.microsoft.com/en-us/collections/yz26f8y64n7k07 - изучаем C#
+dotnet add package ImGui.NET
+
+
+My OS is Debian. I have installed C# Dev Kit in my VSC. I try to write simple GUI app. Firstly i wrote: "dotnet add package ImGui.NET"
+Then i have created 2 files:
+1) MainForm.cs:
+"
+namespace EmptyTemplate
+{
+    public class MainForm : Form
+    {
+        public MainForm() : base(new Rect(400, 300, 250, 450))
+        {
+        }
+
+        protected override void OnGUI()
+            {
+                GUI.Label(new Rect(0, 0, 100, 30), "Hello ImGui", "helloLabel");
+            }
+    }
+}
+"
+2) Program.cs:
+"
+using System;
+
+namespace EmptyTemplate
+{
+    class Program
+    {
+        [STAThread]
+        static void Main()
+        {
+            Application.Run(new MainForm());
+        }
+    }
+}
+"
+and i see some errors underlined in my VSC:

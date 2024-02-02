@@ -13,3 +13,11 @@
 /home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.pdb
 /home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.genruntimeconfig.cache
 /home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/ref/hello_world_app.dll
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.csproj.AssemblyReference.cache
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/ImGui.NET.dll
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/runtimes/linux-x64/native/libcimgui.so
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/runtimes/osx/native/libcimgui.dylib
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/runtimes/win-arm64/native/cimgui.dll
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/runtimes/win-x64/native/cimgui.dll
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/runtimes/win-x86/native/cimgui.dll
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.csproj.CopyComplete
