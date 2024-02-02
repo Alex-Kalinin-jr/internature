@@ -1,0 +1,2 @@
+https://code.visualstudio.com/docs/csharp/get-started - разворачиваем окружение
+https://learn.microsoft.com/en-us/collections/yz26f8y64n7k07 - изучаем C#

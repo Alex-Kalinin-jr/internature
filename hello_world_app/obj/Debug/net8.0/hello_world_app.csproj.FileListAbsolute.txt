@@ -1,0 +1,15 @@
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/hello_world_app
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/hello_world_app.deps.json
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/hello_world_app.runtimeconfig.json
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/hello_world_app.dll
+/home/alex/projects/intern/hello_world_app/bin/Debug/net8.0/hello_world_app.pdb
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.GeneratedMSBuildEditorConfig.editorconfig
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.AssemblyInfoInputs.cache
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.AssemblyInfo.cs
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.csproj.CoreCompileInputs.cache
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.sourcelink.json
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.dll
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/refint/hello_world_app.dll
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.pdb
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/hello_world_app.genruntimeconfig.cache
+/home/alex/projects/intern/hello_world_app/obj/Debug/net8.0/ref/hello_world_app.dll
