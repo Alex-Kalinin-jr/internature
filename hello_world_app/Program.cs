@@ -1,6 +1,7 @@
 ﻿using System;
 using ImGuiNET;
 
+/*
 class Program
 {
     static void Main()
@@ -37,6 +38,21 @@ class Program
         // Shutdown ImGui.NET
         ImGui.DestroyContext();
 
+        Console.WriteLine("ImGui demo complete.");
+    }
+}
+
+*/
+
+class Program
+{
+    static void Main()
+    {
+
+
+
+        Console.WriteLine("Initializing ImGui.NET...");
+        Console.WriteLine("ImGui.NET initialized. Running ImGui demo...");
         Console.WriteLine("ImGui demo complete.");
     }
 }

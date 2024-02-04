@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/home/alex/projects/intern/hello_world_app/hello_world_app.csproj": {}
+    "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj": {}
   },
   "projects": {
-    "/home/alex/projects/intern/hello_world_app/hello_world_app.csproj": {
+    "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/alex/projects/intern/hello_world_app/hello_world_app.csproj",
+        "projectUniqueName": "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
         "projectName": "hello_world_app",
-        "projectPath": "/home/alex/projects/intern/hello_world_app/hello_world_app.csproj",
-        "packagesPath": "/home/alex/.nuget/packages/",
-        "outputPath": "/home/alex/projects/intern/hello_world_app/obj/",
+        "projectPath": "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
+        "packagesPath": "C:\\Users\\alex\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/alex/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\alex\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -59,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.101/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
