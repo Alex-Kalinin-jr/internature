@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = hello_world_app
-build_property.ProjectDir = C:\Users\alex\Source\Repos\Alex-Kalinin-jr\internature\hello_world_app\
+build_property.ProjectDir = C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

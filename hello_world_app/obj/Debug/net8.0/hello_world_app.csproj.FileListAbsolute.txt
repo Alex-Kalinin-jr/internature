@@ -13,3 +13,7 @@ C:\Users\alex\Source\Repos\Alex-Kalinin-jr\internature\hello_world_app\obj\Debug
 C:\Users\alex\Source\Repos\Alex-Kalinin-jr\internature\hello_world_app\obj\Debug\net8.0\hello_world_app.pdb
 C:\Users\alex\Source\Repos\Alex-Kalinin-jr\internature\hello_world_app\obj\Debug\net8.0\hello_world_app.genruntimeconfig.cache
 C:\Users\alex\Source\Repos\Alex-Kalinin-jr\internature\hello_world_app\obj\Debug\net8.0\ref\hello_world_app.dll
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\test_lib.dll
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\test_lib.pdb
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\obj\Debug\net8.0\hello_world_app.csproj.AssemblyReference.cache
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\obj\Debug\net8.0\hello_world_app.csproj.CopyComplete

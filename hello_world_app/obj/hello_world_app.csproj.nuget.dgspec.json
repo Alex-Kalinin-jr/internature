@@ -1,17 +1,80 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj": {}
+    "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj": {}
   },
   "projects": {
-    "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj": {
+    "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
+        "projectUniqueName": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
         "projectName": "hello_world_app",
-        "projectPath": "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
+        "projectPath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
         "packagesPath": "C:\\Users\\alex\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\alex\\Source\\Repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\obj\\",
+        "outputPath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\alex\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\test_lib\\test_lib.csproj": {
+                "projectPath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\test_lib\\test_lib.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\test_lib\\test_lib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\test_lib\\test_lib.csproj",
+        "projectName": "test_lib",
+        "projectPath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\test_lib\\test_lib.csproj",
+        "packagesPath": "C:\\Users\\alex\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\test_lib\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
