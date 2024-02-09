@@ -8,7 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="test_imgui.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
+    <PackageReference Include="OpenTK" Version="4.8.2" />
   </ItemGroup>
 
 </Project>

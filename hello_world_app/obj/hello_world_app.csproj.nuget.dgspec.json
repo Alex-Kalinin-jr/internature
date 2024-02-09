@@ -47,6 +47,10 @@
             "ImGui.NET": {
               "target": "Package",
               "version": "[1.90.1.1, )"
+            },
+            "OpenTK": {
+              "target": "Package",
+              "version": "[4.8.2, )"
             }
           },
           "imports": [
