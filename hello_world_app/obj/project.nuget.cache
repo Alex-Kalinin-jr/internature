@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "9m2xXeXRmMBBJ6ou5+S5VmiO7BetMFHFV7H6EST9ROhwXNID2sDI6D57TrWlU8HyCyIa/XLGzdwjruICfHitcg==",
+  "dgSpecHash": "zVl/ukQT4mzVeVsMZhjWbiJmu+SCtaDXjksL2xfEuuy9lNvfrUrxirGDCYsXVRYJ+fm59GIMXTldfw9WJOKRbQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\alex\\.nuget\\packages\\imgui.net\\1.90.1.1\\imgui.net.1.90.1.1.nupkg.sha512",
+    "C:\\Users\\alex\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
+    "C:\\Users\\alex\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
+    "C:\\Users\\alex\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.4.0\\system.runtime.compilerservices.unsafe.4.4.0.nupkg.sha512"
+  ],
   "logs": []
 }
