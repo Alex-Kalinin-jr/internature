@@ -9,14 +9,21 @@ namespace app
     public class Window : GameWindow
     {
 
-        private readonly float[] vertices = {
-    -0.5f, -0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-     0.0f,  0.5f, 0.0f
-    };
+        float[] vertices = {
+             0.5f,  0.5f, 0.0f,  // top right
+             0.5f, -0.5f, 0.0f,  // bottom right
+            -0.5f, -0.5f, 0.0f,  // bottom left
+            -0.5f,  0.5f, 0.0f   // top left
+        };
+
+        uint[] indices = {  // note that we start from 0!
+            0, 1, 3,   // first triangle
+            1, 2, 3    // second triangle
+        };
 
         private int _vertex_buffer_object;
         private int _vertex_array_object;
+        private int _element_buffer_object;
         private app.Shader _shader;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -36,6 +43,10 @@ namespace app
             GL.BindVertexArray(_vertex_array_object);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
+
+            _element_buffer_object = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _element_buffer_object);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw); 
 
             _shader = new app.Shader("C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\shader.vert",
                 "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\shader.frag");
@@ -62,7 +73,8 @@ namespace app
             GL.Clear(ClearBufferMask.ColorBufferBit);
             _shader.Use();
             GL.BindVertexArray(_vertex_array_object);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            // GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
             SwapBuffers();
         }
 
