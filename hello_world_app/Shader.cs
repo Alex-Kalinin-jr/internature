@@ -30,22 +30,12 @@ namespace app
             {
                 Console.WriteLine(GL.GetShaderInfoLog(VertexShader));
             }
-            else
-            {
-                Console.WriteLine("Vertex _shader was compiled");
-            }
-
             GL.CompileShader(FragmentShader);
             GL.GetShader(FragmentShader, ShaderParameter.CompileStatus, out success);
             if (success == 0)
             {
                 Console.WriteLine(GL.GetShaderInfoLog(FragmentShader));
             }
-            else
-            {
-                Console.WriteLine("Fragment _shader was compiled");
-            }
-
             Handle = GL.CreateProgram();
             GL.AttachShader(Handle, VertexShader);
             GL.AttachShader(Handle, FragmentShader);
@@ -55,10 +45,6 @@ namespace app
             {
                 string infoLog = GL.GetProgramInfoLog(Handle);
                 Console.WriteLine(infoLog);
-            }
-            else
-            {
-                Console.WriteLine("_shader was integrated");
             }
 
             GL.DetachShader(Handle, VertexShader);

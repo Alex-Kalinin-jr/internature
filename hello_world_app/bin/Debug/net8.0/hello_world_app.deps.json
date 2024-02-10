@@ -9,7 +9,8 @@
       "hello_world_app/1.0.0": {
         "dependencies": {
           "ImGui.NET": "1.90.1.1",
-          "OpenTK": "4.8.2"
+          "OpenTK": "4.8.2",
+          "StbImageSharp": "2.27.13"
         },
         "runtime": {
           "hello_world_app.dll": {}
@@ -199,6 +200,14 @@
           }
         }
       },
+      "StbImageSharp/2.27.13": {
+        "runtime": {
+          "lib/netstandard2.0/StbImageSharp.dll": {
+            "assemblyVersion": "2.27.13.0",
+            "fileVersion": "2.27.13.0"
+          }
+        }
+      },
       "System.Buffers/4.4.0": {},
       "System.Numerics.Vectors/4.4.0": {},
       "System.Runtime.CompilerServices.Unsafe/5.0.0": {}
@@ -293,6 +302,13 @@
       "sha512": "sha512-o50PgKL8G0Pqs7Lo7hu1ru+5X5l03aht5jaeik7McXFgVaBJzMLhMhZkiferx4bbcC9Rq597BOknDwqE/bsLOw==",
       "path": "opentk.windowing.graphicslibraryframework/4.8.2",
       "hashPath": "opentk.windowing.graphicslibraryframework.4.8.2.nupkg.sha512"
+    },
+    "StbImageSharp/2.27.13": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tHnP2RHgFzWbOS96UqvRO/LYU1WmpMT1bKiig45we+rpaXacBr11Fq2IBF+MqlgyLyNXxRz18E66qr4R9YlSbg==",
+      "path": "stbimagesharp/2.27.13",
+      "hashPath": "stbimagesharp.2.27.13.nupkg.sha512"
     },
     "System.Buffers/4.4.0": {
       "type": "package",

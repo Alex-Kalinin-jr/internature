@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "yR4E0CgBk5bYqiVMPhCauOdUgxGEoNYaW7AxjPnhlFczDmdmOccAmcWo24AOo8dx7VdVFUHLn7CRlBbWYLCk3A==",
+  "dgSpecHash": "/o/f/k7XC7/29bvsYzVmJO3ywUYQAAKv/0o7ZPPglZsTJ1QVROUhfhokTKXRvsaYUzF319B/7LMEoaUuQXQV4Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\alex\\source\\repos\\Alex-Kalinin-jr\\internature\\hello_world_app\\hello_world_app.csproj",
   "expectedPackageFiles": [
@@ -16,6 +16,7 @@
     "C:\\Users\\alex\\.nuget\\packages\\opentk.windowing.common\\4.8.2\\opentk.windowing.common.4.8.2.nupkg.sha512",
     "C:\\Users\\alex\\.nuget\\packages\\opentk.windowing.desktop\\4.8.2\\opentk.windowing.desktop.4.8.2.nupkg.sha512",
     "C:\\Users\\alex\\.nuget\\packages\\opentk.windowing.graphicslibraryframework\\4.8.2\\opentk.windowing.graphicslibraryframework.4.8.2.nupkg.sha512",
+    "C:\\Users\\alex\\.nuget\\packages\\stbimagesharp\\2.27.13\\stbimagesharp.2.27.13.nupkg.sha512",
     "C:\\Users\\alex\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
     "C:\\Users\\alex\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
     "C:\\Users\\alex\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512"

@@ -233,6 +233,15 @@
           }
         }
       },
+      "StbImageSharp/2.27.13": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/StbImageSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/StbImageSharp.dll": {}
+        }
+      },
       "System.Buffers/4.4.0": {
         "type": "package",
         "compile": {
@@ -454,6 +463,19 @@
         "opentk.windowing.graphicslibraryframework.nuspec"
       ]
     },
+    "StbImageSharp/2.27.13": {
+      "sha512": "tHnP2RHgFzWbOS96UqvRO/LYU1WmpMT1bKiig45we+rpaXacBr11Fq2IBF+MqlgyLyNXxRz18E66qr4R9YlSbg==",
+      "type": "package",
+      "path": "stbimagesharp/2.27.13",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net471/StbImageSharp.dll",
+        "lib/netstandard2.0/StbImageSharp.dll",
+        "stbimagesharp.2.27.13.nupkg.sha512",
+        "stbimagesharp.nuspec"
+      ]
+    },
     "System.Buffers/4.4.0": {
       "sha512": "AwarXzzoDwX6BgrhjoJsk6tUezZEozOT5Y9QKF94Gl4JK91I4PIIBkBco9068Y9/Dra8Dkbie99kXB8+1BaYKw==",
       "type": "package",
@@ -558,7 +580,8 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "ImGui.NET >= 1.90.1.1",
-      "OpenTK >= 4.8.2"
+      "OpenTK >= 4.8.2",
+      "StbImageSharp >= 2.27.13"
     ]
   },
   "packageFolders": {
@@ -612,6 +635,10 @@
           "OpenTK": {
             "target": "Package",
             "version": "[4.8.2, )"
+          },
+          "StbImageSharp": {
+            "target": "Package",
+            "version": "[2.27.13, )"
           }
         },
         "imports": [

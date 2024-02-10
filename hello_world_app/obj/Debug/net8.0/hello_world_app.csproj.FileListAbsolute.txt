@@ -36,3 +36,7 @@ C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug
 C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\runtimes\osx-x64\native\libglfw.3.dylib
 C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\runtimes\win-x64\native\glfw3.dll
 C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\runtimes\win-x86\native\glfw3.dll
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\Resources\container.png
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\StbImageSharp.dll
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\Shaders\shader.frag
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\Shaders\shader.vert
