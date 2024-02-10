@@ -9,7 +9,7 @@ namespace app
 {
     public class Shader
     {
-        int Handle;
+        public int Handle { get; init; }
         private bool disposedValue = false;
 
 
