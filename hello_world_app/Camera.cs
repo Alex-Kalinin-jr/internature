@@ -64,7 +64,7 @@ namespace app {
       _front.Y = MathF.Sin(_pitch);
       _front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
 
-      _front = Vector3.Normalize(_front);
+      _front = Vector3.Normalize(_front); // linear algebra loop
       _right = Vector3.Normalize(Vector3.Cross(_front, Vector3.UnitY));
       _up = Vector3.Normalize(Vector3.Cross(_right, _front));
     }
