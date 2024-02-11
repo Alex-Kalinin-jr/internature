@@ -29,6 +29,9 @@ namespace app {
     private app.Shader _shader;
     private app.Texture _texture;
     private app.Texture _texture2;
+    private Matrix4 _view;
+    private Matrix4 _projection;
+    private float _time;
 
     public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
         : base(gameWindowSettings, nativeWindowSettings) { }
@@ -36,6 +39,7 @@ namespace app {
     protected override void OnLoad() {
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+      GL.Enable(EnableCap.DepthTest);
 
       _vertex_array_object = GL.GenVertexArray();
       GL.BindVertexArray(_vertex_array_object);
@@ -68,6 +72,9 @@ namespace app {
       _shader.SetInt("texture1", 0);
       _shader.SetInt("texture2", 1);
 
+      _view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
+      _projection = Matrix4.Identity * Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f),
+          Size.X / (float)Size.Y, 0.1f, 100.0f);
     }
 
 
@@ -81,24 +88,23 @@ namespace app {
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    protected override void OnRenderFrame(FrameEventArgs args) {
-      base.OnRenderFrame(args);
-      GL.Clear(ClearBufferMask.ColorBufferBit);
+    protected override void OnRenderFrame(FrameEventArgs e) {
+      _time += 4 * (float)e.Time;
+
+      base.OnRenderFrame(e);
+      GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
       GL.BindVertexArray(_vertex_array_object);
 
-      var transform = Matrix4.Identity;
-      transform = transform * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(20.0f));
-      transform = transform * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(60.0f));
-      transform = transform * Matrix4.CreateScale(1.1f);
-      transform = transform * Matrix4.CreateTranslation(0.1f, 0.1f, 0.1f);
-
-
+      Matrix4 model = Matrix4.Identity *  Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
+      
       _texture.Use(TextureUnit.Texture0);
       _texture2.Use(TextureUnit.Texture1);
       _shader.Use();
 
-      _shader.SetMatrix4("transform", transform);
+      _shader.SetMatrix4("model", model);
+      _shader.SetMatrix4("view", _view);
+      _shader.SetMatrix4("projection", _projection);
 
       GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
       SwapBuffers();
@@ -109,7 +115,7 @@ namespace app {
 
     protected override void OnResize(ResizeEventArgs e) {
       base.OnResize(e);
-      GL.Viewport(0, 0, e.Width, e.Height);
+      GL.Viewport(0, 0, Size.X, Size.Y);
     }
 
 
