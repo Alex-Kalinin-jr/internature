@@ -40,3 +40,4 @@ C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug
 C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\StbImageSharp.dll
 C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\Shaders\shader.frag
 C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\Shaders\shader.vert
+C:\Users\alex\source\repos\Alex-Kalinin-jr\internature\hello_world_app\bin\Debug\net8.0\Resources\awesomeface.png

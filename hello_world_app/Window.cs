@@ -28,6 +28,7 @@ namespace app {
     private int _element_buffer_object;
     private app.Shader _shader;
     private app.Texture _texture;
+    private app.Texture _texture2;
 
     public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
         : base(gameWindowSettings, nativeWindowSettings) { }
@@ -59,7 +60,13 @@ namespace app {
       GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
       _texture = Texture.LoadFromFile("Resources/container.png");
-      _texture.Use(TextureUnit.Texture0);
+      _texture.Use(TextureUnit.Texture1);
+
+      _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
+      _texture2.Use(TextureUnit.Texture2);
+
+      _shader.SetInt("texture1", 1);
+      _shader.SetInt("texture2", 2);
 
     }
 
@@ -72,6 +79,7 @@ namespace app {
       }
     }
 
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected override void OnRenderFrame(FrameEventArgs args) {
       base.OnRenderFrame(args);
@@ -79,12 +87,21 @@ namespace app {
 
       GL.BindVertexArray(_vertex_array_object);
 
+      var transform = Matrix4.Identity;
+      transform = transform * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(20.0f));
+      transform = transform * Matrix4.CreateScale(1.1f);
+      transform = transform * Matrix4.CreateTranslation(0.1f, 0.1f, 0.1f);
+
+      _shader.SetMatrix4("transform", transform);
+      _texture.Use(TextureUnit.Texture1);
+      _texture2.Use(TextureUnit.Texture2);
       _shader.Use();
-      _texture.Use(TextureUnit.Texture0);
 
       GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
       SwapBuffers();
     }
+
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     protected override void OnResize(ResizeEventArgs e) {
