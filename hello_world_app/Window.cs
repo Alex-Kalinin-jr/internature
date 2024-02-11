@@ -9,33 +9,40 @@ using System.Timers;
 namespace app {
   public class Window : GameWindow {
 
-    float[] vertices =
+    private readonly float[] _vertices =
     {
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
-        };
+    };
 
     private readonly uint[] _indices =
     {
-            0, 1, 3,
-            1, 2, 3
-        };
+      0, 1, 3,
+      1, 2, 3
+    };
+
 
     private int _vertex_buffer_object;
     private int _vertex_array_object;
     private int _element_buffer_object;
+
     private app.Shader _shader;
     private app.Texture _texture;
     private app.Texture _texture2;
-    private Matrix4 _view;
-    private Matrix4 _projection;
+
+    private Camera _camera;
+    private bool _firstMove = true;
+    private Vector2 _lastPos;
     private float _time;
 
-    public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
-        : base(gameWindowSettings, nativeWindowSettings) { }
 
+
+    public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+        : base(gameWindowSettings, nativeWindowSettings) {}
+
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -46,7 +53,7 @@ namespace app {
 
       _vertex_buffer_object = GL.GenBuffer();
       GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_object);
-      GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+      GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
       _element_buffer_object = GL.GenBuffer();
       GL.BindBuffer(BufferTarget.ElementArrayBuffer, _element_buffer_object);
@@ -72,53 +79,108 @@ namespace app {
       _shader.SetInt("texture1", 0);
       _shader.SetInt("texture2", 1);
 
-      _view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
-      _projection = Matrix4.Identity * Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f),
-          Size.X / (float)Size.Y, 0.1f, 100.0f);
-    }
-
-
-    protected override void OnUpdateFrame(FrameEventArgs args) {
-      base.OnUpdateFrame(args);
-
-      if (KeyboardState.IsKeyDown(Keys.Escape)) {
-        Close();
-      }
+      _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+      CursorState = CursorState.Grabbed;
     }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     protected override void OnRenderFrame(FrameEventArgs e) {
-      _time += 4 * (float)e.Time;
 
       base.OnRenderFrame(e);
+
+      _time += 4 * (float)e.Time;
+
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
       GL.BindVertexArray(_vertex_array_object);
 
-      Matrix4 model = Matrix4.Identity *  Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
-      
+
       _texture.Use(TextureUnit.Texture0);
       _texture2.Use(TextureUnit.Texture1);
       _shader.Use();
 
+      Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
       _shader.SetMatrix4("model", model);
-      _shader.SetMatrix4("view", _view);
-      _shader.SetMatrix4("projection", _projection);
+      _shader.SetMatrix4("view", _camera.GetViewMatrix());
+      _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+
       SwapBuffers();
     }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected override void OnUpdateFrame(FrameEventArgs args) {
+      base.OnUpdateFrame(args);
+
+      if (!IsFocused) {
+        return;
+      }
+
+      var input = KeyboardState;
+
+      if (input.IsKeyDown(Keys.Escape)) {
+        Close();
+      }
 
 
+      const float cameraSpeed = 1.5f;
+      const float sensitivity = 0.2f;
+
+      if (input.IsKeyDown(Keys.W)) {
+        _camera.Position += _camera.Front * cameraSpeed * (float)args.Time;
+      }
+
+      if (input.IsKeyDown(Keys.S)) {
+        _camera.Position -= _camera.Front * cameraSpeed * (float)args.Time;
+      }
+
+      if (input.IsKeyDown(Keys.A)) {
+        _camera.Position -= _camera.Right * cameraSpeed * (float)args.Time;
+      }
+
+      if (input.IsKeyDown(Keys.D)) {
+        _camera.Position += _camera.Right * cameraSpeed * (float)args.Time;
+      }
+
+      if (input.IsKeyDown(Keys.Space)) {
+        _camera.Position += _camera.Up * cameraSpeed * (float)args.Time;
+      }
+
+      if (input.IsKeyDown(Keys.LeftShift)) {
+        _camera.Position -= _camera.Up * cameraSpeed * (float)args.Time;
+      }
+
+      var mouse = MouseState;
+
+      if (_firstMove) {
+        _lastPos = new Vector2(mouse.X, mouse.Y);
+        _firstMove = false;
+      } else {
+        var deltaX = mouse.X - _lastPos.X;
+        var deltaY = mouse.Y - _lastPos.Y;
+        _lastPos = new Vector2(mouse.X, mouse.Y);
+
+        _camera.Yaw += deltaX * sensitivity;
+        _camera.Pitch -= deltaY * sensitivity;
+      }
+
+    }
+
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected override void OnMouseWheel(MouseWheelEventArgs e) {
+      base.OnMouseWheel(e);
+      _camera.Fov -= e.OffsetY;
+    }
+
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnResize(ResizeEventArgs e) {
       base.OnResize(e);
       GL.Viewport(0, 0, Size.X, Size.Y);
+      _camera.AspectRatio = Size.X / (float)Size.Y;
     }
 
-
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnUnload() {
       base.OnUnload();
       _shader.Dispose();
