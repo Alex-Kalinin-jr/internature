@@ -11,9 +11,9 @@ namespace app {
     public float[]? TexCoords {  get; init; }
     public uint[]? Indices { get; init; }
     public int Texture { get; set; }
-    public Vector3 ScaleVr {  get; set; }
-    public Vector3 PosVr { get; set; }
-    public Vector3 RotationVr { get; set; }
+    public OpenTK.Mathematics.Vector3 ScaleVr {  get; set; }
+    public OpenTK.Mathematics.Vector3 PosVr { get; set; }
+    public OpenTK.Mathematics.Vector3 RotationVr { get; set; }
   }
    
   internal class Cube : Volume {
@@ -121,9 +121,9 @@ namespace app {
 
       Indices = null;
       Texture = -1;
-      ScaleVr = Vector3.One;
-      PosVr = Vector3.Zero;
-      RotationVr = Vector3.Zero;
+      ScaleVr = OpenTK.Mathematics.Vector3.One;
+      PosVr = OpenTK.Mathematics.Vector3.Zero;
+      RotationVr = OpenTK.Mathematics.Vector3.Zero;
     }
   }
 }

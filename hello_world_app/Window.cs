@@ -9,53 +9,9 @@ using System.Timers;
 namespace app {
   public class Window : GameWindow {
 
-    float[] _vertices = {
-      -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-       0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-       0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-      -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-      -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-       0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-       0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-      -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-      -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-      -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-      -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-      -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-      -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-      -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-       0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-       0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-       0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-      -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-       0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-       0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-       0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-      -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-      -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-      -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-       0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-       0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-       0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-      -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-      -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
     private List<Volume> _volumes = new List<Volume>();
-    private List<int> _vertex_buffer_objects;
-    private List<int> _vertex_array_objects;
+    private List<int> _vertex_buffer_objects = new List<int>();
+    private List<int> _vertex_array_objects = new List<int>();
     private List<int> _element_buffer_objects;
 
     private app.Shader _shader;
@@ -66,12 +22,11 @@ namespace app {
     private Vector2 _lastPos;
     private float _time;
 
-
-
     public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
         : base(gameWindowSettings, nativeWindowSettings) { }
 
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
 
       Cube buff = new Cube();
@@ -81,10 +36,8 @@ namespace app {
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       GL.Enable(EnableCap.DepthTest);
 
-
       for (int i = 0; i < _volumes.Count; ++i) {
-        int num = GL.GenVertexArray();
-        _vertex_array_objects.Add(num);
+        _vertex_array_objects.Add(GL.GenVertexArray());
         GL.BindVertexArray(_vertex_array_objects[i]);
         _vertex_buffer_objects.Add(GL.GenBuffer());
         GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_objects[i]);
@@ -141,6 +94,9 @@ namespace app {
         GL.BindVertexArray(_vertex_array_objects[i]);
         _texture.Use(TextureUnit.Texture0);
         _shader.Use();
+        _volumes[i].ScaleVr *= 2;
+        _volumes[i].PosVr += new Vector3(0.5f, 0.8f, 0.3f);
+        // to wide
         Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
         _shader.SetMatrix4("model", model);
         _shader.SetMatrix4("view", _camera.GetViewMatrix());
