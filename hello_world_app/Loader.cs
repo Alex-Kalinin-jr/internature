@@ -8,7 +8,7 @@ namespace app {
 
   internal class FileData {
     public float[]? _vertices;
-    public int[]? _texCoords;
+    public float[]? _texCoords;
 
     public FileData() {}
   }
@@ -18,7 +18,7 @@ namespace app {
     static internal FileData ParseFromFile(string filename) {
 
       List<float> vertices = new List<float>();
-      List<int> texCoords = new List<int>();
+      List<float> texCoords = new List<float>();
 
       foreach (string line in File.ReadAllLines(filename)) {
         if (line.StartsWith("#")) continue;
@@ -43,7 +43,7 @@ namespace app {
       }
 
       if (texCoords.Count != 0) {
-        data._texCoords = new int[texCoords.Count];
+        data._texCoords = new float[texCoords.Count];
         texCoords.CopyTo(data._texCoords);
       }
 

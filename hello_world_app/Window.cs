@@ -52,18 +52,16 @@ namespace app {
       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
-    
 
-
-    private int _vertex_buffer_object;
-    private int _vertex_array_object;
-    private int _element_buffer_object;
+    private List<Volume> _volumes = new List<Volume>();
+    private List<int> _vertex_buffer_objects;
+    private List<int> _vertex_array_objects;
+    private List<int> _element_buffer_objects;
 
     private app.Shader _shader;
     private app.Texture _texture;
-    private app.Texture _texture2;
+    private app.Camera _camera;
 
-    private Camera _camera;
     private bool _firstMove = true;
     private Vector2 _lastPos;
     private float _time;
@@ -71,40 +69,55 @@ namespace app {
 
 
     public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
-        : base(gameWindowSettings, nativeWindowSettings) {}
+        : base(gameWindowSettings, nativeWindowSettings) { }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
 
       Cube buff = new Cube();
+      _volumes.Add(buff);
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       GL.Enable(EnableCap.DepthTest);
 
-      _vertex_array_object = GL.GenVertexArray();
-      GL.BindVertexArray(_vertex_array_object);
 
-      _vertex_buffer_object = GL.GenBuffer();
-      GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_object);
-      GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+      for (int i = 0; i < _volumes.Count; ++i) {
+        int num = GL.GenVertexArray();
+        _vertex_array_objects.Add(num);
+        GL.BindVertexArray(_vertex_array_objects[i]);
+        _vertex_buffer_objects.Add(GL.GenBuffer());
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_objects[i]);
+        GL.BufferData(BufferTarget.ArrayBuffer,
+            _volumes[i].Vertices.Length * sizeof(float),
+            _volumes[i].Vertices,
+            BufferUsageHint.StaticDraw);
+        /*
+        _element_buffer_objects.Add(GL.GenBuffer());
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _element_buffer_objects[i]);
+        GL.BufferData(BufferTarget.ElementArrayBuffer, 
+            _volumes[i].Indices.Length * sizeof(uint), 
+            _volumes[i].Indices, 
+            BufferUsageHint.StaticDraw);
+        */
+      }
 
-      /*
-      _element_buffer_object = GL.GenBuffer();
-      GL.BindBuffer(BufferTarget.ElementArrayBuffer, _element_buffer_object);
-      GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
-      */
+
 
       _shader = new app.Shader("Shaders/shader.vert", "Shaders/shader.frag");
       _shader.Use();
 
       int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
       GL.EnableVertexAttribArray(vertexLocation);
-      GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+      GL.VertexAttribPointer(vertexLocation, 3,
+          VertexAttribPointerType.Float, 
+          false, 3 * sizeof(float), 0);
 
       int texCoordLocation = GL.GetAttribLocation(_shader.Handle, "aTexCoord");
       GL.EnableVertexAttribArray(texCoordLocation);
-      GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+      GL.VertexAttribPointer(texCoordLocation, 2,
+          VertexAttribPointerType.Float, 
+          false, 2 * sizeof(float), 0);
 
       _texture = Texture.LoadFromFile("Resources/container.png");
       _texture.Use(TextureUnit.Texture0);
@@ -124,19 +137,16 @@ namespace app {
 
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-      GL.BindVertexArray(_vertex_array_object);
-
-
-      _texture.Use(TextureUnit.Texture0);
-      _shader.Use();
-
-      Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
-      _shader.SetMatrix4("model", model);
-      _shader.SetMatrix4("view", _camera.GetViewMatrix());
-      _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-
-      // GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
-      GL.DrawArrays(PrimitiveType.Triangles, 0, 36) ;
+      for (int i = 0; i < _volumes.Count; ++i) {
+        GL.BindVertexArray(_vertex_array_objects[i]);
+        _texture.Use(TextureUnit.Texture0);
+        _shader.Use();
+        Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
+        _shader.SetMatrix4("model", model);
+        _shader.SetMatrix4("view", _camera.GetViewMatrix());
+        _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+        GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+      }
 
       SwapBuffers();
     }
