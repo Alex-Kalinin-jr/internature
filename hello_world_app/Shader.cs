@@ -8,10 +8,8 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 namespace app {
   public class Shader {
     public int Handle { get; init; }
-    private bool disposedValue = false;
+    private bool _disposedValue = false;
     private readonly Dictionary<string, int> _uniformLocations;
-
-
 
     public Shader(string vertexPath, string fragmentPath) {
       string VertexShaderSource = File.ReadAllText(vertexPath);
@@ -64,14 +62,14 @@ namespace app {
 
 
     protected virtual void Dispose(bool disposing) {
-      if (!disposedValue) {
+      if (!_disposedValue) {
         GL.DeleteProgram(Handle);
-        disposedValue = true;
+        _disposedValue = true;
       }
     }
 
     ~Shader() {
-      if (disposedValue == false) {
+      if (_disposedValue == false) {
         Console.WriteLine("GPU Leak");
       }
     }

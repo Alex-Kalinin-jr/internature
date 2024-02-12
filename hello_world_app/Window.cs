@@ -52,13 +52,8 @@ namespace app {
       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
-    /*
-    private readonly uint[] _indices =
-    {
-      0, 1, 3,
-      1, 2, 3
-    };
-    */
+    
+
 
     private int _vertex_buffer_object;
     private int _vertex_array_object;
@@ -80,6 +75,9 @@ namespace app {
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
+
+      Cube buff = new Cube();
+
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       GL.Enable(EnableCap.DepthTest);
@@ -111,11 +109,7 @@ namespace app {
       _texture = Texture.LoadFromFile("Resources/container.png");
       _texture.Use(TextureUnit.Texture0);
 
-      _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
-      _texture2.Use(TextureUnit.Texture1);
-
       _shader.SetInt("texture1", 0);
-      _shader.SetInt("texture2", 1);
 
       _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
       CursorState = CursorState.Grabbed;
@@ -134,7 +128,6 @@ namespace app {
 
 
       _texture.Use(TextureUnit.Texture0);
-      _texture2.Use(TextureUnit.Texture1);
       _shader.Use();
 
       Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
