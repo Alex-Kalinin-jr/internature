@@ -12,23 +12,24 @@ namespace app {
     private readonly Dictionary<string, int> _uniformLocations;
 
     public Shader(string vertexPath, string fragmentPath) {
+      // copy code
       string VertexShaderSource = File.ReadAllText(vertexPath);
       string FragmentShaderSource = File.ReadAllText(fragmentPath);
-
+      // create descriptors
       int VertexShader = GL.CreateShader(ShaderType.VertexShader);
       int FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-
+      // bind code to descriptors
       GL.ShaderSource(VertexShader, VertexShaderSource);
       GL.ShaderSource(FragmentShader, FragmentShaderSource);
-
+      // compile shaders
       GL.CompileShader(VertexShader);
       GL.CompileShader(FragmentShader);
-
+      // create special program in gl
       Handle = GL.CreateProgram();
-
+      // attach shaders to this program
       GL.AttachShader(Handle, VertexShader);
       GL.AttachShader(Handle, FragmentShader);
-
+      // link shaders
       GL.LinkProgram(Handle);
 
       GL.DetachShader(Handle, VertexShader);

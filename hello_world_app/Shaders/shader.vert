@@ -13,5 +13,8 @@ uniform mat4 projection;
 void main()
 {
 	texCoord = aTexCoord;
-	gl_Position = vec4(aPosition, 1.0) * model * view * projection;
+
+	vec3 morphedPosition = mix(aPosition, normalize(aPosition), 0.5f);
+
+	gl_Position = vec4(morphedPosition, 1.0) * model * view * projection;
 }

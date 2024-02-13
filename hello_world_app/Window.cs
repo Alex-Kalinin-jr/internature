@@ -46,15 +46,12 @@ namespace app {
 
       _shader = new app.Shader("Shaders/shader.vert", "Shaders/shader.frag");
       _shader.Use();
-      int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
-      int texCoordLocation = GL.GetAttribLocation(_shader.Handle, "aTexCoord");
-
-      _texture = Texture.LoadFromFile("Resources/container.png");
-      _texture.Use(TextureUnit.Texture0);
-      _shader.SetInt("texture1", 0);
 
       _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
       CursorState = CursorState.Grabbed;
+
+      int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
+      int texCoordLocation = GL.GetAttribLocation(_shader.Handle, "aTexCoord");
 
       for (int i = 0; i < _volumes.Count; ++i) {
 
@@ -95,15 +92,12 @@ namespace app {
       for (int i = 0; i < _volumes.Count; ++i) {
 
         _shader.Use();
-        GL.BindVertexArray(_vertex_array_objects[i]);
-        _texture.Use(TextureUnit.Texture0);
-
         Matrix4 model = _volumes[i].ComputeModelMatrix();
-
         _shader.SetMatrix4("model", model);
 
+        GL.BindVertexArray(_vertex_array_objects[i]);
         GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-        GL.Flush();
+
       }
 
       SwapBuffers();
