@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Example {
+namespace Ex {
   internal class Program {
+
+    [STAThread]
     static void Main(string[] args) {
-      Console.WriteLine("abc");
+      new MainWindow().Run(60);
     }
   }
 }
