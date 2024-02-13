@@ -30,7 +30,11 @@ namespace app {
     protected override void OnLoad() {
 
       Cube buff = new Cube();
+      Cube buff2 = new Cube();
       _volumes.Add(buff);
+      _volumes.Add(buff2);
+      buff2.PosVr += new Vector3(0.0f, 0.01f, 0.0f);
+
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -91,17 +95,24 @@ namespace app {
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
       for (int i = 0; i < _volumes.Count; ++i) {
+
         GL.BindVertexArray(_vertex_array_objects[i]);
         _texture.Use(TextureUnit.Texture0);
         _shader.Use();
-        _volumes[i].ScaleVr *= 2;
-        _volumes[i].PosVr += new Vector3(0.5f, 0.8f, 0.3f);
-        // to wide
-        Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(_time));
+
+        // here params of object position are changed
+        // why so little value give so meaningful effect?????????????????????????????
+        /*
+        _volumes[i].RotationVr += new Vector3(_time, 0.0f, 0.0f);
+        */
+        Matrix4 model = _volumes[i].ComputeModelMatrix();
+
+
         _shader.SetMatrix4("model", model);
         _shader.SetMatrix4("view", _camera.GetViewMatrix());
         _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
         GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+
       }
 
       SwapBuffers();

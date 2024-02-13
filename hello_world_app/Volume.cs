@@ -1,9 +1,11 @@
-﻿using System;
+﻿using OpenTK.Mathematics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace app {
   internal abstract class Volume {
@@ -14,6 +16,15 @@ namespace app {
     public OpenTK.Mathematics.Vector3 ScaleVr {  get; set; }
     public OpenTK.Mathematics.Vector3 PosVr { get; set; }
     public OpenTK.Mathematics.Vector3 RotationVr { get; set; }
+
+    internal  Matrix4 ComputeModelMatrix() {
+      return Matrix4.Identity *
+        Matrix4.CreateScale(ScaleVr) * 
+        Matrix4.CreateRotationX(MathHelper.DegreesToRadians(RotationVr.X)) * 
+        Matrix4.CreateRotationY(MathHelper.DegreesToRadians(RotationVr.Y)) * 
+        Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(RotationVr.Z)) * 
+        Matrix4.CreateTranslation(PosVr);
+    }
   }
    
   internal class Cube : Volume {
