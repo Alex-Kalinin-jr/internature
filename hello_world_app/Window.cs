@@ -3,16 +3,15 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using System.Diagnostics;
-using System.Drawing;
-using System.Timers;
+
 
 namespace app {
   public class Window : GameWindow {
 
     private List<Volume> _volumes = new List<Volume>();
-    private List<int> _vertex_buffer_objects = new List<int>();
-    private List<int> _vertex_array_objects = new List<int>();
+    private List<int> _vertexBufferObjects = new List<int>();
+    private List<int> _colorBufferObjects = new List<int>();
+    private List<int> _vertexArrayObjects = new List<int>();
     private List<int> _element_buffer_objects;
 
     private app.Shader _shader;
@@ -50,31 +49,41 @@ namespace app {
       _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
       CursorState = CursorState.Grabbed;
 
-      int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
-      int texCoordLocation = GL.GetAttribLocation(_shader.Handle, "aTexCoord");
-
       for (int i = 0; i < _volumes.Count; ++i) {
 
-        _vertex_buffer_objects.Add(GL.GenBuffer());
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_objects[i]);
+        _vertexArrayObjects.Add(GL.GenVertexArray());
+        _vertexBufferObjects.Add(GL.GenBuffer());
+        _colorBufferObjects.Add(GL.GenBuffer());
 
-        _vertex_array_objects.Add(GL.GenVertexArray());
-        GL.BindVertexArray(_vertex_array_objects[i]);
+        GL.BindVertexArray(_vertexArrayObjects[i]);
 
-        GL.BufferData(BufferTarget.ArrayBuffer,
-            _volumes[i].Vertices.Length * sizeof(float),
-            _volumes[i].Vertices,
-            BufferUsageHint.StaticDraw);
-
-        GL.EnableVertexAttribArray(vertexLocation);
-        GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, 
-            false, 3 * sizeof(float), 0);
-
-        GL.EnableVertexAttribArray(texCoordLocation);
-        GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, 
-            false, 2 * sizeof(float), 0);
+        BindPosBuffer(i);
+        BindColorBuffer(i);
       }
     }
+
+    private void BindPosBuffer(int indexOfDescriptors) {
+      int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
+      GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects[indexOfDescriptors]);
+      GL.BufferData(BufferTarget.ArrayBuffer, 
+          _volumes[indexOfDescriptors].Vertices.Length * sizeof(float),
+          _volumes[indexOfDescriptors].Vertices, BufferUsageHint.DynamicDraw);
+      GL.EnableVertexAttribArray(vertexLocation);
+      GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
+          false, 3 * sizeof(float), 0);
+    }
+
+    private void BindColorBuffer(int indexOfDescriptors) {
+      int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
+      GL.BindBuffer(BufferTarget.ArrayBuffer, _colorBufferObjects[indexOfDescriptors]);
+      GL.BufferData(BufferTarget.ArrayBuffer, 
+        _volumes[indexOfDescriptors].Colors.Length * sizeof(float),
+        _volumes[indexOfDescriptors].Colors, BufferUsageHint.StaticDraw);
+      GL.EnableVertexAttribArray(colorLocation);
+      GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float,
+          false, 3 * sizeof(float), 0);
+    }
+
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnRenderFrame(FrameEventArgs e) {
@@ -95,7 +104,7 @@ namespace app {
         Matrix4 model = _volumes[i].ComputeModelMatrix();
         _shader.SetMatrix4("model", model);
 
-        GL.BindVertexArray(_vertex_array_objects[i]);
+        GL.BindVertexArray(_vertexArrayObjects[i]);
         GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
       }

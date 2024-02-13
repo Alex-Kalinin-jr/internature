@@ -13,6 +13,7 @@ namespace app {
     public float[]? TexCoords {  get; init; }
     public uint[]? Indices { get; init; }
     public int Texture { get; set; }
+    public float[]? Colors { get; init; }
     public OpenTK.Mathematics.Vector3 ScaleVr {  get; set; }
     public OpenTK.Mathematics.Vector3 PosVr { get; set; }
     public OpenTK.Mathematics.Vector3 RotationVr { get; set; }
@@ -127,6 +128,47 @@ namespace app {
           1.0f, 0.0f,
           0.0f, 0.0f,
           0.0f, 1.0f
+        };
+      }
+
+      if (Colors == null) {
+        Colors = new float[] {
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f,
+          1.0f, 0.3f, 0.5f
         };
       }
 
