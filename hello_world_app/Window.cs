@@ -28,7 +28,7 @@ namespace app {
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
-
+// temporary part - for tests
       Cube buff = new Cube();
       Cube buff2 = new Cube();
       Cube buff3 = new Cube();
@@ -37,7 +37,7 @@ namespace app {
       _volumes.Add(buff);
       _volumes.Add(buff2);
       _volumes.Add(buff3);
-
+// end of temporary part
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -50,19 +50,17 @@ namespace app {
       CursorState = CursorState.Grabbed;
 
       for (int i = 0; i < _volumes.Count; ++i) {
-
         _vertexArrayObjects.Add(GL.GenVertexArray());
-        _vertexBufferObjects.Add(GL.GenBuffer());
-        _colorBufferObjects.Add(GL.GenBuffer());
-
         GL.BindVertexArray(_vertexArrayObjects[i]);
-
+// if is not null
         BindPosBuffer(i);
         BindColorBuffer(i);
+// end of "if is not null"
       }
     }
 
     private void BindPosBuffer(int indexOfDescriptors) {
+      _vertexBufferObjects.Add(GL.GenBuffer());
       int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
       GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects[indexOfDescriptors]);
       GL.BufferData(BufferTarget.ArrayBuffer, 
@@ -74,6 +72,7 @@ namespace app {
     }
 
     private void BindColorBuffer(int indexOfDescriptors) {
+      _colorBufferObjects.Add(GL.GenBuffer());
       int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
       GL.BindBuffer(BufferTarget.ArrayBuffer, _colorBufferObjects[indexOfDescriptors]);
       GL.BufferData(BufferTarget.ArrayBuffer, 
