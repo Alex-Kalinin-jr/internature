@@ -32,9 +32,12 @@ namespace app {
 
       Cube buff = new Cube();
       Cube buff2 = new Cube();
+      Cube buff3 = new Cube();
+      buff2.PosVr += new Vector3(0.0f, 2.0f, 0.0f);
+      buff3.PosVr += new Vector3(4.0f, 4.0f, 2.0f);
       _volumes.Add(buff);
       _volumes.Add(buff2);
-      buff2.PosVr += new Vector3(0.0f, 0.01f, 0.0f);
+      _volumes.Add(buff3);
 
 
       base.OnLoad();
@@ -48,7 +51,6 @@ namespace app {
 
       _texture = Texture.LoadFromFile("Resources/container.png");
       _texture.Use(TextureUnit.Texture0);
-
       _shader.SetInt("texture1", 0);
 
       _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
@@ -92,15 +94,16 @@ namespace app {
 
       for (int i = 0; i < _volumes.Count; ++i) {
 
+        _shader.Use();
         GL.BindVertexArray(_vertex_array_objects[i]);
         _texture.Use(TextureUnit.Texture0);
-        _shader.Use();
 
         Matrix4 model = _volumes[i].ComputeModelMatrix();
 
         _shader.SetMatrix4("model", model);
 
         GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+        GL.Flush();
       }
 
       SwapBuffers();
