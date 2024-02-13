@@ -4,6 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
+using System.Drawing;
 using System.Timers;
 
 namespace app {
@@ -40,41 +41,10 @@ namespace app {
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       GL.Enable(EnableCap.DepthTest);
 
-      for (int i = 0; i < _volumes.Count; ++i) {
-        _vertex_array_objects.Add(GL.GenVertexArray());
-        GL.BindVertexArray(_vertex_array_objects[i]);
-        _vertex_buffer_objects.Add(GL.GenBuffer());
-        GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_objects[i]);
-        GL.BufferData(BufferTarget.ArrayBuffer,
-            _volumes[i].Vertices.Length * sizeof(float),
-            _volumes[i].Vertices,
-            BufferUsageHint.StaticDraw);
-        /*
-        _element_buffer_objects.Add(GL.GenBuffer());
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, _element_buffer_objects[i]);
-        GL.BufferData(BufferTarget.ElementArrayBuffer, 
-            _volumes[i].Indices.Length * sizeof(uint), 
-            _volumes[i].Indices, 
-            BufferUsageHint.StaticDraw);
-        */
-      }
-
-
-
       _shader = new app.Shader("Shaders/shader.vert", "Shaders/shader.frag");
       _shader.Use();
-
       int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
-      GL.EnableVertexAttribArray(vertexLocation);
-      GL.VertexAttribPointer(vertexLocation, 3,
-          VertexAttribPointerType.Float, 
-          false, 3 * sizeof(float), 0);
-
       int texCoordLocation = GL.GetAttribLocation(_shader.Handle, "aTexCoord");
-      GL.EnableVertexAttribArray(texCoordLocation);
-      GL.VertexAttribPointer(texCoordLocation, 2,
-          VertexAttribPointerType.Float, 
-          false, 2 * sizeof(float), 0);
 
       _texture = Texture.LoadFromFile("Resources/container.png");
       _texture.Use(TextureUnit.Texture0);
@@ -83,6 +53,28 @@ namespace app {
 
       _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
       CursorState = CursorState.Grabbed;
+
+      for (int i = 0; i < _volumes.Count; ++i) {
+
+        _vertex_buffer_objects.Add(GL.GenBuffer());
+        GL.BindBuffer(BufferTarget.ArrayBuffer, _vertex_buffer_objects[i]);
+
+        _vertex_array_objects.Add(GL.GenVertexArray());
+        GL.BindVertexArray(_vertex_array_objects[i]);
+
+        GL.BufferData(BufferTarget.ArrayBuffer,
+            _volumes[i].Vertices.Length * sizeof(float),
+            _volumes[i].Vertices,
+            BufferUsageHint.StaticDraw);
+
+        GL.EnableVertexAttribArray(vertexLocation);
+        GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, 
+            false, 3 * sizeof(float), 0);
+
+        GL.EnableVertexAttribArray(texCoordLocation);
+        GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, 
+            false, 2 * sizeof(float), 0);
+      }
     }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,25 +86,21 @@ namespace app {
 
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+      _shader.SetMatrix4("view", _camera.GetViewMatrix());
+      _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+
+
       for (int i = 0; i < _volumes.Count; ++i) {
 
         GL.BindVertexArray(_vertex_array_objects[i]);
         _texture.Use(TextureUnit.Texture0);
         _shader.Use();
 
-        // here params of object position are changed
-        // why so little value give so meaningful effect?????????????????????????????
-        /*
-        _volumes[i].RotationVr += new Vector3(_time, 0.0f, 0.0f);
-        */
         Matrix4 model = _volumes[i].ComputeModelMatrix();
 
-
         _shader.SetMatrix4("model", model);
-        _shader.SetMatrix4("view", _camera.GetViewMatrix());
-        _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-        GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
+        GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
       }
 
       SwapBuffers();
