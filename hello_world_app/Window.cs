@@ -70,7 +70,8 @@ namespace app {
       GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
           false, 3 * sizeof(float), 0);
     }
-
+// здесь надо подумать, как синхронизировать при больших данных.
+// допустим, у фигуры нет цветов. прямое решение - генерировать default color в конструкторе
     private void BindColorBuffer(int indexOfDescriptors) {
       _colorBufferObjects.Add(GL.GenBuffer());
       int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
