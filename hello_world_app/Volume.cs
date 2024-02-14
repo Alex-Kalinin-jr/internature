@@ -30,6 +30,15 @@ namespace app {
    
   internal class Cube : Volume {
 
+    public Cube(int verticesInLine) {
+      Vertices = app.Generator.GenerateCube(verticesInLine);
+      Texture = -1;
+      ScaleVr = OpenTK.Mathematics.Vector3.One;
+      PosVr = OpenTK.Mathematics.Vector3.Zero;
+      RotationVr = OpenTK.Mathematics.Vector3.Zero;
+
+    }
+
     public Cube(string? path = null) : base() {
 
       if (path != null) {

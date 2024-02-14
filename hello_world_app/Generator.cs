@@ -6,7 +6,23 @@ using System.Threading.Tasks;
 
 namespace app {
   internal class Generator {
-    public static void GenerateFrozenZ(int count, float step, ref float[] cube, ref int ind, float zCoord) {
+
+    public static float[] GenerateCube(int count) {
+      float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
+      float step = 2.0f / (float)(count - 1);
+      int ind = 0;
+
+      GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
+      GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
+      GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
+      GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
+      GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
+      GenerateFrozenY(count, step, ref cube, ref ind, 1.0f);
+
+      return cube;
+    }
+
+    private static void GenerateFrozenZ(int count, float step, ref float[] cube, ref int ind, float zCoord) {
 
       float botLeftX = -1.0f;
       float botRightX = -1.0f + step;
@@ -59,7 +75,7 @@ namespace app {
       }
     }
 
-    public static void GenerateFrozenX(int count, float step, ref float[] cube, ref int ind, float xCoord) {
+    private static void GenerateFrozenX(int count, float step, ref float[] cube, ref int ind, float xCoord) {
 
       float botLeftX = -1.0f;
       float botRightX = -1.0f + step;
@@ -112,7 +128,7 @@ namespace app {
       }
     }
 
-    public static void GenerateFrozenY(int count, float step, ref float[] cube, ref int ind, float yCoord) {
+    private static void GenerateFrozenY(int count, float step, ref float[] cube, ref int ind, float yCoord) {
 
       float botLeftX = -1.0f;
       float botRightX = -1.0f + step;
@@ -163,21 +179,6 @@ namespace app {
         topY += step;
         botY += step;
       }
-    }
-
-    public static float[] GenerateCube(int count) {
-      float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
-      float step = 2.0f / (float)(count - 1);
-      int ind = 0;
-
-      GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
-      GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
-      GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
-      GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
-      GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
-      GenerateFrozenY(count, step, ref cube, ref ind, 1.0f);
-
-      return cube;
     }
   }
 }

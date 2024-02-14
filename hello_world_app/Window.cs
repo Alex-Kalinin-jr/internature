@@ -30,7 +30,13 @@ namespace app {
     protected override void OnLoad() {
 
       Cube buff = new Cube();
-      _volumes.Add(buff);    
+      Cube buff2 = new Cube(5);
+      buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
+      Cube buff3 = new Cube(20);
+      buff3.PosVr += new Vector3(6.0f, 0.0f, 0.0f);
+      _volumes.Add(buff);   
+      _volumes.Add(buff2);
+      _volumes.Add(buff3);
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
