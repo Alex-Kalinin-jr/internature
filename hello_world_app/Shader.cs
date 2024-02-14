@@ -64,6 +64,11 @@ namespace app {
       GL.Uniform1(_uniformLocations[name], num);
     }
 
+    public void SetFloat(string name, float num) {
+      GL.UseProgram(Handle);
+      GL.Uniform1(_uniformLocations[name], num);
+    }
+
     public void SetMatrix4(string name, Matrix4 data) {
       GL.UseProgram(Handle);
       GL.UniformMatrix4(_uniformLocations[name], true, ref data);

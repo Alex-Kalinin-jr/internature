@@ -21,16 +21,21 @@ namespace app {
     private bool _firstMove = true;
     private Vector2 _lastPos;
     private float _time;
+    private float _blend;
+    private bool _increase;
 
     public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
-        : base(gameWindowSettings, nativeWindowSettings) { }
+        : base(gameWindowSettings, nativeWindowSettings) {
+      _blend = 1.0f;
+      _increase = false;
+    }
 
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
 
       Cube buff = new Cube();
-      Cube buff2 = new Cube(5);
+      Cube buff2 = new Cube(100);
       buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
       Cube buff3 = new Cube(20);
       buff3.PosVr += new Vector3(6.0f, 0.0f, 0.0f);
@@ -108,6 +113,9 @@ namespace app {
 
       _shader.SetMatrix4("view", _camera.GetViewMatrix()); 
       _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+      _shader.SetFloat("Radius", 1.0f);
+      ChangeBlend();
+      _shader.SetFloat("Blend", _blend);
 
 
       for (int i = 0; i < _volumes.Count; ++i) {
@@ -206,5 +214,21 @@ namespace app {
       base.OnUnload();
       _shader.Dispose();
     }
+
+    private void ChangeBlend() {
+      float step = 0.001f;
+      if (_increase) {
+        _blend += step;
+      } else {
+        _blend -= step;
+      }
+
+      if (_blend >= 1.0f) {
+        _increase = false;
+      } else if (_blend <= 0.0f) {
+        _increase = true;
+      }
+    }
+
   }
 }
