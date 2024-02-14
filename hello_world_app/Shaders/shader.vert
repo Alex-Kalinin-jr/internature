@@ -10,9 +10,29 @@ uniform mat4 projection;
 
 out vec3 Color;
 
+const float PI = 3.14159;
+const float TWO_PI = PI * 2.0;
+
+uniform float Radius;
+uniform float Blend;
+
+vec3 sphere(vec2 domain)
+{
+    vec3 range;
+    range.x = Radius * cos(domain.y) * sin(domain.x);
+    range.y = Radius * sin(domain.y) * sin(domain.x);
+    range.z = Radius * cos(domain.x);
+    return range;
+}
+
 void main()
 {
 	Color = aColor;
 
-	gl_Position = vec4(aPosition, 1.0) * model * view * projection;
+    vec2 p0 = aPosition.xy * TWO_PI;
+    vec3 normal = sphere(p0);;
+    vec3 vertex = Radius * normal;
+    vertex = mix(aPosition.xyz, vertex, Blend);
+
+	gl_Position = vec4(vertex, 1.0) * model * view * projection;
 }
