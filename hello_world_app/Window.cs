@@ -12,7 +12,7 @@ namespace app {
     private List<int> _vertexBufferObjects = new List<int>();
     private List<int> _colorBufferObjects = new List<int>();
     private List<int> _vertexArrayObjects = new List<int>();
-    private List<int> _element_buffer_objects;
+    private List<int> _elementBufferObjects = new List<int>();
 
     private app.Shader _shader;
     private app.Texture _texture;
@@ -48,6 +48,7 @@ namespace app {
 // if is not null
         BindPosBuffer(i);
         BindColorBuffer(i);
+        BindIndicesBuffer(i);
 // end of "if is not null"
       }
     }
@@ -76,6 +77,12 @@ namespace app {
           false, 3 * sizeof(float), 0);
     }
 
+    private void BindIndicesBuffer(int indexOfDescriptros) {
+      _elementBufferObjects.Add(GL.GenBuffer());
+      GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObjects[indexOfDescriptros]);
+      GL.BufferData(BufferTarget.ElementArrayBuffer, _volumes[indexOfDescriptros].Indices.Length * sizeof(uint),
+          _volumes[indexOfDescriptros ].Indices, BufferUsageHint.StaticDraw);
+    }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnRenderFrame(FrameEventArgs e) {
@@ -97,7 +104,7 @@ namespace app {
         _shader.SetMatrix4("model", model);
 
         GL.BindVertexArray(_vertexArrayObjects[i]);
-        GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
+        GL.DrawElements(PrimitiveType.Triangles, _volumes[i].Indices.Length, DrawElementsType.UnsignedInt, 0);
 
       }
 
