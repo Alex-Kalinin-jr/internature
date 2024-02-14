@@ -28,16 +28,9 @@ namespace app {
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
-// temporary part - for tests
-      Cube buff = new Cube();
-      Cube buff2 = new Cube();
-      Cube buff3 = new Cube();
-      buff2.PosVr += new Vector3(0.0f, 2.0f, 0.0f);
-      buff3.PosVr += new Vector3(4.0f, 4.0f, 2.0f);
+
+      Cube buff = new Cube("Resources/cube_comma.obj");
       _volumes.Add(buff);
-      _volumes.Add(buff2);
-      _volumes.Add(buff3);
-// end of temporary part
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -70,8 +63,7 @@ namespace app {
       GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
           false, 3 * sizeof(float), 0);
     }
-// здесь надо подумать, как синхронизировать при больших данных.
-// допустим, у фигуры нет цветов. прямое решение - генерировать default color в конструкторе
+
     private void BindColorBuffer(int indexOfDescriptors) {
       _colorBufferObjects.Add(GL.GenBuffer());
       int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
@@ -105,7 +97,7 @@ namespace app {
         _shader.SetMatrix4("model", model);
 
         GL.BindVertexArray(_vertexArrayObjects[i]);
-        GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+        GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
 
       }
 

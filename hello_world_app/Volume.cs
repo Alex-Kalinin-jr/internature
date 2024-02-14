@@ -43,8 +43,12 @@ namespace app {
           TexCoords = data._texCoords;
         }
 
+        if (data._indices != null) {
+          Indices = data._indices;
+        }
+
       }
-      if (Vertices == null) {
+      if (path == null) {
         Vertices = new float[] {
           -0.5f, -0.5f, -0.5f,
            0.5f, -0.5f, -0.5f,
@@ -90,7 +94,7 @@ namespace app {
         };
       }
 
-      if (TexCoords == null) {
+      if (path == null) {
         TexCoords = new float[] {
           0.0f, 0.0f,
           1.0f, 0.0f,
@@ -171,8 +175,6 @@ namespace app {
           1.0f, 0.3f, 0.5f
         };
       }
-
-      Indices = null;
       Texture = -1;
       ScaleVr = OpenTK.Mathematics.Vector3.One;
       PosVr = OpenTK.Mathematics.Vector3.Zero;

@@ -9,7 +9,7 @@ namespace app {
   internal class FileData {
     public float[]? _vertices;
     public float[]? _texCoords;
-
+    public uint[]? _indices;
     public FileData() {}
   }
 
@@ -19,6 +19,7 @@ namespace app {
 
       List<float> vertices = new List<float>();
       List<float> texCoords = new List<float>();
+      List<uint> indices = new List<uint>();
 
       foreach (string line in File.ReadAllLines(filename)) {
         if (line.StartsWith("#")) continue;
@@ -29,9 +30,16 @@ namespace app {
           vertices.Add(float.Parse(tokens[1]));
           vertices.Add(float.Parse(tokens[2]));
           vertices.Add(float.Parse(tokens[3]));
+        } else if (tokens[0] == "vt") {
+          texCoords.Add(float.Parse(tokens[1]));
+          texCoords.Add(float.Parse(tokens[2]));
         } else if (tokens[0] == "f") {
-          texCoords.Add(int.Parse(tokens[1]));
-          texCoords.Add(int.Parse(tokens[2]));
+          for (int i = 1; i < tokens.Length; ++i) {
+            var facet = tokens[i].Split('/');
+            foreach (var f in facet) {
+              indices.Add(uint.Parse(f));
+            }
+          }
         }
       }
 
@@ -45,6 +53,11 @@ namespace app {
       if (texCoords.Count != 0) {
         data._texCoords = new float[texCoords.Count];
         texCoords.CopyTo(data._texCoords);
+      }
+
+      if (indices.Count != 0) {
+        data._indices = new uint[indices.Count];
+        indices.CopyTo(data._indices);
       }
 
       return data;
