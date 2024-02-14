@@ -29,8 +29,8 @@ namespace app {
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
 
-      Cube buff = new Cube("Resources/cube_comma.obj");
-      _volumes.Add(buff);
+      Cube buff = new Cube();
+      _volumes.Add(buff);    
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -45,11 +45,18 @@ namespace app {
       for (int i = 0; i < _volumes.Count; ++i) {
         _vertexArrayObjects.Add(GL.GenVertexArray());
         GL.BindVertexArray(_vertexArrayObjects[i]);
-// if is not null
-        BindPosBuffer(i);
-        BindColorBuffer(i);
-        BindIndicesBuffer(i);
-// end of "if is not null"
+
+        if (_volumes[i].Vertices != null) {
+          BindPosBuffer(i);
+        }
+
+        if (_volumes[i].Colors != null) {
+          BindColorBuffer(i);
+        }
+
+        if (_volumes[i].Indices != null) {
+          BindIndicesBuffer(i);
+        }
       }
     }
 
@@ -93,7 +100,7 @@ namespace app {
 
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-      _shader.SetMatrix4("view", _camera.GetViewMatrix());
+      _shader.SetMatrix4("view", _camera.GetViewMatrix()); 
       _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
 
@@ -104,7 +111,11 @@ namespace app {
         _shader.SetMatrix4("model", model);
 
         GL.BindVertexArray(_vertexArrayObjects[i]);
-        GL.DrawElements(PrimitiveType.Triangles, _volumes[i].Indices.Length, DrawElementsType.UnsignedInt, 0);
+        if (_volumes[i].Indices != null) {
+          GL.DrawElements(PrimitiveType.Triangles, _volumes[i].Indices.Length, DrawElementsType.UnsignedInt, 0);
+        } else {
+          GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
+        }
 
       }
 
