@@ -34,7 +34,7 @@ namespace app {
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
 
-      Cube buff = new Cube();
+      Cube buff = new Cube(4);
       Cube buff2 = new Cube(100);
       buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
       Cube buff3 = new Cube(20);
@@ -46,6 +46,7 @@ namespace app {
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       GL.Enable(EnableCap.DepthTest);
+      GL.Enable(EnableCap.ProgramPointSize);
 
       _shader = new app.Shader("Shaders/shader.vert", "Shaders/shader.frag");
       _shader.Use();

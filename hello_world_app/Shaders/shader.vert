@@ -27,7 +27,7 @@ vec3 sphere(vec2 domain)
 
 void main()
 {
-	Color = aColor;
+	Color = vec3(1.0f, 1.0f, 1.0f);
 
     vec2 p0 = aPosition.xy * TWO_PI;
     vec3 normal = sphere(p0);;
@@ -35,4 +35,5 @@ void main()
     vertex = mix(aPosition.xyz, vertex, Blend);
 
 	gl_Position = vec4(vertex, 1.0) * model * view * projection;
+    gl_PointSize = 10.0;
 }
