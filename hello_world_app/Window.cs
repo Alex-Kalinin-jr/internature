@@ -34,14 +34,21 @@ namespace app {
     /// ////////////////////////////////////////////////////////////////////////////////////////////
     protected override void OnLoad() {
 
-      Cube buff = new Cube(4);
+      Cube buff = new Cube(10);
+
       Cube buff2 = new Cube(100);
       buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
+
       Cube buff3 = new Cube(20);
       buff3.PosVr += new Vector3(6.0f, 0.0f, 0.0f);
+
+      Cube buff4 = new Cube(50);
+      buff4.PosVr += new Vector3(0.0f, 3.0f, 0.0f);
+
       _volumes.Add(buff);   
       _volumes.Add(buff2);
       _volumes.Add(buff3);
+      _volumes.Add(buff4);
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -112,12 +119,7 @@ namespace app {
 
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-      _shader.SetMatrix4("view", _camera.GetViewMatrix()); 
-      _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-      _shader.SetFloat("Radius", 1.0f);
-      ChangeBlend();
-      _shader.SetFloat("Blend", _blend);
-
+      AdjustShader();
 
       for (int i = 0; i < _volumes.Count; ++i) {
 
@@ -135,6 +137,14 @@ namespace app {
       }
 
       SwapBuffers();
+    }
+
+    private void AdjustShader() {
+      _shader.SetMatrix4("view", _camera.GetViewMatrix());
+      _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+      _shader.SetFloat("Radius", 1.0f);
+      ChangeBlend();
+      _shader.SetFloat("Blend", _blend);
     }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +210,7 @@ namespace app {
       base.OnMouseWheel(e);
       _camera.Fov -= e.OffsetY;
     }
-
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,10 +234,9 @@ namespace app {
         _blend -= step;
       }
 
-      if (_blend >= 1.0f) {
-        _increase = false;
-      } else if (_blend <= 0.0f) {
-        _increase = true;
+      if (_blend >= 1.0f || _blend <= 0.0f) {
+        _increase = _increase ^ true;
+        Thread.Sleep(1000);
       }
     }
 

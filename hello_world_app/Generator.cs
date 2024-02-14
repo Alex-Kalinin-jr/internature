@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace app {
+﻿namespace app {
   internal class Generator {
 
     public static (float[], uint[]) GenerateCube(int count) {
