@@ -1,10 +1,11 @@
 ﻿namespace app {
   internal class Generator {
 
-    public static (float[], uint[]) GenerateCube(int count) {
+    public static (float[], uint[], float[]) GenerateCube(int count) {
 
       float[] cube = new float[3 * (count) * (count) * 6];
       uint[] idxs = new uint[(count - 1) * (count - 1) * 2 * 6 * 3];
+      float[] colors = new float[cube.Length];
 
       float step = 2.0f / (float)(count - 1);
       int ind = 0;
@@ -17,8 +18,27 @@
       GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
 
       GenerateIndexArray(count, ref idxs);
+      GenerateColorArray( ref colors);
 
-      return (cube, idxs);
+      return (cube, idxs, colors);
+    }
+
+    private static void GenerateColorArray(ref float[] colors) {
+
+      int idx = 0;
+      int idxOfVal = 0;
+
+      while (idx < colors.Length) {
+
+        if (idxOfVal > 2) {
+          idxOfVal = 0;
+        }
+
+        colors[idx + idxOfVal] = 0.7f;
+        ++idxOfVal;
+        idx += 3;
+      }
+      
     }
 
     private static void GenerateIndexArray(int count, ref uint[] indices) {

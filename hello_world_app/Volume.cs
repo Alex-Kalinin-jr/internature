@@ -54,7 +54,7 @@ namespace app {
       }
 
       if (path == null) {
-        (Vertices, Indices) = app.Generator.GenerateCube(10);
+        (Vertices, Indices, Colors) = app.Generator.GenerateCube(10);
       }
     }
 
@@ -63,7 +63,7 @@ namespace app {
   internal class Cube : Volume {
 
     public Cube(int verticesInLine) {
-      (Vertices, Indices) = app.Generator.GenerateCube(verticesInLine);
+      (Vertices, Indices, Colors) = app.Generator.GenerateCube(verticesInLine);
       Texture = -1;
       ScaleVr = OpenTK.Mathematics.Vector3.One;
       PosVr = OpenTK.Mathematics.Vector3.Zero;

@@ -236,7 +236,6 @@ namespace app {
 
       if (_blend >= 1.0f || _blend <= 0.0f) {
         _increase = _increase ^ true;
-        Thread.Sleep(1000);
       }
     }
 

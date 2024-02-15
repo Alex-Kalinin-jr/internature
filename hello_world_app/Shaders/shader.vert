@@ -27,7 +27,7 @@ vec3 sphere(vec2 domain)
 
 void main()
 {
-	Color = vec3(1.0f, 1.0f, 1.0f);
+	Color = aColor;
 
     vec2 p0 = aPosition.xy * TWO_PI;
     vec3 normal = sphere(p0);;
