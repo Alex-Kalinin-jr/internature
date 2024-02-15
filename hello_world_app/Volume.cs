@@ -1,11 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace app {
   internal abstract class Volume {
@@ -34,7 +27,7 @@ namespace app {
       RotationVr = OpenTK.Mathematics.Vector3.Zero;
     }
 
-    public Volume(string path) : this() {
+    public Volume(string path, OpenTK.Mathematics.Vector3 color) : this() {
 
       if (path != "") {
         FileData data = app.OBJParser.ParseFromFile(path);
@@ -54,7 +47,7 @@ namespace app {
       }
 
       if (path == null) {
-        (Vertices, Indices, Colors) = app.Generator.GenerateCube(10);
+        (Vertices, Indices, Colors) = app.Generator.GenerateCube(10, color);
       }
     }
 
@@ -62,13 +55,13 @@ namespace app {
    
   internal class Cube : Volume {
 
-    public Cube(int verticesInLine) {
-      (Vertices, Indices, Colors) = app.Generator.GenerateCube(verticesInLine);
+    public Cube(int verticesInLine, OpenTK.Mathematics.Vector3 color) {
+      (Vertices, Indices, Colors) = app.Generator.GenerateCube(verticesInLine, color);
+
       Texture = -1;
       ScaleVr = OpenTK.Mathematics.Vector3.One;
       PosVr = OpenTK.Mathematics.Vector3.Zero;
       RotationVr = OpenTK.Mathematics.Vector3.Zero;
-
     }
   }
 }

@@ -1,7 +1,10 @@
-﻿namespace app {
+﻿using System;
+using System.Numerics;
+
+namespace app {
   internal class Generator {
 
-    public static (float[], uint[], float[]) GenerateCube(int count) {
+    public static (float[], uint[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
 
       float[] cube = new float[3 * (count) * (count) * 6];
       uint[] idxs = new uint[(count - 1) * (count - 1) * 2 * 6 * 3];
@@ -18,24 +21,17 @@
       GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
 
       GenerateIndexArray(count, ref idxs);
-      GenerateColorArray( ref colors);
+      GenerateColorArray( ref colors, color);
 
       return (cube, idxs, colors);
     }
 
-    private static void GenerateColorArray(ref float[] colors) {
-
+    private static void GenerateColorArray(ref float[] colors, OpenTK.Mathematics.Vector3 color) {
       int idx = 0;
-      int idxOfVal = 0;
-
       while (idx < colors.Length) {
-
-        if (idxOfVal > 2) {
-          idxOfVal = 0;
-        }
-
-        colors[idx + idxOfVal] = 0.7f;
-        ++idxOfVal;
+        colors[idx] = color.X;
+        colors[idx + 1] = color.Y;
+        colors[idx + 2] = color.Z;
         idx += 3;
       }
       
@@ -49,11 +45,11 @@
       for (int i = 0; i < 6; ++i) {
         for (int j = 0; j < count - 1; ++j) {
           for (int k = 0; k < count - 2; ++k) {
-            indices[ind] = topInd;
-            indices[ind + 1] = topInd + 1;
+            indices[ind] = topInd + 1;
+            indices[ind + 1] = topInd;
             indices[ind + 2] = bottomind;
-            indices[ind + 3] = bottomind;
-            indices[ind + 4] = topInd + 1;
+            indices[ind + 3] = topInd + 1;
+            indices[ind + 4] = bottomind;
             indices[ind + 5] = bottomind + 1;
             ind += 6;
             ++topInd;
@@ -120,5 +116,6 @@
         currentY += step;
       }
     }
+
   }
 }

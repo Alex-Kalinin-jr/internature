@@ -31,24 +31,33 @@ namespace app {
     }
 
     /// ////////////////////////////////////////////////////////////////////////////////////////////
-    /// ////////////////////////////////////////////////////////////////////////////////////////////
+    /// //////////////////////////////////////////////////////////////////c//////////////////////////
     protected override void OnLoad() {
 
-      Cube buff = new Cube(10);
+      Cube buff = new Cube(10, new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f));
 
-      Cube buff2 = new Cube(100);
+      Cube buff2 = new Cube(100, new OpenTK.Mathematics.Vector3(0.0f, 1.0f, 0.0f));
       buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
 
-      Cube buff3 = new Cube(20);
+      Cube buff3 = new Cube(20, new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 1.0f));
       buff3.PosVr += new Vector3(6.0f, 0.0f, 0.0f);
 
-      Cube buff4 = new Cube(50);
+
+      Cube buff4 = new Cube(200, new OpenTK.Mathematics.Vector3(1.0f, 0.5f, 0.5f));
       buff4.PosVr += new Vector3(0.0f, 3.0f, 0.0f);
+
+      Cube buff5 = new Cube(200, new OpenTK.Mathematics.Vector3(0.5f, 1.0f, 0.5f));
+      buff5.PosVr += new Vector3(3.0f, 3.0f, 0.0f);
+
+      Cube buff6 = new Cube(200, new OpenTK.Mathematics.Vector3(0.5f, 0.5f, 1.0f));
+      buff6.PosVr += new Vector3(6.0f, 3.0f, 0.0f);
 
       _volumes.Add(buff);   
       _volumes.Add(buff2);
       _volumes.Add(buff3);
       _volumes.Add(buff4);
+      _volumes.Add(buff5);
+      _volumes.Add(buff6);
 
       base.OnLoad();
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -184,11 +193,11 @@ namespace app {
       if (input.IsKeyDown(Keys.Space)) {
         _camera.Position += _camera.Up * cameraSpeed * (float)args.Time;
       }
-
+      /*
       if (input.IsKeyDown(Keys.LeftShift)) {
         _camera.Position -= _camera.Up * cameraSpeed * (float)args.Time;
       }
-
+      */
       var mouse = MouseState;
 
       if (_firstMove) {
@@ -236,6 +245,7 @@ namespace app {
 
       if (_blend >= 1.0f || _blend <= 0.0f) {
         _increase = _increase ^ true;
+        Thread.Sleep(1000);
       }
     }
 
