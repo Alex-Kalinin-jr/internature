@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Class1.cs" />
+    <Compile Remove="Controller.cs" />
     <Compile Remove="test_imgui.cs" />
   </ItemGroup>
 

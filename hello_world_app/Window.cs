@@ -1,11 +1,12 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-
 namespace app {
+
   public class Window : GameWindow {
 
     private List<Volume> _volumes = new List<Volume>();
@@ -30,8 +31,7 @@ namespace app {
       _increase = false;
     }
 
-    /// ////////////////////////////////////////////////////////////////////////////////////////////
-    /// //////////////////////////////////////////////////////////////////c//////////////////////////
+
     protected override void OnLoad() {
 
       Cube buff = new Cube(10, new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f));
@@ -119,7 +119,7 @@ namespace app {
           _volumes[indexOfDescriptros ].Indices, BufferUsageHint.StaticDraw);
     }
 
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     protected override void OnRenderFrame(FrameEventArgs e) {
 
       base.OnRenderFrame(e);
@@ -156,7 +156,7 @@ namespace app {
       _shader.SetFloat("Blend", _blend);
     }
 
-    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     protected override void OnUpdateFrame(FrameEventArgs args) {
       base.OnUpdateFrame(args);
 
@@ -193,11 +193,11 @@ namespace app {
       if (input.IsKeyDown(Keys.Space)) {
         _camera.Position += _camera.Up * cameraSpeed * (float)args.Time;
       }
-      /*
-      if (input.IsKeyDown(Keys.LeftShift)) {
-        _camera.Position -= _camera.Up * cameraSpeed * (float)args.Time;
-      }
-      */
+      
+      // if (input.IsKeyDown(Keys.LeftShift)) {
+      //  _camera.Position -= _camera.Up * cameraSpeed * (float)args.Time;
+      // }
+      
       var mouse = MouseState;
 
       if (_firstMove) {
