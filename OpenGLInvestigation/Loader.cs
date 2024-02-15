@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace app {
 
+
+
   internal class FileData {
     public float[]? _vertices;
     public float[]? _texCoords;
