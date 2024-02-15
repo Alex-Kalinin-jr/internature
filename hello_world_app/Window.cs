@@ -1,4 +1,5 @@
 ﻿
+using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -18,6 +19,7 @@ namespace app {
     private app.Shader _shader;
     private app.Texture _texture;
     private app.Camera _camera;
+    private app.ImGuiController _controller;
 
     private bool _firstMove = true;
     private Vector2 _lastPos;
@@ -33,6 +35,8 @@ namespace app {
 
 
     protected override void OnLoad() {
+
+      _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 
       Cube buff = new Cube(10, new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f));
 
@@ -52,7 +56,7 @@ namespace app {
       Cube buff6 = new Cube(200, new OpenTK.Mathematics.Vector3(0.5f, 0.5f, 1.0f));
       buff6.PosVr += new Vector3(6.0f, 3.0f, 0.0f);
 
-      _volumes.Add(buff);   
+      _volumes.Add(buff);
       _volumes.Add(buff2);
       _volumes.Add(buff3);
       _volumes.Add(buff4);
@@ -60,6 +64,7 @@ namespace app {
       _volumes.Add(buff6);
 
       base.OnLoad();
+
       GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       GL.Enable(EnableCap.DepthTest);
       GL.Enable(EnableCap.ProgramPointSize);
@@ -124,6 +129,8 @@ namespace app {
 
       base.OnRenderFrame(e);
 
+      _controller.Update(this, (float)e.Time);
+
       _time += 4 * (float)e.Time;
 
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -144,6 +151,14 @@ namespace app {
         }
 
       }
+
+      ImGui.DockSpaceOverViewport();
+
+      ImGui.ShowDemoWindow();
+
+      _controller.Render();
+
+      ImGuiController.CheckGLError("End of frame");
 
       SwapBuffers();
     }
@@ -227,6 +242,7 @@ namespace app {
       base.OnResize(e);
       GL.Viewport(0, 0, Size.X, Size.Y);
       _camera.AspectRatio = Size.X / (float)Size.Y;
+      _controller.WindowResized(ClientSize.X, ClientSize.Y);
     }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

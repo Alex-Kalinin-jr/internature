@@ -1,4 +1,6 @@
 ﻿using ImGuiNET;
+using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -7,7 +9,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
-namespace Dear_ImGui_Sample {
+namespace app {
   public class ImGuiController : IDisposable {
     private bool _frameBegun;
 
@@ -35,7 +37,9 @@ namespace Dear_ImGui_Sample {
     private int GLVersion;
     private bool CompatibilityProfile;
 
-
+    /// <summary>
+    /// Constructs a new ImGuiController.
+    /// </summary>
     public ImGuiController(int width, int height) {
       _windowWidth = width;
       _windowHeight = height;
@@ -49,11 +53,13 @@ namespace Dear_ImGui_Sample {
 
       CompatibilityProfile = (GL.GetInteger((GetPName)All.ContextProfileMask) & (int)All.ContextCompatibilityProfileBit) != 0;
 
-      ImGui.SetCurrentContext(ImGui.CreateContext());
+      IntPtr context = ImGui.CreateContext();
+      ImGui.SetCurrentContext(context);
       var io = ImGui.GetIO();
       io.Fonts.AddFontDefault();
 
       io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+      // Enable Docking
       io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
       CreateDeviceResources();
@@ -95,41 +101,6 @@ namespace Dear_ImGui_Sample {
       GL.BufferData(BufferTarget.ElementArrayBuffer, _indexBufferSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
 
       RecreateFontDeviceTexture();
-
-      string VertexSource = @"#version 330 core
-
-uniform mat4 projection_matrix;
-
-layout(location = 0) in vec2 in_position;
-layout(location = 1) in vec2 in_texCoord;
-layout(location = 2) in vec4 in_color;
-
-out vec4 color;
-out vec2 texCoord;
-
-void main()
-{
-    gl_Position = projection_matrix * vec4(in_position, 0, 1);
-    color = in_color;
-    texCoord = in_texCoord;
-}";
-      string FragmentSource = @"#version 330 core
-
-uniform sampler2D in_fontTexture;
-
-in vec4 color;
-in vec2 texCoord;
-
-out vec4 outputColor;
-
-void main()
-{
-    outputColor = color * texture(in_fontTexture, texCoord);
-}";
-
-      _shader = CreateProgram("ImGui", VertexSource, FragmentSource);
-      _shaderProjectionMatrixLocation = GL.GetUniformLocation(_shader, "projection_matrix");
-      _shaderFontTextureLocation = GL.GetUniformLocation(_shader, "in_fontTexture");
 
       int stride = Unsafe.SizeOf<ImDrawVert>();
       GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, stride, 0);
@@ -205,13 +176,9 @@ void main()
       }
 
       SetPerFrameImGuiData(deltaSeconds);
-      UpdateImGuiInput(wnd);
 
       _frameBegun = true;
       ImGui.NewFrame();
-      ImGui.Begin("abc");
-      ImGui.Text("abcccc");
-      ImGui.End();
     }
 
     /// <summary>
@@ -229,50 +196,6 @@ void main()
 
     readonly List<char> PressedChars = new List<char>();
 
-    private void UpdateImGuiInput(GameWindow wnd) {
-      ImGuiIOPtr io = ImGui.GetIO();
-
-      MouseState MouseState = wnd.MouseState;
-      KeyboardState KeyboardState = wnd.KeyboardState;
-
-      io.MouseDown[0] = MouseState[MouseButton.Left];
-      io.MouseDown[1] = MouseState[MouseButton.Right];
-      io.MouseDown[2] = MouseState[MouseButton.Middle];
-      io.MouseDown[3] = MouseState[MouseButton.Button4];
-      io.MouseDown[4] = MouseState[MouseButton.Button5];
-
-      var screenPoint = new Vector2i((int)MouseState.X, (int)MouseState.Y);
-      var point = screenPoint;//wnd.PointToClient(screenPoint);
-      io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
-
-      foreach (Keys key in Enum.GetValues(typeof(Keys))) {
-        if (key == Keys.Unknown) {
-          continue;
-        }
-        io.AddKeyEvent(TranslateKey(key), KeyboardState.IsKeyDown(key));
-      }
-
-      foreach (var c in PressedChars) {
-        io.AddInputCharacter(c);
-      }
-      PressedChars.Clear();
-
-      io.KeyCtrl = KeyboardState.IsKeyDown(Keys.LeftControl) || KeyboardState.IsKeyDown(Keys.RightControl);
-      io.KeyAlt = KeyboardState.IsKeyDown(Keys.LeftAlt) || KeyboardState.IsKeyDown(Keys.RightAlt);
-      io.KeyShift = KeyboardState.IsKeyDown(Keys.LeftShift) || KeyboardState.IsKeyDown(Keys.RightShift);
-      io.KeySuper = KeyboardState.IsKeyDown(Keys.LeftSuper) || KeyboardState.IsKeyDown(Keys.RightSuper);
-    }
-
-    internal void PressChar(char keyChar) {
-      PressedChars.Add(keyChar);
-    }
-
-    internal void MouseScroll(Vector2 offset) {
-      ImGuiIOPtr io = ImGui.GetIO();
-
-      io.MouseWheel = offset.Y;
-      io.MouseWheelH = offset.X;
-    }
 
     private void RenderImDrawData(ImDrawDataPtr draw_data) {
       if (draw_data.CmdListsCount == 0) {
