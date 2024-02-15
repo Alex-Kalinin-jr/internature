@@ -11,7 +11,7 @@
 *.suo
 *.user
 *.sln.docstates
-*.editorconfig
+*editorconfig
 
 # Build results
 [Dd]ebug/
@@ -225,3 +225,4 @@ AppPackages/
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
 #####
+*.sln
