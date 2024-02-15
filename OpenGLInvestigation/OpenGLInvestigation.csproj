@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Class1.cs" />
+    <Compile Remove="Controller.cs" />
+    <Compile Remove="test_imgui.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.90.1.1" />
     <PackageReference Include="OpenTK" Version="4.8.2" />
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
