@@ -149,7 +149,6 @@ namespace app {
         } else {
           GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
         }
-
       }
 
       ImGui.DockSpaceOverViewport();
