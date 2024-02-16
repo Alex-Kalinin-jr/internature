@@ -12,9 +12,15 @@ namespace EditedTriangle {
     private int _numOfVertices = 0;
     private int _uColorLocation;
 
+
+
+
     public MainWindow() {
       InitializeComponent();
     }
+
+
+
 
     private void glControl_Load(object sender, EventArgs e) {
       glControl.MakeCurrent();
@@ -36,6 +42,9 @@ namespace EditedTriangle {
       // Set a color for clearing the glCotrol
       GL.ClearColor(new Color4(0.286f, 0.576f, 0.243f, 1f));
     }
+
+
+
 
     private void glControl_Paint(object sender, System.Windows.Forms.PaintEventArgs e) {
       GL.Viewport(0, 0, glControl.Width, glControl.Height);
@@ -74,6 +83,9 @@ namespace EditedTriangle {
 
       return n;
     }
+
+
+
 
     private int InitShadersAndGetProgram() {
       string vertexShaderSource =
@@ -126,6 +138,9 @@ namespace EditedTriangle {
       return program;
     }
 
+
+
+
     private void buttonSetBGColor_Click(object sender, RoutedEventArgs e) {
       var dialog = new System.Windows.Forms.ColorDialog();
 
@@ -135,6 +150,9 @@ namespace EditedTriangle {
       }
 
     }
+
+
+
 
     private void buttonSetTRColor_Click(object sender, RoutedEventArgs e) {
       var dialog = new System.Windows.Forms.ColorDialog();
