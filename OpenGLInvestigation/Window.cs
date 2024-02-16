@@ -19,7 +19,6 @@ namespace app {
     private app.Shader _shader;
     private app.Texture _texture;
     private app.Camera _camera;
-    private app.ImGuiController _controller;
 
     private bool _firstMove = true;
     private Vector2 _lastPos;
@@ -33,10 +32,7 @@ namespace app {
       _increase = false;
     }
 
-
     protected override void OnLoad() {
-
-      _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
 
       Cube buff = new Cube(10, new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f));
 
@@ -129,8 +125,6 @@ namespace app {
 
       base.OnRenderFrame(e);
 
-      _controller.Update(this, (float)e.Time);
-
       _time += 4 * (float)e.Time;
 
       GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -150,14 +144,6 @@ namespace app {
           GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
         }
       }
-
-      ImGui.DockSpaceOverViewport();
-
-      ImGui.ShowDemoWindow();
-
-      _controller.Render();
-
-      ImGuiController.CheckGLError("End of frame");
 
       SwapBuffers();
     }
@@ -241,7 +227,6 @@ namespace app {
       base.OnResize(e);
       GL.Viewport(0, 0, Size.X, Size.Y);
       _camera.AspectRatio = Size.X / (float)Size.Y;
-      _controller.WindowResized(ClientSize.X, ClientSize.Y);
     }
 
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
