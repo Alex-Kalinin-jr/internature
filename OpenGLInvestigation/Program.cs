@@ -14,7 +14,7 @@ class Program {
       Flags = ContextFlags.ForwardCompatible,
     };
 
-    using (app.Window window = new app.Window(GameWindowSettings.Default, nativeWindowSettings)) {
+    using (OpenGLInvestigation.Window window = new OpenGLInvestigation.Window(GameWindowSettings.Default, nativeWindowSettings)) {
       window.Run();
     }
   }

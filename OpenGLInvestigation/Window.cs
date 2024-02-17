@@ -1,12 +1,13 @@
-﻿
-using ImGuiNET;
+﻿using ImGuiNET;
+using OpenGLInvestigation.Entities;
+using OpenGLInvestigation.Figures;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace app {
+namespace OpenGLInvestigation {
 
   public class Window : GameWindow {
 
@@ -16,9 +17,9 @@ namespace app {
     private List<int> _vertexArrayObjects = new List<int>();
     private List<int> _elementBufferObjects = new List<int>();
 
-    private app.Shader _shader;
-    private app.Texture _texture;
-    private app.Camera _camera;
+    private Shader _shader;
+    private Texture _texture;
+    private Camera _camera;
 
     private bool _firstMove = true;
     private Vector2 _lastPos;
@@ -34,22 +35,22 @@ namespace app {
 
     protected override void OnLoad() {
 
-      Cube buff = new Cube(10, new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f));
+      Cube buff = new Cube(10, new Vector3(1.0f, 0.0f, 0.0f));
 
-      Cube buff2 = new Cube(100, new OpenTK.Mathematics.Vector3(0.0f, 1.0f, 0.0f));
+      Cube buff2 = new Cube(100, new Vector3(0.0f, 1.0f, 0.0f));
       buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
 
-      Cube buff3 = new Cube(20, new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 1.0f));
+      Cube buff3 = new Cube(20, new Vector3(0.0f, 0.0f, 1.0f));
       buff3.PosVr += new Vector3(6.0f, 0.0f, 0.0f);
 
 
-      Cube buff4 = new Cube(200, new OpenTK.Mathematics.Vector3(1.0f, 0.5f, 0.5f));
+      Cube buff4 = new Cube(200, new Vector3(1.0f, 0.5f, 0.5f));
       buff4.PosVr += new Vector3(0.0f, 3.0f, 0.0f);
 
-      Cube buff5 = new Cube(200, new OpenTK.Mathematics.Vector3(0.5f, 1.0f, 0.5f));
+      Cube buff5 = new Cube(200, new Vector3(0.5f, 1.0f, 0.5f));
       buff5.PosVr += new Vector3(3.0f, 3.0f, 0.0f);
 
-      Cube buff6 = new Cube(200, new OpenTK.Mathematics.Vector3(0.5f, 0.5f, 1.0f));
+      Cube buff6 = new Cube(200, new Vector3(0.5f, 0.5f, 1.0f));
       buff6.PosVr += new Vector3(6.0f, 3.0f, 0.0f);
 
       _volumes.Add(buff);
@@ -65,7 +66,7 @@ namespace app {
       GL.Enable(EnableCap.DepthTest);
       GL.Enable(EnableCap.ProgramPointSize);
 
-      _shader = new app.Shader("Shaders/shader.vert", "Shaders/shader.frag");
+      _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
       _shader.Use();
 
       _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
@@ -93,7 +94,7 @@ namespace app {
       _vertexBufferObjects.Add(GL.GenBuffer());
       int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPosition");
       GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects[indexOfDescriptors]);
-      GL.BufferData(BufferTarget.ArrayBuffer, 
+      GL.BufferData(BufferTarget.ArrayBuffer,
           _volumes[indexOfDescriptors].Vertices.Length * sizeof(float),
           _volumes[indexOfDescriptors].Vertices, BufferUsageHint.DynamicDraw);
       GL.EnableVertexAttribArray(vertexLocation);
@@ -105,7 +106,7 @@ namespace app {
       _colorBufferObjects.Add(GL.GenBuffer());
       int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
       GL.BindBuffer(BufferTarget.ArrayBuffer, _colorBufferObjects[indexOfDescriptors]);
-      GL.BufferData(BufferTarget.ArrayBuffer, 
+      GL.BufferData(BufferTarget.ArrayBuffer,
         _volumes[indexOfDescriptors].Colors.Length * sizeof(float),
         _volumes[indexOfDescriptors].Colors, BufferUsageHint.StaticDraw);
       GL.EnableVertexAttribArray(colorLocation);
@@ -117,7 +118,7 @@ namespace app {
       _elementBufferObjects.Add(GL.GenBuffer());
       GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObjects[indexOfDescriptros]);
       GL.BufferData(BufferTarget.ElementArrayBuffer, _volumes[indexOfDescriptros].Indices.Length * sizeof(uint),
-          _volumes[indexOfDescriptros ].Indices, BufferUsageHint.StaticDraw);
+          _volumes[indexOfDescriptros].Indices, BufferUsageHint.StaticDraw);
     }
 
 
@@ -193,11 +194,11 @@ namespace app {
       if (input.IsKeyDown(Keys.Space)) {
         _camera.Position += _camera.Up * cameraSpeed * (float)args.Time;
       }
-      
+
       // if (input.IsKeyDown(Keys.LeftShift)) {
       //  _camera.Position -= _camera.Up * cameraSpeed * (float)args.Time;
       // }
-      
+
       var mouse = MouseState;
 
       if (_firstMove) {
