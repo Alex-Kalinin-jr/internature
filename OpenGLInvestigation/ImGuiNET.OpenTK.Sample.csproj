@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ImGui.NET" Version="1.89.4" />
+		<PackageReference Include="OpenTK" Version="4.7.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Resources/**" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="Shader/Shaders/**" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+</Project>
