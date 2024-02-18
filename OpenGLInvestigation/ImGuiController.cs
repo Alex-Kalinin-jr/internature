@@ -20,9 +20,7 @@ namespace ImGuiNET.OpenTK.Sample {
 
     private int _fontTexture;
 
-    private int _shader;
-    private int _shaderFontTextureLocation;
-    private int _shaderProjectionMatrixLocation;
+    private OpenGLInvestigation.Shader _shader;
 
     private int _windowWidth;
     private int _windowHeight;
@@ -93,40 +91,7 @@ namespace ImGuiNET.OpenTK.Sample {
 
       RecreateFontDeviceTexture();
 
-      string VertexSource = @"#version 330 core
-
-uniform mat4 projection_matrix;
-
-layout(location = 0) in vec2 in_position;
-layout(location = 1) in vec2 in_texCoord;
-layout(location = 2) in vec4 in_color;
-
-out vec4 color;
-out vec2 texCoord;
-
-void main()
-{
-    gl_Position = projection_matrix * vec4(in_position, 0, 1);
-    color = in_color;
-    texCoord = in_texCoord;
-}";
-      string FragmentSource = @"#version 330 core
-
-uniform sampler2D in_fontTexture;
-
-in vec4 color;
-in vec2 texCoord;
-
-out vec4 outputColor;
-
-void main()
-{
-    outputColor = color * texture(in_fontTexture, texCoord);
-}";
-
-      _shader = CreateProgram("ImGui", VertexSource, FragmentSource);
-      _shaderProjectionMatrixLocation = GL.GetUniformLocation(_shader, "projection_matrix");
-      _shaderFontTextureLocation = GL.GetUniformLocation(_shader, "in_fontTexture");
+      _shader = new OpenGLInvestigation.Shader("Shader/Shaders/shader_imgui.vert", "Shader/Shaders/shader_imgui.frag");
 
       int stride = Unsafe.SizeOf<ImDrawVert>();
       GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, stride, 0);
@@ -234,7 +199,7 @@ void main()
       io.MouseDown[2] = MouseState[MouseButton.Middle];
 
       var screenPoint = new Vector2i((int)MouseState.X, (int)MouseState.Y);
-      var point = screenPoint;//wnd.PointToClient(screenPoint);
+      var point = screenPoint;
       io.MousePos = new System.Numerics.Vector2(point.X, point.Y);
 
       foreach (Keys key in Enum.GetValues(typeof(Keys))) {
@@ -354,11 +319,11 @@ void main()
           0.0f,
           -1.0f,
           1.0f);
+      mvp.Transpose();
 
-      GL.UseProgram(_shader);
-      GL.UniformMatrix4(_shaderProjectionMatrixLocation, false, ref mvp);
-      GL.Uniform1(_shaderFontTextureLocation, 0);
-      CheckGLError("Projection");
+      _shader.Use();
+      _shader.SetMatrix4("projection_matrix", mvp);
+      _shader.SetInt("in_fontTexture", 0);
 
       GL.BindVertexArray(_vertexArray);
       CheckGLError("VAO");
@@ -437,7 +402,6 @@ void main()
       GL.DeleteBuffer(_indexBuffer);
 
       GL.DeleteTexture(_fontTexture);
-      GL.DeleteProgram(_shader);
     }
 
     public static void LabelObject(ObjectLabelIdentifier objLabelIdent, int glObject, string name) {
@@ -453,49 +417,6 @@ void main()
       }
 
       return false;
-    }
-
-    public static int CreateProgram(string name, string vertexSource, string fragmentSoruce) {
-      int program = GL.CreateProgram();
-      LabelObject(ObjectLabelIdentifier.Program, program, $"Program: {name}");
-
-      int vertex = CompileShader(name, ShaderType.VertexShader, vertexSource);
-      int fragment = CompileShader(name, ShaderType.FragmentShader, fragmentSoruce);
-
-      GL.AttachShader(program, vertex);
-      GL.AttachShader(program, fragment);
-
-      GL.LinkProgram(program);
-
-      GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int success);
-      if (success == 0) {
-        string info = GL.GetProgramInfoLog(program);
-        Debug.WriteLine($"GL.LinkProgram had info log [{name}]:\n{info}");
-      }
-
-      GL.DetachShader(program, vertex);
-      GL.DetachShader(program, fragment);
-
-      GL.DeleteShader(vertex);
-      GL.DeleteShader(fragment);
-
-      return program;
-    }
-
-    private static int CompileShader(string name, ShaderType type, string source) {
-      int shader = GL.CreateShader(type);
-      LabelObject(ObjectLabelIdentifier.Shader, shader, $"Shader: {name}");
-
-      GL.ShaderSource(shader, source);
-      GL.CompileShader(shader);
-
-      GL.GetShader(shader, ShaderParameter.CompileStatus, out int success);
-      if (success == 0) {
-        string info = GL.GetShaderInfoLog(shader);
-        Debug.WriteLine($"GL.CompileShader for shader '{name}' [{type}] had info log:\n{info}");
-      }
-
-      return shader;
     }
 
     public static void CheckGLError(string title) {

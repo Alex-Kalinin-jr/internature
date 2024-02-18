@@ -1,5 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 
 namespace OpenGLInvestigation {
@@ -105,7 +107,5 @@ namespace OpenGLInvestigation {
         throw new Exception($"Error occurred whilst linking Program({program})");
       }
     }
-
-
   }
 }
