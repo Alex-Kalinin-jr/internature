@@ -58,6 +58,8 @@ public sealed class RotatingCubeDrawer {
     //  ///////////////////////////////////////////////////////////////////////////
     ChangeDrawingType(0);
     GL.Enable(EnableCap.ProgramPointSize);
+    _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
+    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), _width / (float)_height, 0.2f, 256.0f);
 
     Cube buff = new Cube(10, new Vector3(1.0f, 0.0f, 0.0f));
     Cube buff2 = new Cube (10, new Vector3(1.0f, 1.0f, 0.0f));
@@ -100,7 +102,7 @@ public sealed class RotatingCubeDrawer {
   }
 
   public void OnRenderFrame() {
-//  //////////////////////////////////////////////////////////////////////////////
+    //  //////////////////////////////////////////////////////////////////////////////
     AdjustShader();
 
     for (int i = 0; i < _volumes.Count; ++i) {
@@ -146,9 +148,6 @@ public sealed class RotatingCubeDrawer {
         _volumes[indexOfDescriptros].Indices, BufferUsageHint.StaticDraw);
   }
   private void AdjustShader() {
-    _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
-    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), _width / (float)_height, 0.2f, 256.0f);
-
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
     _shader.SetFloat("Radius", 1.0f);
@@ -183,6 +182,11 @@ public sealed class RotatingCubeDrawer {
     if (i == 2) {
       _showType = this.ShowPoints;
     }
+  }
+
+  public void SetMatrices(Matrix4 v, Matrix4 p) {
+    _view = v;
+    _projection = p;
   }
 
 }

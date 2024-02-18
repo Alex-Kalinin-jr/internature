@@ -1,7 +1,9 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using OpenGLInvestigation.Entities;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Runtime.InteropServices;
 
 namespace ImGuiNET.OpenTK.Sample;
@@ -9,6 +11,7 @@ namespace ImGuiNET.OpenTK.Sample;
 public class Window : GameWindow {
   ImGuiController _controller;
   SceneRender _scene;
+  Camera _camera;
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() { 
       Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3) }) { }
@@ -41,6 +44,9 @@ public class Window : GameWindow {
 
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new SceneRender(this);
+    _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+
+
     Error.Check();
   }
 
@@ -129,6 +135,49 @@ public class Window : GameWindow {
     ImGui.End();
   }
 
+
+  protected override void OnUpdateFrame(FrameEventArgs e) {
+    base.OnUpdateFrame(e);
+
+    if (!IsFocused) // Check to see if the window is focused
+    {
+      return;
+    }
+
+    var input = KeyboardState;
+
+    if (input.IsKeyDown(Keys.Escape)) {
+      Close();
+    }
+
+    const float cameraSpeed = 1.5f;
+    const float sensitivity = 0.2f;
+
+    if (input.IsKeyDown(Keys.W)) {
+      _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
+    }
+
+    if (input.IsKeyDown(Keys.S)) {
+      _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
+    }
+    if (input.IsKeyDown(Keys.A)) {
+      _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
+    }
+    if (input.IsKeyDown(Keys.D)) {
+      _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
+    }
+    if (input.IsKeyDown(Keys.Space)) {
+      _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
+    }
+    if (input.IsKeyDown(Keys.LeftShift)) {
+      _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
+    }
+    PassMatrices();
+  }
+
+  public void PassMatrices() {
+    _scene.SetCameraMatrices(_camera.GetViewMatrix(), _camera.GetProjectionMatrix());
+  }
 
 }
 

@@ -25,6 +25,11 @@ internal class SceneRender : IDisposable {
     this.window = window;
   }
 
+  public void SetCameraMatrices(Matrix4 v, Matrix4 p) {
+    _drawer.SetMatrices(v, p);
+  }
+
+
   public void MoveRight() {
     _drawer.MoveRight();
   }
