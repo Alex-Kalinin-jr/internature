@@ -57,6 +57,7 @@ public sealed class RotatingCubeDrawer {
 
     //  ///////////////////////////////////////////////////////////////////////////
     ChangeDrawingType(0);
+    GL.Enable(EnableCap.ProgramPointSize);
 
     Cube buff = new Cube(10, new Vector3(1.0f, 0.0f, 0.0f));
     Cube buff2 = new Cube (10, new Vector3(1.0f, 1.0f, 0.0f));
@@ -163,7 +164,7 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void ShowFramed(int i) {
-    GL.DrawArrays(PrimitiveType.Lines, 0, _volumes[i].Indices.Length / 3);
+    GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Indices.Length / 3);
   }
 
   private void ShowPoints(int i) {
