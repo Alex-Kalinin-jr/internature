@@ -6,6 +6,8 @@ using OpenTK.Mathematics;
 
 namespace ImGuiNET.OpenTK.Sample;
 
+public delegate void Show(int i);
+
 public sealed class RotatingCubeDrawer {
   private int _width;
   private int _height;
@@ -21,6 +23,9 @@ public sealed class RotatingCubeDrawer {
   private List<int> _vertexArrayObjects = new List<int>();
   private OpenGLInvestigation.Shader _shader;
   private List<int> _elementBufferObjects = new List<int>();
+  private Show _showType;
+  //  ///////////////////////////////////////////////////////////////////////////
+
   //  ///////////////////////////////////////////////////////////////////////////
 
   public void MoveRight() {
@@ -50,7 +55,9 @@ public sealed class RotatingCubeDrawer {
 
   public void OnLoad() {
 
-//  ///////////////////////////////////////////////////////////////////////////
+    //  ///////////////////////////////////////////////////////////////////////////
+    ChangeDrawingType(0);
+
     Cube buff = new Cube(10, new Vector3(1.0f, 0.0f, 0.0f));
     Cube buff2 = new Cube (10, new Vector3(1.0f, 1.0f, 0.0f));
     buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
@@ -88,9 +95,7 @@ public sealed class RotatingCubeDrawer {
     _width = width;
     _height = height;
 
-    // Resize the viewport to match the window size.
     GL.Viewport(0, 0, _width, _height);
-
   }
 
   public void OnRenderFrame() {
@@ -104,11 +109,9 @@ public sealed class RotatingCubeDrawer {
       _shader.SetMatrix4("model", model);
 
       GL.BindVertexArray(_vertexArrayObjects[i]);
-      if (_volumes[i].Indices != null) {
-        GL.DrawElements(PrimitiveType.Triangles, _volumes[i].Indices.Length, DrawElementsType.UnsignedInt, 0);
-      } else {
-        GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
-      }
+
+// delegate
+      _showType(i);
     }
 //  //////////////////////////////////////////////////////////////////////////////
   }
@@ -124,7 +127,6 @@ public sealed class RotatingCubeDrawer {
     GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
-
   private void BindColorBuffer(int indexOfDescriptros) {
     _colorBufferObjects.Add(GL.GenBuffer());
     int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
@@ -136,7 +138,6 @@ public sealed class RotatingCubeDrawer {
     GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
-
   private void BindIndicesBuffer(int indexOfDescriptros) {
     _elementBufferObjects.Add(GL.GenBuffer());
     GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObjects[indexOfDescriptros]);
@@ -147,10 +148,40 @@ public sealed class RotatingCubeDrawer {
     _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
     _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), _width / (float)_height, 0.2f, 256.0f);
 
-
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
     _shader.SetFloat("Radius", 1.0f);
     _shader.SetFloat("Blend", 0.0f);
   }
+
+  private void ShowSolid(int i) {
+    if (_volumes[i].Indices != null) {
+      GL.DrawElements(PrimitiveType.Triangles, _volumes[i].Indices.Length, DrawElementsType.UnsignedInt, 0);
+    } else {
+      GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
+    }
+  }
+
+  private void ShowFramed(int i) {
+    GL.DrawArrays(PrimitiveType.Lines, 0, _volumes[i].Indices.Length / 3);
+  }
+
+  private void ShowPoints(int i) {
+    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Indices.Length / 3);
+  }
+
+  public void ChangeDrawingType(int i) {
+    if (i == 0) {
+      _showType = this.ShowSolid;
+    }
+
+    if (i == 1) {
+      _showType = this.ShowFramed;
+    }
+
+    if (i == 2) {
+      _showType = this.ShowPoints;
+    }
+  }
+
 }

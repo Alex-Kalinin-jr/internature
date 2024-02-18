@@ -41,6 +41,9 @@ internal class SceneRender : IDisposable {
     _drawer.MoveBottom();
   }
 
+  public void ChangeShowingType(int i) {
+    _drawer.ChangeDrawingType(i);
+  }
 
   public void DrawViewportWindow() {
     Error.Check();

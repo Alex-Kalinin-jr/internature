@@ -61,6 +61,7 @@ public class Window : GameWindow {
     _controller.StartDockspace();
 
     CreateMovementButtons();
+    CreateShowingTypeButtons();
 
     Error.Check();
     _scene.DrawViewportWindow();
@@ -110,6 +111,20 @@ public class Window : GameWindow {
 
     if (ImGui.Button("Bottom")) {
       _scene.MoveBottom();
+    }
+    ImGui.End();
+  }
+
+  private void CreateShowingTypeButtons() {
+    ImGui.Begin("Solid");
+    if (ImGui.Button("Solid")) {
+      _scene.ChangeShowingType(0);
+    }
+    if (ImGui.Button("Framed")) {
+      _scene.ChangeShowingType(1);
+    }
+    if (ImGui.Button("Points")) {
+      _scene.ChangeShowingType(2);
     }
     ImGui.End();
   }
