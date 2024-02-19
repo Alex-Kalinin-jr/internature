@@ -13,6 +13,8 @@ namespace OpenGLInvestigation.Figures {
       float step = 2.0f / (count - 1);
       int ind = 0;
 
+
+
       GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
       GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
