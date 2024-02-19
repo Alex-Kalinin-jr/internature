@@ -10,9 +10,23 @@ uniform mat4 projection;
 
 out vec3 Color;
 
-void main()
+vec3 lightColor()
 {
-	Color = aColor;
+	float r = 1.0f;
+	float g = 174.0f / 255.0f;
+	float b = 0.0f;
+
+	float ambStrength = 0.4f;
+
+	vec3 outV = vec3(r * ambStrength, g * ambStrength, b * ambStrength);
+	return  outV;
+}
+
+
+
+void main()
+{	
+	Color = lightColor() * aColor;
 
 	float dx = 1.0 - (aPosition.y*aPosition.y/2.0) - (aPosition.z*aPosition.z/2.0) + (aPosition.y*aPosition.y*aPosition.z*aPosition.z/3.0);
 	float dy = 1.0 - (aPosition.z*aPosition.z/2.0) - (aPosition.x*aPosition.x/2.0) + (aPosition.z*aPosition.z*aPosition.x*aPosition.x/3.0);
