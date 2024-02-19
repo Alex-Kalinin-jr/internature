@@ -195,14 +195,14 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void ChangeBlend() {
-    float step = 0.001f;
+    float step = 0.005f;
     if (_increase) {
       _interpolationKoeff += step;
     } else {
       _interpolationKoeff -= step;
     }
 
-    if (_interpolationKoeff >= 1.0f || _interpolationKoeff <= 0.0f) {
+    if (_interpolationKoeff >= 0.98f || _interpolationKoeff <= 0.0f) {
       _increase = _increase ^ true;
       Thread.Sleep(1000);
     }
