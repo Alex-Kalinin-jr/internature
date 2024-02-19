@@ -169,9 +169,11 @@ public class Window : GameWindow {
     if (input.IsKeyDown(Keys.Space)) {
       _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
     }
+    /*
     if (input.IsKeyDown(Keys.LeftShift)) {
       _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
     }
+    */
     PassMatrices();
   }
 

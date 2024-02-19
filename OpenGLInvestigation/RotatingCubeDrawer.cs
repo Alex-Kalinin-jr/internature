@@ -25,7 +25,9 @@ public sealed class RotatingCubeDrawer {
   private List<int> _elementBufferObjects = new List<int>();
   private Show _showType;
   //  ///////////////////////////////////////////////////////////////////////////
-
+  private float _lastTimestamp = Stopwatch.GetTimestamp();
+  private float _interpolationKoeff;
+  private bool _increase;
   //  ///////////////////////////////////////////////////////////////////////////
 
   public void MoveRight() {
@@ -55,7 +57,9 @@ public sealed class RotatingCubeDrawer {
 
   public void OnLoad() {
 
-    //  ///////////////////////////////////////////////////////////////////////////
+    _increase = true;
+    _interpolationKoeff = 0.2f;
+
     ChangeDrawingType(0);
     GL.Enable(EnableCap.ProgramPointSize);
     _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
@@ -103,6 +107,7 @@ public sealed class RotatingCubeDrawer {
 
   public void OnRenderFrame() {
     //  //////////////////////////////////////////////////////////////////////////////
+    ChangeBlend();
     AdjustShader();
 
     for (int i = 0; i < _volumes.Count; ++i) {
@@ -110,6 +115,7 @@ public sealed class RotatingCubeDrawer {
       _shader.Use();
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
+
 
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
@@ -150,8 +156,7 @@ public sealed class RotatingCubeDrawer {
   private void AdjustShader() {
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
-    _shader.SetFloat("Radius", 1.0f);
-    _shader.SetFloat("Blend", 0.0f);
+    _shader.SetFloat("morphingFactor", _interpolationKoeff);
   }
 
   private void ShowSolid(int i) {
@@ -188,5 +193,20 @@ public sealed class RotatingCubeDrawer {
     _view = v;
     _projection = p;
   }
+
+  private void ChangeBlend() {
+    float step = 0.001f;
+    if (_increase) {
+      _interpolationKoeff += step;
+    } else {
+      _interpolationKoeff -= step;
+    }
+
+    if (_interpolationKoeff >= 1.0f || _interpolationKoeff <= 0.0f) {
+      _increase = _increase ^ true;
+      Thread.Sleep(1000);
+    }
+  }
+
 
 }
