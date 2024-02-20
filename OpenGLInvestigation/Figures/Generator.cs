@@ -4,7 +4,7 @@ using System.Numerics;
 namespace OpenGLInvestigation.Figures {
   internal class Generator {
 
-    public static (float[], uint[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
+    public static (float[], uint[], float[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
 
       float[] cube = new float[3 * count * count * 6];
       uint[] idxs = new uint[(count - 1) * (count - 1) * 2 * 6 * 3];
@@ -25,7 +25,7 @@ namespace OpenGLInvestigation.Figures {
       GenerateColorArray(ref colors, color);
       GenerateNormals(ref cube, ref idxs, ref normals);
 
-      return (cube, idxs, colors);
+      return (cube, idxs, colors, normals);
     }
 
     private static void GenerateNormals(ref float[] cube, ref uint[] indices, ref float[] normals) {

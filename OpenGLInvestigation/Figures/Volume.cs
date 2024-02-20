@@ -8,6 +8,7 @@ namespace OpenGLInvestigation.Figures {
     public uint[]? Indices { get; init; }
     public int Texture { get; set; }
     public float[]? Colors { get; init; }
+    public float[]? Normals { get; init; }
     public Vector3 ScaleVr { get; set; }
     public Vector3 PosVr { get; set; }
     public Vector3 RotationVr { get; set; }
@@ -48,7 +49,7 @@ namespace OpenGLInvestigation.Figures {
       }
 
       if (path == null) {
-        (Vertices, Indices, Colors) = Generator.GenerateCube(10, color);
+        (Vertices, Indices, Colors, Normals) = Generator.GenerateCube(10, color);
       }
     }
 
@@ -57,7 +58,7 @@ namespace OpenGLInvestigation.Figures {
   internal class Cube : Volume {
 
     public Cube(int verticesInLine, Vector3 color) {
-      (Vertices, Indices, Colors) = Generator.GenerateCube(verticesInLine, color);
+      (Vertices, Indices, Colors, Normals) = Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
       ScaleVr = Vector3.One;
