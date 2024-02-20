@@ -9,7 +9,7 @@ namespace OpenGLInvestigation.Figures {
       float[] cube = new float[3 * count * count * 6];
       uint[] idxs = new uint[(count - 1) * (count - 1) * 2 * 6 * 3];
       float[] colors = new float[cube.Length];
-      float[] normals = new float[idxs.Length];
+      float[] normals = new float[cube.Length];
 
       float step = 2.0f / (count - 1);
       int ind = 0;
@@ -29,24 +29,33 @@ namespace OpenGLInvestigation.Figures {
     }
 
     private static void GenerateNormals(ref float[] cube, ref uint[] indices, ref float[] normals) {
+      Vector3[] normalsVrs = new Vector3[cube.Length / 3];
+
       for (int i = 0; i < indices.Length; i += 3) {
-        float v1x = cube[indices[i]] - cube[indices[i + 1]];
-        float v1y = cube[indices[i] + 1] - cube[indices[i + 1] + 1];
-        float v1z = cube[indices[i] + 2] - cube[indices[i + 1] + 2];
+        uint index1 = indices[i];
+        uint index2 = indices[i + 1];
+        uint index3 = indices[i + 2];
 
-        float v2x = cube[indices[i + 1]] - cube[indices[i + 2]];
-        float v2y = cube[indices[i + 1] + 1] - cube[indices[i + 2] + 1];
-        float v2z = cube[indices[i + 1] + 2] - cube[indices[i + 2] + 2];
+        Vector3 v1 = new Vector3(cube[index1 * 3], cube[index1 * 3 + 1], cube[index1 * 3 + 2]);
+        Vector3 v2 = new Vector3(cube[index2 * 3], cube[index2 * 3 + 1], cube[index2 * 3 + 2]);
+        Vector3 v3 = new Vector3(cube[index3 * 3], cube[index3 * 3 + 1], cube[index3 * 3 + 2]);
+        Vector3 edge1 = v2 - v1;
+        Vector3 edge2 = v3 - v1;
+        Vector3 triangleNormal = Vector3.Cross(edge1, edge2);
 
-        Vector3 result;
+        normalsVrs[index1] += triangleNormal;
+        normalsVrs[index2] += triangleNormal;
+        normalsVrs[index3] += triangleNormal;
+      }
 
-        result.X = v1y * v2z - v2y * v1z;
-        result.Y = -v1x * v2z + v2x * v1z;
-        result.Z = v1x * v2y - v2x * v1y;
+      for (int i = 0; i < normalsVrs.Length; i++) {
+        normalsVrs[i] = Vector3.Normalize(normalsVrs[i]);
+      }
 
-        normals[i] = result.X;
-        normals[i + 1] = result.Y;
-        normals[i + 2] = result.Z;
+      for (int i = 0; i < normalsVrs.Length; i += 3) {
+        normals[i * 3] = normalsVrs[i].X;
+        normals[i * 3 + 1] = normalsVrs[i].Y;
+        normals[i * 3 + 2] = normalsVrs[i].Z;
       }
     }
 
@@ -151,7 +160,7 @@ namespace OpenGLInvestigation.Figures {
              0.5f,  0.5f, -0.5f,
             -0.5f,  0.5f, -0.5f,
             -0.5f, -0.5f, -0.5f,
- 
+
             -0.5f, -0.5f,  0.5f,
              0.5f, -0.5f,  0.5f,
              0.5f,  0.5f,  0.5f,
