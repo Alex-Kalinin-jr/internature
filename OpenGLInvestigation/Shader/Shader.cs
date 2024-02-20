@@ -12,7 +12,6 @@ namespace OpenGLInvestigation {
 
     public Shader(string vertexPath, string fragmentPath) {
 
-      // copy code
       string VertexShaderSource = File.ReadAllText(vertexPath);
       string FragmentShaderSource = File.ReadAllText(fragmentPath);
 
