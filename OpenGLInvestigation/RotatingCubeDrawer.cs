@@ -20,6 +20,7 @@ public sealed class RotatingCubeDrawer {
   private List<Volume> _volumes = new List<Volume>();
   private List<int> _vertexBufferObjects = new List<int>(); // first is the lamp `
   private List<int> _colorBufferObjects = new List<int>();
+  private List<int> _normalBufferObjects = new List<int>();
   private List<int> _vertexArrayObjects = new List<int>();
   private OpenGLInvestigation.Shader _shader;
   private List<int> _elementBufferObjects = new List<int>();
@@ -112,6 +113,11 @@ public sealed class RotatingCubeDrawer {
       if (_volumes[i].Indices != null) {
         BindIndicesBuffer(i);
       }
+
+      if (_volumes[i].Normals != null) { 
+        BindNormalBuffer(i);
+      }
+
     }
 //  //////////////////////////////////////////////////////////////////////////////
 
@@ -184,6 +190,19 @@ public sealed class RotatingCubeDrawer {
     GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
+
+  private void BindNormalBuffer(int indexOfDescriptros) {
+    _normalBufferObjects.Add(GL.GenBuffer());
+    int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
+    GL.BindBuffer(BufferTarget.ArrayBuffer, _normalBufferObjects[indexOfDescriptros]);
+    GL.BufferData(BufferTarget.ArrayBuffer,
+      _volumes[indexOfDescriptros].Normals.Length * sizeof(float),
+      _volumes[indexOfDescriptros].Normals, BufferUsageHint.StaticDraw);
+    GL.EnableVertexAttribArray(normalLocation);
+    GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
+        false, 3 * sizeof(float), 0);
+  }
+
 
   private void BindIndicesBuffer(int indexOfDescriptros) {
     _elementBufferObjects.Add(GL.GenBuffer());

@@ -58,7 +58,8 @@ namespace OpenGLInvestigation.Figures {
   internal class Cube : Volume {
 
     public Cube(int verticesInLine, Vector3 color) {
-      (Vertices, Indices, Colors, Normals) = Generator.GenerateCube(verticesInLine, color);
+      (Vertices, Indices, Colors, Normals)
+          = Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
       ScaleVr = Vector3.One;
