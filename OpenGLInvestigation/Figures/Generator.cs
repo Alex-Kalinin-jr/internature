@@ -9,7 +9,7 @@ namespace OpenGLInvestigation.Figures {
       float[] cube = new float[3 * count * count * 6];
       uint[] idxs = new uint[(count - 1) * (count - 1) * 2 * 6 * 3];
       float[] colors = new float[cube.Length];
-      float[] normals = new float[cube.Length];
+      float[] normals = new float[idxs.Length];
 
       float step = 2.0f / (count - 1);
       int ind = 0;
