@@ -49,7 +49,8 @@ namespace OpenGLInvestigation.Figures {
       }
 
       if (path == null) {
-        (Vertices, Indices, Colors, Normals) = Generator.GenerateCube(10, color);
+        (Vertices, Indices, Colors, Normals)
+            = Generator.GenerateCube(10, color);
       }
     }
 
@@ -61,6 +62,14 @@ namespace OpenGLInvestigation.Figures {
       (Vertices, Indices, Colors, Normals)
           = Generator.GenerateCube(verticesInLine, color);
 
+      Texture = -1;
+      ScaleVr = Vector3.One;
+      PosVr = Vector3.Zero;
+      RotationVr = Vector3.Zero;
+    }
+
+    public Cube(string a) {
+      (Vertices, Colors, Normals) = Generator.GenerateTestingCube();
       Texture = -1;
       ScaleVr = Vector3.One;
       PosVr = Vector3.Zero;

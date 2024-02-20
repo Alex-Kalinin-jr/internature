@@ -71,15 +71,10 @@ public sealed class RotatingCubeDrawer {
     _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
     _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), _width / (float)_height, 0.2f, 256.0f);
 
-    Cube lampBuff = new Cube(10, new Vector3(0.0f, 0.5f, 0.31f));
+    Cube lampBuff = new Cube(10, new Vector3(1.0f, 1.0f, 1.0f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
     ++_lampCount;
     _lampPosition = lampBuff.PosVr;
-
-    Cube lampBuff2 = new Cube(10, new Vector3(0.0f, 0.5f, 0.62f));
-    lampBuff2.PosVr += new Vector3(0.0f, -2.0f, 0.0f);
-    lampBuff2.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
-    ++_lampCount;
 
     Cube buff = new Cube(10, new Vector3(0.0f, 0.5f, 0.8f));
     buff.PosVr += new Vector3(-3.0f, 0.0f, 0.0f);
@@ -87,10 +82,14 @@ public sealed class RotatingCubeDrawer {
     Cube buff2 = new Cube (10, new Vector3(1.0f, 1.0f, 0.0f));
     buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
 
+    Cube buff3 = new Cube("testing cube");
+    buff3.PosVr += (0.0f, 3.0f, 0.0f);
+    buff3.ScaleVr *= 3;
+
     _volumes.Add(lampBuff);
-    _volumes.Add(lampBuff2);
     _volumes.Add(buff);
     _volumes.Add(buff2);
+    _volumes.Add(buff3);
 
     _shader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", 
         "Shader/Shaders/shader.frag");
