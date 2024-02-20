@@ -32,6 +32,7 @@ public sealed class RotatingCubeDrawer {
   // lamp
   private OpenGLInvestigation.Shader _lampShader;
   private int _lampCount = 0;
+  private Vector3 _lampPosition;
   //  ///////////////////////////////////////////////////////////////////////////
 
   public void MoveRight() {
@@ -72,6 +73,7 @@ public sealed class RotatingCubeDrawer {
     Cube lampBuff = new Cube(10, new Vector3(0.0f, 0.5f, 0.31f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
     ++_lampCount;
+    _lampPosition = lampBuff.PosVr;
 
     Cube lampBuff2 = new Cube(10, new Vector3(0.0f, 0.5f, 0.62f));
     lampBuff2.PosVr += new Vector3(0.0f, -2.0f, 0.0f);
@@ -159,10 +161,6 @@ public sealed class RotatingCubeDrawer {
 //  //////////////////////////////////////////////////////////////////////////////
   }
 
-
-
-
-
   private void BindPosBuffer(int indexOfDescriptros) {
     _vertexBufferObjects.Add(GL.GenBuffer());
     int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
@@ -195,6 +193,7 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void AdjustShader() {
+    _shader.SetUniform3("lightPos", _lampPosition);
     _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // this vector is ambient lighting shader
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
