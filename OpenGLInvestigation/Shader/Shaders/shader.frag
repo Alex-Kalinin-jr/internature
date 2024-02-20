@@ -5,6 +5,7 @@ out vec4 outColor;
 uniform vec3 lightColor;
 
 void main()
-{
-	outColor = vec4(lightColor * Color, 0.0);
+{	float ambientStrength = 0.3;
+
+	outColor = vec4(ambientStrength * lightColor * Color, 1.0);
 }

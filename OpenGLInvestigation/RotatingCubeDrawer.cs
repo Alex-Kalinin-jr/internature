@@ -31,6 +31,8 @@ public sealed class RotatingCubeDrawer {
   //  ///////////////////////////////////////////////////////////////////////////
   // lamp
   private OpenGLInvestigation.Shader _lampShader;
+  private int _lamp;
+  private int _obj;
   //  ///////////////////////////////////////////////////////////////////////////
 
   public void MoveRight() {
@@ -70,7 +72,6 @@ public sealed class RotatingCubeDrawer {
 
     Cube lampBuff = new Cube(10, new Vector3(0.0f, 0.5f, 0.31f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
-    lampBuff.PosVr += new Vector3(0.0f, -3.0f, 0.0f);
 
     Cube buff = new Cube(10, new Vector3(0.0f, 0.5f, 0.8f));
     buff.PosVr += new Vector3(-3.0f, 0.0f, 0.0f);
@@ -82,9 +83,14 @@ public sealed class RotatingCubeDrawer {
     _volumes.Add(buff);
     _volumes.Add(buff2);
 
-    _shader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
+    _shader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", 
+        "Shader/Shaders/shader.frag");
 
-    _lampShader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
+    _lampShader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", 
+        "Shader/Shaders/lightShader.frag");
+
+    _lamp = _lampShader.Handle;
+    _obj = _shader.Handle;
 
     for (int i = 0; i < _volumes.Count; ++i) {
       _vertexArrayObjects.Add(GL.GenVertexArray());
@@ -123,13 +129,9 @@ public sealed class RotatingCubeDrawer {
     AdjustShader();
     AdjustLampShader();
 
-    for (int i = 0; i < _volumes.Count; ++i) {
+    for (int i = 1; i < _volumes.Count; ++i) {
 
-      if (i == 0) {
-        _lampShader.Use();
-      } else {
-        _shader.Use();
-      }
+      _shader.Use();
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
@@ -140,6 +142,13 @@ public sealed class RotatingCubeDrawer {
 // delegate
       _showType(i);
     }
+
+    _lampShader.Use();
+    Matrix4 modelLamp = _volumes[0].ComputeModelMatrix();
+    _lampShader.SetMatrix4("model", modelLamp);
+    GL.BindVertexArray(_vertexArrayObjects[0]);
+    ShowSolid(0);
+
 //  //////////////////////////////////////////////////////////////////////////////
   }
 
@@ -175,14 +184,14 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void AdjustShader() {
-    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
+    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // this vector is ambient lighting shader
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
   }
   // to be merged
   private void AdjustLampShader() {
-    _shader.SetMatrix4("view", _view);
-    _shader.SetMatrix4("projection", _projection);
+    _lampShader.SetMatrix4("view", _view);
+    _lampShader.SetMatrix4("projection", _projection);
   }
 
   private void ShowSolid(int i) {
