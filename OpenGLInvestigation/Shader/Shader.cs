@@ -72,7 +72,10 @@ namespace OpenGLInvestigation {
       GL.UseProgram(Handle);
       GL.UniformMatrix4(_uniformLocations[name], true, ref data);
     }
-
+    public void SetUniform3(string name, Vector3 data) {
+      GL.UseProgram(Handle);
+      GL.Uniform3(_uniformLocations[name], data);
+    }
 
     protected virtual void Dispose(bool disposing) {
       if (!_disposedValue) {
