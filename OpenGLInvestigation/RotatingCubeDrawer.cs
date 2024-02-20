@@ -85,7 +85,7 @@ public sealed class RotatingCubeDrawer {
     buff.PosVr += new Vector3(-3.0f, 0.0f, 0.0f);
 
     Cube buff2 = new Cube (10, new Vector3(1.0f, 1.0f, 0.0f));
-    buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
+    buff2.PosVr += new Vector3(3.0f, 0.0f, -1.0f);
 
     Cube buff3 = new Cube("testing cube");
     buff3.PosVr += (0.0f, 3.0f, 0.0f);
