@@ -9,11 +9,10 @@ namespace OpenGLInvestigation.Figures {
       float[] cube = new float[3 * count * count * 6];
       uint[] idxs = new uint[(count - 1) * (count - 1) * 2 * 6 * 3];
       float[] colors = new float[cube.Length];
+      float[] normals = new float[cube.Length];
 
       float step = 2.0f / (count - 1);
       int ind = 0;
-
-
 
       GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
@@ -24,9 +23,34 @@ namespace OpenGLInvestigation.Figures {
 
       GenerateIndexArray(count, ref idxs);
       GenerateColorArray(ref colors, color);
+      GenerateNormals(ref cube, ref idxs, ref normals);
 
       return (cube, idxs, colors);
     }
+
+    private static void GenerateNormals(ref float[] cube, ref uint[] indices, ref float[] normals) {
+      for (int i = 0; i < indices.Length; i += 3) {
+        float v1x = cube[indices[i]] - cube[indices[i + 1]];
+        float v1y = cube[indices[i] + 1] - cube[indices[i + 1] + 1];
+        float v1z = cube[indices[i] + 2] - cube[indices[i + 1] + 2];
+
+        float v2x = cube[indices[i + 1]] - cube[indices[i + 2]];
+        float v2y = cube[indices[i + 1] + 1] - cube[indices[i + 2] + 1];
+        float v2z = cube[indices[i + 1] + 2] - cube[indices[i + 2] + 2];
+
+        Vector3 result;
+
+        result.X = v1y * v2z - v2y * v1z;
+        result.Y = -v1x * v2z + v2x * v1z;
+        result.Z = v1x * v2y - v2x * v1y;
+
+        normals[i] = result.X;
+        normals[i + 1] = result.Y;
+        normals[i + 2] = result.Z;
+      }
+    }
+
+
 
     private static void GenerateColorArray(ref float[] colors, OpenTK.Mathematics.Vector3 color) {
       int idx = 0;

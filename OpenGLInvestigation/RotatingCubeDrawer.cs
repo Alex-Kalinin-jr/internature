@@ -31,8 +31,7 @@ public sealed class RotatingCubeDrawer {
   //  ///////////////////////////////////////////////////////////////////////////
   // lamp
   private OpenGLInvestigation.Shader _lampShader;
-  private int _lamp;
-  private int _obj;
+  private int _lampCount = 0;
   //  ///////////////////////////////////////////////////////////////////////////
 
   public void MoveRight() {
@@ -72,6 +71,12 @@ public sealed class RotatingCubeDrawer {
 
     Cube lampBuff = new Cube(10, new Vector3(0.0f, 0.5f, 0.31f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
+    ++_lampCount;
+
+    Cube lampBuff2 = new Cube(10, new Vector3(0.0f, 0.5f, 0.62f));
+    lampBuff2.PosVr += new Vector3(0.0f, -2.0f, 0.0f);
+    lampBuff2.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
+    ++_lampCount;
 
     Cube buff = new Cube(10, new Vector3(0.0f, 0.5f, 0.8f));
     buff.PosVr += new Vector3(-3.0f, 0.0f, 0.0f);
@@ -80,6 +85,7 @@ public sealed class RotatingCubeDrawer {
     buff2.PosVr += new Vector3(3.0f, 0.0f, 0.0f);
 
     _volumes.Add(lampBuff);
+    _volumes.Add(lampBuff2);
     _volumes.Add(buff);
     _volumes.Add(buff2);
 
@@ -88,9 +94,6 @@ public sealed class RotatingCubeDrawer {
 
     _lampShader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", 
         "Shader/Shaders/lightShader.frag");
-
-    _lamp = _lampShader.Handle;
-    _obj = _shader.Handle;
 
     for (int i = 0; i < _volumes.Count; ++i) {
       _vertexArrayObjects.Add(GL.GenVertexArray());
@@ -129,9 +132,9 @@ public sealed class RotatingCubeDrawer {
     AdjustShader();
     AdjustLampShader();
 
-    for (int i = 1; i < _volumes.Count; ++i) {
+    _shader.Use();
+    for (int i = _lampCount ; i < _volumes.Count; ++i) {
 
-      _shader.Use();
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
@@ -143,14 +146,22 @@ public sealed class RotatingCubeDrawer {
       _showType(i);
     }
 
+
     _lampShader.Use();
-    Matrix4 modelLamp = _volumes[0].ComputeModelMatrix();
-    _lampShader.SetMatrix4("model", modelLamp);
-    GL.BindVertexArray(_vertexArrayObjects[0]);
-    ShowSolid(0);
+    for (int i = 0; i < _lampCount; ++i) {
+      Matrix4 modelLamp = _volumes[i].ComputeModelMatrix();
+      _lampShader.SetMatrix4("model", modelLamp);
+      GL.BindVertexArray(_vertexArrayObjects[i]);
+      ShowSolid(0);
+
+    }
 
 //  //////////////////////////////////////////////////////////////////////////////
   }
+
+
+
+
 
   private void BindPosBuffer(int indexOfDescriptros) {
     _vertexBufferObjects.Add(GL.GenBuffer());
