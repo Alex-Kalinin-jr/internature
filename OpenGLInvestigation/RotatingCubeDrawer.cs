@@ -121,6 +121,7 @@ public sealed class RotatingCubeDrawer {
     //  //////////////////////////////////////////////////////////////////////////////
     ChangeBlend();
     AdjustShader();
+    AdjustLampShader();
 
     for (int i = 0; i < _volumes.Count; ++i) {
 
@@ -129,6 +130,7 @@ public sealed class RotatingCubeDrawer {
       } else {
         _shader.Use();
       }
+
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
 
@@ -173,12 +175,14 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void AdjustShader() {
+    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
   }
-
+  // to be merged
   private void AdjustLampShader() {
-    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
+    _shader.SetMatrix4("view", _view);
+    _shader.SetMatrix4("projection", _projection);
   }
 
   private void ShowSolid(int i) {
