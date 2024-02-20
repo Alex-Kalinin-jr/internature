@@ -146,6 +146,9 @@ public sealed class RotatingCubeDrawer {
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
+      Matrix4 invertedModel = model;
+      model.Invert();
+      _shader.SetMatrix4("invertedModel", model);
 
 
       GL.BindVertexArray(_vertexArrayObjects[i]);
