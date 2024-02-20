@@ -36,6 +36,8 @@ public sealed class RotatingCubeDrawer {
   private Vector3 _lampPosition;
   //  ///////////////////////////////////////////////////////////////////////////
 
+
+  // to be changed
   public void MoveRight() {
     foreach (var item in _volumes) {
       item.PosVr += new Vector3(1.0f, 0.0f, 0.0f);
@@ -68,8 +70,11 @@ public sealed class RotatingCubeDrawer {
 
     ChangeDrawingType(0);
     GL.Enable(EnableCap.ProgramPointSize);
+
+    // to be encapsulated
     _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
     _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), _width / (float)_height, 0.2f, 256.0f);
+    // to be encapsulated
 
     Cube lampBuff = new Cube(10, new Vector3(1.0f, 1.0f, 1.0f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
@@ -149,16 +154,15 @@ public sealed class RotatingCubeDrawer {
       model.Invert();
       _shader.SetMatrix4("invertedModel", model);
 
-
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
 // delegate
       _showType(i);
     }
 
-
     _lampShader.Use();
     for (int i = 0; i < _lampCount; ++i) {
+
       Matrix4 modelLamp = _volumes[i].ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
       GL.BindVertexArray(_vertexArrayObjects[i]);
@@ -215,6 +219,7 @@ public sealed class RotatingCubeDrawer {
 
   private void AdjustShader() {
     _shader.SetUniform3("lightPos", _lampPosition);
+    _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
     _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // this vector is ambient lighting shader
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
