@@ -14,7 +14,6 @@ namespace OpenGLInvestigation.Figures {
 
       float[] colors = new float[cube.Length];
       float[] normals = new float[cube.Length];
-
       GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
       GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
