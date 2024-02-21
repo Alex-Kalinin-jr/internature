@@ -14,12 +14,12 @@ namespace OpenGLInvestigation.Figures {
 
       float[] colors = new float[cube.Length];
       float[] normals = new float[cube.Length];
-      GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
-      GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
-      GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
-      GenerateFrozenY(count, step, ref cube, ref ind, 1.0f);
-      GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
-      GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
+      GenerateFrozenX(count, step, -1.0f, ref cube, ref ind, -1.0f);
+      GenerateFrozenX(count, -step, 1.0f, ref cube, ref ind, 1.0f);
+      GenerateFrozenY(count, step, -1.0f, ref cube, ref ind, -1.0f);
+      GenerateFrozenY(count, -step, 1.0f, ref cube, ref ind, 1.0f);
+      GenerateFrozenZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
+      GenerateFrozenZ(count, -step, 1.0f,ref cube, ref ind, 1.0f);
       GenerateColorArray(ref colors, color);
 
       GenerateNormals(ref cube, ref normals);
@@ -193,12 +193,15 @@ namespace OpenGLInvestigation.Figures {
       return (vertices, colors, normals);
     }
 
-    public static void GenerateFrozenZ(int count, float step, ref float[] cube, ref int ind, float zCoord) {
+    public static void GenerateFrozenZ(int count, float step, float xStart,
+        ref float[] cube, ref int ind, float zCoord) {
 
-      float leftX = -1.0f;
-      float rightX = -1.0f + step;
+      float stepY = (step < 0) ? -step : step;
+
+      float leftX = xStart;
+      float rightX = xStart + step;
       float botY = -1.0f;
-      float topY = -1.0f + step;
+      float topY = -1.0f + stepY;
 
 
       for (int i = 0; i < count - 1; ++i) {
@@ -233,19 +236,22 @@ namespace OpenGLInvestigation.Figures {
           rightX += step;
         }
 
-        rightX = -1.0f + step;
-        leftX = -1.0f;
-        topY += step;
-        botY += step;
+        rightX = xStart + step;
+        leftX = xStart;
+        topY += stepY;
+        botY += stepY;
       }
     }
 
-    public static void GenerateFrozenX(int count, float step, ref float[] cube, ref int ind, float xCoord) {
+    public static void GenerateFrozenX(int count, float step, float xStart,
+      ref float[] cube, ref int ind, float xCoord) {
 
-      float leftX = -1.0f;
-      float rightX = -1.0f + step;
+      float stepY = (step < 0) ? -step : step;
+
+      float leftX = xStart;
+      float rightX = xStart + step;
       float botY = -1.0f;
-      float topY = -1.0f + step;
+      float topY = -1.0f + stepY;
 
 
       for (int i = 0; i < count - 1; ++i) {
@@ -279,20 +285,23 @@ namespace OpenGLInvestigation.Figures {
           leftX += step;
           rightX += step;
         }
-        leftX = -1.0f;
-        rightX = -1.0f + step;
-        topY += step;
-        botY += step;
+        leftX = xStart;
+        rightX = xStart + step;
+        topY += stepY;
+        botY += stepY;
       }
     }
 
-    public static void GenerateFrozenY(int count, float step, ref float[] cube, ref int ind, float yCoord) {
+    public static void GenerateFrozenY(int count, float step, float xStart,
+      ref float[] cube, ref int ind, float yCoord) {
 
-      float leftX = -1.0f;
-      float rightX = -1.0f + step;
+      float stepY = (step < 0) ? -step : step;
+
+      float leftX = xStart;
+      float rightX = xStart + step;
 
       float botY = -1.0f;
-      float topY = -1.0f + step;
+      float topY = -1.0f + stepY;
 
 
       for (int i = 0; i < count - 1; ++i) {
@@ -322,17 +331,15 @@ namespace OpenGLInvestigation.Figures {
           cube[ind + 16] = yCoord;
           cube[ind + 17] = botY;
 
-
-
           ind += 18;
           rightX += step;
           leftX += step;
         }
 
-        leftX = -1.0f;
-        rightX = -1.0f + step;
-        topY += step;
-        botY += step;
+        leftX = xStart;
+        rightX = xStart + step;
+        topY += stepY;
+        botY += stepY;
       }
     }
 
