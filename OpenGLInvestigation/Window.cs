@@ -9,20 +9,23 @@ using System.Runtime.InteropServices;
 namespace ImGuiNET.OpenTK.Sample;
 
 public class Window : GameWindow {
-  ImGuiController _controller;
-  SceneRender _scene;
-  Camera _camera;
-
-  public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() { 
-      Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3) }) { }
 
   private static DebugProc _debugProcCallback = DebugCallback;
   private static GCHandle _debugProcCallbackHandle;
 
+  ImGuiController _controller;
+  SceneRender _scene;
+  Camera _camera;
+
+  public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
+    Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3)
+  }) { }
+
+
   private static void DebugCallback(DebugSource source, DebugType type, int id,
   DebugSeverity severity, int length, IntPtr message, IntPtr userParam) {
     string messageString = Marshal.PtrToStringAnsi(message, length);
-// there try to insert into app
+    // there try to insert into app
     Console.WriteLine($"{severity} {type} | {messageString}");
 
     if (type == DebugType.DebugTypeError)
@@ -45,7 +48,6 @@ public class Window : GameWindow {
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new SceneRender(this);
     _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
-
 
     Error.Check();
   }
@@ -139,8 +141,7 @@ public class Window : GameWindow {
   protected override void OnUpdateFrame(FrameEventArgs e) {
     base.OnUpdateFrame(e);
 
-    if (!IsFocused) // Check to see if the window is focused
-    {
+    if (!IsFocused) {
       return;
     }
 
@@ -160,20 +161,31 @@ public class Window : GameWindow {
     if (input.IsKeyDown(Keys.S)) {
       _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
     }
+
     if (input.IsKeyDown(Keys.A)) {
       _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
     }
+
     if (input.IsKeyDown(Keys.D)) {
       _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
     }
-    if (input.IsKeyDown(Keys.Space)) {
+
+    if (input.IsKeyDown(Keys.LeftShift)) {
       _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
     }
-    /*
-    if (input.IsKeyDown(Keys.LeftShift)) {
+
+    if (input.IsKeyDown(Keys.Space)) {
       _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
     }
-    */
+
+    if (input.IsKeyDown(Keys.Up)) { _camera.Pitch -= 1; }
+
+    if (input.IsKeyDown(Keys.Down)) { _camera.Pitch += 1; }
+
+    if (input.IsKeyDown(Keys.Left)) { _camera.Yaw -= 1; }
+
+    if (input.IsKeyDown(Keys.Right)) { _camera.Yaw += 1; }
+
     PassMatrices();
   }
 
