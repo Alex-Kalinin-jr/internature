@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace entities {
+namespace SimpleDrawing.Entities {
   internal class Camera {
     private Vector3 _front = -Vector3.UnitZ;
     private Vector3 _up = Vector3.UnitY;
@@ -58,7 +58,7 @@ namespace entities {
       _front.X = MathF.Cos(_pitch) * MathF.Cos(_yaw);
       _front.Y = MathF.Sin(_pitch);
       _front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
-// linear-algebra-loop trick
+      // linear-algebra-loop trick
       _front = Vector3.Normalize(_front);
       _right = Vector3.Normalize(Vector3.Cross(_front, Vector3.UnitY));
       _up = Vector3.Normalize(Vector3.Cross(_right, _front));

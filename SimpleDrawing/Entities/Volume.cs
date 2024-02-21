@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace OpenGLInvestigation.Figures {
+namespace SimpleDrawing.Entities {
   internal abstract class Volume {
     public float[]? Vertices { get; init; }
     public float[]? TexCoords { get; init; }
@@ -30,27 +30,7 @@ namespace OpenGLInvestigation.Figures {
 
     public Volume(string path, Vector3 color) : this() {
 
-      if (path != "") {
-        FileData data = OBJParser.ParseFromFile(path);
-
-        if (data._vertices != null) {
-          Vertices = data._vertices;
-        }
-
-        if (data._texCoords != null) {
-          TexCoords = data._texCoords;
-        }
-
-        if (data._indices != null) {
-          Indices = data._indices;
-        }
-
-      }
-
-      if (path == null) {
-        (Vertices, Colors, Normals)
-            = entities.Generator.GenerateCube(10, color);
-      }
+      (Vertices, Colors, Normals) = Generator.GenerateCube(10, color);
     }
 
   }
@@ -59,7 +39,7 @@ namespace OpenGLInvestigation.Figures {
 
     public Cube(int verticesInLine, Vector3 color) {
       (Vertices, Colors, Normals)
-          = entities.Generator.GenerateCube(verticesInLine, color);
+          = Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
       ScaleVr = Vector3.One;
@@ -68,7 +48,7 @@ namespace OpenGLInvestigation.Figures {
     }
 
     public Cube(string a) {
-      (Vertices, Colors, Normals) = entities.Generator.GenerateTestingCube();
+      (Vertices, Colors, Normals) = Generator.GenerateTestingCube();
       Texture = -1;
       ScaleVr = Vector3.One;
       PosVr = Vector3.Zero;

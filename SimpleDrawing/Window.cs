@@ -1,12 +1,13 @@
-﻿using OpenGLInvestigation.Entities;
+﻿using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using SimpleDrawing.Entities;
 using System.Runtime.InteropServices;
 
-namespace ImGuiNET.OpenTK.Sample;
+namespace SimpleDrawing;
 
 public class Window : GameWindow {
 
@@ -15,7 +16,7 @@ public class Window : GameWindow {
 
   ImGuiController _controller;
   SceneRender _scene;
-  entities.Camera _camera;
+  Camera _camera;
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
     Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3)
@@ -47,7 +48,7 @@ public class Window : GameWindow {
 
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new SceneRender(this);
-    _camera = new entities.Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+    _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
     Error.Check();
   }

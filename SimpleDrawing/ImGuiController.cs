@@ -5,8 +5,10 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
+using SimpleDrawing.Shader;
+using ImGuiNET;
 
-namespace ImGuiNET.OpenTK.Sample {
+namespace SimpleDrawing {
   public class ImGuiController : IDisposable {
     private bool _frameBegun;
 
@@ -20,7 +22,7 @@ namespace ImGuiNET.OpenTK.Sample {
 
     private int _fontTexture;
 
-    private OpenGLInvestigation.Shader _shader;
+    private Shader _shader;
 
     private int _windowWidth;
     private int _windowHeight;

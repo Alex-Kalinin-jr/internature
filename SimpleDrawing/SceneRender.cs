@@ -1,7 +1,8 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using ImGuiNET;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace ImGuiNET.OpenTK.Sample;
+namespace SimpleDrawing;
 
 internal class SceneRender : IDisposable {
 

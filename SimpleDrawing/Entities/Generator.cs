@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace entities {
+namespace SimpleDrawing.Entities {
   internal class Generator {
 
     public static (float[], float[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
@@ -17,7 +17,7 @@ namespace entities {
       GenerateFrozenY(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GenerateFrozenY(count, -step, 1.0f, ref cube, ref ind, 1.0f);
       GenerateFrozenZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
-      GenerateFrozenZ(count, -step, 1.0f,ref cube, ref ind, 1.0f);
+      GenerateFrozenZ(count, -step, 1.0f, ref cube, ref ind, 1.0f);
       GenerateColorArray(ref colors, color);
 
       GenerateNormals(ref cube, ref normals);
@@ -194,7 +194,7 @@ namespace entities {
     public static void GenerateFrozenZ(int count, float step, float xStart,
         ref float[] cube, ref int ind, float zCoord) {
 
-      float stepY = (step < 0) ? -step : step;
+      float stepY = step < 0 ? -step : step;
 
       float leftX = xStart;
       float rightX = xStart + step;
@@ -244,7 +244,7 @@ namespace entities {
     public static void GenerateFrozenX(int count, float step, float xStart,
       ref float[] cube, ref int ind, float xCoord) {
 
-      float stepY = (step < 0) ? -step : step;
+      float stepY = step < 0 ? -step : step;
 
       float leftX = xStart;
       float rightX = xStart + step;
@@ -293,7 +293,7 @@ namespace entities {
     public static void GenerateFrozenY(int count, float step, float xStart,
       ref float[] cube, ref int ind, float yCoord) {
 
-      float stepY = (step < 0) ? -step : step;
+      float stepY = step < 0 ? -step : step;
 
       float leftX = xStart;
       float rightX = xStart + step;
