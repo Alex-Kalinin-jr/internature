@@ -26,8 +26,8 @@ internal class SceneRender : IDisposable {
   }
 
 
-  public void ChangeShowingType(int i) {
-    _drawer.ChangeDrawingType(i);
+  public void ChangeShowingType(int i, bool state) {
+    _drawer.ChangeDrawingType(i, state);
   }
 
   public void DrawViewportWindow() {

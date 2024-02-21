@@ -43,8 +43,6 @@ public sealed class RotatingCubeDrawer {
     _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
     _lampShader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
 
-    _showType = ShowSolid;
-
     _vertexBufferObjects = new List<int>();
     _colorBufferObjects = new List<int>();
     _normalBufferObjects = new List<int>();
@@ -75,7 +73,7 @@ public sealed class RotatingCubeDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
-    ChangeDrawingType(0);
+    ChangeDrawingType(0, true);
     GL.Enable(EnableCap.ProgramPointSize);
 
     for (int i = 0; i < _volumes.Count; ++i) {
@@ -224,17 +222,30 @@ public sealed class RotatingCubeDrawer {
     GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
   }
 
-  public void ChangeDrawingType(int i) {
+  public void ChangeDrawingType(int i, bool state) {
+
     if (i == 0) {
-      _showType = ShowSolid;
+      if (state) {
+        _showType += ShowSolid;
+      } else {
+        _showType -= ShowSolid;
+      }
     }
 
     if (i == 1) {
-      _showType = ShowFramed;
+      if (state) {
+        _showType += ShowFramed;
+      } else {
+        _showType -= ShowFramed;
+      }
     }
 
     if (i == 2) {
-      _showType = ShowPoints;
+      if (state) {
+        _showType += ShowPoints;
+      } else {
+        _showType -= ShowPoints;
+      }
     }
   }
   //  //////////////////////////////////////////////////////////////////////////////

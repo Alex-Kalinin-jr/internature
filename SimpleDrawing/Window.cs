@@ -11,6 +11,10 @@ namespace SimpleDrawing;
 
 public class Window : GameWindow {
 
+  private bool _areFacesDrawn;
+  private bool _areEdgesDrawn;
+  private bool _arePointsDrawn;
+
   private static DebugProc _debugProcCallback = DebugCallback;
   private static GCHandle _debugProcCallbackHandle;
 
@@ -24,6 +28,10 @@ public class Window : GameWindow {
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new SceneRender(this);
     _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+
+    _areFacesDrawn = true;
+    _areEdgesDrawn = false;
+    _arePointsDrawn = false;
   }
 
 
@@ -107,15 +115,29 @@ public class Window : GameWindow {
 
 
   private void CreateShowingTypeButtons() {
-    ImGui.Begin("Solid");
-    if (ImGui.Button("Solid")) {
-      _scene.ChangeShowingType(0);
+    ImGui.Begin("Drawing Mode");
+    if (ImGui.Checkbox("Solid", ref _areFacesDrawn)) {
+      if (!_areEdgesDrawn && !_arePointsDrawn) {
+        _areFacesDrawn = true;
+      } else {
+        _scene.ChangeShowingType(0, _areFacesDrawn);
+      }
     }
-    if (ImGui.Button("Framed")) {
-      _scene.ChangeShowingType(1);
+
+    if (ImGui.Checkbox("Frame", ref _areEdgesDrawn)) {
+      if (!_areFacesDrawn && !_arePointsDrawn) {
+        _areEdgesDrawn = true;
+      } else {
+        _scene.ChangeShowingType(1, _areEdgesDrawn);
+      }
     }
-    if (ImGui.Button("Points")) {
-      _scene.ChangeShowingType(2);
+
+    if (ImGui.Checkbox("Points", ref _arePointsDrawn)) {
+      if (!_areEdgesDrawn && !_areFacesDrawn) {
+        _arePointsDrawn = true;
+      } else {
+        _scene.ChangeShowingType(2, _arePointsDrawn);
+      }
     }
     ImGui.End();
   }
@@ -133,9 +155,8 @@ public class Window : GameWindow {
     if (input.IsKeyDown(Keys.Escape)) {
       Close();
     }
-// to be replaced
+
     const float cameraSpeed = 1.5f;
-    const float sensitivity = 0.2f;
 
     if (input.IsKeyDown(Keys.W)) {
       _camera.Position += _camera.Front * cameraSpeed * (float)e.Time;
@@ -161,13 +182,21 @@ public class Window : GameWindow {
       _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time;
     }
 
-    if (input.IsKeyDown(Keys.Up)) { _camera.Pitch -= 1; }
+    if (input.IsKeyDown(Keys.Up)) {
+      _camera.Pitch -= 1;
+    }
 
-    if (input.IsKeyDown(Keys.Down)) { _camera.Pitch += 1; }
+    if (input.IsKeyDown(Keys.Down)) {
+      _camera.Pitch += 1;
+    }
 
-    if (input.IsKeyDown(Keys.Left)) { _camera.Yaw -= 1; }
+    if (input.IsKeyDown(Keys.Left)) {
+      _camera.Yaw -= 1;
+    }
 
-    if (input.IsKeyDown(Keys.Right)) { _camera.Yaw += 1; }
+    if (input.IsKeyDown(Keys.Right)) {
+      _camera.Yaw += 1;
+    }
 
     PassMatrices();
   }
