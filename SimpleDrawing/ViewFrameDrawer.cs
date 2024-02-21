@@ -6,20 +6,16 @@ using SimpleDrawing.Entities;
 namespace SimpleDrawing;
 
 public delegate void Show(int i);
-public delegate void UseShader();
 
 public sealed class RotatingCubeDrawer {
   private int _width;
   private int _height;
 
-
   private Shader _shader;
   private Shader _lampShader;
-  private List<UseShader> _useShader; // functional object
 
   private int _lampCount = 0;
   private Vector3 _lampPosition;
-
 
   private Matrix4 _view;
   private Matrix4 _projection;
@@ -28,40 +24,37 @@ public sealed class RotatingCubeDrawer {
   // first "_lampCount" volumes are the lamp's volumes
   private List<Volume> _volumes = new List<Volume>();
 
-
   private List<int> _vertexBufferObjects;
   private List<int> _colorBufferObjects;
   private List<int> _normalBufferObjects;
   private List<int> _vertexArrayObjects;
-  private List<int> _elementBufferObjects;
-
 
   private Show _showType;
-
 
   private float _lastTimestamp = Stopwatch.GetTimestamp();
   private float _interpolationKoeff;
   private bool _increase;
   //  //////////////////////////////////////////////////////////////////////////////
+
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
   public RotatingCubeDrawer() {
     _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
     _lampShader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
-    _useShader = new List<UseShader>();
 
     _showType = ShowSolid;
-
 
     _vertexBufferObjects = new List<int>();
     _colorBufferObjects = new List<int>();
     _normalBufferObjects = new List<int>();
     _vertexArrayObjects = new List<int>();
-    _elementBufferObjects = new List<int>();
 
     _increase = true;
     _interpolationKoeff = 0.2f;
 
     _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
-    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), 
+    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f),
         _width / (float)_height, 0.2f, 256.0f);
 
     _volumes = new List<Volume>();
@@ -71,12 +64,14 @@ public sealed class RotatingCubeDrawer {
     ++_lampCount;
     _lampPosition = lampBuff.PosVr;
     _volumes.Add(lampBuff);
-    _useShader.Add(_lampShader.Use);
 
     var cubes = Generator.GenerateVolumes();
     _volumes.AddRange(cubes);
 
   }
+  //  //////////////////////////////////////////////////////////////////////////////
+
+
 
   //  //////////////////////////////////////////////////////////////////////////////
   // to be changed to camera movements 
@@ -105,18 +100,8 @@ public sealed class RotatingCubeDrawer {
   }
 
   //  //////////////////////////////////////////////////////////////////////////////
-  private void AdjustVolumeShader() {
-    _shader.SetUniform3("lightPos", _lampPosition);
-    _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
-    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // this vector is ambient lighting shader
-    _shader.SetMatrix4("view", _view);
-    _shader.SetMatrix4("projection", _projection);
-  }
 
-  private void AdjustLampShader() {
-    _lampShader.SetMatrix4("view", _view);
-    _lampShader.SetMatrix4("projection", _projection);
-  }
+
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
@@ -140,13 +125,10 @@ public sealed class RotatingCubeDrawer {
       }
 
     }
-    //  //////////////////////////////////////////////////////////////////////////////
 
     GL.Enable(EnableCap.DepthTest);
     GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
   }
-
-  public void OnClosed() { }
 
   public void OnResize(int width, int height) {
     _width = width;
@@ -156,40 +138,64 @@ public sealed class RotatingCubeDrawer {
   }
 
   public void OnRenderFrame() {
-    //  //////////////////////////////////////////////////////////////////////////////
-    ChangeBlend();
-    AdjustVolumeShader();
-    AdjustLampShader();
+
+    ChangeBlend(); // morph component changing
+
+    ShowVolumes();
+    ShowLamps();
+
+  }
+
+  public void OnClosed() { }
+  //  //////////////////////////////////////////////////////////////////////////////
+
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
+  void ShowVolumes() {
 
     _shader.Use();
-    for (int i = _lampCount; i < _volumes.Count; ++i) {
+    _shader.SetUniform3("lightPos", _lampPosition);
+    _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
+    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // ambient lighting color
+    _shader.SetMatrix4("view", _view);
+    _shader.SetMatrix4("projection", _projection);
 
+    for (int i = _lampCount; i < _volumes.Count; ++i) {
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
-      Matrix4 invertedModel = model;
+
       model.Invert();
       _shader.SetMatrix4("invertedModel", model);
 
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
-      // delegate
-      _showType(i);
+      _showType(i);  // delegate
     }
+  }
+
+  void ShowLamps() {
 
     _lampShader.Use();
+    _lampShader.SetMatrix4("view", _view);
+    _lampShader.SetMatrix4("projection", _projection);
+
     for (int i = 0; i < _lampCount; ++i) {
 
       Matrix4 modelLamp = _volumes[i].ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
       GL.BindVertexArray(_vertexArrayObjects[i]);
+
       ShowSolid(0);
 
     }
-
-    //  //////////////////////////////////////////////////////////////////////////////
   }
+  //  //////////////////////////////////////////////////////////////////////////////
 
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
   private void BindPosBuffer(int indexOfDescriptros) {
     _vertexBufferObjects.Add(GL.GenBuffer());
     int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
@@ -225,34 +231,27 @@ public sealed class RotatingCubeDrawer {
     GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
+  //  //////////////////////////////////////////////////////////////////////////////
 
 
-  private void BindIndicesBuffer(int indexOfDescriptros) {
-    _elementBufferObjects.Add(GL.GenBuffer());
-    GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObjects[indexOfDescriptros]);
-    GL.BufferData(BufferTarget.ElementArrayBuffer, _volumes[indexOfDescriptros].Indices.Length * sizeof(uint),
-        _volumes[indexOfDescriptros].Indices, BufferUsageHint.StaticDraw);
-  }
 
-
+  //  //////////////////////////////////////////////////////////////////////////////
   private void ShowSolid(int i) {
-    if (_volumes[i].Indices != null) {
-      GL.DrawElements(PrimitiveType.Triangles, _volumes[i].Indices.Length, DrawElementsType.UnsignedInt, 0);
-    } else {
-      GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
-    }
+    GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
   }
 
   private void ShowFramed(int i) {
     int bias = 0;
     int step = _volumes[i].Vertices.Length / 3 / 6;
+
     for (int g = 0; g < 6; ++g) {
       GL.DrawArrays(PrimitiveType.LineStrip, bias, step);
       bias += step;
     }
   }
+
   private void ShowPoints(int i) {
-    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Indices.Length / 3);
+    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
   }
 
   public void ChangeDrawingType(int i) {
@@ -268,11 +267,16 @@ public sealed class RotatingCubeDrawer {
       _showType = ShowPoints;
     }
   }
+  //  //////////////////////////////////////////////////////////////////////////////
 
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
   public void SetMatrices(Matrix4 v, Matrix4 p) {
     _view = v;
     _projection = p;
   }
+
 
   private void ChangeBlend() {
     float step = 0.005f;
