@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace OpenGLInvestigation.Figures {
+namespace entities {
   internal class Generator {
 
     public static (float[], float[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
@@ -9,8 +9,6 @@ namespace OpenGLInvestigation.Figures {
       float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
       float step = 2.0f / (count - 1);
       int ind = 0;
-
-
 
       float[] colors = new float[cube.Length];
       float[] normals = new float[cube.Length];

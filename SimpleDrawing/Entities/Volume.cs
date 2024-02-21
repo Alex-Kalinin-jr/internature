@@ -1,5 +1,4 @@
-﻿using OpenGLInvestigation.Entities;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
 namespace OpenGLInvestigation.Figures {
   internal abstract class Volume {
@@ -50,7 +49,7 @@ namespace OpenGLInvestigation.Figures {
 
       if (path == null) {
         (Vertices, Colors, Normals)
-            = Generator.GenerateCube(10, color);
+            = entities.Generator.GenerateCube(10, color);
       }
     }
 
@@ -60,7 +59,7 @@ namespace OpenGLInvestigation.Figures {
 
     public Cube(int verticesInLine, Vector3 color) {
       (Vertices, Colors, Normals)
-          = Generator.GenerateCube(verticesInLine, color);
+          = entities.Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
       ScaleVr = Vector3.One;
@@ -69,7 +68,7 @@ namespace OpenGLInvestigation.Figures {
     }
 
     public Cube(string a) {
-      (Vertices, Colors, Normals) = Generator.GenerateTestingCube();
+      (Vertices, Colors, Normals) = entities.Generator.GenerateTestingCube();
       Texture = -1;
       ScaleVr = Vector3.One;
       PosVr = Vector3.Zero;

@@ -15,7 +15,7 @@ public class Window : GameWindow {
 
   ImGuiController _controller;
   SceneRender _scene;
-  Camera _camera;
+  entities.Camera _camera;
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
     Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3)
@@ -47,7 +47,7 @@ public class Window : GameWindow {
 
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new SceneRender(this);
-    _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+    _camera = new entities.Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
     Error.Check();
   }

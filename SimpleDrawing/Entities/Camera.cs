@@ -1,11 +1,6 @@
 ﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenGLInvestigation.Entities {
+namespace entities {
   internal class Camera {
     private Vector3 _front = -Vector3.UnitZ;
     private Vector3 _up = Vector3.UnitY;
@@ -63,8 +58,8 @@ namespace OpenGLInvestigation.Entities {
       _front.X = MathF.Cos(_pitch) * MathF.Cos(_yaw);
       _front.Y = MathF.Sin(_pitch);
       _front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
-
-      _front = Vector3.Normalize(_front); // linear algebra loop
+// linear-algebra-loop trick
+      _front = Vector3.Normalize(_front);
       _right = Vector3.Normalize(Vector3.Cross(_front, Vector3.UnitY));
       _up = Vector3.Normalize(Vector3.Cross(_right, _front));
     }
