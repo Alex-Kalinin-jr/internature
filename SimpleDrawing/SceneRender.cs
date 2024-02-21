@@ -26,22 +26,6 @@ internal class SceneRender : IDisposable {
   }
 
 
-  public void MoveRight() {
-    _drawer.MoveRight();
-  }
-
-  public void MoveLeft() {
-    _drawer.MoveLeft();
-  }
-
-  public void MoveTop() {
-    _drawer.MoveTop();
-  }
-
-  public void MoveBottom() {
-    _drawer.MoveBottom();
-  }
-
   public void ChangeShowingType(int i) {
     _drawer.ChangeDrawingType(i);
   }

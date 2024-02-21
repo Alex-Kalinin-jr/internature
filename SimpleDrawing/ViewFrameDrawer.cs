@@ -74,36 +74,6 @@ public sealed class RotatingCubeDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  // to be changed to camera movements 
-  public void MoveRight() {
-    foreach (var item in _volumes) {
-      item.PosVr += new Vector3(1.0f, 0.0f, 0.0f);
-    }
-  }
-
-  public void MoveLeft() {
-    foreach (var item in _volumes) {
-      item.PosVr += new Vector3(-1.0f, 0.0f, 0.0f);
-    }
-  }
-
-  public void MoveTop() {
-    foreach (var item in _volumes) {
-      item.PosVr += new Vector3(0.0f, -1.0f, 0.0f);
-    }
-  }
-
-  public void MoveBottom() {
-    foreach (var item in _volumes) {
-      item.PosVr += new Vector3(0.0f, 1.0f, 0.0f);
-    }
-  }
-
-  //  //////////////////////////////////////////////////////////////////////////////
-
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
     ChangeDrawingType(0);
     GL.Enable(EnableCap.ProgramPointSize);

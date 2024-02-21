@@ -71,7 +71,6 @@ public class Window : GameWindow {
 
     _controller.StartDockspace();
 
-    CreateMovementButtons();
     CreateShowingTypeButtons();
 
     Error.Check();
@@ -106,25 +105,6 @@ public class Window : GameWindow {
     base.OnUnload();
   }
 
-  private void CreateMovementButtons() {
-    ImGui.Begin("Movement");
-    if (ImGui.Button("Right")) {
-      _scene.MoveRight();
-    }
-
-    if (ImGui.Button("Left")) {
-      _scene.MoveLeft();
-    }
-
-    if (ImGui.Button("Top")) {
-      _scene.MoveTop();
-    }
-
-    if (ImGui.Button("Bottom")) {
-      _scene.MoveBottom();
-    }
-    ImGui.End();
-  }
 
   private void CreateShowingTypeButtons() {
     ImGui.Begin("Solid");
