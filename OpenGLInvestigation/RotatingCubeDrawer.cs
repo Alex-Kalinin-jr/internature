@@ -81,18 +81,16 @@ public sealed class RotatingCubeDrawer {
     ++_lampCount;
     _lampPosition = lampBuff.PosVr;
 
-    Cube buff = new Cube(10, new Vector3(0.0f, 0.5f, 0.8f));
-    buff.PosVr += new Vector3(-3.0f, 0.0f, 0.0f);
+    Cube generationTestCube = new Cube(4, new Vector3(1.0f, 0.5f, 0.5f));
 
     Cube buff2 = new Cube (10, new Vector3(1.0f, 1.0f, 0.0f));
     buff2.PosVr += new Vector3(3.0f, 0.0f, -1.0f);
 
     Cube buff3 = new Cube("testing cube");
     buff3.PosVr += (0.0f, 3.0f, 0.0f);
-    buff3.ScaleVr *= 3;
 
     _volumes.Add(lampBuff);
-    _volumes.Add(buff);
+    _volumes.Add(generationTestCube);
     _volumes.Add(buff2);
     _volumes.Add(buff3);
 
@@ -239,7 +237,11 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void ShowFramed(int i) {
-    GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Indices.Length / 3);
+    if (_volumes[i].Indices != null) {
+      GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Indices.Length / 3);
+    } else {
+      GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Vertices.Length / 3);
+    }
   }
 
   private void ShowPoints(int i) {

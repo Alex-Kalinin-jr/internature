@@ -4,86 +4,29 @@ using System.Numerics;
 namespace OpenGLInvestigation.Figures {
   internal class Generator {
 
-    public static (float[], uint[], float[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
-      
-      int numVertices = count * count * count;
-      int numIndices = count * count * count * 6;
+    public static (float[], float[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
 
-      float[] cube = new float[numVertices * 3];
-      uint[] idxs = new uint[numIndices];
+      float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
       float step = 2.0f / (count - 1);
-      GenerateVerticesAndIndices(count, step, ref cube, ref idxs);
+      int ind = 0;
+
+
 
       float[] colors = new float[cube.Length];
-      GenerateColorArray(ref colors, color);
-
       float[] normals = new float[cube.Length];
+
+      GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
+      GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
+      GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
+      GenerateFrozenY(count, step, ref cube, ref ind, 1.0f);
+      GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
+      GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
+
+      GenerateColorArray(ref colors, color);
+      /*
       GenerateNormals(ref cube, ref idxs, ref normals);
-
-      return (cube, idxs, colors, normals);
-    }
-
-
-    private static void GenerateNormals(ref float[] vertices, ref uint[] indices, ref float[] normals) {
-
-      for (int i = 0; i < indices.Length; i += 3) {
-        uint index1 = indices[i];
-        uint index2 = indices[i + 1];
-        uint index3 = indices[i + 2];
-
-        Vector3 v1 = new Vector3(vertices[index1 * 3], vertices[index1 * 3 + 1], vertices[index1 * 3 + 2]);
-        Vector3 v2 = new Vector3(vertices[index2 * 3], vertices[index2 * 3 + 1], vertices[index2 * 3 + 2]);
-        Vector3 v3 = new Vector3(vertices[index3 * 3], vertices[index3 * 3 + 1], vertices[index3 * 3 + 2]);
-        Vector3 edge1 = v2 - v1;
-        Vector3 edge2 = v3 - v1;
-        Vector3 triangleNormal = Vector3.Cross(edge1, edge2);
-
-        normals[index1 * 3] += triangleNormal.X;
-        normals[index1 * 3 + 1] += triangleNormal.Y;
-        normals[index1 * 3 + 2] += triangleNormal.Z;
-        normals[index2 * 3] += triangleNormal.X;
-        normals[index2 * 3 + 1] += triangleNormal.Y;
-        normals[index2 * 3 + 2] += triangleNormal.Z;
-        normals[index3 * 3] += triangleNormal.X;
-        normals[index3 * 3 + 1] += triangleNormal.Y;
-        normals[index3 * 3 + 2] += triangleNormal.Z;
-      }
-
-      for (int i = 0; i < normals.Length; i += 3) {
-        Vector3 normal = new Vector3(normals[i], normals[i + 1], normals[i + 2]);
-        normal = Vector3.Normalize(normal);
-        normals[i] = normal.X;
-        normals[i + 1] = normal.Y;
-        normals[i + 2] = normal.Z;
-      }
-    }
-
-
-    private static void GenerateVerticesAndIndices(int count, float step, ref float[] vertices, ref uint[] indices) {
-
-      int v = 0;
-      int i = 0;
-
-      for (int x = 0; x < count; x++) {
-        for (int y = 0; y < count; y++) {
-          for (int z = 0; z < count; z++) {
-            vertices[v] = x * step;
-            vertices[v + 1] = y * step;
-            vertices[v + 2] = z * step;
-            v += 3;
-
-            uint start = (uint)(x * count * count + y * count + z);
-
-            indices[i] = start;
-            indices[i + 1] = start + 1;
-            indices[i + 2] = start + (uint)count;
-            indices[i + 3] = start + 1;
-            indices[i + 4] = start + (uint)count + 1;
-            indices[i + 5] = start + (uint)count;
-            i += 6;
-          }
-        }
-      }
+      */
+      return (cube, colors, normals);
     }
 
     private static void GenerateColorArray(ref float[] colors, OpenTK.Mathematics.Vector3 color) {
@@ -227,5 +170,168 @@ namespace OpenGLInvestigation.Figures {
 
       return (vertices, colors, normals);
     }
+
+    public static void GenerateFrozenZ(int count, float step, ref float[] cube, ref int ind, float zCoord) {
+
+      float botLeftX = -1.0f;
+      float botRightX = -1.0f + step;
+      float topLeftX = -1.0f;
+      float topRightX = -1.0f + step;
+
+      float botY = -1.0f;
+      float topY = -1.0f + step;
+
+
+      for (int i = 0; i < count - 1; ++i) {
+        for (int j = 0; j < count - 1; ++j) {
+          cube[ind] = botLeftX;
+          cube[ind + 1] = botY;
+          cube[ind + 2] = zCoord;
+
+          cube[ind + 3] = botRightX;
+          cube[ind + 4] = botY;
+          cube[ind + 5] = zCoord;
+
+          cube[ind + 6] = topLeftX;
+          cube[ind + 7] = topY;
+          cube[ind + 8] = zCoord;
+
+          cube[ind + 9] = botLeftX;
+          cube[ind + 10] = botY;
+          cube[ind + 11] = zCoord;
+
+          cube[ind + 12] = botRightX;
+          cube[ind + 13] = botY;
+          cube[ind + 14] = zCoord;
+
+          cube[ind + 15] = topRightX;
+          cube[ind + 16] = topY;
+          cube[ind + 17] = zCoord;
+
+          ind += 18;
+          topLeftX += step;
+          topRightX += step;
+          botLeftX += step;
+          botRightX += step;
+        }
+
+        topLeftX = -1.0f;
+        topRightX = -1.0f + step;
+        botLeftX = -1.0f;
+        botRightX = -1.0f + step;
+        topY += step;
+        botY += step;
+      }
+    }
+
+    public static void GenerateFrozenX(int count, float step, ref float[] cube, ref int ind, float xCoord) {
+
+      float botLeftX = -1.0f;
+      float botRightX = -1.0f + step;
+      float topLeftX = -1.0f;
+      float topRightX = -1.0f + step;
+
+      float botY = -1.0f;
+      float topY = -1.0f + step;
+
+
+      for (int i = 0; i < count - 1; ++i) {
+        for (int j = 0; j < count - 1; ++j) {
+          cube[ind] = xCoord;
+          cube[ind + 1] = botLeftX;
+          cube[ind + 2] = botY;
+
+          cube[ind + 3] = xCoord;
+          cube[ind + 4] = botRightX;
+          cube[ind + 5] = botY;
+
+          cube[ind + 6] = xCoord;
+          cube[ind + 7] = topLeftX;
+          cube[ind + 8] = topY;
+
+          cube[ind + 9] = xCoord;
+          cube[ind + 10] = botLeftX;
+          cube[ind + 11] = botY;
+
+          cube[ind + 12] = xCoord;
+          cube[ind + 13] = botRightX;
+          cube[ind + 14] = botY;
+
+          cube[ind + 15] = xCoord;
+          cube[ind + 16] = topRightX;
+          cube[ind + 17] = topY;
+
+          ind += 18;
+          topLeftX += step;
+          topRightX += step;
+          botLeftX += step;
+          botRightX += step;
+        }
+
+        topLeftX = -1.0f;
+        topRightX = -1.0f + step;
+        botLeftX = -1.0f;
+        botRightX = -1.0f + step;
+        topY += step;
+        botY += step;
+      }
+    }
+
+    public static void GenerateFrozenY(int count, float step, ref float[] cube, ref int ind, float yCoord) {
+
+      float botLeftX = -1.0f;
+      float botRightX = -1.0f + step;
+      float topLeftX = -1.0f;
+      float topRightX = -1.0f + step;
+
+      float botY = -1.0f;
+      float topY = -1.0f + step;
+
+
+      for (int i = 0; i < count - 1; ++i) {
+        for (int j = 0; j < count - 1; ++j) {
+          cube[ind] = botLeftX;
+          cube[ind + 1] = yCoord;
+          cube[ind + 2] = botY;
+
+          cube[ind + 3] = botRightX;
+          cube[ind + 4] = yCoord;
+          cube[ind + 5] = botY;
+
+          cube[ind + 6] = topLeftX;
+          cube[ind + 7] = yCoord;
+          cube[ind + 8] = topY;
+
+          cube[ind + 9] = botLeftX;
+          cube[ind + 10] = yCoord;
+          cube[ind + 11] = botY;
+
+          cube[ind + 12] = botRightX;
+          cube[ind + 13] = yCoord;
+          cube[ind + 14] = botY;
+
+          cube[ind + 15] = topRightX;
+          cube[ind + 16] = yCoord;
+          cube[ind + 17] = topY;
+
+          ind += 18;
+          topLeftX += step;
+          topRightX += step;
+          botLeftX += step;
+          botRightX += step;
+        }
+
+        topLeftX = -1.0f;
+        topRightX = -1.0f + step;
+        botLeftX = -1.0f;
+        botRightX = -1.0f + step;
+        topY += step;
+        botY += step;
+      }
+    }
+
+
+
+
   }
 }

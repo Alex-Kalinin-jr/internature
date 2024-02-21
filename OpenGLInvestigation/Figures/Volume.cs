@@ -49,7 +49,7 @@ namespace OpenGLInvestigation.Figures {
       }
 
       if (path == null) {
-        (Vertices, Indices, Colors, Normals)
+        (Vertices, Colors, Normals)
             = Generator.GenerateCube(10, color);
       }
     }
@@ -59,7 +59,7 @@ namespace OpenGLInvestigation.Figures {
   internal class Cube : Volume {
 
     public Cube(int verticesInLine, Vector3 color) {
-      (Vertices, Indices, Colors, Normals)
+      (Vertices, Colors, Normals)
           = Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
