@@ -35,6 +35,7 @@ namespace OpenGLInvestigation.Figures {
         Vector3 edge1 = v2 - v1;
         Vector3 edge2 = v3 - v1;
         Vector3 triangleNormal = Vector3.Cross(edge1, edge2);
+
         normals[i] = triangleNormal.X;
         normals[i + 1] = triangleNormal.Y;
         normals[i + 2] = triangleNormal.Z;
@@ -206,13 +207,14 @@ namespace OpenGLInvestigation.Figures {
           cube[ind + 1] = botY;
           cube[ind + 2] = zCoord;
 
-          cube[ind + 3] = rightX;
-          cube[ind + 4] = botY;
+          cube[ind + 3] = leftX;
+          cube[ind + 4] = topY;
           cube[ind + 5] = zCoord;
 
-          cube[ind + 6] = leftX;
-          cube[ind + 7] = topY;
+          cube[ind + 6] = rightX;
+          cube[ind + 7] = botY;
           cube[ind + 8] = zCoord;
+
 
           cube[ind + 9] = leftX;
           cube[ind + 10] = topY;
@@ -253,12 +255,13 @@ namespace OpenGLInvestigation.Figures {
           cube[ind + 2] = botY;
 
           cube[ind + 3] = xCoord;
-          cube[ind + 4] = rightX;
-          cube[ind + 5] = botY;
+          cube[ind + 4] = leftX;
+          cube[ind + 5] = topY;
 
           cube[ind + 6] = xCoord;
-          cube[ind + 7] = leftX;
-          cube[ind + 8] = topY;
+          cube[ind + 7] = rightX;
+          cube[ind + 8] = botY;
+
 
           cube[ind + 9] = xCoord;
           cube[ind + 10] = leftX;
@@ -298,13 +301,14 @@ namespace OpenGLInvestigation.Figures {
           cube[ind + 1] = yCoord;
           cube[ind + 2] = botY;
 
-          cube[ind + 3] = rightX;
+          cube[ind + 3] = leftX;
           cube[ind + 4] = yCoord;
-          cube[ind + 5] = botY;
+          cube[ind + 5] = topY;
 
-          cube[ind + 6] = leftX;
+          cube[ind + 6] = rightX;
           cube[ind + 7] = yCoord;
-          cube[ind + 8] = topY;
+          cube[ind + 8] = botY;
+
 
           cube[ind + 9] = leftX;
           cube[ind + 10] = yCoord;
@@ -317,6 +321,8 @@ namespace OpenGLInvestigation.Figures {
           cube[ind + 15] = rightX;
           cube[ind + 16] = yCoord;
           cube[ind + 17] = botY;
+
+
 
           ind += 18;
           rightX += step;
