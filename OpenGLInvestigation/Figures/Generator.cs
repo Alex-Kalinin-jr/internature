@@ -15,13 +15,14 @@ namespace OpenGLInvestigation.Figures {
       float[] colors = new float[cube.Length];
       float[] normals = new float[cube.Length];
 
+      /*
       GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
       GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenY(count, step, ref cube, ref ind, 1.0f);
       GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
+      */
       GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
-
       GenerateColorArray(ref colors, color);
       /*
       GenerateNormals(ref cube, ref idxs, ref normals);
@@ -173,52 +174,45 @@ namespace OpenGLInvestigation.Figures {
 
     public static void GenerateFrozenZ(int count, float step, ref float[] cube, ref int ind, float zCoord) {
 
-      float botLeftX = -1.0f;
-      float botRightX = -1.0f + step;
-      float topLeftX = -1.0f;
-      float topRightX = -1.0f + step;
-
+      float leftX = -1.0f;
+      float rightX = -1.0f + step;
       float botY = -1.0f;
       float topY = -1.0f + step;
 
 
       for (int i = 0; i < count - 1; ++i) {
         for (int j = 0; j < count - 1; ++j) {
-          cube[ind] = botLeftX;
+          cube[ind] = leftX;
           cube[ind + 1] = botY;
           cube[ind + 2] = zCoord;
 
-          cube[ind + 3] = botRightX;
+          cube[ind + 3] = rightX;
           cube[ind + 4] = botY;
           cube[ind + 5] = zCoord;
 
-          cube[ind + 6] = topLeftX;
+          cube[ind + 6] = leftX;
           cube[ind + 7] = topY;
           cube[ind + 8] = zCoord;
 
-          cube[ind + 9] = botLeftX;
+          cube[ind + 9] = leftX;
           cube[ind + 10] = botY;
           cube[ind + 11] = zCoord;
 
-          cube[ind + 12] = botRightX;
+          cube[ind + 12] = rightX;
           cube[ind + 13] = botY;
           cube[ind + 14] = zCoord;
 
-          cube[ind + 15] = topRightX;
+          cube[ind + 15] = rightX;
           cube[ind + 16] = topY;
           cube[ind + 17] = zCoord;
 
           ind += 18;
-          topLeftX += step;
-          topRightX += step;
-          botLeftX += step;
-          botRightX += step;
+          leftX += step;
+          rightX += step;
         }
 
-        topLeftX = -1.0f;
-        topRightX = -1.0f + step;
-        botLeftX = -1.0f;
-        botRightX = -1.0f + step;
+        rightX = -1.0f + step;
+        leftX = -1.0f;
         topY += step;
         botY += step;
       }
@@ -226,11 +220,8 @@ namespace OpenGLInvestigation.Figures {
 
     public static void GenerateFrozenX(int count, float step, ref float[] cube, ref int ind, float xCoord) {
 
-      float botLeftX = -1.0f;
-      float botRightX = -1.0f + step;
-      float topLeftX = -1.0f;
-      float topRightX = -1.0f + step;
-
+      float leftX = -1.0f;
+      float rightX = -1.0f + step;
       float botY = -1.0f;
       float topY = -1.0f + step;
 
@@ -238,40 +229,35 @@ namespace OpenGLInvestigation.Figures {
       for (int i = 0; i < count - 1; ++i) {
         for (int j = 0; j < count - 1; ++j) {
           cube[ind] = xCoord;
-          cube[ind + 1] = botLeftX;
+          cube[ind + 1] = leftX;
           cube[ind + 2] = botY;
 
           cube[ind + 3] = xCoord;
-          cube[ind + 4] = botRightX;
+          cube[ind + 4] = rightX;
           cube[ind + 5] = botY;
 
           cube[ind + 6] = xCoord;
-          cube[ind + 7] = topLeftX;
+          cube[ind + 7] = leftX;
           cube[ind + 8] = topY;
 
           cube[ind + 9] = xCoord;
-          cube[ind + 10] = botLeftX;
+          cube[ind + 10] = leftX;
           cube[ind + 11] = botY;
 
           cube[ind + 12] = xCoord;
-          cube[ind + 13] = botRightX;
+          cube[ind + 13] = rightX;
           cube[ind + 14] = botY;
 
           cube[ind + 15] = xCoord;
-          cube[ind + 16] = topRightX;
+          cube[ind + 16] = rightX;
           cube[ind + 17] = topY;
 
           ind += 18;
-          topLeftX += step;
-          topRightX += step;
-          botLeftX += step;
-          botRightX += step;
+          leftX += step;
+          rightX += step;
         }
-
-        topLeftX = -1.0f;
-        topRightX = -1.0f + step;
-        botLeftX = -1.0f;
-        botRightX = -1.0f + step;
+        leftX = -1.0f;
+        rightX = -1.0f + step;
         topY += step;
         botY += step;
       }
@@ -279,10 +265,8 @@ namespace OpenGLInvestigation.Figures {
 
     public static void GenerateFrozenY(int count, float step, ref float[] cube, ref int ind, float yCoord) {
 
-      float botLeftX = -1.0f;
-      float botRightX = -1.0f + step;
-      float topLeftX = -1.0f;
-      float topRightX = -1.0f + step;
+      float leftX = -1.0f;
+      float rightX = -1.0f + step;
 
       float botY = -1.0f;
       float topY = -1.0f + step;
@@ -290,48 +274,41 @@ namespace OpenGLInvestigation.Figures {
 
       for (int i = 0; i < count - 1; ++i) {
         for (int j = 0; j < count - 1; ++j) {
-          cube[ind] = botLeftX;
+          cube[ind] = leftX;
           cube[ind + 1] = yCoord;
           cube[ind + 2] = botY;
 
-          cube[ind + 3] = botRightX;
+          cube[ind + 3] = rightX;
           cube[ind + 4] = yCoord;
           cube[ind + 5] = botY;
 
-          cube[ind + 6] = topLeftX;
+          cube[ind + 6] = leftX;
           cube[ind + 7] = yCoord;
           cube[ind + 8] = topY;
 
-          cube[ind + 9] = botLeftX;
+          cube[ind + 9] = leftX;
           cube[ind + 10] = yCoord;
           cube[ind + 11] = botY;
 
-          cube[ind + 12] = botRightX;
+          cube[ind + 12] = rightX;
           cube[ind + 13] = yCoord;
           cube[ind + 14] = botY;
 
-          cube[ind + 15] = topRightX;
+          cube[ind + 15] = rightX;
           cube[ind + 16] = yCoord;
           cube[ind + 17] = topY;
 
           ind += 18;
-          topLeftX += step;
-          topRightX += step;
-          botLeftX += step;
-          botRightX += step;
+          rightX += step;
+          leftX += step;
         }
 
-        topLeftX = -1.0f;
-        topRightX = -1.0f + step;
-        botLeftX = -1.0f;
-        botRightX = -1.0f + step;
+        leftX = -1.0f;
+        rightX = -1.0f + step;
         topY += step;
         botY += step;
       }
     }
-
-
-
 
   }
 }

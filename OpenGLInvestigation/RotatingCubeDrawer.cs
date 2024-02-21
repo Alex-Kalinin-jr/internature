@@ -238,14 +238,14 @@ public sealed class RotatingCubeDrawer {
 
   private void ShowFramed(int i) {
     if (_volumes[i].Indices != null) {
-      GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Indices.Length / 3);
+      GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Vertices.Length / 3);
     } else {
       GL.DrawArrays(PrimitiveType.LineStrip, 0, _volumes[i].Vertices.Length / 3);
     }
   }
 
   private void ShowPoints(int i) {
-    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Indices.Length / 3);
+    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
   }
 
   public void ChangeDrawingType(int i) {
