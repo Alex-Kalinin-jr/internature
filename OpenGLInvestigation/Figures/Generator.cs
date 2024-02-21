@@ -21,11 +21,34 @@ namespace OpenGLInvestigation.Figures {
       GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
       GenerateColorArray(ref colors, color);
-      /*
-      GenerateNormals(ref cube, ref idxs, ref normals);
-      */
+
+      GenerateNormals(ref cube, ref normals);
+
       return (cube, colors, normals);
     }
+
+    private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
+      for (int i = 0; i < vertices.Length; i += 9) {
+        Vector3 v1 = new Vector3(vertices[i], vertices[i + 1], vertices[i + 2]);
+        Vector3 v2 = new Vector3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
+        Vector3 v3 = new Vector3(vertices[i + 6], vertices[i + 7], vertices[i + 8]);
+        Vector3 edge1 = v2 - v1;
+        Vector3 edge2 = v3 - v1;
+        Vector3 triangleNormal = Vector3.Cross(edge1, edge2);
+        normals[i] = triangleNormal.X;
+        normals[i + 1] = triangleNormal.Y;
+        normals[i + 2] = triangleNormal.Z;
+        normals[i + 3] = triangleNormal.X;
+        normals[i + 4] = triangleNormal.Y;
+        normals[i + 5] = triangleNormal.Z;
+        normals[i + 6] = triangleNormal.X;
+        normals[i + 7] = triangleNormal.Y;
+        normals[i + 8] = triangleNormal.Z;
+      }
+
+
+    }
+
 
     private static void GenerateColorArray(ref float[] colors, OpenTK.Mathematics.Vector3 color) {
       int idx = 0;
