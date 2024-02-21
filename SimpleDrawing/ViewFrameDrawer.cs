@@ -6,37 +6,80 @@ using SimpleDrawing.Entities;
 namespace SimpleDrawing;
 
 public delegate void Show(int i);
+public delegate void UseShader();
 
 public sealed class RotatingCubeDrawer {
   private int _width;
   private int _height;
 
+
+  private Shader _shader;
+  private Shader _lampShader;
+  private List<UseShader> _useShader; // functional object
+
+  private int _lampCount = 0;
+  private Vector3 _lampPosition;
+
+
   private Matrix4 _view;
   private Matrix4 _projection;
   private readonly float _FOV = 45.0f;
 
-  //  ///////////////////////////////////////////////////////////////////////////
+  // first "_lampCount" volumes are the lamp's volumes
   private List<Volume> _volumes = new List<Volume>();
-  private List<int> _vertexBufferObjects = new List<int>(); // first is the lamp `
-  private List<int> _colorBufferObjects = new List<int>();
-  private List<int> _normalBufferObjects = new List<int>();
-  private List<int> _vertexArrayObjects = new List<int>();
-  private Shader _shader;
-  private List<int> _elementBufferObjects = new List<int>();
+
+
+  private List<int> _vertexBufferObjects;
+  private List<int> _colorBufferObjects;
+  private List<int> _normalBufferObjects;
+  private List<int> _vertexArrayObjects;
+  private List<int> _elementBufferObjects;
+
+
   private Show _showType;
-  //  ///////////////////////////////////////////////////////////////////////////
+
+
   private float _lastTimestamp = Stopwatch.GetTimestamp();
   private float _interpolationKoeff;
   private bool _increase;
-  //  ///////////////////////////////////////////////////////////////////////////
-  // lamp
-  private Shader _lampShader;
-  private int _lampCount = 0;
-  private Vector3 _lampPosition;
-  //  ///////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////
+  public RotatingCubeDrawer() {
+    _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
+    _lampShader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
+    _useShader = new List<UseShader>();
+
+    _showType = ShowSolid;
 
 
-  // to be changed
+    _vertexBufferObjects = new List<int>();
+    _colorBufferObjects = new List<int>();
+    _normalBufferObjects = new List<int>();
+    _vertexArrayObjects = new List<int>();
+    _elementBufferObjects = new List<int>();
+
+    _increase = true;
+    _interpolationKoeff = 0.2f;
+
+    _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
+    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), 
+        _width / (float)_height, 0.2f, 256.0f);
+
+    _volumes = new List<Volume>();
+
+    Cube lampBuff = new Cube(10, new Vector3(1.0f, 1.0f, 1.0f));
+    lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
+    ++_lampCount;
+    _lampPosition = lampBuff.PosVr;
+    _volumes.Add(lampBuff);
+    _useShader.Add(_lampShader.Use);
+
+    var cubes = Generator.GenerateVolumes();
+    _volumes.AddRange(cubes);
+
+  }
+
+  //  //////////////////////////////////////////////////////////////////////////////
+  // to be changed to camera movements 
   public void MoveRight() {
     foreach (var item in _volumes) {
       item.PosVr += new Vector3(1.0f, 0.0f, 0.0f);
@@ -61,75 +104,24 @@ public sealed class RotatingCubeDrawer {
     }
   }
 
+  //  //////////////////////////////////////////////////////////////////////////////
+  private void AdjustVolumeShader() {
+    _shader.SetUniform3("lightPos", _lampPosition);
+    _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
+    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // this vector is ambient lighting shader
+    _shader.SetMatrix4("view", _view);
+    _shader.SetMatrix4("projection", _projection);
+  }
 
+  private void AdjustLampShader() {
+    _lampShader.SetMatrix4("view", _view);
+    _lampShader.SetMatrix4("projection", _projection);
+  }
+
+  //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
-
-    _increase = true;
-    _interpolationKoeff = 0.2f;
-
     ChangeDrawingType(0);
     GL.Enable(EnableCap.ProgramPointSize);
-
-    // to be encapsulated
-    _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
-    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f), _width / (float)_height, 0.2f, 256.0f);
-    // to be encapsulated
-
-    Cube lampBuff = new Cube(10, new Vector3(1.0f, 1.0f, 1.0f));
-    lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
-    ++_lampCount;
-    _lampPosition = lampBuff.PosVr;
-
-    Cube buff = new Cube(4, new Vector3(1.0f, 0.5f, 0.0f));
-    buff.PosVr += new Vector3(-3.0f, 0.0f, -1.0f);
-    buff.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff2 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff2.PosVr += new Vector3(3.0f, 0.0f, -1.0f);
-    buff2.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff3 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff3.PosVr += new Vector3(0.0f, 0.0f, -3.0f);
-    buff3.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff4 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff4.PosVr += new Vector3(0.0f, 3.0f, -3.0f);
-    buff4.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff5 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff5.PosVr += new Vector3(0.0f, -3.0f, -3.0f);
-    buff5.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff6 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff6.PosVr += new Vector3(3.0f, 3.0f, -1.0f);
-    buff6.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff7 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff7.PosVr += new Vector3(3.0f, -3.0f, -1.0f);
-    buff7.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff8 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff8.PosVr += new Vector3(-3.0f, 3.0f, 0.0f);
-    buff8.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    Cube buff9 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
-    buff9.PosVr += new Vector3(-3.0f, -3.0f, 0.0f);
-    buff9.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
-
-    _volumes.Add(lampBuff);
-    _volumes.Add(buff);
-    _volumes.Add(buff2);
-    _volumes.Add(buff3);
-    _volumes.Add(buff4);
-    _volumes.Add(buff5);
-    _volumes.Add(buff6);
-    _volumes.Add(buff7);
-    _volumes.Add(buff8);
-    _volumes.Add(buff9);
-
-    _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
-
-    _lampShader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
 
     for (int i = 0; i < _volumes.Count; ++i) {
       _vertexArrayObjects.Add(GL.GenVertexArray());
@@ -141,10 +133,6 @@ public sealed class RotatingCubeDrawer {
 
       if (_volumes[i].Colors != null) {
         BindColorBuffer(i);
-      }
-
-      if (_volumes[i].Indices != null) {
-        BindIndicesBuffer(i);
       }
 
       if (_volumes[i].Normals != null) {
@@ -170,7 +158,7 @@ public sealed class RotatingCubeDrawer {
   public void OnRenderFrame() {
     //  //////////////////////////////////////////////////////////////////////////////
     ChangeBlend();
-    AdjustShader();
+    AdjustVolumeShader();
     AdjustLampShader();
 
     _shader.Use();
@@ -246,18 +234,6 @@ public sealed class RotatingCubeDrawer {
         _volumes[indexOfDescriptros].Indices, BufferUsageHint.StaticDraw);
   }
 
-  private void AdjustShader() {
-    _shader.SetUniform3("lightPos", _lampPosition);
-    _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
-    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // this vector is ambient lighting shader
-    _shader.SetMatrix4("view", _view);
-    _shader.SetMatrix4("projection", _projection);
-  }
-  // to be merged
-  private void AdjustLampShader() {
-    _lampShader.SetMatrix4("view", _view);
-    _lampShader.SetMatrix4("projection", _projection);
-  }
 
   private void ShowSolid(int i) {
     if (_volumes[i].Indices != null) {
@@ -306,11 +282,12 @@ public sealed class RotatingCubeDrawer {
       _interpolationKoeff -= step;
     }
 
-    if (_interpolationKoeff >= 0.98f || _interpolationKoeff <= 0.0f) {
+    if (_interpolationKoeff >= 0.999f || _interpolationKoeff <= 0.0f) {
       _increase = _increase ^ true;
-      Thread.Sleep(1000);
     }
   }
+
+
 
 
 }

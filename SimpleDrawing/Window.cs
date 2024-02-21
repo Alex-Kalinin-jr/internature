@@ -19,8 +19,12 @@ public class Window : GameWindow {
   Camera _camera;
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
-    Size = new Vector2i(1600, 900), APIVersion = new Version(3, 3)
-  }) { }
+    Size = new Vector2i(1024, 768), APIVersion = new Version(3, 3)
+  }) {
+    _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
+    _scene = new SceneRender(this);
+    _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+  }
 
 
   private static void DebugCallback(DebugSource source, DebugType type, int id,
@@ -46,9 +50,7 @@ public class Window : GameWindow {
     Title += ": OpenGL Version: " + GL.GetString(StringName.Version);
     VSync = VSyncMode.On;
 
-    _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
-    _scene = new SceneRender(this);
-    _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
+
 
     Error.Check();
   }
@@ -151,32 +153,32 @@ public class Window : GameWindow {
     if (input.IsKeyDown(Keys.Escape)) {
       Close();
     }
-
+// to be replaced
     const float cameraSpeed = 1.5f;
     const float sensitivity = 0.2f;
 
     if (input.IsKeyDown(Keys.W)) {
-      _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
+      _camera.Position += _camera.Front * cameraSpeed * (float)e.Time;
     }
 
     if (input.IsKeyDown(Keys.S)) {
-      _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
+      _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time;
     }
 
     if (input.IsKeyDown(Keys.A)) {
-      _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
+      _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time;
     }
 
     if (input.IsKeyDown(Keys.D)) {
-      _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
+      _camera.Position += _camera.Right * cameraSpeed * (float)e.Time;
     }
 
     if (input.IsKeyDown(Keys.LeftShift)) {
-      _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
+      _camera.Position += _camera.Up * cameraSpeed * (float)e.Time;
     }
 
     if (input.IsKeyDown(Keys.Space)) {
-      _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
+      _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time;
     }
 
     if (input.IsKeyDown(Keys.Up)) { _camera.Pitch -= 1; }

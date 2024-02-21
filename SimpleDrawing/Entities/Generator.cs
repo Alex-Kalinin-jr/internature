@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using OpenTK.Mathematics;
 
 namespace SimpleDrawing.Entities {
   internal class Generator {
@@ -26,6 +25,7 @@ namespace SimpleDrawing.Entities {
     }
 
     private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
+
       for (int i = 0; i < vertices.Length; i += 9) {
         Vector3 v1 = new Vector3(vertices[i], vertices[i + 1], vertices[i + 2]);
         Vector3 v2 = new Vector3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
@@ -45,11 +45,11 @@ namespace SimpleDrawing.Entities {
         normals[i + 8] = triangleNormal.Z;
       }
 
-
     }
 
 
     private static void GenerateColorArray(ref float[] colors, OpenTK.Mathematics.Vector3 color) {
+
       int idx = 0;
       while (idx < colors.Length) {
         colors[idx] = color.X;
@@ -62,130 +62,42 @@ namespace SimpleDrawing.Entities {
 
     public static (float[], float[], float[]) GenerateTestingCube() {
       float[] vertices = {
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-
-            -0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f, -0.5f,
-            -0.5f, -0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f,  0.5f,
-            -0.5f, -0.5f, -0.5f,
-
-            -0.5f,  0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-             0.5f,  0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f, -0.5f
-        };
+        -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f,
+        0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f,
+        -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f, -0.5f, -0.5f,  0.5f, -0.5f, 0.5f, 0.5f,
+        0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f, 0.5f, -0.5f,  0.5f, 0.5f,  0.5f, 0.5f,
+        -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f,
+        0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f,
+        -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f,
+        0.5f,  0.5f, 0.5f, -0.5f,  0.5f, 0.5f, -0.5f,  0.5f, -0.5f
+      };
 
       float[] normals = {
-          0.0f,  0.0f, -1.0f,
-          0.0f,  0.0f, -1.0f,
-          0.0f,  0.0f, -1.0f,
-          0.0f,  0.0f, -1.0f,
-          0.0f,  0.0f, -1.0f,
-          0.0f,  0.0f, -1.0f,
-          0.0f,  0.0f,  1.0f,
-          0.0f,  0.0f,  1.0f,
-          0.0f,  0.0f,  1.0f,
-          0.0f,  0.0f,  1.0f,
-          0.0f,  0.0f,  1.0f,
-          0.0f,  0.0f,  1.0f,
-         -1.0f,  0.0f,  0.0f,
-         -1.0f,  0.0f,  0.0f,
-         -1.0f,  0.0f,  0.0f,
-         -1.0f,  0.0f,  0.0f,
-         -1.0f,  0.0f,  0.0f,
-         -1.0f,  0.0f,  0.0f,
-          1.0f,  0.0f,  0.0f,
-          1.0f,  0.0f,  0.0f,
-          1.0f,  0.0f,  0.0f,
-          1.0f,  0.0f,  0.0f,
-          1.0f,  0.0f,  0.0f,
-          1.0f,  0.0f,  0.0f,
-          0.0f, -1.0f,  0.0f,
-          0.0f, -1.0f,  0.0f,
-          0.0f, -1.0f,  0.0f,
-          0.0f, -1.0f,  0.0f,
-          0.0f, -1.0f,  0.0f,
-          0.0f, -1.0f,  0.0f,
-          0.0f,  1.0f,  0.0f,
-          0.0f,  1.0f,  0.0f,
-          0.0f,  1.0f,  0.0f,
-          0.0f,  1.0f,  0.0f,
-          0.0f,  1.0f,  0.0f,
-          0.0f,  1.0f,  0.0f
+        0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+        0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f,
+        0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f
       };
 
       float[] colors = {
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f
+        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
+        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
+        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
+        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
+        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
+        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f
       };
 
       return (vertices, colors, normals);
@@ -317,7 +229,6 @@ namespace SimpleDrawing.Entities {
           cube[ind + 8] = topY;
 
 
-
           cube[ind + 9] = leftX;
           cube[ind + 10] = yCoord;
           cube[ind + 11] = topY;
@@ -342,6 +253,60 @@ namespace SimpleDrawing.Entities {
         botY += stepY;
       }
     }
+
+
+    public static List<Cube> GenerateVolumes() {
+      var volumes = new List<Cube>();
+
+      Cube buff = new Cube(4, new Vector3(1.0f, 0.5f, 0.0f));
+      buff.PosVr += new Vector3(-3.0f, 0.0f, -1.0f);
+      buff.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff2 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff2.PosVr += new Vector3(3.0f, 0.0f, -1.0f);
+      buff2.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff3 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff3.PosVr += new Vector3(0.0f, 0.0f, -3.0f);
+      buff3.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff4 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff4.PosVr += new Vector3(0.0f, 3.0f, -3.0f);
+      buff4.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff5 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff5.PosVr += new Vector3(0.0f, -3.0f, -3.0f);
+      buff5.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff6 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff6.PosVr += new Vector3(3.0f, 3.0f, -1.0f);
+      buff6.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff7 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff7.PosVr += new Vector3(3.0f, -3.0f, -1.0f);
+      buff7.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff8 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff8.PosVr += new Vector3(-3.0f, 3.0f, 0.0f);
+      buff8.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      Cube buff9 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+      buff9.PosVr += new Vector3(-3.0f, -3.0f, 0.0f);
+      buff9.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+      volumes.Add(buff);
+      volumes.Add(buff2);
+      volumes.Add(buff3);
+      volumes.Add(buff4);
+      volumes.Add(buff5);
+      volumes.Add(buff6);
+      volumes.Add(buff7);
+      volumes.Add(buff8);
+      volumes.Add(buff9);
+
+      return volumes;
+    }
+
 
   }
 }

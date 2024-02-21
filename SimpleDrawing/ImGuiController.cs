@@ -5,7 +5,6 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
-using SimpleDrawing.Shader;
 using ImGuiNET;
 
 namespace SimpleDrawing {
@@ -22,7 +21,7 @@ namespace SimpleDrawing {
 
     private int _fontTexture;
 
-    private Shader _shader;
+    private Entities.Shader _shader;
 
     private int _windowWidth;
     private int _windowHeight;
@@ -52,10 +51,13 @@ namespace SimpleDrawing {
 
       io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
+      _shader = new Entities.Shader("Shader/Shaders/shader_imgui.vert", "Shader/Shaders/shader_imgui.frag");
+
       CreateDeviceResources();
       SetKeyMappings();
 
       SetPerFrameImGuiData(1f / 60f);
+
 
       ImGui.NewFrame();
       _frameBegun = true;
@@ -93,7 +95,7 @@ namespace SimpleDrawing {
 
       RecreateFontDeviceTexture();
 
-      _shader = new OpenGLInvestigation.Shader("Shader/Shaders/shader_imgui.vert", "Shader/Shaders/shader_imgui.frag");
+      _shader.Use();
 
       int stride = Unsafe.SizeOf<ImDrawVert>();
       GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, stride, 0);
