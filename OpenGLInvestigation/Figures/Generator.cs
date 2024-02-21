@@ -15,13 +15,11 @@ namespace OpenGLInvestigation.Figures {
       float[] colors = new float[cube.Length];
       float[] normals = new float[cube.Length];
 
-      /*
       GenerateFrozenX(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenX(count, step, ref cube, ref ind, 1.0f);
       GenerateFrozenY(count, step, ref cube, ref ind, -1.0f);
       GenerateFrozenY(count, step, ref cube, ref ind, 1.0f);
       GenerateFrozenZ(count, step, ref cube, ref ind, -1.0f);
-      */
       GenerateFrozenZ(count, step, ref cube, ref ind, 1.0f);
       GenerateColorArray(ref colors, color);
       /*
@@ -195,15 +193,15 @@ namespace OpenGLInvestigation.Figures {
           cube[ind + 8] = zCoord;
 
           cube[ind + 9] = leftX;
-          cube[ind + 10] = botY;
+          cube[ind + 10] = topY;
           cube[ind + 11] = zCoord;
 
           cube[ind + 12] = rightX;
-          cube[ind + 13] = botY;
+          cube[ind + 13] = topY;
           cube[ind + 14] = zCoord;
 
           cube[ind + 15] = rightX;
-          cube[ind + 16] = topY;
+          cube[ind + 16] = botY;
           cube[ind + 17] = zCoord;
 
           ind += 18;
@@ -242,15 +240,15 @@ namespace OpenGLInvestigation.Figures {
 
           cube[ind + 9] = xCoord;
           cube[ind + 10] = leftX;
-          cube[ind + 11] = botY;
+          cube[ind + 11] = topY;
 
           cube[ind + 12] = xCoord;
           cube[ind + 13] = rightX;
-          cube[ind + 14] = botY;
+          cube[ind + 14] = topY;
 
           cube[ind + 15] = xCoord;
           cube[ind + 16] = rightX;
-          cube[ind + 17] = topY;
+          cube[ind + 17] = botY;
 
           ind += 18;
           leftX += step;
@@ -288,15 +286,15 @@ namespace OpenGLInvestigation.Figures {
 
           cube[ind + 9] = leftX;
           cube[ind + 10] = yCoord;
-          cube[ind + 11] = botY;
+          cube[ind + 11] = topY;
 
           cube[ind + 12] = rightX;
           cube[ind + 13] = yCoord;
-          cube[ind + 14] = botY;
+          cube[ind + 14] = topY;
 
           cube[ind + 15] = rightX;
           cube[ind + 16] = yCoord;
-          cube[ind + 17] = topY;
+          cube[ind + 17] = botY;
 
           ind += 18;
           rightX += step;
