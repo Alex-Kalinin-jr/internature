@@ -85,7 +85,6 @@ public sealed class RotatingCubeDrawer {
     buff.PosVr += new Vector3(-3.0f, 0.0f, -1.0f);
     buff.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
 
-
     Cube buff2 = new Cube (10, new Vector3(1.0f, 0.5f, 0.0f));
     buff2.PosVr += new Vector3(3.0f, 0.0f, -1.0f);
     buff2.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
@@ -102,12 +101,32 @@ public sealed class RotatingCubeDrawer {
     buff5.PosVr += new Vector3(0.0f, -3.0f, -3.0f);
     buff5.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
 
+    Cube buff6 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+    buff6.PosVr += new Vector3(3.0f, 3.0f, -1.0f);
+    buff6.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+    Cube buff7 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+    buff7.PosVr += new Vector3(3.0f, -3.0f, -1.0f);
+    buff7.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+    Cube buff8 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+    buff8.PosVr += new Vector3(-3.0f, 3.0f, 0.0f);
+    buff8.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
+    Cube buff9 = new Cube(10, new Vector3(1.0f, 0.5f, 0.0f));
+    buff9.PosVr += new Vector3(-3.0f, -3.0f, 0.0f);
+    buff9.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
+
     _volumes.Add(lampBuff);
     _volumes.Add(buff);
     _volumes.Add(buff2);
     _volumes.Add(buff3);
     _volumes.Add(buff4);
     _volumes.Add(buff5);
+    _volumes.Add(buff6);
+    _volumes.Add(buff7);
+    _volumes.Add(buff8);
+    _volumes.Add(buff9);
 
     _shader = new OpenGLInvestigation.Shader("Shader/Shaders/shader.vert", 
         "Shader/Shaders/shader.frag");
