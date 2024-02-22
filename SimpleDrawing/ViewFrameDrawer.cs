@@ -132,12 +132,16 @@ public sealed class RotatingCubeDrawer {
   void ShowVolumes() {
 
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
-    _shader.SetUniform3("lightPos", _lampPosition);
     _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
-    _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // ambient lighting color
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
-    
+
+    _shader.SetUniform3("light.position", _lampPosition);
+    _shader.SetUniform3("light.color", new Vector3(1.0f, 1.0f, 1.0f));
+    _shader.SetFloat("light.constant", 1.0f);
+    _shader.SetFloat("light.linear", 0.09f);
+    _shader.SetFloat("light.quadratic", 0.032f);
+
     _shader.SetUniform3("material.diffuse", new Vector3(0.714f, 0.4284f, 0.18144f));
     _shader.SetUniform3("material.specular", new Vector3(0.393548f, 0.271906f, 0.166721f));
     _shader.SetFloat("material.shiness", 0.2f);
