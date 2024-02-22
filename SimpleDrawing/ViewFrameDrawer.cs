@@ -25,7 +25,6 @@ public sealed class RotatingCubeDrawer {
   private List<Volume> _volumes = new List<Volume>();
 
   private List<int> _vertexBufferObjects;
-  private List<int> _colorBufferObjects;
   private List<int> _normalBufferObjects;
   private List<int> _vertexArrayObjects;
 
@@ -44,7 +43,6 @@ public sealed class RotatingCubeDrawer {
     _lampShader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
 
     _vertexBufferObjects = new List<int>();
-    _colorBufferObjects = new List<int>();
     _normalBufferObjects = new List<int>();
     _vertexArrayObjects = new List<int>();
 
@@ -57,7 +55,7 @@ public sealed class RotatingCubeDrawer {
 
     _volumes = new List<Volume>();
 
-    Cube lampBuff = new Cube(10, new Vector3(1.0f, 1.0f, 1.0f));
+    Cube lampBuff = new Cube(10, new Vector3(0.0f, 0.0f, 0.0f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
     ++_lampCount;
     _lampPosition = lampBuff.PosVr;
@@ -82,10 +80,6 @@ public sealed class RotatingCubeDrawer {
 
       if (_volumes[i].Vertices != null) {
         BindPosBuffer(i);
-      }
-
-      if (_volumes[i].Colors != null) {
-        BindColorBuffer(i);
       }
 
       if (_volumes[i].Normals != null) {
@@ -133,6 +127,7 @@ public sealed class RotatingCubeDrawer {
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
+      _shader.SetUniform3("aColor", _volumes[i].ColorVr);
 
       model.Invert();
       _shader.SetMatrix4("invertedModel", model);
@@ -153,6 +148,7 @@ public sealed class RotatingCubeDrawer {
 
       Matrix4 modelLamp = _volumes[i].ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
+      _lampShader.SetUniform3("aColor", _volumes[i].ColorVr);
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
       ShowSolid(0);
@@ -173,18 +169,6 @@ public sealed class RotatingCubeDrawer {
         _volumes[indexOfDescriptros].Vertices, BufferUsageHint.DynamicDraw);
     GL.EnableVertexAttribArray(vertexLocation);
     GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-
-  private void BindColorBuffer(int indexOfDescriptros) {
-    _colorBufferObjects.Add(GL.GenBuffer());
-    int colorLocation = GL.GetAttribLocation(_shader.Handle, "aColor");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, _colorBufferObjects[indexOfDescriptros]);
-    GL.BufferData(BufferTarget.ArrayBuffer,
-      _volumes[indexOfDescriptros].Colors.Length * sizeof(float),
-      _volumes[indexOfDescriptros].Colors, BufferUsageHint.StaticDraw);
-    GL.EnableVertexAttribArray(colorLocation);
-    GL.VertexAttribPointer(colorLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
 
@@ -250,7 +234,11 @@ public sealed class RotatingCubeDrawer {
   }
   //  //////////////////////////////////////////////////////////////////////////////
 
-
+  void ChangeVolumesColor(Vector3 color) {
+    for (int i = _lampCount; i < _volumes.Count; ++i) {
+      _volumes[i].ColorVr = color;
+    }
+  }
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void SetMatrices(Matrix4 v, Matrix4 p) {

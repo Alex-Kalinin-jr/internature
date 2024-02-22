@@ -6,8 +6,9 @@ namespace SimpleDrawing.Entities {
     public float[]? TexCoords { get; init; }
     public uint[]? Indices { get; init; }
     public int Texture { get; set; }
-    public float[]? Colors { get; init; }
+
     public float[]? Normals { get; init; }
+    public Vector3 ColorVr { get; set; }
     public Vector3 ScaleVr { get; set; }
     public Vector3 PosVr { get; set; }
     public Vector3 RotationVr { get; set; }
@@ -30,7 +31,7 @@ namespace SimpleDrawing.Entities {
 
     public Volume(string path, Vector3 color) : this() {
 
-      (Vertices, Colors, Normals) = Generator.GenerateCube(10, color);
+      (Vertices, ColorVr, Normals) = Generator.GenerateCube(10, color);
     }
 
   }
@@ -38,7 +39,7 @@ namespace SimpleDrawing.Entities {
   internal class Cube : Volume {
 
     public Cube(int verticesInLine, Vector3 color) {
-      (Vertices, Colors, Normals)
+      (Vertices, ColorVr, Normals)
           = Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
@@ -48,7 +49,7 @@ namespace SimpleDrawing.Entities {
     }
 
     public Cube(string a) {
-      (Vertices, Colors, Normals) = Generator.GenerateTestingCube();
+      (Vertices, ColorVr, Normals) = Generator.GenerateTestingCube();
       Texture = -1;
       ScaleVr = Vector3.One;
       PosVr = Vector3.Zero;

@@ -3,13 +3,12 @@
 namespace SimpleDrawing.Entities {
   internal class Generator {
 
-    public static (float[], float[], float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
+    public static (float[], Vector3, float[]) GenerateCube(int count, Vector3 color) {
 
       float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
       float step = 2.0f / (count - 1);
       int ind = 0;
 
-      float[] colors = new float[cube.Length];
       float[] normals = new float[cube.Length];
       GenerateFrozenX(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GenerateFrozenX(count, -step, 1.0f, ref cube, ref ind, 1.0f);
@@ -17,11 +16,12 @@ namespace SimpleDrawing.Entities {
       GenerateFrozenY(count, -step, 1.0f, ref cube, ref ind, 1.0f);
       GenerateFrozenZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GenerateFrozenZ(count, -step, 1.0f, ref cube, ref ind, 1.0f);
-      GenerateColorArray(ref colors, color);
+
+      Vector3 outColor = color;
 
       GenerateNormals(ref cube, ref normals);
 
-      return (cube, colors, normals);
+      return (cube, color, normals);
     }
 
     private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
@@ -48,19 +48,7 @@ namespace SimpleDrawing.Entities {
     }
 
 
-    private static void GenerateColorArray(ref float[] colors, OpenTK.Mathematics.Vector3 color) {
-
-      int idx = 0;
-      while (idx < colors.Length) {
-        colors[idx] = color.X;
-        colors[idx + 1] = color.Y;
-        colors[idx + 2] = color.Z;
-        idx += 3;
-      }
-
-    }
-
-    public static (float[], float[], float[]) GenerateTestingCube() {
+    public static (float[], Vector3, float[]) GenerateTestingCube() {
       float[] vertices = {
         -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f,
         0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
@@ -91,14 +79,7 @@ namespace SimpleDrawing.Entities {
         1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f
       };
 
-      float[] colors = {
-        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f,
-        1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f
-      };
+      Vector3 colors = new Vector3(1.0f, 0.5f, 0.0f);
 
       return (vertices, colors, normals);
     }
