@@ -136,7 +136,6 @@ internal class SceneRender : IDisposable {
   }
 
   public void SetEdgesColor(System.Numerics.Vector3 color) {
-
     _drawer.ChangeEdgesColor(new Vector3(color.X, color.Y, color.Z));
   }
 

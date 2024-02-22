@@ -19,5 +19,5 @@ void main()
     Normal = aNormal * mat3(transpose(invertedModel));
 
     gl_Position = vec4(aPos, 1.0) * model * view * projection;
-    gl_PointSize = 5;
+    gl_PointSize = 3;
 }

@@ -157,18 +157,18 @@ public class Window : GameWindow {
     if (ImGui.ColorEdit3("", ref _facesColor) || ImGui.ColorPicker3("", ref _facesColor)) {
       _scene.SetFacesColor(_facesColor);
     }
-
-
     ImGui.End();
 
     ImGui.Begin("edges");
-    ImGui.ColorEdit3("", ref _edgesColor);
-    ImGui.ColorPicker3("", ref _edgesColor);
+    if (ImGui.ColorEdit3("", ref _edgesColor) || ImGui.ColorPicker3("", ref _edgesColor)) {
+      _scene.SetEdgesColor(_edgesColor);
+    }
     ImGui.End();
 
     ImGui.Begin("points");
-    ImGui.ColorEdit3("", ref _pointsColor);
-    ImGui.ColorPicker3("", ref _pointsColor);
+    if (ImGui.ColorEdit3("", ref _pointsColor) || ImGui.ColorPicker3("", ref _pointsColor)) {
+      _scene.SetPointsColor(_pointsColor);
+    }
     ImGui.End();
   }
 

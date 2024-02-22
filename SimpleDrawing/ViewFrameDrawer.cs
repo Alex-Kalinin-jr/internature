@@ -136,7 +136,6 @@ public sealed class RotatingCubeDrawer {
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
-      _shader.SetUniform3("aColor", _volumes[i].ColorVr);
 
       model.Invert();
       _shader.SetMatrix4("invertedModel", model);
@@ -198,10 +197,13 @@ public sealed class RotatingCubeDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   private void ShowSolid(int i) {
+    _shader.SetUniform3("aColor", _facesColor);
     GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
   }
 
   private void ShowFramed(int i) {
+    _shader.SetUniform3("aColor", _edgesColor);
+
     int bias = 0;
     int step = _volumes[i].Vertices.Length / 3 / 6;
 
@@ -212,6 +214,7 @@ public sealed class RotatingCubeDrawer {
   }
 
   private void ShowPoints(int i) {
+    _shader.SetUniform3("aColor", _pointsColor);
     GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
   }
 
