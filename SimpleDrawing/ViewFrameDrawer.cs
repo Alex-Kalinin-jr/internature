@@ -44,7 +44,7 @@ public sealed class RotatingCubeDrawer {
   //  //////////////////////////////////////////////////////////////////////////////
   public RotatingCubeDrawer() {
     _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
-    _lampShader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/lightShader.frag");
+    _lampShader = new Shader("Shader/Shaders/lightShader.vert", "Shader/Shaders/lightShader.frag");
 
     _vertexBufferObjects = new List<int>();
     _normalBufferObjects = new List<int>();
