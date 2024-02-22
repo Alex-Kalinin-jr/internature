@@ -15,6 +15,10 @@ public class Window : GameWindow {
   private bool _areEdgesDrawn;
   private bool _arePointsDrawn;
 
+  private System.Numerics.Vector3 _facesColor;
+  private System.Numerics.Vector3 _edgesColor;
+  private System.Numerics.Vector3 _pointsColor;
+
   private static DebugProc _debugProcCallback = DebugCallback;
   private static GCHandle _debugProcCallbackHandle;
 
@@ -32,6 +36,10 @@ public class Window : GameWindow {
     _areFacesDrawn = true;
     _areEdgesDrawn = false;
     _arePointsDrawn = false;
+
+    _facesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+    _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+    _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
   }
 
 
@@ -78,8 +86,9 @@ public class Window : GameWindow {
     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
     _controller.StartDockspace();
-
+// customization
     CreateShowingTypeButtons();
+    CreateColorPalette();
 
     Error.Check();
     _scene.DrawViewportWindow();
@@ -139,6 +148,24 @@ public class Window : GameWindow {
         _scene.ChangeShowingType(2, _arePointsDrawn);
       }
     }
+    ImGui.End();
+  }
+
+  private void CreateColorPalette() {
+
+    ImGui.Begin("faces");
+    ImGui.ColorEdit3("", ref _facesColor);
+    ImGui.ColorPicker3("", ref _facesColor);
+    ImGui.End();
+
+    ImGui.Begin("edges");
+    ImGui.ColorEdit3("", ref _edgesColor);
+    ImGui.ColorPicker3("", ref _edgesColor);
+    ImGui.End();
+
+    ImGui.Begin("points");
+    ImGui.ColorEdit3("", ref _pointsColor);
+    ImGui.ColorPicker3("", ref _pointsColor);
     ImGui.End();
   }
 
