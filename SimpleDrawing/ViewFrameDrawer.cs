@@ -134,7 +134,6 @@ public sealed class RotatingCubeDrawer {
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
 
-    _shader.SetUniform3("material.ambient", new Vector3(1.0f, 0.5f, 0.31f));
     _shader.SetUniform3("material.diffuse", new Vector3(1.0f, 0.5f, 0.31f));
     _shader.SetUniform3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
     _shader.SetFloat("material.shiness", 32.0f);
@@ -170,126 +169,127 @@ public sealed class RotatingCubeDrawer {
 
     }
   }
-  //  //////////////////////////////////////////////////////////////////////////////
-
-
 
   //  //////////////////////////////////////////////////////////////////////////////
-  private void BindPosBuffer(int indexOfDescriptros) {
-    _vertexBufferObjects.Add(GL.GenBuffer());
-    int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects[indexOfDescriptros]);
-    GL.BufferData(BufferTarget.ArrayBuffer,
-        _volumes[indexOfDescriptros].Vertices.Length * sizeof(float),
-        _volumes[indexOfDescriptros].Vertices, BufferUsageHint.DynamicDraw);
-    GL.EnableVertexAttribArray(vertexLocation);
-    GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-
-  private void BindNormalBuffer(int indexOfDescriptros) {
-    _normalBufferObjects.Add(GL.GenBuffer());
-    int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, _normalBufferObjects[indexOfDescriptros]);
-    GL.BufferData(BufferTarget.ArrayBuffer,
-      _volumes[indexOfDescriptros].Normals.Length * sizeof(float),
-      _volumes[indexOfDescriptros].Normals, BufferUsageHint.StaticDraw);
-    GL.EnableVertexAttribArray(normalLocation);
-    GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-  //  //////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
-  private void ShowSolid(int i) {
-    _shader.SetUniform3("aColor", _facesColor);
+//  //////////////////////////////////////////////////////////////////////////////
+private void BindPosBuffer(int indexOfDescriptros) {
+  _vertexBufferObjects.Add(GL.GenBuffer());
+  int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
+  GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects[indexOfDescriptros]);
+  GL.BufferData(BufferTarget.ArrayBuffer,
+      _volumes[indexOfDescriptros].Vertices.Length * sizeof(float),
+      _volumes[indexOfDescriptros].Vertices, BufferUsageHint.DynamicDraw);
+  GL.EnableVertexAttribArray(vertexLocation);
+  GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
+      false, 3 * sizeof(float), 0);
+}
+
+private void BindNormalBuffer(int indexOfDescriptros) {
+  _normalBufferObjects.Add(GL.GenBuffer());
+  int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
+  GL.BindBuffer(BufferTarget.ArrayBuffer, _normalBufferObjects[indexOfDescriptros]);
+  GL.BufferData(BufferTarget.ArrayBuffer,
+    _volumes[indexOfDescriptros].Normals.Length * sizeof(float),
+    _volumes[indexOfDescriptros].Normals, BufferUsageHint.StaticDraw);
+  GL.EnableVertexAttribArray(normalLocation);
+  GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
+      false, 3 * sizeof(float), 0);
+}
+//  //////////////////////////////////////////////////////////////////////////////
+
+
+
+//  //////////////////////////////////////////////////////////////////////////////
+private void ShowSolid(int i) {
+    _shader.SetUniform3("material.ambient", _facesColor);
     GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
+}
+
+private void ShowFramed(int i) {
+  _shader.SetUniform3("material.ambient", _edgesColor);
+
+  int bias = 0;
+  int step = _volumes[i].Vertices.Length / 3 / 6;
+
+  for (int g = 0; g < 6; ++g) {
+    GL.DrawArrays(PrimitiveType.LineStrip, bias, step);
+    bias += step;
   }
+}
 
-  private void ShowFramed(int i) {
-    _shader.SetUniform3("aColor", _edgesColor);
+private void ShowPoints(int i) {
+  _shader.SetUniform3("material.ambient", _pointsColor);
+  GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
+}
 
-    int bias = 0;
-    int step = _volumes[i].Vertices.Length / 3 / 6;
+public void ChangeDrawingType(int i, bool state) {
 
-    for (int g = 0; g < 6; ++g) {
-      GL.DrawArrays(PrimitiveType.LineStrip, bias, step);
-      bias += step;
-    }
-  }
-
-  private void ShowPoints(int i) {
-    _shader.SetUniform3("aColor", _pointsColor);
-    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
-  }
-
-  public void ChangeDrawingType(int i, bool state) {
-
-    if (i == 0) {
-      if (state) {
-        _showType += ShowSolid;
-      } else {
-        _showType -= ShowSolid;
-      }
-    }
-
-    if (i == 1) {
-      if (state) {
-        _showType += ShowFramed;
-      } else {
-        _showType -= ShowFramed;
-      }
-    }
-
-    if (i == 2) {
-      if (state) {
-        _showType += ShowPoints;
-      } else {
-        _showType -= ShowPoints;
-      }
-    }
-  }
-  //  //////////////////////////////////////////////////////////////////////////////
-
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
-  public void ChangeFacesColor(Vector3 color) {
-      _facesColor = color;
-  }
-
-  public void ChangeEdgesColor(Vector3 color) {
-    _edgesColor = color;
-  }
-
-  public void ChangePointsColor(Vector3 color) {
-    _pointsColor = color;
-  }
-  //  //////////////////////////////////////////////////////////////////////////////
-  
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
-  public void SetMatrices(Matrix4 v, Matrix4 p) {
-    _view = v;
-    _projection = p;
-  }
-
-
-  private void ChangeBlend() {
-    float step = 0.005f;
-    if (_increase) {
-      _interpolationKoeff += step;
+  if (i == 0) {
+    if (state) {
+      _showType += ShowSolid;
     } else {
-      _interpolationKoeff -= step;
-    }
-
-    if (_interpolationKoeff >= 1.0f || _interpolationKoeff <= 0.0f) {
-      _increase = _increase ^ true;
+      _showType -= ShowSolid;
     }
   }
+
+  if (i == 1) {
+    if (state) {
+      _showType += ShowFramed;
+    } else {
+      _showType -= ShowFramed;
+    }
+  }
+
+  if (i == 2) {
+    if (state) {
+      _showType += ShowPoints;
+    } else {
+      _showType -= ShowPoints;
+    }
+  }
+}
+//  //////////////////////////////////////////////////////////////////////////////
+
+
+
+//  //////////////////////////////////////////////////////////////////////////////
+public void ChangeFacesColor(Vector3 color) {
+    _facesColor = color;
+}
+
+public void ChangeEdgesColor(Vector3 color) {
+  _edgesColor = color;
+}
+
+public void ChangePointsColor(Vector3 color) {
+  _pointsColor = color;
+}
+//  //////////////////////////////////////////////////////////////////////////////
+
+
+
+//  //////////////////////////////////////////////////////////////////////////////
+public void SetMatrices(Matrix4 v, Matrix4 p) {
+  _view = v;
+  _projection = p;
+}
+
+
+private void ChangeBlend() {
+  float step = 0.005f;
+  if (_increase) {
+    _interpolationKoeff += step;
+  } else {
+    _interpolationKoeff -= step;
+  }
+
+  if (_interpolationKoeff >= 1.0f || _interpolationKoeff <= 0.0f) {
+    _increase = _increase ^ true;
+  }
+}
 
 
 

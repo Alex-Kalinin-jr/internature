@@ -2,17 +2,16 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 2) in vec3 aNormal;
 
-
-out vec3 Color;
-out vec3 Normal;
-out vec3 FragPos;
-
 uniform vec3 aColor;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 invertedModel;
 uniform float morphingFactor;
+
+out vec3 Color;
+out vec3 Normal;
+out vec3 FragPos;
 
 void main()
 {
