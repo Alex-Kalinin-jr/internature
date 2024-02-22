@@ -3,6 +3,7 @@
 in vec3 Color;
 in vec3 Normal;
 in vec3 FragPos;
+// in vec3 DistortedPosition;
 
 out vec4 outColor;
 
@@ -11,17 +12,23 @@ uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 struct Material {	
-vec3 ambient;
-vec3 diffuse;
-vec3 specular;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 
-  float shiness;
+    float shiness;
 };
 
 uniform Material material;
 
 
+
+
 void main() {	
+// vec3 dpdx = dFdx(DistortedPosition);
+// vec3 dpdy = dFdy(DistortedPosition);
+// vec3 distortedNormal = normalize(cross(dpdx, dpdy));
+
 // ambient
 vec3 ambient = lightColor * material.ambient;
 

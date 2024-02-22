@@ -239,7 +239,10 @@ namespace SimpleDrawing.Entities {
     public static List<Cube> GenerateVolumes() {
       var volumes = new List<Cube>();
 
-      Cube buff = new Cube(4, new Vector3(1.0f, 0.5f, 0.0f));
+
+
+
+      Cube buff = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
       buff.PosVr += new Vector3(-3.0f, 0.0f, -1.0f);
       buff.RotationVr += new Vector3(0.0f, 45.0f, 0.0f);
 

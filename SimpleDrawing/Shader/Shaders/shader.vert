@@ -2,6 +2,8 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 2) in vec3 aNormal;
 
+
+
 uniform vec3 aColor;
 uniform mat4 model;
 uniform mat4 view;
@@ -12,6 +14,7 @@ uniform float morphingFactor;
 out vec3 Color;
 out vec3 Normal;
 out vec3 FragPos;
+// out vec3 DistortedPosition;
 
 void main()
 {
@@ -28,8 +31,8 @@ void main()
 	float dyY = aPos.y * sqrt(abs(dy)) * morphingFactor + aPos.y * (1.0 - morphingFactor);
 	float dzZ = aPos.z * sqrt(abs(dz)) * morphingFactor + aPos.z * (1.0 - morphingFactor);
 
-	vec3 distortedPosition = vec3(dxX, dyY, dzZ);
+	vec3 DistortedPosition = vec3(dxX, dyY, dzZ);
 
-	gl_Position = vec4(distortedPosition, 1.0) * model * view * projection;
+	gl_Position = vec4(DistortedPosition, 1.0) * model * view * projection;
     gl_PointSize = 3.0;
 }

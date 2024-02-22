@@ -59,7 +59,7 @@ public sealed class RotatingCubeDrawer {
 
     _volumes = new List<Volume>();
 
-    Cube lampBuff = new Cube(10, new Vector3(0.0f, 0.0f, 0.0f));
+    Cube lampBuff = new Cube(4, new Vector3(1.0f, 1.0f, 1.0f));
     lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
     ++_lampCount;
     _lampPosition = lampBuff.PosVr;
@@ -68,7 +68,13 @@ public sealed class RotatingCubeDrawer {
     var cubes = Generator.GenerateVolumes();
     _volumes.AddRange(cubes);
 
-    _facesColor = _volumes[_lampCount].ColorVr;
+    if (_volumes.Count > _lampCount) {
+      _facesColor = _volumes[_lampCount ].ColorVr;
+
+    } else {
+      _facesColor = _volumes[0].ColorVr;
+    }
+
     _edgesColor = _facesColor;
     _pointsColor = _facesColor;
 
@@ -125,18 +131,16 @@ public sealed class RotatingCubeDrawer {
   //  //////////////////////////////////////////////////////////////////////////////
   void ShowVolumes() {
 
-    _shader.Use();
-
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("lightPos", _lampPosition);
     _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
     _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // ambient lighting color
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
-
-    _shader.SetUniform3("material.diffuse", new Vector3(1.0f, 0.5f, 0.31f));
-    _shader.SetUniform3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-    _shader.SetFloat("material.shiness", 32.0f);
+    
+    _shader.SetUniform3("material.diffuse", new Vector3(0.714f, 0.4284f, 0.18144f));
+    _shader.SetUniform3("material.specular", new Vector3(0.393548f, 0.271906f, 0.166721f));
+    _shader.SetFloat("material.shiness", 0.2f);
 
     for (int i = _lampCount; i < _volumes.Count; ++i) {
 
@@ -154,7 +158,6 @@ public sealed class RotatingCubeDrawer {
 
   void ShowLamps() {
 
-    _lampShader.Use();
     _lampShader.SetMatrix4("view", _view);
     _lampShader.SetMatrix4("projection", _projection);
 
@@ -165,7 +168,7 @@ public sealed class RotatingCubeDrawer {
       _lampShader.SetUniform3("aColor", _volumes[i].ColorVr);
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
-      ShowSolid(0);
+      ShowSolid(i);
 
     }
   }
@@ -204,7 +207,10 @@ private void BindNormalBuffer(int indexOfDescriptros) {
 
 //  //////////////////////////////////////////////////////////////////////////////
 private void ShowSolid(int i) {
-    _shader.SetUniform3("material.ambient", _facesColor);
+    if (i >= _lampCount) {
+      _shader.SetUniform3("material.ambient", _facesColor);
+    }
+
     GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
 }
 
