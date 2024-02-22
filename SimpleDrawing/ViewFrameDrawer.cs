@@ -33,6 +33,10 @@ public sealed class RotatingCubeDrawer {
   private float _lastTimestamp = Stopwatch.GetTimestamp();
   private float _interpolationKoeff;
   private bool _increase;
+
+  Vector3 _facesColor;
+  Vector3 _edgesColor;
+  Vector3 _pointsColor;
   //  //////////////////////////////////////////////////////////////////////////////
 
 
@@ -63,6 +67,11 @@ public sealed class RotatingCubeDrawer {
 
     var cubes = Generator.GenerateVolumes();
     _volumes.AddRange(cubes);
+
+    _facesColor = _volumes[_lampCount].ColorVr;
+    _edgesColor = _facesColor;
+    _pointsColor = _facesColor;
+
 
   }
   //  //////////////////////////////////////////////////////////////////////////////
@@ -234,11 +243,23 @@ public sealed class RotatingCubeDrawer {
   }
   //  //////////////////////////////////////////////////////////////////////////////
 
-  void ChangeVolumesColor(Vector3 color) {
-    for (int i = _lampCount; i < _volumes.Count; ++i) {
-      _volumes[i].ColorVr = color;
-    }
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
+  public void ChangeFacesColor(Vector3 color) {
+      _facesColor = color;
   }
+
+  public void ChangeEdgesColor(Vector3 color) {
+    _edgesColor = color;
+  }
+
+  public void ChangePointsColor(Vector3 color) {
+    _pointsColor = color;
+  }
+  //  //////////////////////////////////////////////////////////////////////////////
+  
+
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void SetMatrices(Matrix4 v, Matrix4 p) {

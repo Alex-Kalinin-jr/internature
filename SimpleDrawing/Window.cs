@@ -154,8 +154,11 @@ public class Window : GameWindow {
   private void CreateColorPalette() {
 
     ImGui.Begin("faces");
-    ImGui.ColorEdit3("", ref _facesColor);
-    ImGui.ColorPicker3("", ref _facesColor);
+    if (ImGui.ColorEdit3("", ref _facesColor) || ImGui.ColorPicker3("", ref _facesColor)) {
+      _scene.SetFacesColor(_facesColor);
+    }
+
+
     ImGui.End();
 
     ImGui.Begin("edges");
