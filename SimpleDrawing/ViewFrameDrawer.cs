@@ -126,11 +126,18 @@ public sealed class RotatingCubeDrawer {
   void ShowVolumes() {
 
     _shader.Use();
+
+    _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("lightPos", _lampPosition);
     _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
     _shader.SetUniform3("lightColor", new Vector3(1.0f, 1.0f, 1.0f)); // ambient lighting color
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
+
+    _shader.SetUniform3("material.ambient", new Vector3(1.0f, 0.5f, 0.31f));
+    _shader.SetUniform3("material.diffuse", new Vector3(1.0f, 0.5f, 0.31f));
+    _shader.SetUniform3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+    _shader.SetFloat("material.shiness", 32.0f);
 
     for (int i = _lampCount; i < _volumes.Count; ++i) {
 
@@ -279,7 +286,7 @@ public sealed class RotatingCubeDrawer {
       _interpolationKoeff -= step;
     }
 
-    if (_interpolationKoeff >= 0.999f || _interpolationKoeff <= 0.0f) {
+    if (_interpolationKoeff >= 1.0f || _interpolationKoeff <= 0.0f) {
       _increase = _increase ^ true;
     }
   }

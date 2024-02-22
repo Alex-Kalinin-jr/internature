@@ -1,7 +1,19 @@
 ﻿using OpenTK.Mathematics;
 
+
+
+
 namespace SimpleDrawing.Entities {
+  struct Material {
+    Vector3 _ambient;
+    Vector3 _diffuse;
+    Vector3 _specular;
+
+    float _shiness;
+  }
+
   internal abstract class Volume {
+
     public float[]? Vertices { get; init; }
     public float[]? TexCoords { get; init; }
     public uint[]? Indices { get; init; }
