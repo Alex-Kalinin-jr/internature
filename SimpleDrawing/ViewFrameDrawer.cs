@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using SimpleDrawing.Entities;
@@ -10,6 +11,9 @@ public delegate void Show(int i);
 public sealed class RotatingCubeDrawer {
   private int _width;
   private int _height;
+
+  Camera _camera;
+  const float _cameraSpeed = 1.5f;
 
   private Shader _shader;
   private Shader _lampShader;
@@ -43,8 +47,12 @@ public sealed class RotatingCubeDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   public RotatingCubeDrawer() {
+    _width = 1024;
+    _height = 768;
     _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
     _lampShader = new Shader("Shader/Shaders/lightShader.vert", "Shader/Shaders/lightShader.frag");
+
+    _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
 
     _vertexBufferObjects = new List<int>();
     _normalBufferObjects = new List<int>();
@@ -283,9 +291,9 @@ public void ChangePointsColor(Vector3 color) {
 
 
 //  //////////////////////////////////////////////////////////////////////////////
-public void SetMatrices(Matrix4 v, Matrix4 p) {
-  _view = v;
-  _projection = p;
+public void SetMatrices() {
+  _view = _camera.GetViewMatrix();
+  _projection = _camera.GetProjectionMatrix();
 }
 
 
@@ -301,8 +309,41 @@ private void ChangeBlend() {
     _increase = _increase ^ true;
   }
 }
+  //  //////////////////////////////////////////////////////////////////////////////
 
 
 
+  //  //////////////////////////////////////////////////////////////////////////////
+  public void MoveCameraFwd(float val) {
+    _camera.Position += _camera.Front * _cameraSpeed * val;
+  }
+
+  public void MoveCameraBack(float val) {
+    _camera.Position -= _camera.Front * _cameraSpeed * val;
+  }
+
+  public void MoveCameraRight(float val) {
+    _camera.Position -= _camera.Right * _cameraSpeed * val;
+  }
+
+  public void MoveCameraLeft(float val) {
+    _camera.Position += _camera.Right * _cameraSpeed * val;
+  }
+
+  public void MoveCameraDown(float val) {
+    _camera.Position += _camera.Up * _cameraSpeed * val;
+  }
+
+  public void MoveCameraUp(float val) {
+    _camera.Position -= _camera.Up * _cameraSpeed * val;
+  }
+
+  public void ChangeCameraPitch(float val) {
+    _camera.Pitch += val;
+  }
+
+  public void ChangeCameraYaw(float val) {
+    _camera.Yaw += val;
+  }
 
 }

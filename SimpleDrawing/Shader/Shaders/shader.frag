@@ -17,6 +17,11 @@ struct Light {
     float quadratic;
 };
 
+struct FlasLight {
+    vec3 position;
+    vec3 direction;
+    vec3 cutOff;
+};
 
 
 struct Material {	

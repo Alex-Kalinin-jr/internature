@@ -21,8 +21,8 @@ internal class SceneRender : IDisposable {
     this._window = _window;
   }
 
-  public void SetCameraMatrices(Matrix4 v, Matrix4 p) {
-    _drawer.SetMatrices(v, p);
+  public void SetCameraMatrices() {
+    _drawer.SetMatrices();
   }
 
 
@@ -131,6 +131,8 @@ internal class SceneRender : IDisposable {
     GL.DeleteFramebuffer(_fbo);
   }
 
+
+  // ///////////////////////////////////////////////////////////////////
   public void SetFacesColor(System.Numerics.Vector3 color) {
     _drawer.ChangeFacesColor(new Vector3(color.X, color.Y, color.Z));
   }
@@ -142,5 +144,21 @@ internal class SceneRender : IDisposable {
   public void SetPointsColor(System.Numerics.Vector3 color) {
     _drawer.ChangePointsColor(new Vector3(color.X, color.Y, color.Z));
   }
+
+  public void MoveCameraFwd(float val) { _drawer.MoveCameraFwd(val); }
+
+  public void MoveCameraBack(float val) { _drawer.MoveCameraBack(val); }
+
+  public void MoveCameraRight(float val) { _drawer.MoveCameraRight(val); }
+
+  public void MoveCameraLeft(float val) { _drawer.MoveCameraLeft(val); }
+
+  public void MoveCameraDown(float val) { _drawer.MoveCameraDown(val); }
+
+  public void MoveCameraUp(float val) { _drawer.MoveCameraUp(val); }
+
+  public void ChangeCameraPitch(float val) { _drawer.ChangeCameraPitch(val); }
+
+  public void ChangeCameraYaw(float val) { _drawer.ChangeCameraYaw(val); }
 
 }

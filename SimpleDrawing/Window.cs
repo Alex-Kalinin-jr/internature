@@ -24,14 +24,12 @@ public class Window : GameWindow {
 
   ImGuiController _controller;
   SceneRender _scene;
-  Camera _camera;
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
     Size = new Vector2i(1024, 768), APIVersion = new Version(3, 3)
   }) {
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new SceneRender(this);
-    _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
     _areFacesDrawn = true;
     _areEdgesDrawn = false;
@@ -124,6 +122,7 @@ public class Window : GameWindow {
 
 
   private void CreateShowingTypeButtons() {
+
     ImGui.Begin("Drawing Mode");
     if (ImGui.Checkbox("Solid", ref _areFacesDrawn)) {
       if (!_areEdgesDrawn && !_arePointsDrawn) {
@@ -149,6 +148,7 @@ public class Window : GameWindow {
       }
     }
     ImGui.End();
+
   }
 
   private void CreateColorPalette() {
@@ -186,53 +186,47 @@ public class Window : GameWindow {
       Close();
     }
 
-    const float cameraSpeed = 1.5f;
-
     if (input.IsKeyDown(Keys.W)) {
-      _camera.Position += _camera.Front * cameraSpeed * (float)e.Time;
+      _scene.MoveCameraFwd((float)e.Time);
     }
 
     if (input.IsKeyDown(Keys.S)) {
-      _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time;
+       _scene.MoveCameraBack((float)e.Time);
     }
 
     if (input.IsKeyDown(Keys.A)) {
-      _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time;
+       _scene.MoveCameraRight((float)e.Time);
     }
 
     if (input.IsKeyDown(Keys.D)) {
-      _camera.Position += _camera.Right * cameraSpeed * (float)e.Time;
+      _scene.MoveCameraLeft((float)e.Time);
     }
 
     if (input.IsKeyDown(Keys.LeftShift)) {
-      _camera.Position += _camera.Up * cameraSpeed * (float)e.Time;
+      _scene.MoveCameraDown((float)e.Time);
     }
 
     if (input.IsKeyDown(Keys.Space)) {
-      _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time;
+      _scene.MoveCameraUp((float)e.Time);
     }
 
     if (input.IsKeyDown(Keys.Up)) {
-      _camera.Pitch -= 1;
+      _scene.ChangeCameraPitch(-1.0f);
     }
 
     if (input.IsKeyDown(Keys.Down)) {
-      _camera.Pitch += 1;
+      _scene.ChangeCameraPitch(1.0f);
     }
 
     if (input.IsKeyDown(Keys.Left)) {
-      _camera.Yaw -= 1;
+      _scene.ChangeCameraYaw(-1.0f);
     }
 
     if (input.IsKeyDown(Keys.Right)) {
-      _camera.Yaw += 1;
+      _scene.ChangeCameraYaw(1.0f);
     }
 
-    PassMatrices();
-  }
-
-  public void PassMatrices() {
-    _scene.SetCameraMatrices(_camera.GetViewMatrix(), _camera.GetProjectionMatrix());
+    _scene.SetCameraMatrices();
   }
 
 }
