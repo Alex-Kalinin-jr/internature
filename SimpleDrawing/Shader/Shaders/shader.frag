@@ -1,28 +1,47 @@
 #version 330 core
 
-in vec3 Color;
-in vec3 Normal;
-in vec3 FragPos;
-// in vec3 DistortedPosition;
+#define NR_POINTLIGHTS 1 // to be passed through uniform
+#define NR_FLASHLIGHTS 1 // to be passed
+#define NR_DIRECTIONAL_LIGHTS 1
 
 out vec4 outColor;
 
+struct DirLight {
+    vec3 direction;
 
-struct Light {
-    vec3 position;
     vec3 color;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+
+struct PointLight {
+    vec3 position;
+
+    vec3 color;
+    vec3 diffuse;
+    vec3 specular;
 
     float constant;
     float linear;
     float quadratic;
 };
 
-struct FlasLight {
+struct FlashLight {
     vec3 position;
     vec3 direction;
-    vec3 cutOff;
-};
 
+    float cutOff;
+    float outerCutOff;
+
+    vec3 color;
+    vec3 diffuse;
+    vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
 
 struct Material {	
     vec3 ambient;
@@ -32,38 +51,75 @@ struct Material {
     float shiness;
 };
 
-uniform Material material;
-uniform Light light;
 uniform vec3 viewPos;
+uniform Material material;
+uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform FlasLight flashlight[NR_FLASHLIGHTS];
+uniform DirLight dirlights[NR_DIRECTIONAL_LIGHTS];
 
 
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 
+    vec3 lightDir = normalize(-light.direction);
+    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
+
+    vec3 ambient = light.color * material.ambient;
+    vec3 diffuse = light.diffuse * diff * material.ambient;
+    vec3 specular = light.specular * spec * material.ambient;
+
+    return (ambient + diffuse + specular);
+}
+
+vec3 CalcPointLights(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+
+    vec3 lightDir = normalize(light.position - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
+    float distancE = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
+
+    vec3 ambient = light.color * material.ambient;
+    vec3 diffuse = light.color * (diff * material.diffuse);
+    vec3 specular = light.color * (spec * material.specular);
+
+    return attenuation * (ambient + diffuse + specular);
+}
+
+vec3 CalcFlashLights(FlashLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+
+    vec3 lightDir = normalize(light.position - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
+    float distancE = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
+
+    vec3 ambient  = light.color  * materal.ambient;
+    vec3 diffuse  = light.diffuse  * diff * materal.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
+
+    return attenuation * (ambient + diffuse + specular);
+}
 
 void main() {	
-// vec3 dpdx = dFdx(DistortedPosition);
-// vec3 dpdy = dFdy(DistortedPosition);
-// vec3 distortedNormal = normalize(cross(dpdx, dpdy));
+    vec3 norm = normalize(Normal);
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 result = vec3(0.0, 0.0, 0.0);
 
-// ambient
-vec3 ambient = light.color * material.ambient;
+    for (int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++) {
+        result += CalcDirLight(dirlights[i], norm, viewDir);
+    }
 
-// diffuse 
-vec3 norm = normalize(Normal);
+    for (int i = 0; i < NR_POINTLIGHTS; i++) {
+        result += CalcPointLights(pointLights[i], norm, FragPos, viewDir);
+    }
 
-vec3 lightDir = normalize(light.position - FragPos);
-float distancE = length(light.position - FragPos);
-float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
-// vec3 lightDir = normalize(-lightPos); // directional light. there should be direction vector!
-float diff = max(dot(norm, lightDir), 0.0);
-vec3 diffuse = light.color * (diff * material.diffuse);
+    for (int i = 0; i < NR_FLASHLIGHTS; i++) {
+        result += CalcFlashLights(flashLights[i], norm, FragPos, viewDir);
+    }
 
-// specular
-vec3 viewDir = normalize(viewPos - FragPos);
-vec3 reflectDir = reflect(-lightDir, norm);
-float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
-vec3 specular = light.color * (spec * material.specular);
-
-vec3 result = attenuation * (ambient + diffuse + specular);
-
-outColor = vec4(result, 1.0);
+    outColor = vec4(result, 1.0);
 }
