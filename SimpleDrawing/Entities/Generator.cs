@@ -3,7 +3,7 @@
 namespace SimpleDrawing.Entities {
   internal class Generator {
 
-    public static (float[], Vector3, float[]) GenerateCube(int count, Vector3 color) {
+    public static (float[], Material, float[]) GenerateCube(int count, Vector3 color) {
 
       float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
       float step = 2.0f / (count - 1);
@@ -17,11 +17,12 @@ namespace SimpleDrawing.Entities {
       GenerateFrozenZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GenerateFrozenZ(count, -step, 1.0f, ref cube, ref ind, 1.0f);
 
-      Vector3 outColor = color;
+      Material material = new Material();
+      material.Ambient = color;
 
       GenerateNormals(ref cube, ref normals);
 
-      return (cube, color, normals);
+      return (cube, material, normals);
     }
 
     private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
@@ -48,7 +49,7 @@ namespace SimpleDrawing.Entities {
     }
 
 
-    public static (float[], Vector3, float[]) GenerateTestingCube() {
+    public static (float[], Material, float[]) GenerateTestingCube() {
       float[] vertices = {
         -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f,
         0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
@@ -79,9 +80,10 @@ namespace SimpleDrawing.Entities {
         1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f
       };
 
-      Vector3 colors = new Vector3(1.0f, 0.5f, 0.0f);
+      Material material = new Material();
+      material.Ambient = new Vector3(1.0f, 0.5f, 0.0f);
 
-      return (vertices, colors, normals);
+      return (vertices, material, normals);
     }
 
     public static void GenerateFrozenZ(int count, float step, float xStart,

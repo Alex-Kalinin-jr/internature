@@ -6,7 +6,7 @@ namespace SimpleDrawing;
 
 internal class SceneRender : IDisposable {
 
-  private RotatingCubeDrawer _drawer;
+  private SceneDrawer _drawer;
 
   int _fbo;
   int _rbo;

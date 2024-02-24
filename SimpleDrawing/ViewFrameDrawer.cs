@@ -8,7 +8,7 @@ namespace SimpleDrawing;
 
 public delegate void Show(int i);
 
-public sealed class RotatingCubeDrawer {
+public sealed class SceneDrawer {
   private int _width;
   private int _height;
 
@@ -18,8 +18,12 @@ public sealed class RotatingCubeDrawer {
   private Shader _shader;
   private Shader _lampShader;
 
+
+  DirectionalLight _dirLight;
+  PointLight _pointLight;
+  FlashLight _flashLight;
+
   private int _lampCount = 0;
-  private Vector3 _lampPosition;
 
   private Matrix4 _view;
   private Matrix4 _projection;
@@ -46,7 +50,7 @@ public sealed class RotatingCubeDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  public RotatingCubeDrawer() {
+  public SceneDrawer() {
     _width = 1024;
     _height = 768;
     _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
@@ -67,20 +71,30 @@ public sealed class RotatingCubeDrawer {
 
     _volumes = new List<Volume>();
 
-    Cube lampBuff = new Cube(4, new Vector3(1.0f, 1.0f, 1.0f));
-    lampBuff.ScaleVr = new Vector3(0.2f, 0.2f, 0.2f);
+
+    // ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    _flashLight = new FlashLight();
     ++_lampCount;
-    _lampPosition = lampBuff.PosVr;
-    _volumes.Add(lampBuff);
+    _pointLight = new PointLight();
+    ++_lampCount;
+    _dirLight = new DirectionalLight();
+    _dirLight.Direction = new Vector3(1.0f, -1.0f, 1.0f);
+    ++_lampCount;
+
+    _volumes.Add(_flashLight._form);
+    _volumes.Add(_pointLight._form);
+    _volumes.Add(_dirLight._form);
+    // ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     var cubes = Generator.GenerateVolumes();
     _volumes.AddRange(cubes);
 
     if (_volumes.Count > _lampCount) {
-      _facesColor = _volumes[_lampCount].ColorVr;
+      _facesColor = _volumes[_lampCount].MaterialTraits.Ambient;
 
     } else {
-      _facesColor = _volumes[0].ColorVr;
+      _facesColor = _volumes[0].MaterialTraits.Ambient;
     }
 
     _edgesColor = _facesColor;
@@ -144,22 +158,11 @@ public sealed class RotatingCubeDrawer {
     _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
-// point light
-    _shader.SetUniform3("light.position", _lampPosition);
-    _shader.SetUniform3("light.color", new Vector3(1.0f, 1.0f, 1.0f));
-    _shader.SetFloat("light.constant", 1.0f);
-    _shader.SetFloat("light.linear", 0.09f);
-    _shader.SetFloat("light.quadratic", 0.032f);
-
-    _shader.SetUniform3("material.diffuse", new Vector3(0.714f, 0.4284f, 0.18144f));
-    _shader.SetUniform3("material.specular", new Vector3(0.393548f, 0.271906f, 0.166721f));
-    _shader.SetFloat("material.shiness", 0.2f);
-
-    // flashlight
-    _shader.SetUniform3("flashlight.position", _camera.Position);
-    _shader.SetUniform3("flashlight.direction", _camera.Front);
-    _shader.SetFloat("flashlight.cutOff", (float)Math.Cos(MathHelper.DegreesToRadians(12.5)));
-    _shader.SetFloat("flashlight.outerCutOff", (float)Math.Cos(MathHelper.DegreesToRadians(17.5)));
+// dirlight light
+    _shader.SetUniform3($"dirlights[{0}].direction", _dirLight.Direction);
+    _shader.SetUniform3($"dirlights[{0}].color", _dirLight.Color);
+    _shader.SetUniform3($"dirlights[{0}].diffuse", _dirLight.Diffuse);
+    _shader.SetUniform3($"dirlights[{0}].specular", _dirLight.Specular);
 
 
     for (int i = _lampCount; i < _volumes.Count; ++i) {
@@ -170,6 +173,12 @@ public sealed class RotatingCubeDrawer {
       model.Invert();
       _shader.SetMatrix4("invertedModel", model);
 
+
+      _shader.SetUniform3("material.ambient", _volumes[i].MaterialTraits.Ambient);
+      _shader.SetUniform3("material.diffuse", _volumes[i].MaterialTraits.Diffuse);
+      _shader.SetUniform3("material.specular", _volumes[i].MaterialTraits.Specular);
+      _shader.SetFloat("material.shiness", _volumes[i].MaterialTraits.Shiness);
+     
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
       _showType(i);  // delegate
@@ -185,7 +194,7 @@ public sealed class RotatingCubeDrawer {
 
       Matrix4 modelLamp = _volumes[i].ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
-      _lampShader.SetUniform3("aColor", _volumes[i].ColorVr);
+      _lampShader.SetUniform3("aColor", _volumes[i].MaterialTraits.Ambient);
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
       ShowSolid(i);
@@ -354,3 +363,79 @@ public sealed class RotatingCubeDrawer {
   }
 
 }
+
+
+/*
+ * uniform vec3 viewPos;
+uniform Material material;
+uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform FlasLight flashlight[NR_FLASHLIGHTS];
+uniform DirLight dirlights[NR_DIRECTIONAL_LIGHTS];
+
+
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
+
+    vec3 lightDir = normalize(-light.direction);
+    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
+
+    vec3 ambient = light.color * material.ambient;
+    vec3 diffuse = light.diffuse * diff * material.ambient;
+    vec3 specular = light.specular * spec * material.ambient;
+
+    return (ambient + diffuse + specular);
+}
+
+vec3 CalcPointLights(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+
+    vec3 lightDir = normalize(light.position - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
+    float distancE = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
+
+    vec3 ambient = light.color * material.ambient;
+    vec3 diffuse = light.color * (diff * material.diffuse);
+    vec3 specular = light.color * (spec * material.specular);
+
+    return attenuation * (ambient + diffuse + specular);
+}
+
+vec3 CalcFlashLights(FlashLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+
+    vec3 lightDir = normalize(light.position - fragPos);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
+    float distancE = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
+
+    vec3 ambient  = light.color  * materal.ambient;
+    vec3 diffuse  = light.diffuse  * diff * materal.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
+
+    return attenuation * (ambient + diffuse + specular);
+}
+
+void main() {	
+    vec3 norm = normalize(Normal);
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 result = vec3(0.0, 0.0, 0.0);
+
+    for (int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++) {
+        result += CalcDirLight(dirlights[i], norm, viewDir);
+    }
+
+    for (int i = 0; i < NR_POINTLIGHTS; i++) {
+        result += CalcPointLights(pointLights[i], norm, FragPos, viewDir);
+    }
+
+    for (int i = 0; i < NR_FLASHLIGHTS; i++) {
+        result += CalcFlashLights(flashLights[i], norm, FragPos, viewDir);
+    }
+
+    outColor = vec4(result, 1.0);
+}
+*/

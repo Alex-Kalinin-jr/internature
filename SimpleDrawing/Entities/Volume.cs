@@ -1,18 +1,23 @@
 ﻿using OpenTK.Mathematics;
 
-
-
-
 namespace SimpleDrawing.Entities {
-  struct Material {
-    Vector3 _ambient;
-    Vector3 _diffuse;
-    Vector3 _specular;
+  public struct Material {
+    public Vector3 Ambient { get; set; }
+    public Vector3 Diffuse { get; set; }
+    public Vector3 Specular { get; set; }
 
-    float _shiness;
+    public float Shiness { get; set; }
+    public Material() {
+      Ambient = new Vector3(1.0f, 0.5f, 0.0f);
+      Diffuse = new Vector3(1.0f, 0.5f, 0.31f);
+      Specular = new Vector3(0.5f, 0.5f, 0.5f);
+      Shiness = 0.32f;
+    }
   }
 
   internal abstract class Volume {
+
+    public Material MaterialTraits { get; set; }
 
     public float[]? Vertices { get; init; }
     public float[]? TexCoords { get; init; }
@@ -20,7 +25,6 @@ namespace SimpleDrawing.Entities {
     public int Texture { get; set; }
 
     public float[]? Normals { get; init; }
-    public Vector3 ColorVr { get; set; }
     public Vector3 ScaleVr { get; set; }
     public Vector3 PosVr { get; set; }
     public Vector3 RotationVr { get; set; }
@@ -39,11 +43,12 @@ namespace SimpleDrawing.Entities {
       ScaleVr = Vector3.One;
       PosVr = Vector3.Zero;
       RotationVr = Vector3.Zero;
+      MaterialTraits = new Material();
     }
 
     public Volume(string path, Vector3 color) : this() {
 
-      (Vertices, ColorVr, Normals) = Generator.GenerateCube(10, color);
+      (Vertices, MaterialTraits, Normals) = Generator.GenerateCube(10, color);
     }
 
   }
@@ -51,7 +56,7 @@ namespace SimpleDrawing.Entities {
   internal class Cube : Volume {
 
     public Cube(int verticesInLine, Vector3 color) {
-      (Vertices, ColorVr, Normals)
+      (Vertices, MaterialTraits, Normals)
           = Generator.GenerateCube(verticesInLine, color);
 
       Texture = -1;
@@ -61,7 +66,7 @@ namespace SimpleDrawing.Entities {
     }
 
     public Cube(string a) {
-      (Vertices, ColorVr, Normals) = Generator.GenerateTestingCube();
+      (Vertices, MaterialTraits, Normals) = Generator.GenerateTestingCube();
       Texture = -1;
       ScaleVr = Vector3.One;
       PosVr = Vector3.Zero;
