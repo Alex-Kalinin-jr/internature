@@ -74,9 +74,13 @@ public sealed class SceneDrawer {
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////
     _flashLight = new FlashLight();
+    _flashLight._form.PosVr = new Vector3(0.0f, 0.0f, 3.0f);
     ++_lampCount;
+
     _pointLight = new PointLight();
+    _pointLight._form.PosVr = new Vector3(0.0f, -3.0f, 2.0f);
     ++_lampCount;
+
     _dirLight = new DirectionalLight();
     _dirLight.Direction = new Vector3(1.0f, -1.0f, 1.0f);
     ++_lampCount;
@@ -159,11 +163,31 @@ public sealed class SceneDrawer {
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
 // dirlight light
+/*
     _shader.SetUniform3($"dirlights[{0}].direction", _dirLight.Direction);
     _shader.SetUniform3($"dirlights[{0}].color", _dirLight.Color);
     _shader.SetUniform3($"dirlights[{0}].diffuse", _dirLight.Diffuse);
     _shader.SetUniform3($"dirlights[{0}].specular", _dirLight.Specular);
-
+*/
+// pointlight
+    _shader.SetUniform3($"pointLights[{0}].position", _pointLight._form.PosVr);
+    _shader.SetUniform3($"pointLights[{0}].color", _pointLight.Color);
+    _shader.SetUniform3($"pointLights[{0}].diffuse", _pointLight.Diffuse);
+    _shader.SetUniform3($"pointLights[{0}].specular", _pointLight.Specular);
+    _shader.SetFloat($"pointLights[{0}].constant", _pointLight.Constant);
+    _shader.SetFloat($"pointLights[{0}].linear", _pointLight.Linear);
+    _shader.SetFloat($"pointLights[{0}].quadratic", _pointLight.Quadratic);
+// flashlight
+    _shader.SetUniform3($"flashLights[{0}].position", _flashLight._form.PosVr);
+    _shader.SetUniform3($"flashLights[{0}].direction", _flashLight.Direction);
+    _shader.SetFloat($"flashLights[{0}].cutOff", _flashLight.CutOff);
+    _shader.SetFloat($"flashLights[{0}].outerCutOff", _flashLight.OuterCutOff);
+    _shader.SetUniform3($"flashLights[{0}].color", _flashLight.Color);
+    _shader.SetUniform3($"flashLights[{0}].diffuse", _flashLight.Diffuse);
+    _shader.SetUniform3($"flashLights[{0}].specular", _flashLight.Specular);
+    _shader.SetFloat($"flashLights[{0}].constant", _flashLight.Constant);
+    _shader.SetFloat($"flashLights[{0}].linear", _flashLight.Linear);
+    _shader.SetFloat($"flashLights[{0}].quadratic", _flashLight.Quadratic);
 
     for (int i = _lampCount; i < _volumes.Count; ++i) {
 
@@ -364,78 +388,3 @@ public sealed class SceneDrawer {
 
 }
 
-
-/*
- * uniform vec3 viewPos;
-uniform Material material;
-uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform FlasLight flashlight[NR_FLASHLIGHTS];
-uniform DirLight dirlights[NR_DIRECTIONAL_LIGHTS];
-
-
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
-
-    vec3 lightDir = normalize(-light.direction);
-    float diff = max(dot(lightDir, normal), 0.0);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
-
-    vec3 ambient = light.color * material.ambient;
-    vec3 diffuse = light.diffuse * diff * material.ambient;
-    vec3 specular = light.specular * spec * material.ambient;
-
-    return (ambient + diffuse + specular);
-}
-
-vec3 CalcPointLights(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-
-    vec3 lightDir = normalize(light.position - fragPos);
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
-    float distancE = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
-
-    vec3 ambient = light.color * material.ambient;
-    vec3 diffuse = light.color * (diff * material.diffuse);
-    vec3 specular = light.color * (spec * material.specular);
-
-    return attenuation * (ambient + diffuse + specular);
-}
-
-vec3 CalcFlashLights(FlashLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-
-    vec3 lightDir = normalize(light.position - fragPos);
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiness);
-    float distancE = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distancE + distancE * distancE * light.quadratic);
-
-    vec3 ambient  = light.color  * materal.ambient;
-    vec3 diffuse  = light.diffuse  * diff * materal.diffuse;
-    vec3 specular = light.specular * spec * material.specular;
-
-    return attenuation * (ambient + diffuse + specular);
-}
-
-void main() {	
-    vec3 norm = normalize(Normal);
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 result = vec3(0.0, 0.0, 0.0);
-
-    for (int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++) {
-        result += CalcDirLight(dirlights[i], norm, viewDir);
-    }
-
-    for (int i = 0; i < NR_POINTLIGHTS; i++) {
-        result += CalcPointLights(pointLights[i], norm, FragPos, viewDir);
-    }
-
-    for (int i = 0; i < NR_FLASHLIGHTS; i++) {
-        result += CalcFlashLights(flashLights[i], norm, FragPos, viewDir);
-    }
-
-    outColor = vec4(result, 1.0);
-}
-*/
