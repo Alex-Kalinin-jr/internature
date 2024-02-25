@@ -21,11 +21,6 @@ internal class SceneRender : IDisposable {
     this._window = _window;
   }
 
-  public void SetCameraMatrices() {
-    _drawer.SetMatrices();
-  }
-
-
   public void ChangeShowingType(int i, bool state) {
     _drawer.ChangeDrawingType(i, state);
   }

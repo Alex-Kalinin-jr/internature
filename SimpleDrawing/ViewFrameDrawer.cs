@@ -25,8 +25,6 @@ public sealed class SceneDrawer {
 
   private int _lampCount = 0;
 
-  private Matrix4 _view;
-  private Matrix4 _projection;
   private readonly float _FOV = 45.0f;
 
   // first "_lampCount" volumes are the lamp's volumes
@@ -65,22 +63,18 @@ public sealed class SceneDrawer {
     _increase = true;
     _interpolationKoeff = 0.2f;
 
-    _view = Matrix4.LookAt(new Vector3(0.0f, 0.0f, 10.0f), new Vector3(1.5f, 2.0f, 0.0f), Vector3.UnitY);
-    _projection = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI * (_FOV / 180f),
-        _width / (float)_height, 0.2f, 256.0f);
 
     _volumes = new List<Volume>();
-
-
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////
     _dirLight = new DirectionalLight();
-    _dirLight.Direction = new Vector3(1.0f, -1.0f, 1.0f);
+    _dirLight.Direction = new Vector3(0.0f, -1.0f, 0.0f);
     ++_lampCount;
 
     _pointLight = new PointLight();
     ++_lampCount;
 
     _flashLight = new FlashLight();
+    _flashLight.Direction = new Vector3(0.0f, 0.3f, -1.0f);
     ++_lampCount;
 
     _volumes.Add(_dirLight._form);
@@ -158,9 +152,9 @@ public sealed class SceneDrawer {
 
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("viewPos", _camera.Position);
-    _shader.SetMatrix4("view", _view);
-    _shader.SetMatrix4("projection", _projection);
-// dirlight light
+    _shader.SetMatrix4("view", _camera.GetViewMatrix());
+    _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+// dirlight
     _shader.SetUniform3($"dirlights[{0}].direction", _dirLight.Direction);
     _shader.SetUniform3($"dirlights[{0}].color", _dirLight.Color);
     _shader.SetUniform3($"dirlights[{0}].diffuse", _dirLight.Diffuse);
@@ -184,8 +178,7 @@ public sealed class SceneDrawer {
     _shader.SetFloat($"flashLights[{0}].constant", _flashLight.Constant);
     _shader.SetFloat($"flashLights[{0}].linear", _flashLight.Linear);
     _shader.SetFloat($"flashLights[{0}].quadratic", _flashLight.Quadratic);
-/*
-*/
+
 
     for (int i = _lampCount; i < _volumes.Count; ++i) {
 
@@ -209,8 +202,8 @@ public sealed class SceneDrawer {
 
   void ShowLamps() {
 
-    _lampShader.SetMatrix4("view", _view);
-    _lampShader.SetMatrix4("projection", _projection);
+    _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
+    _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
     for (int i = 0; i < _lampCount; ++i) {
 
@@ -329,12 +322,6 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  public void SetMatrices() {
-    _view = _camera.GetViewMatrix();
-    _projection = _camera.GetProjectionMatrix();
-  }
-
-
   private void ChangeBlend() {
     float step = 0.005f;
     if (_increase) {

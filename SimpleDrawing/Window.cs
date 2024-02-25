@@ -225,8 +225,6 @@ public class Window : GameWindow {
     if (input.IsKeyDown(Keys.Right)) {
       _scene.ChangeCameraYaw(1.0f);
     }
-
-    _scene.SetCameraMatrices();
   }
 
 }

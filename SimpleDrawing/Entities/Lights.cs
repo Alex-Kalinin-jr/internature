@@ -72,7 +72,7 @@ namespace SimpleDrawing.Entities {
       Specular = new Vector3(1.0f, 1.0f, 1.0f);
 
       CutOff = MathF.Cos(MathHelper.DegreesToRadians(12.5f));
-      OuterCutOff = MathF.Cos(MathHelper.DegreesToRadians(17.5f));
+      OuterCutOff = MathF.Cos(MathHelper.DegreesToRadians(20.5f));
 
       Constant = 1.0f;
       Linear = 0.09f;
