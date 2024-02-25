@@ -20,6 +20,8 @@ namespace SimpleDrawing.Entities {
 
     public Material MaterialTraits { get; set; }
 
+    public int VAO { get; set; }
+
     public float[]? Vertices { get; init; }
     public float[]? TexCoords { get; init; }
     public uint[]? Indices { get; init; }

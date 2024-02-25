@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using SimpleDrawing.Entities;
@@ -14,20 +13,12 @@ public sealed class SceneDrawer {
 
   Camera _camera;
   const float _cameraSpeed = 1.5f;
-  private readonly float _FOV = 45.0f;
 
   private Shader _shader;
   private Shader _lampShader;
 
   private List<Volume> _volumes;
   private List<Light> _lights;
-
-  private List<int> _normalBufferObjects;
-  private List<int> _vertexArrayObjects;
-
-  private List<int> _lightsBufferObjects;
-  private List<int> _normalLightsBufferObjects;
-  private List<int> _lightsArrayObjects;
 
   private Show _showType;
 
@@ -49,8 +40,6 @@ public sealed class SceneDrawer {
     _lampShader = new Shader("Shader/Shaders/lightShader.vert", "Shader/Shaders/lightShader.frag");
 
     _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
-
-    _vertexArrayObjects = new List<int>();
 
     _increase = true;
     _interpolationKoeff = 0.2f;
@@ -89,12 +78,29 @@ public sealed class SceneDrawer {
 
     for (int i = 0; i < _volumes.Count; ++i) {
 
-      _vertexArrayObjects.Add(GL.GenVertexArray());
-      GL.BindVertexArray(_vertexArrayObjects[i]);
+      _volumes[i].VAO = GL.GenVertexArray();
+      GL.BindVertexArray(_volumes[i].VAO);
 
-      if (_volumes[i].Vertices != null && _volumes[i].Normals != null) {
-        BindPosBuffer(i);
-        BindNormalBuffer(i);
+      if (_volumes[i].Vertices != null) {
+        BindPosBuffer(_volumes[i].Vertices);
+      }
+
+      if (_volumes[i].Normals != null) {
+        BindNormalBuffer(_volumes[i].Normals);
+
+      }
+    }
+
+    for (int i =0; i < _lights.Count; ++i) {
+      _lights[i]._form.VAO = GL.GenVertexArray();
+      GL.BindVertexArray(_lights[i]._form.VAO);
+
+      if (_lights[i]._form.Vertices != null) {
+        BindPosBuffer(_lights[i]._form.Vertices);
+      }
+
+      if (_lights[i]._form.Normals != null) {
+        BindNormalBuffer(_lights[i]._form.Normals);
       }
 
     }
@@ -140,8 +146,8 @@ public sealed class SceneDrawer {
     for (int i = 0; i < _volumes.Count; ++i) {
 
       _volumes[i].AdjustShader(ref _shader);
-      
-      GL.BindVertexArray(_vertexArrayObjects[i]);
+
+      GL.BindVertexArray(_volumes[i].VAO);
 
       _showType(i);
     }
@@ -156,8 +162,8 @@ public sealed class SceneDrawer {
 
       Matrix4 modelLamp = _lights[i]._form.ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
-      _lampShader.SetUniform3("aColor", _volumes[i].MaterialTraits.Ambient);
-      GL.BindVertexArray(_vertexArrayObjects[i]);
+      _lampShader.SetUniform3("aColor", _lights[i]._form.MaterialTraits.Ambient);
+      GL.BindVertexArray(_lights[i]._form.VAO);
 
       ShowSolid(i);
 
@@ -169,23 +175,21 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  private void BindPosBuffer(int indexOfDescriptros) {
+  private void BindPosBuffer(float[] vertices) {
     int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
     GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer,
-        _volumes[indexOfDescriptros].Vertices.Length * sizeof(float),
-        _volumes[indexOfDescriptros].Vertices, BufferUsageHint.DynamicDraw);
+    GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), 
+        vertices, BufferUsageHint.DynamicDraw);
     GL.EnableVertexAttribArray(vertexLocation);
     GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
 
-  private void BindNormalBuffer(int indexOfDescriptros) {
+  private void BindNormalBuffer(float[] normals) {
     int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
     GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer,
-      _volumes[indexOfDescriptros].Normals.Length * sizeof(float),
-      _volumes[indexOfDescriptros].Normals, BufferUsageHint.StaticDraw);
+    GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float), 
+        normals, BufferUsageHint.StaticDraw);
     GL.EnableVertexAttribArray(normalLocation);
     GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
