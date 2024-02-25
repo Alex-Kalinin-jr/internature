@@ -255,7 +255,7 @@ namespace SimpleDrawing.Entities {
       var lights = new List<Light>();
 
       var dirLight = new DirectionalLight();
-      dirLight.Direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
+      dirLight._direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
       dirLight._form.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
       dirLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
 
@@ -265,7 +265,7 @@ namespace SimpleDrawing.Entities {
 
       var flashLight = new FlashLight();
       flashLight._form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
-      flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
+      flashLight._direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
       flashLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
 
       lights.Add(dirLight);

@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
@@ -151,5 +152,11 @@ internal class SceneRender : IDisposable {
   public void ChangeCameraPitch(float val) { _drawer.ChangeCameraPitch(val); }
 
   public void ChangeCameraYaw(float val) { _drawer.ChangeCameraYaw(val); }
+
+  internal void ChangeDirectionalLight(DirectionalLight light) { _drawer.ChangeDirLight(light); }
+
+  internal void ChangePointLight(PointLight light) { _drawer.ChangePointLight(light); }
+
+  internal void ChangeFlashLight(FlashLight light) { _drawer.ChangeFlashLight(light); }
 
 }

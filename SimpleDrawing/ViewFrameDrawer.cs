@@ -282,6 +282,24 @@ public sealed class SceneDrawer {
   public void ChangeCameraYaw(float val) {
     _camera.Yaw += val;
   }
+  //  //////////////////////////////////////////////////////////////////////////////
 
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
+  internal void ChangeDirLight(DirectionalLight val) {
+    val._form.VAO = _lights[0]._form.VAO;
+    _lights[0] = val;
+  }
+
+  internal void ChangePointLight(PointLight val) {
+    val._form.VAO = _lights[1]._form.VAO;
+    _lights[1] = val;
+  }
+
+  internal void ChangeFlashLight(FlashLight val) {
+    val._form.VAO = _lights[2]._form.VAO;
+    _lights[2] = val;
+  }
 }
 

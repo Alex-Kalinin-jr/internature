@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using SimpleDrawing.Entities;
 using System.Runtime.InteropServices;
 
 namespace SimpleDrawing;
@@ -19,6 +20,9 @@ public class Window : GameWindow {
   private System.Numerics.Vector3 _edgesColor;
   private System.Numerics.Vector3 _pointsColor;
 
+  private DirectionalLight _directionalLight;
+  private PointLight _pointLight;
+  private FlashLight _flashLight;
 
   private static DebugProc _debugProcCallback = DebugCallback;
   private static GCHandle _debugProcCallbackHandle;
@@ -38,6 +42,10 @@ public class Window : GameWindow {
 
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
+
+    _directionalLight = new DirectionalLight();
+    _pointLight = new PointLight();
+    _flashLight = new FlashLight();
   }
 
 
@@ -84,9 +92,10 @@ public class Window : GameWindow {
     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit);
 
     _controller.StartDockspace();
-// customization
+    // customization
     CreateShowingTypeButtons();
     CreateColorPalette();
+    CreateDirLightPalette();
 
     Error.Check();
     _scene.DrawViewportWindow();
@@ -152,8 +161,17 @@ public class Window : GameWindow {
   }
 
   private void CreateDirLightPalette() {
-
+    ImGui.Begin("directional light");
+    if (ImGui.SliderFloat3("direction", ref _directionalLight._direction, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("color", ref _directionalLight._color, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("diffuse", ref _directionalLight._diffuse, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("specular", ref _directionalLight._specular, 0.0f, 1.0f)) {
+      _scene.ChangeDirectionalLight(_directionalLight);
+    }
+    ImGui.End();
   }
+
+
 
   private void CreateColorPalette() {
 
