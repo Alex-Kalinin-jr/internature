@@ -31,11 +31,11 @@ namespace SimpleDrawing.Entities {
       base.AdjustShader(ref shader, i);
       shader.SetUniform3($"dirlights[{i}].direction",
           new OpenTK.Mathematics.Vector3(_direction.X, _direction.Y, _direction.Z));
-      shader.SetUniform3($"dirlights[{i}].color", 
+      shader.SetUniform3($"dirlights[{i}].color",
           new OpenTK.Mathematics.Vector3(_color.X, _color.Y, _color.Z));
       shader.SetUniform3($"dirlights[{i}].diffuse",
           new OpenTK.Mathematics.Vector3(_diffuse.X, _diffuse.Y, _diffuse.Z));
-      shader.SetUniform3($"dirlights[{i}].specular", 
+      shader.SetUniform3($"dirlights[{i}].specular",
           new OpenTK.Mathematics.Vector3(_specular.X, _specular.Y, _specular.Z));
     }
 
@@ -43,12 +43,12 @@ namespace SimpleDrawing.Entities {
 
   internal class PointLight : Light {
 
-    public Vector3 _color { get; set; }
-    public Vector3 _diffuse { get; set; }
-    public Vector3 _specular { get; set;}
-    public float Constant {  get; set; }
-    public float Linear { get; set; }
-    public float Quadratic { get; set; }
+    public Vector3 _color;
+    public Vector3 _diffuse;
+    public Vector3 _specular;
+    public float _constant;
+    public float _linear;
+    public float _quadratic;
 
     public PointLight() {
       _form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
@@ -58,9 +58,9 @@ namespace SimpleDrawing.Entities {
       _diffuse = new Vector3(0.8f, 0.8f, 0.8f);
       _specular = new Vector3(1.0f, 1.0f, 1.0f);
 
-      Constant = 1.0f;
-      Linear = 0.09f;
-      Quadratic = 0.032f;
+      _constant = 1.0f;
+      _linear = 0.09f;
+      _quadratic = 0.032f;
     }
 
     public override void AdjustShader(ref Shader shader, int i) {
@@ -73,9 +73,9 @@ namespace SimpleDrawing.Entities {
         new OpenTK.Mathematics.Vector3(_diffuse.X, _diffuse.Y, _diffuse.Z));
       shader.SetUniform3($"pointLights[{i}].specular",
         new OpenTK.Mathematics.Vector3(_specular.X, _specular.Y, _specular.Z));
-      shader.SetFloat($"pointLights[{i}].constant", Constant);
-      shader.SetFloat($"pointLights[{i}].linear", Linear);
-      shader.SetFloat($"pointLights[{i}].quadratic", Quadratic);
+      shader.SetFloat($"pointLights[{i}].constant", _constant);
+      shader.SetFloat($"pointLights[{i}].linear", _linear);
+      shader.SetFloat($"pointLights[{i}].quadratic", _quadratic);
     }
 
   }
@@ -87,12 +87,12 @@ namespace SimpleDrawing.Entities {
     public Vector3 _diffuse;
     public Vector3 _specular;
 
-    public float CutOff;
-    public float OuterCutOff;
+    public float _cutOff;
+    public float _outerCutOff;
 
-    public float Constant;
-    public float Linear;
-    public float Quadratic;
+    public float _constant;
+    public float _linear;
+    public float _quadratic;
 
     public FlashLight() {
       _form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
@@ -104,31 +104,30 @@ namespace SimpleDrawing.Entities {
       _diffuse = new Vector3(1.0f, 1.0f, 1.0f);
       _specular = new Vector3(1.0f, 1.0f, 1.0f);
 
-      CutOff = MathF.Cos(OpenTK.Mathematics.MathHelper.DegreesToRadians(12.5f));
-      OuterCutOff = MathF.Cos(OpenTK.Mathematics.MathHelper.DegreesToRadians(20.5f));
+      _cutOff = MathF.Cos(OpenTK.Mathematics.MathHelper.DegreesToRadians(12.5f));
+      _outerCutOff = MathF.Cos(OpenTK.Mathematics.MathHelper.DegreesToRadians(20.5f));
 
-      Constant = 1.0f;
-      Linear = 0.09f;
-      Quadratic = 0.032f;
+      _constant = 1.0f;
+      _linear = 0.09f;
+      _quadratic = 0.032f;
     }
-
     public override void AdjustShader(ref Shader shader, int i) {
       base.AdjustShader(ref shader, i);
 
       shader.SetUniform3($"flashLights[{i}].position", _form.PosVr);
-      shader.SetUniform3($"flashLights[{i}].direction", 
+      shader.SetUniform3($"flashLights[{i}].direction",
           new OpenTK.Mathematics.Vector3(_direction.X, _direction.Y, _direction.Z));
-      shader.SetFloat($"flashLights[{i}].cutOff", CutOff);
-      shader.SetFloat($"flashLights[{i}].outerCutOff", OuterCutOff);
-      shader.SetUniform3($"flashLights[{i}].color", 
+      shader.SetFloat($"flashLights[{i}].cutOff", _cutOff);
+      shader.SetFloat($"flashLights[{i}].outerCutOff", _outerCutOff);
+      shader.SetUniform3($"flashLights[{i}].color",
           new OpenTK.Mathematics.Vector3(_color.X, _color.Y, _color.Z));
-      shader.SetUniform3($"flashLights[{i}].diffuse", 
+      shader.SetUniform3($"flashLights[{i}].diffuse",
           new OpenTK.Mathematics.Vector3(_diffuse.X, _diffuse.Y, _diffuse.Z));
-      shader.SetUniform3($"flashLights[{i}].specular", 
+      shader.SetUniform3($"flashLights[{i}].specular",
           new OpenTK.Mathematics.Vector3(_specular.X, _specular.Y, _specular.Z));
-      shader.SetFloat($"flashLights[{i}].constant", Constant);
-      shader.SetFloat($"flashLights[{i}].linear", Linear);
-      shader.SetFloat($"flashLights[{i}].quadratic", Quadratic);
+      shader.SetFloat($"flashLights[{i}].constant", _constant);
+      shader.SetFloat($"flashLights[{i}].linear", _linear);
+      shader.SetFloat($"flashLights[{i}].quadratic", _quadratic);
     }
   }
 }

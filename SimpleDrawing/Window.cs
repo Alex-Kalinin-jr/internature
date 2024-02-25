@@ -95,6 +95,7 @@ public class Window : GameWindow {
     // customization
     CreateShowingTypeButtons();
     CreateColorPalette();
+    CreatePointLightPalette();
     CreateDirLightPalette();
 
     Error.Check();
@@ -163,14 +164,31 @@ public class Window : GameWindow {
   private void CreateDirLightPalette() {
     ImGui.Begin("directional light");
     if (ImGui.SliderFloat3("direction", ref _directionalLight._direction, 0.0f, 1.0f) ||
-    ImGui.SliderFloat3("color", ref _directionalLight._color, 0.0f, 1.0f) ||
-    ImGui.SliderFloat3("diffuse", ref _directionalLight._diffuse, 0.0f, 1.0f) ||
-    ImGui.SliderFloat3("specular", ref _directionalLight._specular, 0.0f, 1.0f)) {
+        ImGui.SliderFloat3("color", ref _directionalLight._color, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("diffuse", ref _directionalLight._diffuse, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("specular", ref _directionalLight._specular, 0.0f, 1.0f)) {
       _scene.ChangeDirectionalLight(_directionalLight);
     }
     ImGui.End();
   }
 
+  private void CreatePointLightPalette() {
+    ImGui.Begin("point light");
+    if (ImGui.SliderFloat3("color", ref _pointLight._color, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("diffuse", ref _pointLight._diffuse, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("specular", ref _pointLight._specular, 0.0f, 1.0f) ||
+        ImGui.SliderFloat("constant koeff", ref _pointLight._constant, 0.0f, 1.0f) ||
+        ImGui.SliderFloat("linear koeff", ref _pointLight._linear, 0.0f, 0.25f) ||
+        ImGui.SliderFloat("quadratic koeff", ref _pointLight._quadratic, 0.0f, 0.09f)) {
+      _scene.ChangePointLight(_pointLight);
+    }
+    ImGui.End();
+  }
+
+  private void CreateFlasLightPalette() {
+    ImGui.Begin("flash light");
+    ImGui.End();
+  }
 
 
   private void CreateColorPalette() {
