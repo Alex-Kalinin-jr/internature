@@ -1,7 +1,7 @@
 #version 330 core
 
-#define NR_POINTLIGHTS 1 // to be passed through uniform
-#define NR_FLASHLIGHTS 1 // to be passed
+#define NR_POINTLIGHTS 1 
+#define NR_FLASHLIGHTS 1 
 #define NR_DIRECTIONAL_LIGHTS 1
 
 in vec3 Normal;

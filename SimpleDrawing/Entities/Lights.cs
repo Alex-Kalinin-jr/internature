@@ -1,10 +1,17 @@
 ﻿using OpenTK.Mathematics;
 
-namespace SimpleDrawing.Entities {
-  internal struct DirectionalLight {
-    public Cube _form;
-    public Vector3 Direction { get; set; }
 
+
+
+namespace SimpleDrawing.Entities {
+
+  internal abstract class Light {
+    public Volume _form;
+    public virtual void AdjustShader(ref Shader shader, int i) { }
+  }
+
+  internal class DirectionalLight : Light {
+    public Vector3 Direction { get; set; }
     public Vector3 Color { get; set; }
     public Vector3 Diffuse { get; set; }
     public Vector3 Specular { get; set; }
@@ -19,15 +26,23 @@ namespace SimpleDrawing.Entities {
       Diffuse = new Vector3(0.4f, 0.4f, 0.4f);
       Specular = new Vector3(0.5f, 0.5f, 0.5f);
     }
+
+    public override void AdjustShader(ref Shader shader, int i) {
+      base.AdjustShader(ref shader, i);
+
+      shader.SetUniform3($"dirlights[{i}].direction", Direction);
+      shader.SetUniform3($"dirlights[{i}].color", Color);
+      shader.SetUniform3($"dirlights[{i}].diffuse", Diffuse);
+      shader.SetUniform3($"dirlights[{i}].specular", Specular);
+    }
+
   }
 
-  internal struct PointLight {
-    public Cube _form;
+  internal class PointLight : Light {
 
     public Vector3 Color { get; set; }
     public Vector3 Diffuse { get; set; }
     public Vector3 Specular { get; set;}
-
     public float Constant {  get; set; }
     public float Linear { get; set; }
     public float Quadratic { get; set; }
@@ -44,10 +59,24 @@ namespace SimpleDrawing.Entities {
       Linear = 0.09f;
       Quadratic = 0.032f;
     }
+
+    public override void AdjustShader(ref Shader shader, int i) {
+      base.AdjustShader(ref shader, i);
+
+      shader.SetUniform3($"pointLights[{i}].position", _form.PosVr);
+      shader.SetUniform3($"pointLights[{i}].color", Color);
+      shader.SetUniform3($"pointLights[{i}].diffuse", Diffuse);
+      shader.SetUniform3($"pointLights[{i}].specular", Specular);
+      shader.SetFloat($"pointLights[{i}].constant", Constant);
+      shader.SetFloat($"pointLights[{i}].linear", Linear);
+      shader.SetFloat($"pointLights[{i}].quadratic", Quadratic);
+    }
+
+
+
   }
 
-  internal struct FlashLight {
-    public Cube _form;
+  internal class FlashLight : Light {
 
     public Vector3 Direction { get; set; }
     public Vector3 Color { get; set; }
@@ -79,5 +108,19 @@ namespace SimpleDrawing.Entities {
       Quadratic = 0.032f;
     }
 
+    public override void AdjustShader(ref Shader shader, int i) {
+      base.AdjustShader(ref shader, i);
+
+      shader.SetUniform3($"flashLights[{i}].position", _form.PosVr);
+      shader.SetUniform3($"flashLights[{i}].direction", Direction);
+      shader.SetFloat($"flashLights[{i}].cutOff", CutOff);
+      shader.SetFloat($"flashLights[{i}].outerCutOff", OuterCutOff);
+      shader.SetUniform3($"flashLights[{i}].color", Color);
+      shader.SetUniform3($"flashLights[{i}].diffuse", Diffuse);
+      shader.SetUniform3($"flashLights[{i}].specular", Specular);
+      shader.SetFloat($"flashLights[{i}].constant", Constant);
+      shader.SetFloat($"flashLights[{i}].linear", Linear);
+      shader.SetFloat($"flashLights[{i}].quadratic", Quadratic);
+    }
   }
 }

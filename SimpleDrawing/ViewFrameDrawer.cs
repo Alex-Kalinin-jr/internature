@@ -14,21 +14,13 @@ public sealed class SceneDrawer {
 
   Camera _camera;
   const float _cameraSpeed = 1.5f;
+  private readonly float _FOV = 45.0f;
 
   private Shader _shader;
   private Shader _lampShader;
 
-
-  DirectionalLight _dirLight;
-  PointLight _pointLight;
-  FlashLight _flashLight;
-
-  private int _lampCount = 0;
-
-  private readonly float _FOV = 45.0f;
-
-  // first "_lampCount" volumes are the lamp's volumes
-  private List<Volume> _volumes = new List<Volume>();
+  private List<Volume> _volumes;
+  private List<Light> _lights;
 
   private List<int> _vertexBufferObjects;
   private List<int> _normalBufferObjects;
@@ -65,33 +57,23 @@ public sealed class SceneDrawer {
 
 
     _volumes = new List<Volume>();
+    _lights = new List<Light>();
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    _dirLight = new DirectionalLight();
-    _dirLight.Direction = new Vector3(0.0f, -1.0f, 0.0f);
-    ++_lampCount;
-
-    _pointLight = new PointLight();
-    ++_lampCount;
-
-    _flashLight = new FlashLight();
-    _flashLight.Direction = new Vector3(0.0f, 0.3f, -1.0f);
-    ++_lampCount;
-
-    _volumes.Add(_dirLight._form);
-    _volumes.Add(_pointLight._form);
-    _volumes.Add(_flashLight._form);
+    var dirLight = new DirectionalLight();
+    dirLight.Direction = new Vector3(0.0f, -1.0f, 0.0f);
+    var pointLight = new PointLight();
+    var flashLight = new FlashLight();
+    flashLight.Direction = new Vector3(0.0f, 0.3f, -1.0f);
+    _lights.Add(dirLight);
+    _lights.Add(pointLight);
+    _lights.Add(flashLight);
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     var cubes = Generator.GenerateVolumes();
     _volumes.AddRange(cubes);
 
-    if (_volumes.Count > _lampCount) {
-      _facesColor = _volumes[_lampCount].MaterialTraits.Ambient;
-
-    } else {
-      _facesColor = _volumes[0].MaterialTraits.Ambient;
-    }
+    _facesColor = _volumes[0].MaterialTraits.Ambient;
 
     _edgesColor = _facesColor;
     _pointsColor = _facesColor;
@@ -154,33 +136,12 @@ public sealed class SceneDrawer {
     _shader.SetUniform3("viewPos", _camera.Position);
     _shader.SetMatrix4("view", _camera.GetViewMatrix());
     _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-// dirlight
-    _shader.SetUniform3($"dirlights[{0}].direction", _dirLight.Direction);
-    _shader.SetUniform3($"dirlights[{0}].color", _dirLight.Color);
-    _shader.SetUniform3($"dirlights[{0}].diffuse", _dirLight.Diffuse);
-    _shader.SetUniform3($"dirlights[{0}].specular", _dirLight.Specular);
-// pointlight
-    _shader.SetUniform3($"pointLights[{0}].position", _pointLight._form.PosVr);
-    _shader.SetUniform3($"pointLights[{0}].color", _pointLight.Color);
-    _shader.SetUniform3($"pointLights[{0}].diffuse", _pointLight.Diffuse);
-    _shader.SetUniform3($"pointLights[{0}].specular", _pointLight.Specular);
-    _shader.SetFloat($"pointLights[{0}].constant", _pointLight.Constant);
-    _shader.SetFloat($"pointLights[{0}].linear", _pointLight.Linear);
-    _shader.SetFloat($"pointLights[{0}].quadratic", _pointLight.Quadratic);
-// flashlight
-    _shader.SetUniform3($"flashLights[{0}].position", _flashLight._form.PosVr);
-    _shader.SetUniform3($"flashLights[{0}].direction", _flashLight.Direction);
-    _shader.SetFloat($"flashLights[{0}].cutOff", _flashLight.CutOff);
-    _shader.SetFloat($"flashLights[{0}].outerCutOff", _flashLight.OuterCutOff);
-    _shader.SetUniform3($"flashLights[{0}].color", _flashLight.Color);
-    _shader.SetUniform3($"flashLights[{0}].diffuse", _flashLight.Diffuse);
-    _shader.SetUniform3($"flashLights[{0}].specular", _flashLight.Specular);
-    _shader.SetFloat($"flashLights[{0}].constant", _flashLight.Constant);
-    _shader.SetFloat($"flashLights[{0}].linear", _flashLight.Linear);
-    _shader.SetFloat($"flashLights[{0}].quadratic", _flashLight.Quadratic);
 
+    for (int i = 0; i < _lights.Count; ++i) {
+      _lights[i].AdjustShader(ref _shader, 0);
+    }
 
-    for (int i = _lampCount; i < _volumes.Count; ++i) {
+    for (int i = 0; i < _volumes.Count; ++i) {
 
       Matrix4 model = _volumes[i].ComputeModelMatrix();
       _shader.SetMatrix4("model", model);
@@ -205,9 +166,9 @@ public sealed class SceneDrawer {
     _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
     _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
-    for (int i = 0; i < _lampCount; ++i) {
+    for (int i = 0; i < _lights.Count; ++i) {
 
-      Matrix4 modelLamp = _volumes[i].ComputeModelMatrix();
+      Matrix4 modelLamp = _lights[i]._form.ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
       _lampShader.SetUniform3("aColor", _volumes[i].MaterialTraits.Ambient);
       GL.BindVertexArray(_vertexArrayObjects[i]);
@@ -251,9 +212,7 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   private void ShowSolid(int i) {
-    if (i >= _lampCount) {
-      _shader.SetUniform3("material.ambient", _facesColor);
-    }
+    _shader.SetUniform3("material.ambient", _facesColor);
 
     GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
   }
