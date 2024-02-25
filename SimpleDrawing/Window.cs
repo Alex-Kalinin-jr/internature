@@ -258,7 +258,7 @@ public class Window : GameWindow {
       _scene.MoveCameraLeft((float)e.Time);
     }
 
-    if (input.IsKeyDown(Keys.LeftShift)) {
+    if (input.IsKeyDown(Keys.RightShift)) {
       _scene.MoveCameraDown((float)e.Time);
     }
 
