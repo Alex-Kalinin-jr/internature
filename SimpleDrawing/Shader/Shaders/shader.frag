@@ -123,11 +123,15 @@ void main() {
     }
 
     for (int i = 0; i < NR_POINTLIGHTS; i++) {
-       result += CalcPointLights(pointLights[i], norm, FragPos, viewDir);
+        if (pointLights[i].constant != 0) {
+            result += CalcPointLights(pointLights[i], norm, FragPos, viewDir);
+        }
     }
 
     for (int i = 0; i < NR_FLASHLIGHTS; i++) {
-       result += CalcFlashLights(flashLights[i], norm, FragPos, viewDir);
+        if (flashLights[i].constant != 0) {
+            result += CalcFlashLights(flashLights[i], norm, FragPos, viewDir);
+        }
     }
 
     outColor = vec4(result, 1.0);
