@@ -242,22 +242,22 @@ namespace SimpleDrawing.Entities {
       var volumes = new List<Cube>();
 
       Cube buff = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
-      buff.PosVr += new Vector3(-2.5f, 0.0f, 0.0f);
+      buff.PosVr += new Vector3(-3.5f, 0.0f, 0.0f);
 
       Cube buff2 = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
-      buff2.PosVr += new Vector3(2.5f, 0.0f, 0.0f);
+      buff2.PosVr += new Vector3(3.5f, 0.0f, 0.0f);
 
       Cube buff3 = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
-      buff3.PosVr += new Vector3(0.0f, 2.5f, 0.0f);
+      buff3.PosVr += new Vector3(0.0f, 3.5f, 0.0f);
 
       Cube buff4 = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
-      buff4.PosVr += new Vector3(0.0f, 2.5f, 0.0f);
+      buff4.PosVr += new Vector3(0.0f, -3.5f, 0.0f);
 
       Cube buff5 = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
-      buff5.PosVr += new Vector3(0.0f, 0.0f, -2.5f);
+      buff5.PosVr += new Vector3(0.0f, 0.0f, -3.5f);
 
       Cube buff6 = new Cube(4, new Vector3(0.2125f, 0.1275f, 0.054f));
-      buff6.PosVr += new Vector3(0.0f, 0.0f, 2.5f);
+      buff6.PosVr += new Vector3(0.0f, 0.0f, 3.5f);
 
 
       volumes.Add(buff);

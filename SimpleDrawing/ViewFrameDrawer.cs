@@ -73,21 +73,19 @@ public sealed class SceneDrawer {
 
 
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    _flashLight = new FlashLight();
-    _flashLight._form.PosVr = new Vector3(0.0f, 0.0f, 3.0f);
-    ++_lampCount;
-
-    _pointLight = new PointLight();
-    _pointLight._form.PosVr = new Vector3(0.0f, -3.0f, 2.0f);
-    ++_lampCount;
-
     _dirLight = new DirectionalLight();
     _dirLight.Direction = new Vector3(1.0f, -1.0f, 1.0f);
     ++_lampCount;
 
-    _volumes.Add(_flashLight._form);
-    _volumes.Add(_pointLight._form);
+    _pointLight = new PointLight();
+    ++_lampCount;
+
+    _flashLight = new FlashLight();
+    ++_lampCount;
+
     _volumes.Add(_dirLight._form);
+    _volumes.Add(_pointLight._form);
+    _volumes.Add(_flashLight._form);
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -159,16 +157,14 @@ public sealed class SceneDrawer {
   void ShowVolumes() {
 
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
-    _shader.SetUniform3("viewPos", new Vector3(0.0f, 0.0f, 10.0f));
+    _shader.SetUniform3("viewPos", _camera.Position);
     _shader.SetMatrix4("view", _view);
     _shader.SetMatrix4("projection", _projection);
 // dirlight light
-/*
     _shader.SetUniform3($"dirlights[{0}].direction", _dirLight.Direction);
     _shader.SetUniform3($"dirlights[{0}].color", _dirLight.Color);
     _shader.SetUniform3($"dirlights[{0}].diffuse", _dirLight.Diffuse);
     _shader.SetUniform3($"dirlights[{0}].specular", _dirLight.Specular);
-*/
 // pointlight
     _shader.SetUniform3($"pointLights[{0}].position", _pointLight._form.PosVr);
     _shader.SetUniform3($"pointLights[{0}].color", _pointLight.Color);
@@ -188,6 +184,8 @@ public sealed class SceneDrawer {
     _shader.SetFloat($"flashLights[{0}].constant", _flashLight.Constant);
     _shader.SetFloat($"flashLights[{0}].linear", _flashLight.Linear);
     _shader.SetFloat($"flashLights[{0}].quadratic", _flashLight.Quadratic);
+/*
+*/
 
     for (int i = _lampCount; i < _volumes.Count; ++i) {
 
