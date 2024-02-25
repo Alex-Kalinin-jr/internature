@@ -251,6 +251,30 @@ namespace SimpleDrawing.Entities {
       return volumes;
     }
 
+    public static List<Light> GenerateLights() {
+      var lights = new List<Light>();
+
+      var dirLight = new DirectionalLight();
+      dirLight.Direction = new Vector3(0.0f, 1.0f, 0.0f);
+      dirLight._form.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
+      dirLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+
+      // var pointLight = new PointLight();
+      // pointLight._form.PosVr = new Vector3(0.0f, -1.5f, -1.0f);
+      // pointLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+
+      // var flashLight = new FlashLight();
+      // flashLight._form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
+      // flashLight.Direction = new Vector3(0.0f, 0.0f, -1.0f);
+      // flashLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+
+      lights.Add(dirLight);
+      // lights.Add(pointLight);
+      // lights.Add(flashLight);
+
+      return lights;
+    }
+
 
   }
 }

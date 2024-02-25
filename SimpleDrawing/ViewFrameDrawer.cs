@@ -5,7 +5,7 @@ using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
-public delegate void Show(int i);
+public delegate void Show(int length);
 
 public sealed class SceneDrawer {
   private int _width;
@@ -38,18 +38,13 @@ public sealed class SceneDrawer {
     _height = 768;
     _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
     _lampShader = new Shader("Shader/Shaders/lightShader.vert", "Shader/Shaders/lightShader.frag");
-
     _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
-
     _increase = true;
     _interpolationKoeff = 0.2f;
-
     _edgesColor = new Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new Vector3(0.0f, 0.0f, 0.0f);
-
     _volumes = new List<Volume>();
     _lights = new List<Light>();
-
   }
   //  //////////////////////////////////////////////////////////////////////////////
 
@@ -80,36 +75,15 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
-
-    // theese code should be in some another place /////////////////
-    var dirLight = new DirectionalLight();
-    dirLight.Direction = new Vector3(0.0f, 1.0f, 0.0f);
-    dirLight._form.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
-    dirLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
-
-    var pointLight = new PointLight();
-    pointLight._form.PosVr = new Vector3(0.0f, -1.5f, -1.0f);
-    pointLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
-
-    var flashLight = new FlashLight();
-    flashLight._form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
-    flashLight.Direction = new Vector3(0.0f, 0.0f, -1.0f);
-    flashLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
-
-    _lights.Add(dirLight);
-    _lights.Add(pointLight);
-    _lights.Add(flashLight);
-
-    var cubes = Generator.GenerateVolumes();
-    _volumes.AddRange(cubes);
-    // theese code should be in some another place /////////////////
-
-
+    _volumes.AddRange(Generator.GenerateVolumes());
+    _lights.AddRange(Generator.GenerateLights());
     ChangeDrawingType(0, true);
+
     GL.Enable(EnableCap.ProgramPointSize);
+    GL.Enable(EnableCap.DepthTest);
+    GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
 
     for (int i = 0; i < _volumes.Count; ++i) {
-
       _volumes[i].VAO = GL.GenVertexArray();
       GL.BindVertexArray(_volumes[i].VAO);
 
@@ -119,7 +93,6 @@ public sealed class SceneDrawer {
 
       if (_volumes[i].Normals != null) {
         BindNormalBuffer(_volumes[i].Normals);
-
       }
     }
 
@@ -134,11 +107,9 @@ public sealed class SceneDrawer {
       if (_lights[i]._form.Normals != null) {
         BindNormalBuffer(_lights[i]._form.Normals);
       }
-
     }
 
-    GL.Enable(EnableCap.DepthTest);
-    GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
+
   }
 
   public void OnResize(int width, int height) {
@@ -162,10 +133,8 @@ public sealed class SceneDrawer {
 
 
 
-
   //  //////////////////////////////////////////////////////////////////////////////
   void ShowVolumes() {
-
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("viewPos", _camera.Position);
     _shader.SetMatrix4("view", _camera.GetViewMatrix());
@@ -178,9 +147,8 @@ public sealed class SceneDrawer {
     for (int i = 0; i < _volumes.Count; ++i) {
       _volumes[i].AdjustShader(ref _shader);
       GL.BindVertexArray(_volumes[i].VAO);
-      _showType(i);
+      _showType(_volumes[i].Vertices.Length);
     }
-
   }
 
   void ShowLamps() {
@@ -196,22 +164,21 @@ public sealed class SceneDrawer {
       GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i]._form.Vertices.Length / 3);
     }
   }
-
   //  //////////////////////////////////////////////////////////////////////////////
 
 
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  private void ShowSolid(int i) {
-    GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
+  private void ShowSolid(int length) {
+    GL.DrawArrays(PrimitiveType.Triangles, 0, length / 3);
   }
 
-  private void ShowFramed(int i) {
+  private void ShowFramed(int length) {
     _shader.SetUniform3("material.ambient", _edgesColor);
 
     int bias = 0;
-    int step = _volumes[i].Vertices.Length / 3 / 6;
+    int step = length / 3 / 6;
 
     for (int g = 0; g < 6; ++g) {
       GL.DrawArrays(PrimitiveType.LineStrip, bias, step);
@@ -219,9 +186,9 @@ public sealed class SceneDrawer {
     }
   }
 
-  private void ShowPoints(int i) {
+  private void ShowPoints(int length) {
     _shader.SetUniform3("material.ambient", _pointsColor);
-    GL.DrawArrays(PrimitiveType.Points, 0, _volumes[i].Vertices.Length / 3);
+    GL.DrawArrays(PrimitiveType.Points, 0, length / 3);
   }
 
   public void ChangeDrawingType(int i, bool state) {

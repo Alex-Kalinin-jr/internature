@@ -72,8 +72,6 @@ namespace SimpleDrawing.Entities {
       shader.SetFloat($"pointLights[{i}].quadratic", Quadratic);
     }
 
-
-
   }
 
   internal class FlashLight : Light {
