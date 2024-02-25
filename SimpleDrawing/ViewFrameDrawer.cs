@@ -22,9 +22,12 @@ public sealed class SceneDrawer {
   private List<Volume> _volumes;
   private List<Light> _lights;
 
-  private List<int> _vertexBufferObjects;
   private List<int> _normalBufferObjects;
   private List<int> _vertexArrayObjects;
+
+  private List<int> _lightsBufferObjects;
+  private List<int> _normalLightsBufferObjects;
+  private List<int> _lightsArrayObjects;
 
   private Show _showType;
 
@@ -32,7 +35,6 @@ public sealed class SceneDrawer {
   private float _interpolationKoeff;
   private bool _increase;
 
-  Vector3 _facesColor;
   Vector3 _edgesColor;
   Vector3 _pointsColor;
   //  //////////////////////////////////////////////////////////////////////////////
@@ -48,36 +50,16 @@ public sealed class SceneDrawer {
 
     _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
 
-    _vertexBufferObjects = new List<int>();
-    _normalBufferObjects = new List<int>();
     _vertexArrayObjects = new List<int>();
 
     _increase = true;
     _interpolationKoeff = 0.2f;
 
+    _edgesColor = new Vector3(0.0f, 0.0f, 0.0f);
+    _pointsColor = new Vector3(0.0f, 0.0f, 0.0f);
 
     _volumes = new List<Volume>();
     _lights = new List<Light>();
-    // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    var dirLight = new DirectionalLight();
-    dirLight.Direction = new Vector3(0.0f, -1.0f, 0.0f);
-    var pointLight = new PointLight();
-    var flashLight = new FlashLight();
-    flashLight.Direction = new Vector3(0.0f, 0.3f, -1.0f);
-    _lights.Add(dirLight);
-    _lights.Add(pointLight);
-    _lights.Add(flashLight);
-    // ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    var cubes = Generator.GenerateVolumes();
-    _volumes.AddRange(cubes);
-
-    _facesColor = _volumes[0].MaterialTraits.Ambient;
-
-    _edgesColor = _facesColor;
-    _pointsColor = _facesColor;
-
 
   }
   //  //////////////////////////////////////////////////////////////////////////////
@@ -86,18 +68,32 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
+
+    // theese code should be in some another place /////////////////
+    var dirLight = new DirectionalLight();
+    dirLight.Direction = new Vector3(0.0f, -1.0f, 0.0f);
+    var pointLight = new PointLight();
+    var flashLight = new FlashLight();
+    flashLight.Direction = new Vector3(0.0f, 0.3f, -1.0f);
+    _lights.Add(dirLight);
+    _lights.Add(pointLight);
+    _lights.Add(flashLight);
+
+    var cubes = Generator.GenerateVolumes();
+    _volumes.AddRange(cubes);
+    // theese code should be in some another place /////////////////
+
+
     ChangeDrawingType(0, true);
     GL.Enable(EnableCap.ProgramPointSize);
 
     for (int i = 0; i < _volumes.Count; ++i) {
+
       _vertexArrayObjects.Add(GL.GenVertexArray());
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
-      if (_volumes[i].Vertices != null) {
+      if (_volumes[i].Vertices != null && _volumes[i].Normals != null) {
         BindPosBuffer(i);
-      }
-
-      if (_volumes[i].Normals != null) {
         BindNormalBuffer(i);
       }
 
@@ -143,21 +139,11 @@ public sealed class SceneDrawer {
 
     for (int i = 0; i < _volumes.Count; ++i) {
 
-      Matrix4 model = _volumes[i].ComputeModelMatrix();
-      _shader.SetMatrix4("model", model);
-
-      model.Invert();
-      _shader.SetMatrix4("invertedModel", model);
-
-
-      _shader.SetUniform3("material.ambient", _volumes[i].MaterialTraits.Ambient);
-      _shader.SetUniform3("material.diffuse", _volumes[i].MaterialTraits.Diffuse);
-      _shader.SetUniform3("material.specular", _volumes[i].MaterialTraits.Specular);
-      _shader.SetFloat("material.shiness", _volumes[i].MaterialTraits.Shiness);
-     
+      _volumes[i].AdjustShader(ref _shader);
+      
       GL.BindVertexArray(_vertexArrayObjects[i]);
 
-      _showType(i);  // delegate
+      _showType(i);
     }
   }
 
@@ -184,9 +170,8 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   private void BindPosBuffer(int indexOfDescriptros) {
-    _vertexBufferObjects.Add(GL.GenBuffer());
     int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObjects[indexOfDescriptros]);
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
     GL.BufferData(BufferTarget.ArrayBuffer,
         _volumes[indexOfDescriptros].Vertices.Length * sizeof(float),
         _volumes[indexOfDescriptros].Vertices, BufferUsageHint.DynamicDraw);
@@ -196,9 +181,8 @@ public sealed class SceneDrawer {
   }
 
   private void BindNormalBuffer(int indexOfDescriptros) {
-    _normalBufferObjects.Add(GL.GenBuffer());
     int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, _normalBufferObjects[indexOfDescriptros]);
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
     GL.BufferData(BufferTarget.ArrayBuffer,
       _volumes[indexOfDescriptros].Normals.Length * sizeof(float),
       _volumes[indexOfDescriptros].Normals, BufferUsageHint.StaticDraw);
@@ -206,14 +190,17 @@ public sealed class SceneDrawer {
     GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
+
+
+
+
+
   //  //////////////////////////////////////////////////////////////////////////////
 
 
 
   //  //////////////////////////////////////////////////////////////////////////////
   private void ShowSolid(int i) {
-    _shader.SetUniform3("material.ambient", _facesColor);
-
     GL.DrawArrays(PrimitiveType.Triangles, 0, _volumes[i].Vertices.Length / 3);
   }
 
@@ -265,10 +252,6 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  public void ChangeFacesColor(Vector3 color) {
-    _facesColor = color;
-  }
-
   public void ChangeEdgesColor(Vector3 color) {
     _edgesColor = color;
   }

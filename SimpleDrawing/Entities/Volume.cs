@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using System.Reflection;
 
 namespace SimpleDrawing.Entities {
   public struct Material {
@@ -49,6 +50,18 @@ namespace SimpleDrawing.Entities {
     public Volume(string path, Vector3 color) : this() {
 
       (Vertices, MaterialTraits, Normals) = Generator.GenerateCube(10, color);
+    }
+
+    public void AdjustShader(ref Shader shader) {
+      shader.SetUniform3("material.ambient", MaterialTraits.Ambient);
+      shader.SetUniform3("material.diffuse", MaterialTraits.Diffuse);
+      shader.SetUniform3("material.specular", MaterialTraits.Specular);
+      shader.SetFloat("material.shiness", MaterialTraits.Shiness);
+
+      var modelMatrix = ComputeModelMatrix();
+      shader.SetMatrix4("model", modelMatrix);
+      modelMatrix.Invert();
+      shader.SetMatrix4("invertedModel", modelMatrix);
     }
 
   }
