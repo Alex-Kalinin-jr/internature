@@ -119,7 +119,9 @@ void main() {
     vec3 result = vec3(0.0, 0.0, 0.0);
 
     for (int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++) {
-        result += CalcDirLight(dirlights[i], norm, viewDir);
+        if (dirlights[i].direction != vec3(0.0, 0.0, 0.0)) {
+            result += CalcDirLight(dirlights[i], norm, viewDir);
+        }
     }
 
     for (int i = 0; i < NR_POINTLIGHTS; i++) {

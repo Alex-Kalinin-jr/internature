@@ -4,20 +4,21 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using SimpleDrawing.Entities;
 using System.Runtime.InteropServices;
 
 namespace SimpleDrawing;
 
 public class Window : GameWindow {
 
+
+
   private bool _areFacesDrawn;
   private bool _areEdgesDrawn;
   private bool _arePointsDrawn;
 
-  private System.Numerics.Vector3 _facesColor;
   private System.Numerics.Vector3 _edgesColor;
   private System.Numerics.Vector3 _pointsColor;
+
 
   private static DebugProc _debugProcCallback = DebugCallback;
   private static GCHandle _debugProcCallbackHandle;
@@ -35,7 +36,6 @@ public class Window : GameWindow {
     _areEdgesDrawn = false;
     _arePointsDrawn = false;
 
-    _facesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
   }
@@ -148,6 +148,10 @@ public class Window : GameWindow {
       }
     }
     ImGui.End();
+
+  }
+
+  private void CreateDirLightPalette() {
 
   }
 
