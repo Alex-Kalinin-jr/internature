@@ -56,14 +56,46 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
+  private void BindPosBuffer(float[] vertices) {
+    int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+    GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float),
+        vertices, BufferUsageHint.DynamicDraw);
+    GL.EnableVertexAttribArray(vertexLocation);
+    GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
+        false, 3 * sizeof(float), 0);
+  }
+
+  private void BindNormalBuffer(float[] normals) {
+    int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+    GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float),
+        normals, BufferUsageHint.StaticDraw);
+    GL.EnableVertexAttribArray(normalLocation);
+    GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
+        false, 3 * sizeof(float), 0);
+  }
+  //  //////////////////////////////////////////////////////////////////////////////
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
 
     // theese code should be in some another place /////////////////
     var dirLight = new DirectionalLight();
-    dirLight.Direction = new Vector3(0.0f, -1.0f, 0.0f);
+    dirLight.Direction = new Vector3(0.0f, 1.0f, 0.0f);
+    dirLight._form.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
+    dirLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+
     var pointLight = new PointLight();
+    pointLight._form.PosVr = new Vector3(0.0f, -1.5f, -1.0f);
+    pointLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+
     var flashLight = new FlashLight();
-    flashLight.Direction = new Vector3(0.0f, 0.3f, -1.0f);
+    flashLight._form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
+    flashLight.Direction = new Vector3(0.0f, 0.0f, -1.0f);
+    flashLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+
     _lights.Add(dirLight);
     _lights.Add(pointLight);
     _lights.Add(flashLight);
@@ -144,13 +176,11 @@ public sealed class SceneDrawer {
     }
 
     for (int i = 0; i < _volumes.Count; ++i) {
-
       _volumes[i].AdjustShader(ref _shader);
-
       GL.BindVertexArray(_volumes[i].VAO);
-
       _showType(i);
     }
+
   }
 
   void ShowLamps() {
@@ -159,47 +189,16 @@ public sealed class SceneDrawer {
     _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
     for (int i = 0; i < _lights.Count; ++i) {
-
       Matrix4 modelLamp = _lights[i]._form.ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
       _lampShader.SetUniform3("aColor", _lights[i]._form.MaterialTraits.Ambient);
       GL.BindVertexArray(_lights[i]._form.VAO);
-
-      ShowSolid(i);
-
+      GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i]._form.Vertices.Length / 3);
     }
   }
 
   //  //////////////////////////////////////////////////////////////////////////////
 
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
-  private void BindPosBuffer(float[] vertices) {
-    int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), 
-        vertices, BufferUsageHint.DynamicDraw);
-    GL.EnableVertexAttribArray(vertexLocation);
-    GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-
-  private void BindNormalBuffer(float[] normals) {
-    int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float), 
-        normals, BufferUsageHint.StaticDraw);
-    GL.EnableVertexAttribArray(normalLocation);
-    GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-
-
-
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
 
 
 
