@@ -1,9 +1,7 @@
 ﻿using OpenTK.Mathematics;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace SimpleDrawing.Entities {
-  internal class Generator {
+  public class Generator {
 
     public static (float[], Material, float[]) GenerateCube(int count, Vector3 color) {
 
@@ -12,12 +10,12 @@ namespace SimpleDrawing.Entities {
       int ind = 0;
 
       float[] normals = new float[cube.Length];
-      GenerateFrozenX(count, step, -1.0f, ref cube, ref ind, -1.0f);
-      GenerateFrozenX(count, -step, 1.0f, ref cube, ref ind, 1.0f);
-      GenerateFrozenY(count, step, -1.0f, ref cube, ref ind, -1.0f);
-      GenerateFrozenY(count, -step, 1.0f, ref cube, ref ind, 1.0f);
-      GenerateFrozenZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
-      GenerateFrozenZ(count, -step, 1.0f, ref cube, ref ind, 1.0f);
+      GeneratePlaneYZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
+      GeneratePlaneYZ(count, -step, 1.0f, ref cube, ref ind, 1.0f);
+      GeneratePlaneXZ(count, step, -1.0f, ref cube, ref ind, -1.0f);
+      GeneratePlaneXZ(count, -step, 1.0f, ref cube, ref ind, 1.0f);
+      GeneratePlaneXY(count, step, -1.0f, ref cube, ref ind, -1.0f);
+      GeneratePlaneXY(count, -step, 1.0f, ref cube, ref ind, 1.0f);
 
       Material material = new Material();
       material.Ambient = color;
@@ -88,7 +86,7 @@ namespace SimpleDrawing.Entities {
       return (vertices, material, normals);
     }
 
-    public static void GenerateFrozenZ(int count, float step, float xStart,
+    private static void GeneratePlaneXY(int count, float step, float xStart,
         ref float[] cube, ref int ind, float zCoord) {
 
       float stepY = step < 0 ? -step : step;
@@ -138,7 +136,7 @@ namespace SimpleDrawing.Entities {
       }
     }
 
-    public static void GenerateFrozenX(int count, float step, float xStart,
+    private static void GeneratePlaneYZ(int count, float step, float xStart,
       ref float[] cube, ref int ind, float xCoord) {
 
       float stepY = step < 0 ? -step : step;
@@ -187,7 +185,7 @@ namespace SimpleDrawing.Entities {
       }
     }
 
-    public static void GenerateFrozenY(int count, float step, float xStart,
+    private static void GeneratePlaneXZ(int count, float step, float xStart,
       ref float[] cube, ref int ind, float yCoord) {
 
       float stepY = step < 0 ? -step : step;
@@ -277,43 +275,5 @@ namespace SimpleDrawing.Entities {
       return lights;
     }
 
-  }
-}
-
-public class TextureGenerator {
-  public static void GenerateTexture() {
-    string CharSheet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-=_+[]{}\\|;:'\".,<>/?`~ ";
-    string MonoWidthFont = "Courier New";
-    int textureWidth = 2048;
-    int charCountPerRow = CharSheet.Length;
-    int charWidth = textureWidth / charCountPerRow;
-    int textureHeight = charWidth;
-
-    Bitmap bitmap = new Bitmap(textureWidth, textureHeight, PixelFormat.Format32bppArgb);
-    Graphics graphics = Graphics.FromImage(bitmap);
-    graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-    Font font = new Font(MonoWidthFont, charWidth - 1, FontStyle.Regular, GraphicsUnit.Pixel);
-
-    for (int i = 0; i < charCountPerRow; i++) {
-      int x = i * charWidth;
-      int y = 0;
-
-      graphics.DrawString(CharSheet[i].ToString(), font, Brushes.Black, new PointF(x, y));
-    }
-
-    EncoderParameters encoderParams = new EncoderParameters(1);
-    encoderParams.Param[0] = new EncoderParameter(Encoder.Quality, 100L);
-    ImageCodecInfo pngCodec = GetEncoderInfo("image/png");
-    bitmap.Save("char_sheet_texture.png", pngCodec, encoderParams);
-  }
-
-  private static ImageCodecInfo GetEncoderInfo(string mimeType) {
-    ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-    foreach (ImageCodecInfo codec in codecs) {
-      if (codec.MimeType == mimeType) {
-        return codec;
-      }
-    }
-    return null;
   }
 }

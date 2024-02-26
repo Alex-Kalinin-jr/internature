@@ -1,22 +1,8 @@
 ﻿using OpenTK.Mathematics;
-using System.Reflection;
 
 namespace SimpleDrawing.Entities {
-  public struct Material {
-    public Vector3 Ambient { get; set; }
-    public Vector3 Diffuse { get; set; }
-    public Vector3 Specular { get; set; }
 
-    public float Shiness { get; set; }
-    public Material() {
-      Ambient = new Vector3(1.0f, 0.5f, 0.0f);
-      Diffuse = new Vector3(1.0f, 0.5f, 0.31f);
-      Specular = new Vector3(0.5f, 0.5f, 0.5f);
-      Shiness = 0.32f;
-    }
-  }
-
-  internal abstract class Volume {
+  public abstract class Volume {
 
     public Material MaterialTraits { get; set; }
 
@@ -52,6 +38,7 @@ namespace SimpleDrawing.Entities {
     public Volume(string path, Vector3 color) : this() {
 
       (Vertices, MaterialTraits, Normals) = Generator.GenerateCube(10, color);
+
     }
 
     public void AdjustShader(ref Shader shader) {
@@ -68,26 +55,6 @@ namespace SimpleDrawing.Entities {
 
   }
 
-  internal class Cube : Volume {
-
-    public Cube(int verticesInLine, Vector3 color) {
-      (Vertices, MaterialTraits, Normals)
-          = Generator.GenerateCube(verticesInLine, color);
-
-      Texture = -1;
-      ScaleVr = Vector3.One;
-      PosVr = Vector3.Zero;
-      RotationVr = Vector3.Zero;
-    }
-
-    public Cube(string a) {
-      (Vertices, MaterialTraits, Normals) = Generator.GenerateTestingCube();
-      Texture = -1;
-      ScaleVr = Vector3.One;
-      PosVr = Vector3.Zero;
-      RotationVr = Vector3.Zero;
-    }
-  }
 }
 
 

@@ -5,7 +5,6 @@ namespace SimpleDrawing;
 
 class Program {
   static void Main() {
-    TextureGenerator.GenerateTexture();
     Window wnd = new Window();
     wnd.Run();
   }
