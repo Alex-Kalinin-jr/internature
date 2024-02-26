@@ -97,15 +97,15 @@ public sealed class SceneDrawer {
     }
 
     for (int i =0; i < _lights.Count; ++i) {
-      _lights[i]._form.VAO = GL.GenVertexArray();
-      GL.BindVertexArray(_lights[i]._form.VAO);
+      _lights[i].Form.VAO = GL.GenVertexArray();
+      GL.BindVertexArray(_lights[i].Form.VAO);
 
-      if (_lights[i]._form.Vertices != null) {
-        BindPosBuffer(_lights[i]._form.Vertices);
+      if (_lights[i].Form.Vertices != null) {
+        BindPosBuffer(_lights[i].Form.Vertices);
       }
 
-      if (_lights[i]._form.Normals != null) {
-        BindNormalBuffer(_lights[i]._form.Normals);
+      if (_lights[i].Form.Normals != null) {
+        BindNormalBuffer(_lights[i].Form.Normals);
       }
     }
 
@@ -157,11 +157,11 @@ public sealed class SceneDrawer {
     _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
     for (int i = 0; i < _lights.Count; ++i) {
-      Matrix4 modelLamp = _lights[i]._form.ComputeModelMatrix();
+      Matrix4 modelLamp = _lights[i].Form.ComputeModelMatrix();
       _lampShader.SetMatrix4("model", modelLamp);
-      _lampShader.SetUniform3("aColor", _lights[i]._form.MaterialTraits.Ambient);
-      GL.BindVertexArray(_lights[i]._form.VAO);
-      GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i]._form.Vertices.Length / 3);
+      _lampShader.SetUniform3("aColor", _lights[i].Form.MaterialTraits.Ambient);
+      GL.BindVertexArray(_lights[i].Form.VAO);
+      GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].Form.Vertices.Length / 3);
     }
   }
   //  //////////////////////////////////////////////////////////////////////////////
@@ -288,17 +288,17 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   internal void ChangeDirLight(DirectionalLight val) {
-    val._form.VAO = _lights[0]._form.VAO;
+    val.Form.VAO = _lights[0].Form.VAO;
     _lights[0] = val;
   }
 
   internal void ChangePointLight(PointLight val) {
-    val._form.VAO = _lights[1]._form.VAO;
+    val.Form.VAO = _lights[1].Form.VAO;
     _lights[1] = val;
   }
 
   internal void ChangeFlashLight(FlashLight val) {
-    val._form.VAO = _lights[2]._form.VAO;
+    val.Form.VAO = _lights[2].Form.VAO;
     _lights[2] = val;
   }
 }

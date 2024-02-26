@@ -47,9 +47,9 @@ public class Window : GameWindow {
     _directionalLight = new DirectionalLight();
     _pointLight = new PointLight();
     _flashLight = new FlashLight();
-    _flashLight._form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
-    _flashLight._direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
-    _flashLight._form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+    _flashLight.Form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
+    _flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
+    _flashLight.Form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
     _flashPos = new System.Numerics.Vector3(2.0f, -2.0f, 2.0f) ;
 }
 
@@ -169,10 +169,10 @@ public class Window : GameWindow {
 
   private void CreateDirLightPalette() {
     ImGui.Begin("directional light");
-    if (ImGui.SliderFloat3("direction", ref _directionalLight._direction, -1.0f, 1.0f) ||
-        ImGui.SliderFloat3("color", ref _directionalLight._color, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("diffuse", ref _directionalLight._diffuse, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("specular", ref _directionalLight._specular, 0.0f, 1.0f)) {
+    if (ImGui.SliderFloat3("direction", ref _directionalLight.Direction, -1.0f, 1.0f) ||
+        ImGui.SliderFloat3("color", ref _directionalLight.Color, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("diffuse", ref _directionalLight.Diffuse, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("specular", ref _directionalLight.Specular, 0.0f, 1.0f)) {
       _scene.ChangeDirectionalLight(_directionalLight);
     }
     ImGui.End();
@@ -180,12 +180,12 @@ public class Window : GameWindow {
 
   private void CreatePointLightPalette() {
     ImGui.Begin("point light");
-    if (ImGui.SliderFloat3("color", ref _pointLight._color, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("diffuse", ref _pointLight._diffuse, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("specular", ref _pointLight._specular, 0.0f, 1.0f) ||
-        ImGui.SliderFloat("constant koeff", ref _pointLight._constant, 0.5f, 1.0f) ||
-        ImGui.SliderFloat("linear koeff", ref _pointLight._linear, 0.07f, 0.3f) ||
-        ImGui.SliderFloat("quadratic koeff", ref _pointLight._quadratic, 0.0f, 0.07f)) {
+    if (ImGui.SliderFloat3("color", ref _pointLight.Color, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("diffuse", ref _pointLight.Diffuse, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("specular", ref _pointLight.Specular, 0.0f, 1.0f) ||
+        ImGui.SliderFloat("constant koeff", ref _pointLight.Constant, 0.5f, 1.0f) ||
+        ImGui.SliderFloat("linear koeff", ref _pointLight.Linear, 0.07f, 0.3f) ||
+        ImGui.SliderFloat("quadratic koeff", ref _pointLight.Quadratic, 0.0f, 0.07f)) {
       _scene.ChangePointLight(_pointLight);
     }
     ImGui.End();
@@ -195,17 +195,17 @@ public class Window : GameWindow {
     ImGui.Begin("flash light");
 
     if (ImGui.SliderFloat3("position", ref _flashPos, -6.0f, 6.0f)) {
-      _flashLight._form.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
+      _flashLight.Form.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
       _scene.ChangeFlashLight(_flashLight);
     }
 
-    if (ImGui.SliderFloat3("direction", ref _flashLight._direction, -1.0f, 1.0f) ||
-        ImGui.SliderFloat3("color", ref _flashLight._color, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("diffuse", ref _flashLight._diffuse, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("specular", ref _flashLight._specular, 0.0f, 1.0f) ||
-        ImGui.SliderFloat("constant koeff", ref _flashLight._constant, 0.5f, 1.0f) ||
-        ImGui.SliderFloat("linear koeff", ref _flashLight._linear, 0.07f, 0.3f) ||
-        ImGui.SliderFloat("quadratic koeff", ref _flashLight._quadratic, 0.0f, 0.07f)
+    if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f) ||
+        ImGui.SliderFloat3("color", ref _flashLight.Color, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("diffuse", ref _flashLight.Diffuse, 0.0f, 1.0f) ||
+        ImGui.SliderFloat3("specular", ref _flashLight.Specular, 0.0f, 1.0f) ||
+        ImGui.SliderFloat("constant koeff", ref _flashLight.Constant, 0.5f, 1.0f) ||
+        ImGui.SliderFloat("linear koeff", ref _flashLight.Linear, 0.07f, 0.3f) ||
+        ImGui.SliderFloat("quadratic koeff", ref _flashLight.Quadratic, 0.0f, 0.07f)
         ) {
       _scene.ChangeFlashLight(_flashLight);
     }

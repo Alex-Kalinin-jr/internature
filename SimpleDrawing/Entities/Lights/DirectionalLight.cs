@@ -2,32 +2,32 @@
 using System.Numerics;
 
 public class DirectionalLight : Light {
-  public Vector3 _direction;
-  public Vector3 _color;
-  public Vector3 _diffuse;
-  public Vector3 _specular;
+  public Vector3 Direction;
+  public Vector3 Color;
+  public Vector3 Diffuse;
+  public Vector3 Specular;
 
   public DirectionalLight() {
-    _form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
-    _form.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+    Form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
+    Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
 
-    _direction = new Vector3(-0.2f, -1.0f, -0.3f);
+    Direction = new Vector3(-0.2f, -1.0f, -0.3f);
 
-    _color = new Vector3(0.05f, 0.05f, 0.05f);
-    _diffuse = new Vector3(0.4f, 0.4f, 0.4f);
-    _specular = new Vector3(0.5f, 0.5f, 0.5f);
+    Color = new Vector3(0.05f, 0.05f, 0.05f);
+    Diffuse = new Vector3(0.4f, 0.4f, 0.4f);
+    Specular = new Vector3(0.5f, 0.5f, 0.5f);
   }
 
   public override void AdjustShader(ref Shader shader, int i) {
     base.AdjustShader(ref shader, i);
     shader.SetUniform3($"dirlights[{i}].direction",
-        new OpenTK.Mathematics.Vector3(_direction.X, _direction.Y, _direction.Z));
+        new OpenTK.Mathematics.Vector3(Direction.X, Direction.Y, Direction.Z));
     shader.SetUniform3($"dirlights[{i}].color",
-        new OpenTK.Mathematics.Vector3(_color.X, _color.Y, _color.Z));
+        new OpenTK.Mathematics.Vector3(Color.X, Color.Y, Color.Z));
     shader.SetUniform3($"dirlights[{i}].diffuse",
-        new OpenTK.Mathematics.Vector3(_diffuse.X, _diffuse.Y, _diffuse.Z));
+        new OpenTK.Mathematics.Vector3(Diffuse.X, Diffuse.Y, Diffuse.Z));
     shader.SetUniform3($"dirlights[{i}].specular",
-        new OpenTK.Mathematics.Vector3(_specular.X, _specular.Y, _specular.Z));
+        new OpenTK.Mathematics.Vector3(Specular.X, Specular.Y, Specular.Z));
   }
 
 }
