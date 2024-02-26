@@ -34,11 +34,11 @@ public sealed class SceneDrawer {
 
   Vector3 _edgesColor;
   Vector3 _pointsColor;
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public SceneDrawer() {
     _width = 1024;
     _height = 768;
@@ -56,37 +56,46 @@ public sealed class SceneDrawer {
     _texture = Texture.LoadFromFile("Resources/char_sheet_texture.png");
 
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void BindTextureBuffer() {
-    float h = 21f / (_height / 2);
-    float w = 21f / (_width / 2);
+ 
+    float h = 0.05f;
+    float w = 0.05f;
+    _vertices = new float[] { 0.0f, h, w, h, 0.0f, 0.0f,
+                              0.0f, 0.0f, w, h, w, 0};
 
-    _vertices = new float[] { 0.0f, h, w, h, w, 0.0f, 0.0f, h, w, 0.0f, 0.0f, 0.0f};
-
-    float x1 = (21f / 2048) * 0; // 0 is loop var
-    float x2 = (21f / 2048) * (0 + 1); // 0 is loop var
-
-    _textureData = new float[] { x1, 0, x2, 0, x2, 1, x1, 0, x2, 1, x1, 1};
 
     _lettersVao = GL.GenVertexArray();
     GL.BindVertexArray( _lettersVao );
 
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+    GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
     int vertexLocation = GL.GetAttribLocation(_lettersShader.Handle, "aPosition");
-    int textureLocation = GL.GetAttribLocation(_lettersShader.Handle, "aTexCoord");
     GL.EnableVertexAttribArray(vertexLocation);
     GL.VertexAttribPointer(vertexLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+
+
+    int i = 1;
+    float x1 = (21f / 2048) * i; // 0 is loop var
+    float x2 = (21f / 2048) * (i + 1); // 0 is loop var
+    _textureData = new float[] {x1, 1, x2, 1, x1, 0, 
+                                x1, 0, x2, 1, x2, 0};
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+    GL.BufferData(BufferTarget.ArrayBuffer, _textureData.Length * sizeof(float), _textureData, BufferUsageHint.StaticDraw);
+    int textureLocation = GL.GetAttribLocation(_lettersShader.Handle, "aTexCoord");
     GL.EnableVertexAttribArray(textureLocation);
     GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+    
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   private void BindPosBuffer(float[] vertices) {
     int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
     GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
@@ -106,15 +115,15 @@ public sealed class SceneDrawer {
     GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
         false, 3 * sizeof(float), 0);
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
     BindTextureBuffer();
 
-    _volumes.AddRange(Generator.GenerateVolumes());
-    _lights.AddRange(Generator.GenerateLights());
+    // _volumes.AddRange(Generator.GenerateVolumes());
+    // _lights.AddRange(Generator.GenerateLights());
     ChangeDrawingType(0, true);
 
     GL.Enable(EnableCap.ProgramPointSize);
@@ -166,21 +175,22 @@ public sealed class SceneDrawer {
 
 
     GL.BindVertexArray(_lettersVao);
-    float x = 200; // user-defined x-pos
-    float y = 200; // user-defined y-pos
+    float x = 0.0f; // user-defined x-pos
+    float y = 0.0f; // user-defined y-pos
     Vector3 position = new Vector3(x, y, 0);
-    Matrix4 modelMatrix = Matrix4.CreateScale(1.0f) * Matrix4.CreateTranslation(position);
+    Matrix4 modelMatrix = Matrix4.CreateScale(3.0f) * Matrix4.CreateTranslation(position);
     _lettersShader.SetMatrix4("modelMatrix", modelMatrix);
+
     _texture.Use(TextureUnit.Texture0);
-    GL.DrawArrays(PrimitiveType.Triangles, 0, 2);
+    GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 2);
   }
 
   public void OnClosed() { }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   private void ShowVolumes() {
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("viewPos", _camera.Position);
@@ -211,12 +221,12 @@ public sealed class SceneDrawer {
       GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].Form.Vertices.Length / 3);
     }
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   private void ShowSolid(int length) {
     GL.DrawArrays(PrimitiveType.Triangles, 0, length / 3);
   }
@@ -264,11 +274,11 @@ public sealed class SceneDrawer {
       }
     }
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void ChangeEdgesColor(Vector3 color) {
     _edgesColor = color;
   }
@@ -276,11 +286,11 @@ public sealed class SceneDrawer {
   public void ChangePointsColor(Vector3 color) {
     _pointsColor = color;
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   private void ChangeBlend() {
     float step = 0.005f;
     if (_increase) {
@@ -293,11 +303,11 @@ public sealed class SceneDrawer {
       _increase = _increase ^ true;
     }
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void MoveCameraFwd(float val) {
     _camera.Position += _camera.Front * _cameraSpeed * val;
   }
@@ -329,11 +339,11 @@ public sealed class SceneDrawer {
   public void ChangeCameraYaw(float val) {
     _camera.Yaw += val;
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void ChangeDirLight(DirectionalLight val) {
     val.Form.VAO = _lights[0].Form.VAO;
     _lights[0] = val;
