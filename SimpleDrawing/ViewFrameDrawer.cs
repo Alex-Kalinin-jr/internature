@@ -51,6 +51,45 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
+  public void BindTextureBuffer(float[] texture) {
+    float h = 0.2f / (_height / 2); // magic num 0.2
+    float w = 0.2f / (_width / 2); // magic num 0.2
+
+    Vector2[] vertices = new Vector2[]{
+      new Vector2( 0, h),
+      new Vector2( w, h),
+      new Vector2( w, 0),
+
+      new Vector2( 0, h),
+      new Vector2( w, 0),
+      new Vector2( 0, 0)
+    };
+
+    for (int i = 0; i < 20;  i++) {
+      float x1 = (0.2f / 2048) * i; // magic nums 0.2 and 2048
+      float x2 = (0.2f / 2048) * (i + 1); // magic nums 0.2 and 2048
+
+      Vector2[] textureData = new Vector2[] {
+        new Vector2 (x1, 0),
+        new Vector2 (x2, 0),
+        new Vector2 (x2, 1),
+
+        new Vector2 (x1, 0),
+        new Vector2 (x2, 1),
+        new Vector2 (x1, 1)
+      };
+    }
+
+    float x = 200; // user-defined x-pos
+    float y = 200; // user-defined y-pos
+    Vector3 position = new Vector3(x, y, 0);
+    Matrix4 modelMatrix = Matrix4.CreateScale(1) * Matrix4.CreateTranslation(position);
+  }
+  //  //////////////////////////////////////////////////////////////////////////////
+
+
+
+  //  //////////////////////////////////////////////////////////////////////////////
   private void BindPosBuffer(float[] vertices) {
     int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
     GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
@@ -134,7 +173,7 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  void ShowVolumes() {
+  private void ShowVolumes() {
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("viewPos", _camera.Position);
     _shader.SetMatrix4("view", _camera.GetViewMatrix());
@@ -151,7 +190,7 @@ public sealed class SceneDrawer {
     }
   }
 
-  void ShowLamps() {
+  private void ShowLamps() {
 
     _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
     _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
@@ -287,19 +326,20 @@ public sealed class SceneDrawer {
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  internal void ChangeDirLight(DirectionalLight val) {
+  public void ChangeDirLight(DirectionalLight val) {
     val.Form.VAO = _lights[0].Form.VAO;
     _lights[0] = val;
   }
 
-  internal void ChangePointLight(PointLight val) {
+  public void ChangePointLight(PointLight val) {
     val.Form.VAO = _lights[1].Form.VAO;
     _lights[1] = val;
   }
 
-  internal void ChangeFlashLight(FlashLight val) {
+  public void ChangeFlashLight(FlashLight val) {
     val.Form.VAO = _lights[2].Form.VAO;
     _lights[2] = val;
   }
+
 }
 

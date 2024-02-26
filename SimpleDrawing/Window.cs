@@ -4,14 +4,11 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using SimpleDrawing.Entities;
 using System.Runtime.InteropServices;
 
 namespace SimpleDrawing;
 
 public class Window : GameWindow {
-
-
 
   private bool _areFacesDrawn;
   private bool _areEdgesDrawn;
