@@ -51,7 +51,7 @@ namespace SimpleDrawing {
 
       io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
-      _shader = new Entities.Shader("Shader/Shaders/shader_imgui.vert", "Shader/Shaders/shader_imgui.frag");
+      _shader = new Entities.Shader("Shaders/shader_imgui.vert", "Shaders/shader_imgui.frag");
 
       CreateDeviceResources();
       SetKeyMappings();

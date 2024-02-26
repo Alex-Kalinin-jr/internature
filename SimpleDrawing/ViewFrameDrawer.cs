@@ -36,8 +36,8 @@ public sealed class SceneDrawer {
   public SceneDrawer() {
     _width = 1024;
     _height = 768;
-    _shader = new Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
-    _lampShader = new Shader("Shader/Shaders/lightShader.vert", "Shader/Shaders/lightShader.frag");
+    _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+    _lampShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
     _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
     _increase = true;
     _interpolationKoeff = 0.2f;
@@ -52,8 +52,8 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void BindTextureBuffer(float[] texture) {
-    float h = 0.2f / (_height / 2); // magic num 0.2
-    float w = 0.2f / (_width / 2); // magic num 0.2
+    float h = 21f / (_height / 2);
+    float w = 21f / (_width / 2);
 
     Vector2[] vertices = new Vector2[]{
       new Vector2( 0, h),
@@ -65,9 +65,9 @@ public sealed class SceneDrawer {
       new Vector2( 0, 0)
     };
 
-    for (int i = 0; i < 20;  i++) {
-      float x1 = (0.2f / 2048) * i; // magic nums 0.2 and 2048
-      float x2 = (0.2f / 2048) * (i + 1); // magic nums 0.2 and 2048
+    for (int i = 0; i < 95;  i++) {
+      float x1 = (21f / 2048) * i;
+      float x2 = (21f / 2048) * (i + 1);
 
       Vector2[] textureData = new Vector2[] {
         new Vector2 (x1, 0),
@@ -84,6 +84,8 @@ public sealed class SceneDrawer {
     float y = 200; // user-defined y-pos
     Vector3 position = new Vector3(x, y, 0);
     Matrix4 modelMatrix = Matrix4.CreateScale(1) * Matrix4.CreateTranslation(position);
+
+
   }
   //  //////////////////////////////////////////////////////////////////////////////
 
