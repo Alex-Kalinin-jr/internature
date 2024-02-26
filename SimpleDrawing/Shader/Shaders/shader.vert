@@ -16,7 +16,6 @@ out vec3 FragPos;
 void main()
 {
     FragPos = vec3(vec4(aPos, 1.0) * model);
-    Normal = aNormal * mat3(transpose(invertedModel));
 
 
 	float dx = 1.0 - (aPos.y*aPos.y/2.0) - (aPos.z*aPos.z/2.0) + (aPos.y*aPos.y*aPos.z*aPos.z/3.0);
@@ -27,8 +26,12 @@ void main()
 	float dyY = aPos.y * sqrt(abs(dy)) * morphingFactor + aPos.y * (1.0 - morphingFactor);
 	float dzZ = aPos.z * sqrt(abs(dz)) * morphingFactor + aPos.z * (1.0 - morphingFactor);
 
+
 	vec3 DistortedPosition = vec3(dxX, dyY, dzZ);
+
+    Normal = (aNormal) * mat3(transpose(invertedModel));
 
 	gl_Position = vec4(DistortedPosition, 1.0) * model * view * projection;
     gl_PointSize = 3.0;
 }
+
