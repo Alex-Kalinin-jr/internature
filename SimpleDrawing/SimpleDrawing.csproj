@@ -12,12 +12,14 @@
 	<ItemGroup>
 		<PackageReference Include="ImGui.NET" Version="1.89.4" />
 		<PackageReference Include="OpenTK" Version="4.7.7" />
+		<PackageReference Include="StbImageSharp" Version="2.27.13" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="Resources/**" CopyToOutputDirectory="PreserveNewest" />
-		<None Include="Shader/Shaders/**" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="Shaders/**" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="Shaders/**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
 </Project>

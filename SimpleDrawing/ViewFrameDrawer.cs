@@ -16,9 +16,15 @@ public sealed class SceneDrawer {
 
   private Shader _shader;
   private Shader _lampShader;
+  private Shader _lettersShader;
 
   private List<Volume> _volumes;
   private List<Light> _lights;
+
+  private int _lettersVao;
+  Texture _texture;
+  float[] _vertices;
+  float[] _textureData;
 
   private Show _showType;
 
@@ -45,47 +51,36 @@ public sealed class SceneDrawer {
     _pointsColor = new Vector3(0.0f, 0.0f, 0.0f);
     _volumes = new List<Volume>();
     _lights = new List<Light>();
+
+    _lettersShader = new Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
+    _texture = Texture.LoadFromFile("Resources/char_sheet_texture.png");
+
   }
   //  //////////////////////////////////////////////////////////////////////////////
 
 
 
   //  //////////////////////////////////////////////////////////////////////////////
-  public void BindTextureBuffer(float[] texture) {
+  public void BindTextureBuffer() {
     float h = 21f / (_height / 2);
     float w = 21f / (_width / 2);
 
-    Vector2[] vertices = new Vector2[]{
-      new Vector2( 0, h),
-      new Vector2( w, h),
-      new Vector2( w, 0),
+    _vertices = new float[] { 0.0f, h, w, h, w, 0.0f, 0.0f, h, w, 0.0f, 0.0f, 0.0f};
 
-      new Vector2( 0, h),
-      new Vector2( w, 0),
-      new Vector2( 0, 0)
-    };
+    float x1 = (21f / 2048) * 0; // 0 is loop var
+    float x2 = (21f / 2048) * (0 + 1); // 0 is loop var
 
-    for (int i = 0; i < 95;  i++) {
-      float x1 = (21f / 2048) * i;
-      float x2 = (21f / 2048) * (i + 1);
+    _textureData = new float[] { x1, 0, x2, 0, x2, 1, x1, 0, x2, 1, x1, 1};
 
-      Vector2[] textureData = new Vector2[] {
-        new Vector2 (x1, 0),
-        new Vector2 (x2, 0),
-        new Vector2 (x2, 1),
+    _lettersVao = GL.GenVertexArray();
+    GL.BindVertexArray( _lettersVao );
 
-        new Vector2 (x1, 0),
-        new Vector2 (x2, 1),
-        new Vector2 (x1, 1)
-      };
-    }
-
-    float x = 200; // user-defined x-pos
-    float y = 200; // user-defined y-pos
-    Vector3 position = new Vector3(x, y, 0);
-    Matrix4 modelMatrix = Matrix4.CreateScale(1) * Matrix4.CreateTranslation(position);
-
-
+    int vertexLocation = GL.GetAttribLocation(_lettersShader.Handle, "aPosition");
+    int textureLocation = GL.GetAttribLocation(_lettersShader.Handle, "aTexCoord");
+    GL.EnableVertexAttribArray(vertexLocation);
+    GL.VertexAttribPointer(vertexLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
+    GL.EnableVertexAttribArray(textureLocation);
+    GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
   }
   //  //////////////////////////////////////////////////////////////////////////////
 
@@ -116,6 +111,8 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
+    BindTextureBuffer();
+
     _volumes.AddRange(Generator.GenerateVolumes());
     _lights.AddRange(Generator.GenerateLights());
     ChangeDrawingType(0, true);
@@ -137,7 +134,7 @@ public sealed class SceneDrawer {
       }
     }
 
-    for (int i =0; i < _lights.Count; ++i) {
+    for (int i = 0; i < _lights.Count; ++i) {
       _lights[i].Form.VAO = GL.GenVertexArray();
       GL.BindVertexArray(_lights[i].Form.VAO);
 
@@ -167,6 +164,15 @@ public sealed class SceneDrawer {
     ShowVolumes();
     ShowLamps();
 
+
+    GL.BindVertexArray(_lettersVao);
+    float x = 200; // user-defined x-pos
+    float y = 200; // user-defined y-pos
+    Vector3 position = new Vector3(x, y, 0);
+    Matrix4 modelMatrix = Matrix4.CreateScale(1.0f) * Matrix4.CreateTranslation(position);
+    _lettersShader.SetMatrix4("modelMatrix", modelMatrix);
+    _texture.Use(TextureUnit.Texture0);
+    GL.DrawArrays(PrimitiveType.Triangles, 0, 2);
   }
 
   public void OnClosed() { }
