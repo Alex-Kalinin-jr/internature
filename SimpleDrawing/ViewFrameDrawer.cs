@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using OpenTK.Graphics.OpenGL4;
+using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
@@ -33,6 +34,9 @@ public sealed class SceneDrawer {
 
   private OpenTK.Mathematics.Vector3 _edgesColor;
   private OpenTK.Mathematics.Vector3 _pointsColor;
+
+
+  private Letters _letters;
   //  //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -41,8 +45,11 @@ public sealed class SceneDrawer {
   public SceneDrawer() {
     _width = 1024;
     _height = 768;
+
     _shader = new Entities.Shader("Shaders/shader.vert", "Shaders/shader.frag");
     _lampShader = new Entities.Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
+    _lettersShader = new Entities.Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
+
     _camera = new Entities.Camera(OpenTK.Mathematics.Vector3.UnitZ * 3, _width / _height);
     _increase = true;
     _interpolationKoeff = 0.2f;
@@ -51,8 +58,10 @@ public sealed class SceneDrawer {
     _volumes = new List<Entities.Volume>();
     _lights = new List<Entities.Light>();
 
-    _lettersShader = new Entities.Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
-    _texture = Entities.Texture.LoadFromFile("Resources/P.png");
+
+    // test
+     _letters = new Letters();
+    _texture = _letters.Textures[4];
 
   }
   //  //////////////////////////////////////////////////////////////////////////////////////
@@ -62,8 +71,8 @@ public sealed class SceneDrawer {
   //  //////////////////////////////////////////////////////////////////////////////////////
   public void BindTextureBuffer() {
 
-    float h = 0.05f;
-    float w = 0.05f;
+    float h = 0.09f;
+    float w = 0.04f;
     _vertices = new float[] { 0.0f, h, w, h, 0.0f, 0.0f,
                               0.0f, 0.0f, w, h, w, 0};
 
@@ -158,7 +167,7 @@ public sealed class SceneDrawer {
     float y = 0.0f; // user-defined y-pos
     OpenTK.Mathematics.Vector3 position = new OpenTK.Mathematics.Vector3(x, y, 0);
 
-    OpenTK.Mathematics.Matrix4 modelMatrix = OpenTK.Mathematics.Matrix4.CreateScale(5.0f)
+    OpenTK.Mathematics.Matrix4 modelMatrix = OpenTK.Mathematics.Matrix4.CreateScale(3.0f)
         * OpenTK.Mathematics.Matrix4.CreateTranslation(position);
 
     _lettersShader.SetMatrix4("modelMatrix", modelMatrix);
