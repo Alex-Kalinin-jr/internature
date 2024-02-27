@@ -7,6 +7,7 @@ namespace SimpleDrawing.Entities {
     public float CoordX { get; set; }
     public float CoordY { get; set; }
     public float Scale { get; set; }
+    public OpenTK.Mathematics.Vector3 Color { get; set; }
 
     private Dictionary<char, Texture> _texturesByName;
 
@@ -22,6 +23,7 @@ namespace SimpleDrawing.Entities {
       CoordX = -1.0f + width + 0.05f;
       CoordY = -1.0f + height + 0.05f;
       Scale = 1.5f;
+      Color = new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f);
 
       _texturesByName = new Dictionary<char, Texture>();
       _vertices = new float[] { 0.0f, Height, Width, Height, 0.0f, 0.0f, 0.0f, 0.0f, Width, Height, Width, 0.0f };
@@ -47,6 +49,7 @@ namespace SimpleDrawing.Entities {
     }
 
     public void DrawFps(ref Shader shader, string fps) {
+      shader.SetUniform3("color", Color);
 
       BindTextureBuffer(shader.Handle);
 
@@ -69,6 +72,12 @@ namespace SimpleDrawing.Entities {
           x += Width * Scale;
         }
 
+      }
+    }
+
+    public void AddNewTexture(char key, Texture texture) {
+      if (!_texturesByName.ContainsKey(key)) {
+        _texturesByName.Add(key, texture);
       }
     }
 

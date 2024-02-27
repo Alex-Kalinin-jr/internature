@@ -116,12 +116,14 @@ public sealed class SceneDrawer {
 
     Letters letters2 = new Letters(0.03f, 0.06f);
     letters2.Scale = 2.0f;
+    letters2.Color = new OpenTK.Mathematics.Vector3(0.0f, 1.0f, 0.0f);
     letters2.CoordY = 0.0f;
     letters2.CoordX = 0.0f;
     letters2.DrawFps(ref _lettersShader, "7345FFF...P");
 
     Letters letters3 = new Letters(0.06f, 0.09f);
     letters3.Scale = 4.0f;
+    letters3.Color = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 1.0f);
     letters3.CoordY = 0.5f;
     letters3.CoordX = 0.5f;
     letters3.DrawFps(ref _lettersShader, ".1.");
