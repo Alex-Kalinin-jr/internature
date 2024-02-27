@@ -1,41 +1,33 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System.Diagnostics;
-using System.Xml.Linq;
 
-
-namespace OpenGLInvestigation {
+namespace SimpleDrawing.Entities {
   public class Shader {
+
+    private readonly Dictionary<string, int> _uniformLocations;
+
     public int Handle { get; init; }
     private bool _disposedValue = false;
-    private readonly Dictionary<string, int> _uniformLocations;
 
     public Shader(string vertexPath, string fragmentPath) {
 
-      // copy code
       string VertexShaderSource = File.ReadAllText(vertexPath);
       string FragmentShaderSource = File.ReadAllText(fragmentPath);
 
-      // create descriptors
       int VertexShader = GL.CreateShader(ShaderType.VertexShader);
       int FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
 
-      // bind code to descriptors
       GL.ShaderSource(VertexShader, VertexShaderSource);
       GL.ShaderSource(FragmentShader, FragmentShaderSource);
 
-      // compile shaders
       CompileShader(VertexShader);
       CompileShader(FragmentShader);
 
-      // create special program in gl
       Handle = GL.CreateProgram();
 
-      // attach shaders to this program
       GL.AttachShader(Handle, VertexShader);
       GL.AttachShader(Handle, FragmentShader);
 
-      // link shaders
       LinkProgram(Handle);
 
       GL.DetachShader(Handle, VertexShader);
@@ -53,6 +45,25 @@ namespace OpenGLInvestigation {
       }
 
     }
+
+    ~Shader() {
+      if (_disposedValue == false) {
+        Console.WriteLine("GPU Leak");
+      }
+    }
+
+    public void Dispose() {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing) {
+      if (!_disposedValue) {
+        GL.DeleteProgram(Handle);
+        _disposedValue = true;
+      }
+    }
+
 
     public void Use() {
       GL.UseProgram(Handle);
@@ -72,25 +83,11 @@ namespace OpenGLInvestigation {
       GL.UseProgram(Handle);
       GL.UniformMatrix4(_uniformLocations[name], true, ref data);
     }
-
-
-    protected virtual void Dispose(bool disposing) {
-      if (!_disposedValue) {
-        GL.DeleteProgram(Handle);
-        _disposedValue = true;
-      }
+    public void SetUniform3(string name, Vector3 data) {
+      GL.UseProgram(Handle);
+      GL.Uniform3(_uniformLocations[name], data);
     }
 
-    ~Shader() {
-      if (_disposedValue == false) {
-        Console.WriteLine("GPU Leak");
-      }
-    }
-
-    public void Dispose() {
-      Dispose(true);
-      GC.SuppressFinalize(this);
-    }
     private static void CompileShader(int shader) {
       GL.CompileShader(shader);
       GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
