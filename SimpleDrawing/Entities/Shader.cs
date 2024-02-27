@@ -1,128 +1,108 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace SimpleDrawing.Entities
-{
-    public class Shader
-    {
-        public int Handle { get; init; }
-        private bool _disposedValue = false;
-        private readonly Dictionary<string, int> _uniformLocations;
+namespace SimpleDrawing.Entities {
+  public class Shader {
 
-        public Shader(string vertexPath, string fragmentPath)
-        {
+    private readonly Dictionary<string, int> _uniformLocations;
 
-            string VertexShaderSource = File.ReadAllText(vertexPath);
-            string FragmentShaderSource = File.ReadAllText(fragmentPath);
+    public int Handle { get; init; }
+    private bool _disposedValue = false;
 
-            // create descriptors
-            int VertexShader = GL.CreateShader(ShaderType.VertexShader);
-            int FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+    public Shader(string vertexPath, string fragmentPath) {
 
-            // bind code to descriptors
-            GL.ShaderSource(VertexShader, VertexShaderSource);
-            GL.ShaderSource(FragmentShader, FragmentShaderSource);
+      string VertexShaderSource = File.ReadAllText(vertexPath);
+      string FragmentShaderSource = File.ReadAllText(fragmentPath);
 
-            // compile shaders
-            CompileShader(VertexShader);
-            CompileShader(FragmentShader);
+      int VertexShader = GL.CreateShader(ShaderType.VertexShader);
+      int FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
 
-            // create special program in gl
-            Handle = GL.CreateProgram();
+      GL.ShaderSource(VertexShader, VertexShaderSource);
+      GL.ShaderSource(FragmentShader, FragmentShaderSource);
 
-            // attach shaders to this program
-            GL.AttachShader(Handle, VertexShader);
-            GL.AttachShader(Handle, FragmentShader);
+      CompileShader(VertexShader);
+      CompileShader(FragmentShader);
 
-            // link shaders
-            LinkProgram(Handle);
+      Handle = GL.CreateProgram();
 
-            GL.DetachShader(Handle, VertexShader);
-            GL.DetachShader(Handle, FragmentShader);
-            GL.DeleteShader(VertexShader);
-            GL.DeleteShader(FragmentShader);
+      GL.AttachShader(Handle, VertexShader);
+      GL.AttachShader(Handle, FragmentShader);
 
-            GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numOfUniforms);
-            _uniformLocations = new Dictionary<string, int>();
+      LinkProgram(Handle);
 
-            for (var i = 0; i < numOfUniforms; ++i)
-            {
-                var key = GL.GetActiveUniform(Handle, i, out _, out _);
-                var location = GL.GetUniformLocation(Handle, key);
-                _uniformLocations.Add(key, location);
-            }
+      GL.DetachShader(Handle, VertexShader);
+      GL.DetachShader(Handle, FragmentShader);
+      GL.DeleteShader(VertexShader);
+      GL.DeleteShader(FragmentShader);
 
-        }
+      GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numOfUniforms);
+      _uniformLocations = new Dictionary<string, int>();
 
-        public void Use()
-        {
-            GL.UseProgram(Handle);
-        }
+      for (var i = 0; i < numOfUniforms; ++i) {
+        var key = GL.GetActiveUniform(Handle, i, out _, out _);
+        var location = GL.GetUniformLocation(Handle, key);
+        _uniformLocations.Add(key, location);
+      }
 
-        public void SetInt(string name, int num)
-        {
-            GL.UseProgram(Handle);
-            GL.Uniform1(_uniformLocations[name], num);
-        }
-
-        public void SetFloat(string name, float num)
-        {
-            GL.UseProgram(Handle);
-            GL.Uniform1(_uniformLocations[name], num);
-        }
-
-        public void SetMatrix4(string name, Matrix4 data)
-        {
-            GL.UseProgram(Handle);
-            GL.UniformMatrix4(_uniformLocations[name], true, ref data);
-        }
-        public void SetUniform3(string name, Vector3 data)
-        {
-            GL.UseProgram(Handle);
-            GL.Uniform3(_uniformLocations[name], data);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                GL.DeleteProgram(Handle);
-                _disposedValue = true;
-            }
-        }
-
-        ~Shader()
-        {
-            if (_disposedValue == false)
-            {
-                Console.WriteLine("GPU Leak");
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        private static void CompileShader(int shader)
-        {
-            GL.CompileShader(shader);
-            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
-            if (code != (int)All.True)
-            {
-                var infoLog = GL.GetShaderInfoLog(shader);
-                throw new Exception($"Error occurred whilst compiling Shader({shader}).\n\n{infoLog}");
-            }
-        }
-
-        private static void LinkProgram(int program)
-        {
-            GL.LinkProgram(program);
-            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
-            if (code != (int)All.True)
-            {
-                throw new Exception($"Error occurred whilst linking Program({program})");
-            }
-        }
     }
+
+    ~Shader() {
+      if (_disposedValue == false) {
+        Console.WriteLine("GPU Leak");
+      }
+    }
+
+    public void Dispose() {
+      Dispose(true);
+      GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing) {
+      if (!_disposedValue) {
+        GL.DeleteProgram(Handle);
+        _disposedValue = true;
+      }
+    }
+
+
+    public void Use() {
+      GL.UseProgram(Handle);
+    }
+
+    public void SetInt(string name, int num) {
+      GL.UseProgram(Handle);
+      GL.Uniform1(_uniformLocations[name], num);
+    }
+
+    public void SetFloat(string name, float num) {
+      GL.UseProgram(Handle);
+      GL.Uniform1(_uniformLocations[name], num);
+    }
+
+    public void SetMatrix4(string name, Matrix4 data) {
+      GL.UseProgram(Handle);
+      GL.UniformMatrix4(_uniformLocations[name], true, ref data);
+    }
+    public void SetUniform3(string name, Vector3 data) {
+      GL.UseProgram(Handle);
+      GL.Uniform3(_uniformLocations[name], data);
+    }
+
+    private static void CompileShader(int shader) {
+      GL.CompileShader(shader);
+      GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+      if (code != (int)All.True) {
+        var infoLog = GL.GetShaderInfoLog(shader);
+        throw new Exception($"Error occurred whilst compiling Shader({shader}).\n\n{infoLog}");
+      }
+    }
+
+    private static void LinkProgram(int program) {
+      GL.LinkProgram(program);
+      GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
+      if (code != (int)All.True) {
+        throw new Exception($"Error occurred whilst linking Program({program})");
+      }
+    }
+  }
 }

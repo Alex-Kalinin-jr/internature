@@ -17,9 +17,9 @@ public class Window : GameWindow {
   private System.Numerics.Vector3 _edgesColor;
   private System.Numerics.Vector3 _pointsColor;
 
-  private DirectionalLight _directionalLight;
-  private PointLight _pointLight;
-  private FlashLight _flashLight;
+  private Entities.DirectionalLight _directionalLight;
+  private Entities.PointLight _pointLight;
+  private Entities.FlashLight _flashLight;
   private System.Numerics.Vector3 _flashPos;
 
   private static DebugProc _debugProcCallback = DebugCallback;
@@ -41,9 +41,9 @@ public class Window : GameWindow {
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
 
-    _directionalLight = new DirectionalLight();
-    _pointLight = new PointLight();
-    _flashLight = new FlashLight();
+    _directionalLight = new Entities.DirectionalLight();
+    _pointLight = new Entities.PointLight();
+    _flashLight = new Entities.FlashLight();
     _flashLight.Form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
     _flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
     _flashLight.Form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);

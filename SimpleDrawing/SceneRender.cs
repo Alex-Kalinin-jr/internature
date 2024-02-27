@@ -1,19 +1,17 @@
 ﻿using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
-using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
 internal class SceneRender : IDisposable {
 
-  private SceneDrawer _drawer;
-
-  int _fbo;
-  int _rbo;
-  int _texColor;
-  Vector2i _fboSize = default;
   private readonly Window _window;
+
+  private SceneDrawer _drawer;
+  private int _fbo;
+  private int _rbo;
+  private int _texColor;
+  private OpenTK.Mathematics.Vector2i _fboSize = default;
 
   public SceneRender(Window _window) {
     _drawer = new();
@@ -22,37 +20,38 @@ internal class SceneRender : IDisposable {
     this._window = _window;
   }
 
+  public void Dispose() {
+    _drawer.OnClosed();
+    GL.DeleteFramebuffer(_fbo);
+  }
+
+
+
   public void ChangeShowingType(int i, bool state) {
     _drawer.ChangeDrawingType(i, state);
   }
 
   public void DrawViewportWindow() {
     Error.Check();
-    // https://gamedev.stackexchange.com/a/140704
 
     ImGui.Begin("GameWindow");
+
     {
-      // Using a Child allow to fill all the space of the _window.
-      // It also alows customization
       ImGui.BeginChild("GameRender");
 
-      // Get the size of the child (i.e. the whole draw size of the windows).
       System.Numerics.Vector2 wsize = ImGui.GetWindowSize();
 
-      // make sure the buffers are the currect size
-      Vector2i wsizei = new((int)wsize.X, (int)wsize.Y);
+      OpenTK.Mathematics.Vector2i wsizei = new((int)wsize.X, (int)wsize.Y);
       if (_fboSize != wsizei) {
         _fboSize = wsizei;
 
-        // create our frame buffer if needed
         if (_fbo == 0) {
           _fbo = GL.GenFramebuffer();
-          // bind our frame buffer
+
           GL.BindFramebuffer(FramebufferTarget.Framebuffer, _fbo);
           GL.ObjectLabel(ObjectLabelIdentifier.Framebuffer, _fbo, 10, "GameWindow");
         }
 
-        // bind our frame buffer
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, _fbo);
 
         if (_texColor > 0)
@@ -81,22 +80,19 @@ internal class SceneRender : IDisposable {
         //GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent32f, 800, 600, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
         //GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, texDepth, 0);
 
-        // make sure the frame buffer is complete
         FramebufferErrorCode errorCode = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
         if (errorCode != FramebufferErrorCode.FramebufferComplete)
           throw new Exception();
       } else {
-        // bind our frame and depth buffer
         GL.BindFramebuffer(FramebufferTarget.Framebuffer, _fbo);
         GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _rbo);
       }
 
       Error.Check();
-      GL.Viewport(0, 0, wsizei.X, wsizei.Y); // change the viewport to _window
+      GL.Viewport(0, 0, wsizei.X, wsizei.Y);
 
-      // actually draw the scene
       {
-        GL.ClearColor(Color4.DimGray);
+        GL.ClearColor(OpenTK.Mathematics.Color4.DimGray);
         GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
         _drawer.OnResize(wsizei.X, wsizei.Y);
@@ -104,37 +100,30 @@ internal class SceneRender : IDisposable {
         Error.Check();
       }
 
-      // unbind our bo so nothing else uses it
       GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
-      GL.Viewport(0, 0, _window.ClientSize.X, _window.ClientSize.Y); // back to full screen size
+      GL.Viewport(0, 0, _window.ClientSize.X, _window.ClientSize.Y);
 
       Error.Check();
-      // Because I use the texture from OpenGL, I need to invert the V from the UV.
+
       GL.ActiveTexture(TextureUnit.Texture0);
       GL.BindTexture(TextureTarget.Texture2D, _texColor);
-      //ImGui.Image(new IntPtr(_texColor), wsize, Vector2.UnitY, Vector2.UnitX);
+
       ImGui.Image(new IntPtr(_texColor), wsize);
 
       Error.Check();
       ImGui.EndChild();
     }
+
     ImGui.End();
   }
 
-  public void Dispose() {
-    _drawer.OnClosed();
-    GL.DeleteFramebuffer(_fbo);
-  }
-
-
-  // ///////////////////////////////////////////////////////////////////
   public void SetEdgesColor(System.Numerics.Vector3 color) {
-    _drawer.ChangeEdgesColor(new Vector3(color.X, color.Y, color.Z));
+    _drawer.ChangeEdgesColor(new OpenTK.Mathematics.Vector3(color.X, color.Y, color.Z));
   }
 
   public void SetPointsColor(System.Numerics.Vector3 color) {
-    _drawer.ChangePointsColor(new Vector3(color.X, color.Y, color.Z));
+    _drawer.ChangePointsColor(new OpenTK.Mathematics.Vector3(color.X, color.Y, color.Z));
   }
 
   public void MoveCameraFwd(float val) { _drawer.MoveCameraFwd(val); }
@@ -153,10 +142,10 @@ internal class SceneRender : IDisposable {
 
   public void ChangeCameraYaw(float val) { _drawer.ChangeCameraYaw(val); }
 
-  internal void ChangeDirectionalLight(DirectionalLight light) { _drawer.ChangeDirLight(light); }
+  public void ChangeDirectionalLight(Entities.DirectionalLight light) { _drawer.ChangeDirLight(light); }
 
-  internal void ChangePointLight(PointLight light) { _drawer.ChangePointLight(light); }
+  public void ChangePointLight(Entities.PointLight light) { _drawer.ChangePointLight(light); }
 
-  internal void ChangeFlashLight(FlashLight light) { _drawer.ChangeFlashLight(light); }
+  public void ChangeFlashLight(Entities.FlashLight light) { _drawer.ChangeFlashLight(light); }
 
 }
