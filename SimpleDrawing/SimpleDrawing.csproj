@@ -22,4 +22,8 @@
 		<None Include="Shaders/**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Class1.backup" />
+	</ItemGroup>
+
 </Project>
