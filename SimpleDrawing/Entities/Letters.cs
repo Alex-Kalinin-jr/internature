@@ -8,7 +8,7 @@ namespace SimpleDrawing.Entities {
     public float CoordY { get; set; }
     public float Scale { get; set; }
 
-    private List<Texture> _textures;
+    private Dictionary<char, Texture> _texturesByName;
 
     private float[] _vertices;
     private float[] _texCoords;
@@ -23,24 +23,24 @@ namespace SimpleDrawing.Entities {
       CoordY = -1.0f + height + 0.05f;
       Scale = 1.5f;
 
-      _textures = new List<Texture>();
+      _texturesByName = new Dictionary<char, Texture>();
       _vertices = new float[] { 0.0f, Height, Width, Height, 0.0f, 0.0f, 0.0f, 0.0f, Width, Height, Width, 0.0f };
       _texCoords = new float[] { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f };
 
-      _textures.Add(Texture.LoadFromFile("Resources/0.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/1.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/2.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/3.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/4.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/5.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/6.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/7.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/8.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/9.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/..png"));
-      _textures.Add(Texture.LoadFromFile("Resources/F.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/P.png"));
-      _textures.Add(Texture.LoadFromFile("Resources/S.png"));
+      _texturesByName.Add('0',Texture.LoadFromFile("Resources/0.png"));
+      _texturesByName.Add('1', Texture.LoadFromFile("Resources/1.png"));
+      _texturesByName.Add('2', Texture.LoadFromFile("Resources/2.png"));
+      _texturesByName.Add('3', Texture.LoadFromFile("Resources/3.png"));
+      _texturesByName.Add('4', Texture.LoadFromFile("Resources/4.png"));
+      _texturesByName.Add('5', Texture.LoadFromFile("Resources/5.png"));
+      _texturesByName.Add('6', Texture.LoadFromFile("Resources/6.png"));
+      _texturesByName.Add('7', Texture.LoadFromFile("Resources/7.png"));
+      _texturesByName.Add('8', Texture.LoadFromFile("Resources/8.png"));
+      _texturesByName.Add('9', Texture.LoadFromFile("Resources/9.png"));
+      _texturesByName.Add('.', Texture.LoadFromFile("Resources/..png"));
+      _texturesByName.Add('F', Texture.LoadFromFile("Resources/F.png"));
+      _texturesByName.Add('P', Texture.LoadFromFile("Resources/P.png"));
+      _texturesByName.Add('S', Texture.LoadFromFile("Resources/S.png"));
 
       _vao = GL.GenVertexArray();
 
@@ -50,25 +50,26 @@ namespace SimpleDrawing.Entities {
 
       BindTextureBuffer(shader.Handle);
 
-      for (int i = 0; i < 3; ++i) {
+      float x = CoordX;
 
-        OpenTK.Mathematics.Vector3 position = new OpenTK.Mathematics.Vector3(CoordX, CoordY, 0);
+      foreach (char symbol in fps) {
 
-        OpenTK.Mathematics.Matrix4 modelMatrix = OpenTK.Mathematics.Matrix4.CreateScale(1.5f)
-            * OpenTK.Mathematics.Matrix4.CreateTranslation(position);
+        if (_texturesByName.ContainsKey(symbol)) {
+          OpenTK.Mathematics.Vector3 position = new OpenTK.Mathematics.Vector3(x, CoordY, 0);
 
-        shader.SetMatrix4("modelMatrix", modelMatrix);
+          OpenTK.Mathematics.Matrix4 modelMatrix = OpenTK.Mathematics.Matrix4.CreateScale(Scale)
+              * OpenTK.Mathematics.Matrix4.CreateTranslation(position);
 
-        _texture = _letters.Textures[i];
-        _texture.Use(TextureUnit.Texture0);
+          shader.SetMatrix4("modelMatrix", modelMatrix);
 
-        GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 2);
-        x += 0.1f;
+
+          _texturesByName[symbol].Use(TextureUnit.Texture0);
+
+          GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 2);
+          x += Width * Scale;
+        }
+
       }
-
-
-
-
     }
 
     private void BindTextureBuffer(int shaderHandle) {

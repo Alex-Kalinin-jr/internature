@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using OpenTK.Graphics.OpenGL4;
+using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
@@ -19,11 +20,6 @@ public sealed class SceneDrawer {
 
   private List<Entities.Volume> _volumes;
   private List<Entities.Light> _lights;
-
-  private int _lettersVao;
-  private Entities.Texture _texture;
-  private float[] _vertices;
-  private float[] _textureData;
 
   private Show _showType;
 
@@ -56,10 +52,7 @@ public sealed class SceneDrawer {
     _pointsColor = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 0.0f);
     _volumes = new List<Entities.Volume>();
     _lights = new List<Entities.Light>();
-
-
-    // test -----------------------------------------------------------------------------
-     _letters = new Entities.Letters(0.05f, 0.1f);
+    _letters = new Entities.Letters(0.05f, 0.1f);
   }
   //  //////////////////////////////////////////////////////////////////////////////////////
 
@@ -119,6 +112,19 @@ public sealed class SceneDrawer {
     ShowVolumes();
     ShowLamps();
 
+    _letters.DrawFps(ref _lettersShader, "FPS");
+
+    Letters letters2 = new Letters(0.03f, 0.06f);
+    letters2.Scale = 2.0f;
+    letters2.CoordY = 0.0f;
+    letters2.CoordX = 0.0f;
+    letters2.DrawFps(ref _lettersShader, "7345FFF...P");
+
+    Letters letters3 = new Letters(0.06f, 0.09f);
+    letters3.Scale = 4.0f;
+    letters3.CoordY = 0.5f;
+    letters3.CoordX = 0.5f;
+    letters3.DrawFps(ref _lettersShader, ".1.");
   }
 
   public void OnClosed() { }
