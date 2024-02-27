@@ -52,7 +52,7 @@ public sealed class SceneDrawer {
     _lights = new List<Entities.Light>();
 
     _lettersShader = new Entities.Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
-    _texture = Entities.Texture.LoadFromFile("Resources/a_2.png");
+    _texture = Entities.Texture.LoadFromFile("Resources/P.png");
 
   }
   //  //////////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +70,8 @@ public sealed class SceneDrawer {
 
     _lettersVao = GL.GenVertexArray();
     GL.BindVertexArray(_lettersVao);
+    GL.Enable(EnableCap.Blend);
+    GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
     GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
     GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
@@ -99,8 +101,8 @@ public sealed class SceneDrawer {
   public void OnLoad() {
     BindTextureBuffer();
 
-    // _volumes.AddRange(Entities.Generator.GenerateVolumes());
-    // _lights.AddRange(Entities.Generator.GenerateLights());
+    _volumes.AddRange(Entities.Generator.GenerateVolumes());
+    _lights.AddRange(Entities.Generator.GenerateLights());
     ChangeDrawingType(0, true);
 
     GL.Enable(EnableCap.ProgramPointSize);

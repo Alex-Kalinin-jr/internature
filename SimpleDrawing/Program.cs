@@ -5,7 +5,7 @@ namespace SimpleDrawing;
 
 class Program {
   static void Main() {
-    TextureGenerator.GenerateTexture();
+    TextureGenerator.GenerateTexture("0123456789FPS.");
     Window wnd = new Window();
     wnd.Run();
   }
