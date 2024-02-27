@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using OpenTK.Graphics.OpenGL4;
-using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
@@ -36,7 +35,7 @@ public sealed class SceneDrawer {
   private OpenTK.Mathematics.Vector3 _pointsColor;
 
 
-  private Letters _letters;
+  private Entities.Letters _letters;
   //  //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -59,48 +58,8 @@ public sealed class SceneDrawer {
     _lights = new List<Entities.Light>();
 
 
-    // test
-     _letters = new Letters();
-    _texture = _letters.Textures[4];
-
-  }
-  //  //////////////////////////////////////////////////////////////////////////////////////
-
-
-
-  //  //////////////////////////////////////////////////////////////////////////////////////
-  public void BindTextureBuffer() {
-
-    float h = 0.09f;
-    float w = 0.04f;
-    _vertices = new float[] { 0.0f, h, w, h, 0.0f, 0.0f,
-                              0.0f, 0.0f, w, h, w, 0};
-
-
-    _lettersVao = GL.GenVertexArray();
-    GL.BindVertexArray(_lettersVao);
-    GL.Enable(EnableCap.Blend);
-    GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
-    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
-    int vertexLocation = GL.GetAttribLocation(_lettersShader.Handle, "aPosition");
-    GL.EnableVertexAttribArray(vertexLocation);
-    GL.VertexAttribPointer(vertexLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
-
-
-    int i = 0;
-    float x1 = (1.0f) * i; // 0 is loop var
-    float x2 = (1.0f) * (i + 1); // 0 is loop var
-    _textureData = new float[] {x1, 1, x2, 1, x1, 0,
-                                x1, 0, x2, 1, x2, 0};
-
-    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer, _textureData.Length * sizeof(float), _textureData, BufferUsageHint.StaticDraw);
-    int textureLocation = GL.GetAttribLocation(_lettersShader.Handle, "aTexCoord");
-    GL.EnableVertexAttribArray(textureLocation);
-    GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
-
+    // test -----------------------------------------------------------------------------
+     _letters = new Entities.Letters(0.05f, 0.1f);
   }
   //  //////////////////////////////////////////////////////////////////////////////////////
 
@@ -108,7 +67,6 @@ public sealed class SceneDrawer {
 
   //  //////////////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
-    BindTextureBuffer();
 
     _volumes.AddRange(Entities.Generator.GenerateVolumes());
     _lights.AddRange(Entities.Generator.GenerateLights());
@@ -161,19 +119,6 @@ public sealed class SceneDrawer {
     ShowVolumes();
     ShowLamps();
 
-
-    GL.BindVertexArray(_lettersVao);
-    float x = 0.0f; // user-defined x-pos
-    float y = 0.0f; // user-defined y-pos
-    OpenTK.Mathematics.Vector3 position = new OpenTK.Mathematics.Vector3(x, y, 0);
-
-    OpenTK.Mathematics.Matrix4 modelMatrix = OpenTK.Mathematics.Matrix4.CreateScale(3.0f)
-        * OpenTK.Mathematics.Matrix4.CreateTranslation(position);
-
-    _lettersShader.SetMatrix4("modelMatrix", modelMatrix);
-
-    _texture.Use(TextureUnit.Texture0);
-    GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length / 2);
   }
 
   public void OnClosed() { }
