@@ -163,7 +163,7 @@ public sealed class SceneDrawer {
   }
 
   public void MoveCameraBack(float val) {
-    _camera.Position -= _camera.Front * _cameraSpeed * val;
+    _camera.Position -= _camera.Front * _cameraSpeed * (val);
   }
 
   public void MoveCameraRight(float val) {

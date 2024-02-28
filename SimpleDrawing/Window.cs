@@ -114,6 +114,11 @@ public class Window : GameWindow {
 
     ImGuiController.CheckGLError("End of frame");
 
+    SwapBuffersWithTimeMeasurement();
+  }
+
+  protected void SwapBuffersWithTimeMeasurement() {
+
     _stopWatch.Stop();
     float millisec = (float)_stopWatch.ElapsedMilliseconds / 1000.0f;
     float fps = 1.0f / millisec;
@@ -123,6 +128,8 @@ public class Window : GameWindow {
     _stopWatch = Stopwatch.StartNew();
 
   }
+
+
 
   protected override void OnTextInput(TextInputEventArgs e) {
     base.OnTextInput(e);
