@@ -23,7 +23,7 @@ public sealed class SceneDrawer {
 
   private Show _showType;
 
-  private float _lastTimestamp = Stopwatch.GetTimestamp();
+  private string _renderTime;
   private float _interpolationKoeff;
   private bool _increase;
 
@@ -111,28 +111,16 @@ public sealed class SceneDrawer {
 
     ShowVolumes();
     ShowLamps();
+    _letters.DrawFps(ref _lettersShader, "FPS" + _renderTime);
 
-    _letters.DrawFps(ref _lettersShader, "FPS");
-
-    Letters letters2 = new Letters(0.03f, 0.06f);
-    letters2.Scale = 2.0f;
-    letters2.Color = new OpenTK.Mathematics.Vector3(0.0f, 1.0f, 0.0f);
-    letters2.CoordY = 0.0f;
-    letters2.CoordX = 0.0f;
-    letters2.DrawFps(ref _lettersShader, "7345FFF...P");
-
-    Letters letters3 = new Letters(0.06f, 0.09f);
-    letters3.Scale = 4.0f;
-    letters3.Color = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 1.0f);
-    letters3.CoordY = 0.5f;
-    letters3.CoordX = 0.5f;
-    letters3.DrawFps(ref _lettersShader, ".1.");
   }
 
   public void OnClosed() { }
   //  //////////////////////////////////////////////////////////////////////////////////////
 
-
+  public void SetTime(string time) {
+    _renderTime = time;
+  }
 
   //  //////////////////////////////////////////////////////////////////////////////////////
   public void ChangeDrawingType(int i, bool state) {
