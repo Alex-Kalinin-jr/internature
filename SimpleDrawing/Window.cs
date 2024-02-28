@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace SimpleDrawing;
@@ -24,6 +25,7 @@ public class Window : GameWindow {
 
   private static DebugProc _debugProcCallback = DebugCallback;
   private static GCHandle _debugProcCallbackHandle;
+  private Stopwatch _stopWatch;
 
   ImGuiController _controller;
   SceneRender _scene;
@@ -47,8 +49,9 @@ public class Window : GameWindow {
     _flashLight.Form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
     _flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
     _flashLight.Form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
-    _flashPos = new System.Numerics.Vector3(2.0f, -2.0f, 2.0f) ;
-}
+    _flashPos = new System.Numerics.Vector3(2.0f, -2.0f, 2.0f);
+    _stopWatch = Stopwatch.StartNew();
+  }
 
 
   private static void DebugCallback(DebugSource source, DebugType type, int id,
@@ -111,8 +114,22 @@ public class Window : GameWindow {
 
     ImGuiController.CheckGLError("End of frame");
 
-    SwapBuffers();
+    SwapBuffersWithTimeMeasurement();
   }
+
+  protected void SwapBuffersWithTimeMeasurement() {
+
+    _stopWatch.Stop();
+    float millisec = (float)_stopWatch.ElapsedMilliseconds / 1000.0f;
+    float fps = 1.0f / millisec;
+    string strFps = fps > 60 ? "60" : ((int)fps).ToString();
+    _scene.SetTime(strFps);
+    SwapBuffers();
+    _stopWatch = Stopwatch.StartNew();
+
+  }
+
+
 
   protected override void OnTextInput(TextInputEventArgs e) {
     base.OnTextInput(e);

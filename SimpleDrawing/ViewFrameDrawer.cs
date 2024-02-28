@@ -1,13 +1,12 @@
 ﻿using System.Diagnostics;
 using OpenTK.Graphics.OpenGL4;
-
+using SimpleDrawing.Entities;
 
 namespace SimpleDrawing;
 
 public delegate void Show(int length);
 
 public sealed class SceneDrawer {
-
   const float _cameraSpeed = 1.5f;
 
   private int _width;
@@ -17,28 +16,35 @@ public sealed class SceneDrawer {
 
   private Entities.Shader _shader;
   private Entities.Shader _lampShader;
+  private Entities.Shader _lettersShader;
 
   private List<Entities.Volume> _volumes;
   private List<Entities.Light> _lights;
 
   private Show _showType;
 
-  private float _lastTimestamp = Stopwatch.GetTimestamp();
+  private string _renderTime;
   private float _interpolationKoeff;
   private bool _increase;
 
   private OpenTK.Mathematics.Vector3 _edgesColor;
   private OpenTK.Mathematics.Vector3 _pointsColor;
-  //  //////////////////////////////////////////////////////////////////////////////
+
+
+  private Entities.Letters _letters;
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public SceneDrawer() {
     _width = 1024;
     _height = 768;
-    _shader = new Entities.Shader("Shader/Shaders/shader.vert", "Shader/Shaders/shader.frag");
-    _lampShader = new Entities.Shader("Shader/Shaders/lightShader.vert", "Shader/Shaders/lightShader.frag");
+
+    _shader = new Entities.Shader("Shaders/shader.vert", "Shaders/shader.frag");
+    _lampShader = new Entities.Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
+    _lettersShader = new Entities.Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
+
     _camera = new Entities.Camera(OpenTK.Mathematics.Vector3.UnitZ * 3, _width / _height);
     _increase = true;
     _interpolationKoeff = 0.2f;
@@ -46,51 +52,15 @@ public sealed class SceneDrawer {
     _pointsColor = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 0.0f);
     _volumes = new List<Entities.Volume>();
     _lights = new List<Entities.Light>();
+    _letters = new Entities.Letters(0.05f, 0.1f);
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
-  public void BindTextureBuffer(float[] texture) {
-    float h = 0.2f / (_height / 2); // magic num 0.2
-    float w = 0.2f / (_width / 2); // magic num 0.2
-
-    OpenTK.Mathematics.Vector2[] vertices = new OpenTK.Mathematics.Vector2[]{
-      new OpenTK.Mathematics.Vector2( 0, h),
-      new OpenTK.Mathematics.Vector2( w, h),
-      new OpenTK.Mathematics.Vector2( w, 0),
-
-      new OpenTK.Mathematics.Vector2( 0, h),
-      new OpenTK.Mathematics.Vector2( w, 0),
-      new OpenTK.Mathematics.Vector2( 0, 0)
-    };
-
-    for (int i = 0; i < 20;  i++) {
-      float x1 = (0.2f / 2048) * i; // magic nums 0.2 and 2048
-      float x2 = (0.2f / 2048) * (i + 1); // magic nums 0.2 and 2048
-
-      OpenTK.Mathematics.Vector2[] textureData = new OpenTK.Mathematics.Vector2[] {
-        new OpenTK.Mathematics.Vector2 (x1, 0),
-        new OpenTK.Mathematics.Vector2 (x2, 0),
-        new OpenTK.Mathematics.Vector2 (x2, 1),
-
-        new OpenTK.Mathematics.Vector2 (x1, 0),
-        new OpenTK.Mathematics.Vector2 (x2, 1),
-        new OpenTK.Mathematics.Vector2 (x1, 1)
-      };
-    }
-
-    float x = 200; // user-defined x-pos
-    float y = 200; // user-defined y-pos
-    OpenTK.Mathematics.Vector3 position = new OpenTK.Mathematics.Vector3(x, y, 0);
-    OpenTK.Mathematics.Matrix4 modelMatrix = OpenTK.Mathematics.Matrix4.CreateScale(1) * OpenTK.Mathematics.Matrix4.CreateTranslation(position);
-  }
-
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void OnLoad() {
+
     _volumes.AddRange(Entities.Generator.GenerateVolumes());
     _lights.AddRange(Entities.Generator.GenerateLights());
     ChangeDrawingType(0, true);
@@ -112,7 +82,7 @@ public sealed class SceneDrawer {
       }
     }
 
-    for (int i =0; i < _lights.Count; ++i) {
+    for (int i = 0; i < _lights.Count; ++i) {
       _lights[i].Form.Vao = GL.GenVertexArray();
       GL.BindVertexArray(_lights[i].Form.Vao);
 
@@ -141,11 +111,18 @@ public sealed class SceneDrawer {
 
     ShowVolumes();
     ShowLamps();
+    _letters.DrawFps(ref _lettersShader, "FPS" + _renderTime);
 
   }
 
   public void OnClosed() { }
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
+  public void SetTime(string time) {
+    _renderTime = time;
+  }
+
+  //  //////////////////////////////////////////////////////////////////////////////////////
   public void ChangeDrawingType(int i, bool state) {
 
     if (i == 0) {
@@ -172,11 +149,7 @@ public sealed class SceneDrawer {
       }
     }
   }
-  //  //////////////////////////////////////////////////////////////////////////////
 
-
-
-  //  //////////////////////////////////////////////////////////////////////////////
   public void ChangeEdgesColor(OpenTK.Mathematics.Vector3 color) {
     _edgesColor = color;
   }
@@ -190,7 +163,7 @@ public sealed class SceneDrawer {
   }
 
   public void MoveCameraBack(float val) {
-    _camera.Position -= _camera.Front * _cameraSpeed * val;
+    _camera.Position -= _camera.Front * _cameraSpeed * (val);
   }
 
   public void MoveCameraRight(float val) {
@@ -231,11 +204,11 @@ public sealed class SceneDrawer {
     val.Form.Vao = _lights[2].Form.Vao;
     _lights[2] = val;
   }
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
 
 
 
-  //  //////////////////////////////////////////////////////////////////////////////
+  //  //////////////////////////////////////////////////////////////////////////////////////
   private void ChangeBlend() {
     float step = 0.005f;
     if (_increase) {
@@ -270,6 +243,26 @@ public sealed class SceneDrawer {
     GL.DrawArrays(PrimitiveType.Points, 0, length / 3);
   }
 
+  private void BindPosBuffer(float[] vertices) {
+    int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+    GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float),
+        vertices, BufferUsageHint.DynamicDraw);
+    GL.EnableVertexAttribArray(vertexLocation);
+    GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
+        false, 3 * sizeof(float), 0);
+  }
+
+  private void BindNormalBuffer(float[] normals) {
+    int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
+    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+    GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float),
+        normals, BufferUsageHint.StaticDraw);
+    GL.EnableVertexAttribArray(normalLocation);
+    GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
+        false, 3 * sizeof(float), 0);
+  }
+
   private void ShowVolumes() {
     _shader.SetFloat("morphingFactor", _interpolationKoeff);
     _shader.SetUniform3("viewPos", _camera.Position);
@@ -300,30 +293,5 @@ public sealed class SceneDrawer {
       GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].Form.Vertices.Length / 3);
     }
   }
-
-  private void BindPosBuffer(float[] vertices) {
-    int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float),
-        vertices, BufferUsageHint.DynamicDraw);
-    GL.EnableVertexAttribArray(vertexLocation);
-    GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-
-  private void BindNormalBuffer(float[] normals) {
-    int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
-    GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-    GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float),
-        normals, BufferUsageHint.StaticDraw);
-    GL.EnableVertexAttribArray(normalLocation);
-    GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
-        false, 3 * sizeof(float), 0);
-  }
-  //  //////////////////////////////////////////////////////////////////////////////
-
-
-
-
 }
 

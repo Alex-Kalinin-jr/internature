@@ -148,4 +148,7 @@ internal class SceneRender : IDisposable {
 
   public void ChangeFlashLight(Entities.FlashLight light) { _drawer.ChangeFlashLight(light); }
 
+  public void SetTime(string time) { 
+    _drawer.SetTime(time);
+  }
 }
