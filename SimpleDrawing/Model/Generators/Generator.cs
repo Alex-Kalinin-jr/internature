@@ -66,8 +66,8 @@ namespace SimpleDrawing.Model {
     public static List<Cube> GenerateVolumes() {
       var volumes = new List<Cube>();
 
-      for (float i = -5.0f; i <= 5.0f; i += 2.0f) {
-        for (float j = -5.0f; j <= 5.0f; j += 2.0f) {
+      for (float i = -6.0f; i <= 6.0f; i += 4.0f) {
+        for (float j = -6.0f; j <= 6.0f; j += 4.0f) {
           Cube buff = new Cube(4, new OpenTK.Mathematics.Vector3(0.2125f, 0.1275f, 0.054f));
           buff.PosVr += new OpenTK.Mathematics.Vector3(i, 1.0f, j);
           volumes.Add(buff);

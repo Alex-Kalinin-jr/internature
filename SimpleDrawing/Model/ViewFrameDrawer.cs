@@ -53,7 +53,7 @@ namespace SimpleDrawing.Model {
       _volumes = new List<Volume>();
       _lights = new List<Light>();
       _letters = new Letters(0.05f, 0.1f);
-      _circleShiftingMover = new CircleShiftingMover(1000, 0.0f, 0.0f);
+      _circleShiftingMover = new CircleShiftingMover(1000);
       
     }
     //  //////////////////////////////////////////////////////////////////////////////////////
