@@ -10,13 +10,13 @@ namespace SimpleDrawing.Model {
     private int _height;
 
     private Camera _camera;
+    private Letters _letters;
+    private List<Volume> _volumes;
+    private List<Light> _lights;
 
     private Shader _shader;
     private Shader _lampShader;
     private Shader _lettersShader;
-
-    private List<Volume> _volumes;
-    private List<Light> _lights;
 
     private Show _showType;
 
@@ -28,7 +28,10 @@ namespace SimpleDrawing.Model {
     private OpenTK.Mathematics.Vector3 _pointsColor;
 
 
-    private Letters _letters;
+    // test
+    CircleShiftingMover _circleShiftingMover;
+    // end of test
+
     //  //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -50,6 +53,8 @@ namespace SimpleDrawing.Model {
       _volumes = new List<Volume>();
       _lights = new List<Light>();
       _letters = new Letters(0.05f, 0.1f);
+      _circleShiftingMover = new CircleShiftingMover(1000, 0.0f, 0.0f);
+      
     }
     //  //////////////////////////////////////////////////////////////////////////////////////
 
@@ -105,7 +110,7 @@ namespace SimpleDrawing.Model {
     public void OnRenderFrame() {
 
       ChangeBlend(); // morph component changing
-
+      MoveVolumes();
       ShowVolumes();
       ShowLamps();
       _letters.DrawFps(ref _lettersShader, "FPS" + _renderTime);
@@ -258,6 +263,15 @@ namespace SimpleDrawing.Model {
       GL.EnableVertexAttribArray(normalLocation);
       GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
           false, 3 * sizeof(float), 0);
+    }
+
+
+    private void MoveVolumes() {
+      for (int i = 0; i < _volumes.Count; ++i) {
+        var volume = _volumes[i];
+        _circleShiftingMover.Move(ref volume);
+        _volumes[i] = volume;
+      }
     }
 
     private void ShowVolumes() {
