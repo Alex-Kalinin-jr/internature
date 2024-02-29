@@ -151,6 +151,19 @@ namespace SimpleDrawing.Model {
     public void SetTime(string time) {
       _drawer.SetTime(time);
     }
+
+    public void ReGenerateVolumes(int count, float step) {
+      _drawer.ReplaceVolumes(count, step);
+    }
+
+    public void RegenerateFlashLights(int count, float step) {
+
+    }
+
+    public void ChangeMovements(int mode, bool state) {
+      _drawer.ChangeMovingActions(mode, state);
+    }
+
   }
 }
 

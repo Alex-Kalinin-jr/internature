@@ -2,6 +2,7 @@
 
 namespace SimpleDrawing.Model {
   public delegate void Show(int length);
+  public delegate void MoveVolume(ref Volume vol);
 
   public sealed class SceneDrawer {
     const float _cameraSpeed = 1.5f;
@@ -19,6 +20,7 @@ namespace SimpleDrawing.Model {
     private Shader _lettersShader;
 
     private Show _showType;
+    private MoveVolume _moveVolume;
 
     private string _renderTime;
     private float _interpolationKoeff;
@@ -68,26 +70,15 @@ namespace SimpleDrawing.Model {
     //  //////////////////////////////////////////////////////////////////////////////////////
     public void OnLoad() {
 
-      _volumes.AddRange(Generator.GenerateVolumes());
-      _lights.AddRange(Generator.GenerateLights());
+      _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
+      _lights.AddRange(Generator.GenerateLights(10, 2.0f));
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
       GL.Enable(EnableCap.DepthTest);
       GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
 
-      for (int i = 0; i < _volumes.Count; ++i) {
-        _volumes[i].Vao = GL.GenVertexArray();
-        GL.BindVertexArray(_volumes[i].Vao);
-
-        if (_volumes[i].Vertices != null) {
-          BindPosBuffer(_volumes[i].Vertices);
-        }
-
-        if (_volumes[i].Normals != null) {
-          BindNormalBuffer(_volumes[i].Normals);
-        }
-      }
+      CreateAndBindVolumesBuffers();
 
       for (int i = 0; i < _lights.Count; ++i) {
         _lights[i].Form.Vao = GL.GenVertexArray();
@@ -157,6 +148,32 @@ namespace SimpleDrawing.Model {
       }
     }
 
+    public void ChangeMovingActions(int i, bool state) {
+      if (i == 0) {
+        if (state) {
+          _moveVolume += _circleShiftingMover.Move;
+        } else {
+          _moveVolume -= _circleShiftingMover.Move;
+        }
+      }
+
+      if (i == 1) {
+        if (state) {
+          _moveVolume += _rotateaterMover.Move;
+        } else {
+          _moveVolume -= _rotateaterMover.Move;
+        }
+      }
+
+      if (i == 2) {
+        if (state) {
+          _moveVolume += _upDownMover.Move;
+        } else {
+          _moveVolume -= _upDownMover.Move;
+        }
+      }
+    }
+
     public void ChangeEdgesColor(OpenTK.Mathematics.Vector3 color) {
       _edgesColor = color;
     }
@@ -212,7 +229,11 @@ namespace SimpleDrawing.Model {
       _lights[2] = val;
     }
     //  //////////////////////////////////////////////////////////////////////////////////////
-
+    public void ReplaceVolumes(int countOfSide, float step) {
+      _volumes.Clear();
+      _volumes.AddRange(Generator.GenerateVolumes(countOfSide, step));
+      CreateAndBindVolumesBuffers();
+    }
 
 
     //  //////////////////////////////////////////////////////////////////////////////////////
@@ -274,21 +295,15 @@ namespace SimpleDrawing.Model {
     private void MoveVolumes() {
       for (int i = 0; i < _volumes.Count; ++i) {
         var volume = _volumes[i];
-        MoveVolume(ref volume);
+        _moveVolume?.Invoke(ref volume);
         _volumes[i] = volume;
       }
 
       for (int i = 2; i < _lights.Count; ++i) {
         var light = _lights[i].Form;
-        MoveVolume(ref light);
+        _moveVolume?.Invoke(ref light);
         _lights[i].Form = light;
       }
-    }
-
-    private void MoveVolume(ref Volume volume) {
-      _circleShiftingMover.Move(ref volume);
-      _rotateaterMover.Move(ref volume);
-      _upDownMover.Move(ref volume);
     }
 
     private void ShowVolumes() {
@@ -325,6 +340,22 @@ namespace SimpleDrawing.Model {
         GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].Form.Vertices.Length / 3);
       }
     }
+
+    private void CreateAndBindVolumesBuffers() {
+      for (int i = 0; i<_volumes.Count; ++i) {
+        _volumes[i].Vao = GL.GenVertexArray();
+        GL.BindVertexArray(_volumes[i].Vao);
+
+        if (_volumes[i].Vertices != null) {
+          BindPosBuffer(_volumes[i].Vertices);
+        }
+
+        if (_volumes[i].Normals != null) {
+          BindNormalBuffer(_volumes[i].Normals);
+        }
+      }
+    }
+
   }
 }
 

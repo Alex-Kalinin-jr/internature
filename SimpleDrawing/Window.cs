@@ -15,6 +15,13 @@ public class Window : GameWindow {
   private bool _areEdgesDrawn;
   private bool _arePointsDrawn;
 
+  private bool _areRotatedOne;
+  private bool _areRotatedTwo;
+  private bool _areShiftedUpDown;
+
+  int _cubesCount;
+  float _step;
+
   private System.Numerics.Vector3 _edgesColor;
   private System.Numerics.Vector3 _pointsColor;
 
@@ -30,6 +37,7 @@ public class Window : GameWindow {
   ImGuiController _controller;
   Model.SceneRender _scene;
 
+
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
     Size = new Vector2i(1024, 768), APIVersion = new Version(3, 3)
   }) {
@@ -39,6 +47,10 @@ public class Window : GameWindow {
     _areFacesDrawn = true;
     _areEdgesDrawn = false;
     _arePointsDrawn = false;
+
+    _areRotatedOne = false;
+    _areShiftedUpDown = false;
+    _areRotatedTwo = false;
 
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
@@ -51,6 +63,9 @@ public class Window : GameWindow {
     _flashLight.Form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
     _flashPos = new System.Numerics.Vector3(2.0f, -2.0f, 2.0f);
     _stopWatch = Stopwatch.StartNew();
+
+    _cubesCount = 10;
+    _step = 2.0f;
   }
 
 
@@ -101,6 +116,8 @@ public class Window : GameWindow {
     CreatePointLightPalette();
     CreateFlasLightPalette();
     CreateDirLightPalette();
+    CreateVolumesChanger();
+    CreateMoveVolumeCheckboxes();
 
     Error.Check();
     _scene.DrawViewportWindow();
@@ -180,6 +197,25 @@ public class Window : GameWindow {
 
   }
 
+  private void CreateMoveVolumeCheckboxes() {
+
+    ImGui.Begin("Movements");
+    if (ImGui.Checkbox("Rotate 1", ref _areRotatedOne)) {
+      _scene.ChangeMovements(0, _areRotatedOne);
+    }
+
+    if (ImGui.Checkbox("Rotate 2", ref _areRotatedTwo)) {
+      _scene.ChangeMovements(1, _areRotatedTwo);
+    }
+
+    if (ImGui.Checkbox("Shift Up-Down", ref _areShiftedUpDown)) {
+      _scene.ChangeMovements(2, _areShiftedUpDown);
+
+    }
+    ImGui.End();
+
+  }
+
   private void CreateDirLightPalette() {
     ImGui.Begin("directional light");
     if (ImGui.SliderFloat3("direction", ref _directionalLight.Direction, -1.0f, 1.0f) ||
@@ -201,6 +237,16 @@ public class Window : GameWindow {
         ImGui.SliderFloat("quadratic koeff", ref _pointLight.Quadratic, 0.0f, 0.07f)) {
       _scene.ChangePointLight(_pointLight);
     }
+    ImGui.End();
+  }
+
+  private void CreateVolumesChanger() {
+    ImGui.Begin("Volumes");
+    if (ImGui.SliderInt("Count", ref _cubesCount, 1, 100) ||
+        ImGui.SliderFloat("_step", ref _step, 2.0f, 10.0f)) {
+      _scene.ReGenerateVolumes(_cubesCount, _step);
+    }
+
     ImGui.End();
   }
 

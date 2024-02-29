@@ -63,11 +63,11 @@ namespace SimpleDrawing.Model {
     }
 
 
-    public static List<Cube> GenerateVolumes() {
+    public static List<Cube> GenerateVolumes(int countOfSide, float step) {
       var volumes = new List<Cube>();
-
-      for (float i = -250.0f; i <= 250.0f; i += 2.0f) {
-        for (float j = -250.0f; j <= 250.0f; j += 2.0f) {
+      float range = countOfSide * step;
+      for (float i = -range / 2; i < range / 2; i += step) {
+        for (float j = -range / 2; j < range / 2; j += step) {
           Cube buff = new Cube(4, new OpenTK.Mathematics.Vector3(0.2125f, 0.1275f, 0.054f));
           buff.PosVr += new OpenTK.Mathematics.Vector3(i, 1.0f, j);
           volumes.Add(buff);
@@ -77,7 +77,7 @@ namespace SimpleDrawing.Model {
     }
 
 
-    public static List<Light> GenerateLights() {
+    public static List<Light> GenerateLights(int sideCount, float step) {
       var lights = new List<Light>();
 
       var dirLight = new DirectionalLight();
@@ -92,25 +92,29 @@ namespace SimpleDrawing.Model {
       lights.Add(dirLight);
       lights.Add(pointLight);
 
-      float step = 1.5f;
-      float x = -15.0f;
-      float z = -15.0f;
-      for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-          var flashLight = new FlashLight();
-
-          flashLight.Form.PosVr = new OpenTK.Mathematics.Vector3(x, -2.5f, z);
-          flashLight.Direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
-          flashLight.Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
-          lights.Add(flashLight);
-          x += step;
-        }
-        x = -10.0f;
-        z += step;
-      }
+      lights.AddRange(GenerateFlashLights(sideCount, step));
 
       return lights;
     }
+
+    public static List<Light> GenerateFlashLights(int sideCount, float step) {
+      var lights = new List<Light>();
+      float range = sideCount * step;
+
+      for (float i = -range / 2; i < range / 2; i += step) {
+        for (float j = -range / 2; j < range / 2; j += step) {
+          var flashLight = new FlashLight();
+          flashLight.Form.PosVr = new OpenTK.Mathematics.Vector3(i, -2.5f, j);
+          flashLight.Direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
+          flashLight.Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+          lights.Add(flashLight);
+
+        }
+      }
+
+      return lights;
+    } 
+
 
 
     private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
