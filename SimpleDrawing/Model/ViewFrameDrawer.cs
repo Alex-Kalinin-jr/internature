@@ -30,6 +30,8 @@ namespace SimpleDrawing.Model {
 
     // test
     CircleShiftingMover _circleShiftingMover;
+    RotaterMover _rotateaterMover;
+    UpDownMover _upDownMover;
     // end of test
 
     //  //////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +55,10 @@ namespace SimpleDrawing.Model {
       _volumes = new List<Volume>();
       _lights = new List<Light>();
       _letters = new Letters(0.05f, 0.1f);
+
       _circleShiftingMover = new CircleShiftingMover(1000);
+      _rotateaterMover = new RotaterMover();
+      _upDownMover = new UpDownMover();
       
     }
     //  //////////////////////////////////////////////////////////////////////////////////////
@@ -269,9 +274,21 @@ namespace SimpleDrawing.Model {
     private void MoveVolumes() {
       for (int i = 0; i < _volumes.Count; ++i) {
         var volume = _volumes[i];
-        _circleShiftingMover.Move(ref volume);
+        MoveVolume(ref volume);
         _volumes[i] = volume;
       }
+
+      for (int i = 2; i < _lights.Count; ++i) {
+        var light = _lights[i].Form;
+        MoveVolume(ref light);
+        _lights[i].Form = light;
+      }
+    }
+
+    private void MoveVolume(ref Volume volume) {
+      _circleShiftingMover.Move(ref volume);
+      _rotateaterMover.Move(ref volume);
+      _upDownMover.Move(ref volume);
     }
 
     private void ShowVolumes() {
@@ -281,7 +298,11 @@ namespace SimpleDrawing.Model {
       _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       for (int i = 0; i < _lights.Count; ++i) {
-        _lights[i].AdjustShader(ref _shader, 0);
+        if (i < 2) {
+          _lights[i].AdjustShader(ref _shader, 0);
+        } else {
+          _lights[i].AdjustShader(ref _shader, i - 2);
+        }
       }
 
       for (int i = 0; i < _volumes.Count; ++i) {

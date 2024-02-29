@@ -1,7 +1,7 @@
 #version 330 core
 
 #define NR_POINTLIGHTS 1 
-#define NR_FLASHLIGHTS 1 
+#define NR_FLASHLIGHTS 100 
 #define NR_DIRECTIONAL_LIGHTS 1
 
 in vec3 Normal;
@@ -19,7 +19,7 @@ struct DirLight {
 
 
 struct PointLight {
-    vec3 position;
+    vec3 position;                                                   
 
     vec3 color;
     vec3 diffuse;
