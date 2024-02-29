@@ -71,7 +71,7 @@ namespace SimpleDrawing.Model {
     public void OnLoad() {
 
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
-      _lights.AddRange(Generator.GenerateLights(10, 2.0f));
+      _lights.AddRange(Generator.GenerateLights(3, 2.0f));
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
