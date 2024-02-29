@@ -1,5 +1,5 @@
 ﻿
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
   public class PointLight : Light {
 
     public System.Numerics.Vector3 Color;

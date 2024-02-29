@@ -1,5 +1,5 @@
 ﻿
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
 
   public class Camera {
     public OpenTK.Mathematics.Vector3 Position { get; set; }

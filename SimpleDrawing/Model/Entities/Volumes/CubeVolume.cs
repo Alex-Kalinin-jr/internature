@@ -1,5 +1,5 @@
 ﻿
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
   public class Cube : Volume {
 
     public Cube(int verticesInLine, OpenTK.Mathematics.Vector3 color) {

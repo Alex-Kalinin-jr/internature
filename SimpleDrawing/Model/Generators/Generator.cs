@@ -1,5 +1,5 @@
 ﻿
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
   public class Generator {
 
     public static (float[], Material, float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {

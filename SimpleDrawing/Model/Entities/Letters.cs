@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
   public class Letters {
     public float Width { get; set; }
     public float Height { get; set; }

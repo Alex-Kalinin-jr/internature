@@ -1,4 +1,4 @@
-﻿namespace SimpleDrawing.Entities {
+﻿namespace SimpleDrawing.Model {
 
   public abstract class Volume {
 

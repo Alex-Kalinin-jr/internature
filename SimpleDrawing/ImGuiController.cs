@@ -21,7 +21,7 @@ namespace SimpleDrawing {
 
     private int _fontTexture;
 
-    private Entities.Shader _shader;
+    private Model.Shader _shader;
 
     private int _windowWidth;
     private int _windowHeight;
@@ -51,7 +51,7 @@ namespace SimpleDrawing {
 
       io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
-      _shader = new Entities.Shader("Shaders/shader_imgui.vert", "Shaders/shader_imgui.frag");
+      _shader = new Model.Shader("Shaders/shader_imgui.vert", "Shaders/shader_imgui.frag");
 
       CreateDeviceResources();
       SetKeyMappings();

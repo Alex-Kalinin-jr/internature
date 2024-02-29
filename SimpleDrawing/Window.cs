@@ -18,9 +18,9 @@ public class Window : GameWindow {
   private System.Numerics.Vector3 _edgesColor;
   private System.Numerics.Vector3 _pointsColor;
 
-  private Entities.DirectionalLight _directionalLight;
-  private Entities.PointLight _pointLight;
-  private Entities.FlashLight _flashLight;
+  private Model.DirectionalLight _directionalLight;
+  private Model.PointLight _pointLight;
+  private Model.FlashLight _flashLight;
   private System.Numerics.Vector3 _flashPos;
 
   private static DebugProc _debugProcCallback = DebugCallback;
@@ -28,13 +28,13 @@ public class Window : GameWindow {
   private Stopwatch _stopWatch;
 
   ImGuiController _controller;
-  SceneRender _scene;
+  Model.SceneRender _scene;
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
     Size = new Vector2i(1024, 768), APIVersion = new Version(3, 3)
   }) {
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
-    _scene = new SceneRender(this);
+    _scene = new Model.SceneRender(this);
 
     _areFacesDrawn = true;
     _areEdgesDrawn = false;
@@ -43,9 +43,9 @@ public class Window : GameWindow {
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
 
-    _directionalLight = new Entities.DirectionalLight();
-    _pointLight = new Entities.PointLight();
-    _flashLight = new Entities.FlashLight();
+    _directionalLight = new Model.DirectionalLight();
+    _pointLight = new Model.PointLight();
+    _flashLight = new Model.FlashLight();
     _flashLight.Form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
     _flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
     _flashLight.Form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
@@ -76,8 +76,6 @@ public class Window : GameWindow {
     SetupDebugging();
     Title += ": OpenGL Version: " + GL.GetString(StringName.Version);
     VSync = VSyncMode.On;
-
-
 
     Error.Check();
   }
@@ -123,6 +121,7 @@ public class Window : GameWindow {
     float millisec = (float)_stopWatch.ElapsedMilliseconds / 1000.0f;
     float fps = 1.0f / millisec;
     string strFps = fps > 60 ? "60" : ((int)fps).ToString();
+
     _scene.SetTime(strFps);
     SwapBuffers();
     _stopWatch = Stopwatch.StartNew();
@@ -228,8 +227,8 @@ public class Window : GameWindow {
 
 
   private void CreateColorPalette() {
-
     ImGui.Begin("edges");
+
     if (ImGui.ColorEdit3("", ref _edgesColor) || ImGui.ColorPicker3("", ref _edgesColor)) {
       _scene.SetEdgesColor(_edgesColor);
     }

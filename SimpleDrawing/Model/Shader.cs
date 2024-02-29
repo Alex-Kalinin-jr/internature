@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
   public class Shader {
 
     private readonly Dictionary<string, int> _uniformLocations;

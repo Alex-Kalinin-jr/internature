@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
 
   public class Texture {
     public readonly int Handle;
