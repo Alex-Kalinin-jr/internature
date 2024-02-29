@@ -1,6 +1,8 @@
-﻿namespace SimpleDrawing.Model {
+﻿using OpenTK.Graphics.OpenGL4;
 
-  public abstract class Volume {
+namespace SimpleDrawing.Model {
+
+  public abstract class Volume : IBindable {
 
     public Material ItsMaterial { get; set; }
     public Position ItsPosition { get; set; }
@@ -10,8 +12,21 @@
     public abstract void AdjustShader(ref Shader shader);
     public abstract OpenTK.Mathematics.Matrix4 ComputeModelMatrix();
 
-  }
+    public void Bind(ref Shader shader) {
 
+      Vao = GL.GenVertexArray();
+      GL.BindVertexArray(Vao);
+
+      if (ItsForm.Vertices != null) {
+        GlBinder.BindPosBuffer(ItsForm.Vertices, ref shader);
+      }
+
+      if (ItsForm.Normals != null) {
+        GlBinder.BindNormalBuffer(ItsForm.Normals, ref shader);
+      }
+    }
+
+  }
 }
 
 

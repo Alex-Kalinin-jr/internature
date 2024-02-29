@@ -79,20 +79,7 @@ namespace SimpleDrawing.Model {
       GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
 
       CreateAndBindVolumesBuffers();
-
-      for (int i = 0; i < _lights.Count; ++i) {
-        _lights[i].ItsVolume.Vao = GL.GenVertexArray();
-        GL.BindVertexArray(_lights[i].ItsVolume.Vao);
-
-        if (_lights[i].ItsVolume.ItsForm.Vertices != null) {
-          BindPosBuffer(_lights[i].ItsVolume.ItsForm.Vertices);
-        }
-
-        if (_lights[i].ItsVolume.ItsForm.Normals != null) {
-          BindNormalBuffer(_lights[i].ItsVolume.ItsForm.Normals);
-        }
-      }
-
+      CreateAndBindLampsBuffers();
 
     }
 
@@ -271,27 +258,6 @@ namespace SimpleDrawing.Model {
       GL.DrawArrays(PrimitiveType.Points, 0, length / 3);
     }
 
-    private void BindPosBuffer(float[] vertices) {
-      int vertexLocation = GL.GetAttribLocation(_shader.Handle, "aPos");
-      GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-      GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float),
-          vertices, BufferUsageHint.DynamicDraw);
-      GL.EnableVertexAttribArray(vertexLocation);
-      GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float,
-          false, 3 * sizeof(float), 0);
-    }
-
-    private void BindNormalBuffer(float[] normals) {
-      int normalLocation = GL.GetAttribLocation(_shader.Handle, "aNormal");
-      GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-      GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float),
-          normals, BufferUsageHint.StaticDraw);
-      GL.EnableVertexAttribArray(normalLocation);
-      GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,
-          false, 3 * sizeof(float), 0);
-    }
-
-
     private void MoveVolumes() {
       for (int i = 0; i < _volumes.Count; ++i) {
         var form = _volumes[i].ItsPosition;
@@ -343,16 +309,13 @@ namespace SimpleDrawing.Model {
 
     private void CreateAndBindVolumesBuffers() {
       for (int i = 0; i<_volumes.Count; ++i) {
-        _volumes[i].Vao = GL.GenVertexArray();
-        GL.BindVertexArray(_volumes[i].Vao);
+        _volumes[i].Bind(ref _shader);
+      }
+    }
 
-        if (_volumes[i].ItsForm.Vertices != null) {
-          BindPosBuffer(_volumes[i].ItsForm.Vertices);
-        }
-
-        if (_volumes[i].ItsForm.Normals != null) {
-          BindNormalBuffer(_volumes[i].ItsForm.Normals);
-        }
+    private void CreateAndBindLampsBuffers() {
+      for (int i = 0; i < _lights.Count; ++i) {
+        _lights[i].Bind(ref _lampShader);
       }
     }
 
