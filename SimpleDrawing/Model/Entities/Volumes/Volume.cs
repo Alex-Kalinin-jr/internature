@@ -1,6 +1,6 @@
 ﻿namespace SimpleDrawing.Model {
 
-  public abstract class Volume {
+  public abstract class Volume : IPositioned {
 
     public Material MaterialTraits { get; set; }
 
