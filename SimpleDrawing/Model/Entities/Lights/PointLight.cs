@@ -10,8 +10,8 @@ namespace SimpleDrawing.Model {
     public float Quadratic;
 
     public PointLight() {
-      Form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
-      Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+      ItsVolume = new Cube(4);
+      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
 
       Color = new System.Numerics.Vector3(0.05f, 0.05f, 0.05f);
       Diffuse = new System.Numerics.Vector3(0.8f, 0.8f, 0.8f);
@@ -25,7 +25,7 @@ namespace SimpleDrawing.Model {
     public override void AdjustShader(ref Shader shader, int i) {
       base.AdjustShader(ref shader, i);
 
-      shader.SetUniform3($"pointLights[{i}].position", Form.PosVr);
+      shader.SetUniform3($"pointLights[{i}].position", ItsVolume.ItsPosition.PosVr);
       shader.SetUniform3($"pointLights[{i}].color",
         new OpenTK.Mathematics.Vector3(Color.X, Color.Y, Color.Z));
       shader.SetUniform3($"pointLights[{i}].diffuse",

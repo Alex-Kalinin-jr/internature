@@ -58,9 +58,9 @@ public class Window : GameWindow {
     _directionalLight = new Model.DirectionalLight();
     _pointLight = new Model.PointLight();
     _flashLight = new Model.FlashLight();
-    _flashLight.Form.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
+    _flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
     _flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
-    _flashLight.Form.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+    _flashLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
     _flashPos = new System.Numerics.Vector3(2.0f, -2.0f, 2.0f);
     _stopWatch = Stopwatch.StartNew();
 
@@ -254,7 +254,7 @@ public class Window : GameWindow {
     ImGui.Begin("flash light");
 
     if (ImGui.SliderFloat3("position", ref _flashPos, -6.0f, 6.0f)) {
-      _flashLight.Form.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
+      _flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
       _scene.ChangeFlashLight(_flashLight);
     }
 

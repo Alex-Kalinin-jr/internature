@@ -15,8 +15,8 @@ namespace SimpleDrawing.Model {
     public float Quadratic;
 
     public FlashLight() {
-      Form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
-      Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+      ItsVolume = new Cube(4);
+      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
 
       Direction = new System.Numerics.Vector3(0.0f, 0.0f, 1.0f);
 
@@ -34,7 +34,7 @@ namespace SimpleDrawing.Model {
     public override void AdjustShader(ref Shader shader, int i) {
       base.AdjustShader(ref shader, i);
 
-      shader.SetUniform3($"flashLights[{i}].position", Form.PosVr);
+      shader.SetUniform3($"flashLights[{i}].position", ItsVolume.ItsPosition.PosVr);
       shader.SetUniform3($"flashLights[{i}].direction",
           new OpenTK.Mathematics.Vector3(Direction.X, Direction.Y, Direction.Z));
       shader.SetFloat($"flashLights[{i}].cutOff", CutOff);

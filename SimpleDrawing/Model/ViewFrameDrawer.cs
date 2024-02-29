@@ -2,7 +2,7 @@
 
 namespace SimpleDrawing.Model {
   public delegate void Show(int length);
-  public delegate void MoveVolume(ref Volume vol);
+  public delegate void MoveVolume(ref Position vol);
 
   public sealed class SceneDrawer {
     const float _cameraSpeed = 1.5f;
@@ -81,15 +81,15 @@ namespace SimpleDrawing.Model {
       CreateAndBindVolumesBuffers();
 
       for (int i = 0; i < _lights.Count; ++i) {
-        _lights[i].Form.Vao = GL.GenVertexArray();
-        GL.BindVertexArray(_lights[i].Form.Vao);
+        _lights[i].ItsVolume.Vao = GL.GenVertexArray();
+        GL.BindVertexArray(_lights[i].ItsVolume.Vao);
 
-        if (_lights[i].Form.Vertices != null) {
-          BindPosBuffer(_lights[i].Form.Vertices);
+        if (_lights[i].ItsVolume.ItsForm.Vertices != null) {
+          BindPosBuffer(_lights[i].ItsVolume.ItsForm.Vertices);
         }
 
-        if (_lights[i].Form.Normals != null) {
-          BindNormalBuffer(_lights[i].Form.Normals);
+        if (_lights[i].ItsVolume.ItsForm.Normals != null) {
+          BindNormalBuffer(_lights[i].ItsVolume.ItsForm.Normals);
         }
       }
 
@@ -215,17 +215,17 @@ namespace SimpleDrawing.Model {
     }
 
     public void ChangeDirLight(DirectionalLight val) {
-      val.Form.Vao = _lights[0].Form.Vao;
+      val.ItsVolume.Vao = _lights[0].ItsVolume.Vao;
       _lights[0] = val;
     }
 
     public void ChangePointLight(PointLight val) {
-      val.Form.Vao = _lights[1].Form.Vao;
+      val.ItsVolume.Vao = _lights[1].ItsVolume.Vao;
       _lights[1] = val;
     }
 
     public void ChangeFlashLight(FlashLight val) {
-      val.Form.Vao = _lights[2].Form.Vao;
+      val.ItsVolume.Vao = _lights[2].ItsVolume.Vao;
       _lights[2] = val;
     }
     //  //////////////////////////////////////////////////////////////////////////////////////
@@ -294,15 +294,15 @@ namespace SimpleDrawing.Model {
 
     private void MoveVolumes() {
       for (int i = 0; i < _volumes.Count; ++i) {
-        var volume = _volumes[i];
-        _moveVolume?.Invoke(ref volume);
-        _volumes[i] = volume;
+        var form = _volumes[i].ItsPosition;
+        _moveVolume?.Invoke(ref form);
+        _volumes[i].ItsPosition = form;
       }
 
       for (int i = 2; i < _lights.Count; ++i) {
-        var light = _lights[i].Form;
+        var light = _lights[i].ItsVolume.ItsPosition;
         _moveVolume?.Invoke(ref light);
-        _lights[i].Form = light;
+        _lights[i].ItsVolume.ItsPosition = light;
       }
     }
 
@@ -323,7 +323,7 @@ namespace SimpleDrawing.Model {
       for (int i = 0; i < _volumes.Count; ++i) {
         _volumes[i].AdjustShader(ref _shader);
         GL.BindVertexArray(_volumes[i].Vao);
-        _showType(_volumes[i].Vertices.Length);
+        _showType(_volumes[i].ItsForm.Vertices.Length);
       }
     }
 
@@ -333,11 +333,11 @@ namespace SimpleDrawing.Model {
       _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       for (int i = 0; i < _lights.Count; ++i) {
-        OpenTK.Mathematics.Matrix4 modelLamp = _lights[i].Form.ComputeModelMatrix();
+        OpenTK.Mathematics.Matrix4 modelLamp = _lights[i].ItsVolume.ComputeModelMatrix();
         _lampShader.SetMatrix4("model", modelLamp);
-        _lampShader.SetUniform3("aColor", _lights[i].Form.MaterialTraits.Ambient);
-        GL.BindVertexArray(_lights[i].Form.Vao);
-        GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].Form.Vertices.Length / 3);
+        _lampShader.SetUniform3("aColor", _lights[i].ItsVolume.ItsMaterial.Ambient);
+        GL.BindVertexArray(_lights[i].ItsVolume.Vao);
+        GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
       }
     }
 
@@ -346,12 +346,12 @@ namespace SimpleDrawing.Model {
         _volumes[i].Vao = GL.GenVertexArray();
         GL.BindVertexArray(_volumes[i].Vao);
 
-        if (_volumes[i].Vertices != null) {
-          BindPosBuffer(_volumes[i].Vertices);
+        if (_volumes[i].ItsForm.Vertices != null) {
+          BindPosBuffer(_volumes[i].ItsForm.Vertices);
         }
 
-        if (_volumes[i].Normals != null) {
-          BindNormalBuffer(_volumes[i].Normals);
+        if (_volumes[i].ItsForm.Normals != null) {
+          BindNormalBuffer(_volumes[i].ItsForm.Normals);
         }
       }
     }

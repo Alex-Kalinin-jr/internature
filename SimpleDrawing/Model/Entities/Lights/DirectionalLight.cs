@@ -8,8 +8,8 @@ namespace SimpleDrawing.Model {
     public System.Numerics.Vector3 Specular;
 
     public DirectionalLight() {
-      Form = new Cube(4, new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f));
-      Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+      ItsVolume = new Cube(4);
+      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
 
       Direction = new System.Numerics.Vector3(-0.2f, -1.0f, -0.3f);
 
