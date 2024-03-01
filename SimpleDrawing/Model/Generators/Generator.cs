@@ -63,11 +63,16 @@ namespace SimpleDrawing.Model {
     public static List<Cube> GenerateVolumes(int countOfSide, float step) {
       var volumes = new List<Cube>();
       float range = countOfSide * step;
+      string[] materials = {"emerald", "obsidian", "chrome", "blackRubber", "bronze"};
+      int count = 0;
       for (float i = -range / 2; i < range / 2; i += step) {
         for (float j = -range / 2; j < range / 2; j += step) {
           Cube buff = new Cube(10);
+          int a = count % materials.Length;
+          buff.ItsMaterial = Material.CreateMaterial(materials[a]);
           buff.ItsPosition.PosVr += new OpenTK.Mathematics.Vector3(i, 1.0f, j);
           volumes.Add(buff);
+          ++count;
         }
       }
       return volumes;
