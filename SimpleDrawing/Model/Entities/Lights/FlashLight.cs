@@ -1,4 +1,5 @@
 ﻿
+
 namespace SimpleDrawing.Model {
   public class FlashLight : Light {
 

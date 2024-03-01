@@ -12,7 +12,7 @@ namespace SimpleDrawing.Model {
       GL.BindVertexArray(ItsVolume.Vao);
 
       if (ItsVolume.ItsForm.Vertices != null) {
-        GlBinder.BindPosBuffer(ItsVolume.ItsForm.Vertices, ref shader);
+        GlBinder.BindPosBuffer(ItsVolume.ItsForm.Vertices, ref shader, 3);
       }
     }
 
