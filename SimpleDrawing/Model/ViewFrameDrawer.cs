@@ -21,6 +21,7 @@ namespace SimpleDrawing.Model {
 
     private Show _showType;
     private MoveVolume _moveVolume;
+    private MoveVolume _moveFlashLight;
 
     private string _renderTime;
     private float _interpolationKoeff;
@@ -135,30 +136,12 @@ namespace SimpleDrawing.Model {
       }
     }
 
-    public void ChangeMovingActions(int i, bool state) {
-      if (i == 0) {
-        if (state) {
-          _moveVolume += _circleShiftingMover.Move;
-        } else {
-          _moveVolume -= _circleShiftingMover.Move;
-        }
-      }
-
-      if (i == 1) {
-        if (state) {
-          _moveVolume += _rotateaterMover.Move;
-        } else {
-          _moveVolume -= _rotateaterMover.Move;
-        }
-      }
-
-      if (i == 2) {
-        if (state) {
-          _moveVolume += _upDownMover.Move;
-        } else {
-          _moveVolume -= _upDownMover.Move;
-        }
-      }
+    public void ChangeCubesMovings(int i, bool state) {
+      ChangeMovingActions(i, state, ref _moveVolume);
+    }
+    
+    public void ChangeLightsMovings(int i, bool state) {
+      ChangeMovingActions(i, state, ref _moveFlashLight);
     }
 
     public void ChangeEdgesColor(OpenTK.Mathematics.Vector3 color) {
@@ -267,7 +250,7 @@ namespace SimpleDrawing.Model {
 
       for (int i = 2; i < _lights.Count; ++i) {
         var light = _lights[i].ItsVolume.ItsPosition;
-        _moveVolume?.Invoke(ref light);
+        _moveFlashLight?.Invoke(ref light);
         _lights[i].ItsVolume.ItsPosition = light;
       }
     }
@@ -316,6 +299,32 @@ namespace SimpleDrawing.Model {
     private void CreateAndBindLampsBuffers() {
       for (int i = 0; i < _lights.Count; ++i) {
         _lights[i].Bind(ref _lampShader);
+      }
+    }
+
+    private void ChangeMovingActions(int i, bool state, ref MoveVolume movingDelegate) {
+      if (i == 0) {
+        if (state) {
+          movingDelegate += _circleShiftingMover.Move;
+        } else {
+          movingDelegate -= _circleShiftingMover.Move;
+        }
+      }
+
+      if (i == 1) {
+        if (state) {
+          movingDelegate += _rotateaterMover.Move;
+        } else {
+          movingDelegate -= _rotateaterMover.Move;
+        }
+      }
+
+      if (i == 2) {
+        if (state) {
+          movingDelegate += _upDownMover.Move;
+        } else {
+          movingDelegate -= _upDownMover.Move;
+        }
       }
     }
 

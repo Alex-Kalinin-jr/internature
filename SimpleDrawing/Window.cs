@@ -199,7 +199,7 @@ public class Window : GameWindow {
 
   private void CreateMoveVolumeCheckboxes() {
 
-    ImGui.Begin("Movements");
+    ImGui.Begin("Volumes");
     if (ImGui.Checkbox("Rotate 1", ref _areRotatedOne)) {
       _scene.ChangeMovements(0, _areRotatedOne);
     }
@@ -210,6 +210,21 @@ public class Window : GameWindow {
 
     if (ImGui.Checkbox("Shift Up-Down", ref _areShiftedUpDown)) {
       _scene.ChangeMovements(2, _areShiftedUpDown);
+
+    }
+    ImGui.End();
+
+    ImGui.Begin("Lights");
+    if (ImGui.Checkbox("Rotate 1", ref _areRotatedOne)) {
+      _scene.ChangeLightsMovements(0, _areRotatedOne);
+    }
+
+    if (ImGui.Checkbox("Rotate 2", ref _areRotatedTwo)) {
+      _scene.ChangeLightsMovements(1, _areRotatedTwo);
+    }
+
+    if (ImGui.Checkbox("Shift Up-Down", ref _areShiftedUpDown)) {
+      _scene.ChangeLightsMovements(2, _areShiftedUpDown);
 
     }
     ImGui.End();

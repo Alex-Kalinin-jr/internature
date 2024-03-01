@@ -161,7 +161,11 @@ namespace SimpleDrawing.Model {
     }
 
     public void ChangeMovements(int mode, bool state) {
-      _drawer.ChangeMovingActions(mode, state);
+      _drawer.ChangeCubesMovings(mode, state);
+    }
+
+    public void ChangeLightsMovements(int mode, bool state) {
+      _drawer.ChangeLightsMovings(mode, state);
     }
 
   }
