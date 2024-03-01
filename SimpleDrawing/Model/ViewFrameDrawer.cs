@@ -30,12 +30,10 @@ namespace SimpleDrawing.Model {
     private OpenTK.Mathematics.Vector3 _edgesColor;
     private OpenTK.Mathematics.Vector3 _pointsColor;
 
-
-    // test
     CircleShiftingMover _circleShiftingMover;
     RotaterMover _rotateaterMover;
     UpDownMover _upDownMover;
-    // end of test
+
 
     //  //////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,8 +93,11 @@ namespace SimpleDrawing.Model {
 
       ChangeBlend(); // morph component changing
       MoveVolumes();
+      MoveLights();
+
       ShowVolumes();
       ShowLamps();
+
       _letters.DrawFps(ref _lettersShader, "FPS" + _renderTime);
 
     }
@@ -247,13 +248,17 @@ namespace SimpleDrawing.Model {
         _moveVolume?.Invoke(ref form);
         _volumes[i].ItsPosition = form;
       }
+    }
 
+    private void MoveLights() {
       for (int i = 2; i < _lights.Count; ++i) {
         var light = _lights[i].ItsVolume.ItsPosition;
         _moveFlashLight?.Invoke(ref light);
         _lights[i].ItsVolume.ItsPosition = light;
       }
     }
+
+
 
     private void ShowVolumes() {
       _shader.SetFloat("morphingFactor", _interpolationKoeff);

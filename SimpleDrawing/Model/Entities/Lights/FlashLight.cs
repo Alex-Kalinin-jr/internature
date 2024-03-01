@@ -1,5 +1,4 @@
 ﻿
-
 namespace SimpleDrawing.Model {
   public class FlashLight : Light {
 
@@ -17,6 +16,9 @@ namespace SimpleDrawing.Model {
 
     public FlashLight() {
       ItsVolume = new Cube(4);
+      Material material = new Material();
+      material.Ambient = new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f);
+      ItsVolume.ItsMaterial = material;
       ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
 
       Direction = new System.Numerics.Vector3(0.0f, 0.0f, 1.0f);

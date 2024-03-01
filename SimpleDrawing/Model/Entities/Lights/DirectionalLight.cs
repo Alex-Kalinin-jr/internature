@@ -10,6 +10,9 @@ namespace SimpleDrawing.Model {
     public DirectionalLight() {
       ItsVolume = new Cube(4);
       ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+      Material material = new Material();
+      material.Ambient = new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f);
+      ItsVolume.ItsMaterial = material;
 
       Direction = new System.Numerics.Vector3(-0.2f, -1.0f, -0.3f);
 

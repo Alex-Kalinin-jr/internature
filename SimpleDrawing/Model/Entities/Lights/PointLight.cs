@@ -11,6 +11,9 @@ namespace SimpleDrawing.Model {
 
     public PointLight() {
       ItsVolume = new Cube(4);
+      Material material = new Material();
+      material.Ambient = new OpenTK.Mathematics.Vector3(1.0f, 1.0f, 1.0f);
+      ItsVolume.ItsMaterial = material;
       ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
 
       Color = new System.Numerics.Vector3(0.05f, 0.05f, 0.05f);
