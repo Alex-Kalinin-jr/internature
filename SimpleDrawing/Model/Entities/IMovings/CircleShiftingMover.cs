@@ -5,6 +5,7 @@ namespace SimpleDrawing.Model {
     public double Radius { get; set; }
 
     private double _deltaRads;
+
     public CircleShiftingMover(int period) {
       _deltaRads = Math.PI * 2 / (double)period;
     }

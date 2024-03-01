@@ -3,6 +3,7 @@
 namespace SimpleDrawing.Model {
 
   public abstract class Light : IBindable {
+
     public Cube ItsVolume;
     public virtual void AdjustShader(ref Shader shader, int i) { }
 
@@ -14,6 +15,7 @@ namespace SimpleDrawing.Model {
         GlBinder.BindPosBuffer(ItsVolume.ItsForm.Vertices, ref shader);
       }
     }
+
 
   }
 

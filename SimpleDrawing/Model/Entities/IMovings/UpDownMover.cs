@@ -5,9 +5,9 @@ namespace SimpleDrawing.Model {
 
       OpenTK.Mathematics.Vector3 buff = source.PosVr;
       if (buff.X >= 0) {
-        buff.Y += 0.005f;
+        buff.Y += 0.02f;
       } else {
-        buff.Y -= 0.005f;
+        buff.Y -= 0.02f;
       }
       
       source.PosVr = buff;
