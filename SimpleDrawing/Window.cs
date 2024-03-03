@@ -322,25 +322,25 @@ public class Window : GameWindow {
       _scene.ChangeFlashLightPosition(ConvertVector(_flashLight.Position));
     }
     if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f)) {
-      _scene.ChangeFlashLightPosition(ConvertVector(_flashLight.Direction));
+      _scene.ChangeFlashLightDirection(ConvertVector(_flashLight.Direction));
     }
     if (ImGui.SliderFloat3("color", ref _flashLight.Color, 0.0f, 1.0f)) {
-      _scene.ChangeFlashLightPosition(ConvertVector(_flashLight.Color));
+      _scene.ChangeFlashLightColor(ConvertVector(_flashLight.Color));
     }
     if (ImGui.SliderFloat3("diffuse", ref _flashLight.Diffuse, 0.0f, 1.0f)) {
-      _scene.ChangeFlashLightPosition(ConvertVector(_flashLight.Diffuse));
+      _scene.ChangeFlashLightDiffuse(ConvertVector(_flashLight.Diffuse));
     }
     if (ImGui.SliderFloat3("specular", ref _flashLight.Specular, 0.0f, 1.0f)) {
-      _scene.ChangeFlashLightPosition(ConvertVector(_flashLight.Specular));
+      _scene.ChangeFlashLightSpecular(ConvertVector(_flashLight.Specular));
     }
     if (ImGui.SliderFloat("constant koeff", ref _flashLight.Constant, 0.5f, 1.0f)) {
-      _scene.ChangePointLightQuadratic(_pointLight.Constant);
+      _scene.ChangeFlashLightConstant(_pointLight.Constant);
     }
     if (ImGui.SliderFloat("linear koeff", ref _flashLight.Linear, 0.07f, 0.3f)) {
-      _scene.ChangePointLightQuadratic(_pointLight.Linear);
+      _scene.ChangeFlashLightLinear(_pointLight.Linear);
     }
     if (ImGui.SliderFloat("quadratic koeff", ref _flashLight.Quadratic, 0.0f, 0.07f)) {
-      _scene.ChangePointLightQuadratic(_pointLight.Quadratic);
+      _scene.ChangeFlashLightQuadratic(_pointLight.Quadratic);
     }
     ImGui.End();
   }

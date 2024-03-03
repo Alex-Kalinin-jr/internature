@@ -70,6 +70,10 @@ namespace SimpleDrawing.Model {
 
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
       (_directionalLights, _pointLights, _lights ) = Generator.GenerateLights(3, 2.0f);
+
+      _pointLights.Clear();
+      _directionalLights.Clear();
+
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
@@ -246,33 +250,36 @@ namespace SimpleDrawing.Model {
       }
     }
 
+
+
+
     public void ChangeFlashLightPosition(Vector3 val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        _pointLights[i].ItsVolume.ItsPosition.PosVr = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        _lights[i].ItsVolume.ItsPosition.PosVr = val;
       }
     }
     public void ChangeFlashLightDirection(Vector3 val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Direction = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Direction = val;
       }
     }
 
     public void ChangeFlashLightColor(Vector3 val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Ambient = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Ambient = val;
       }
     }
 
 
     public void ChangeFlashLightDiffuse(Vector3 val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Diffuse = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Diffuse = val;
       }
     }
 
     public void ChangeFlashLightSpecular(Vector3 val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Specular = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Specular = val;
       }
     }
 
@@ -285,20 +292,20 @@ namespace SimpleDrawing.Model {
     }
 
     public void ChangeFlashLightConstant(float val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Constant = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Constant = val;
       }
     }
 
     public void ChangeFlashLightLinear(float val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Linear = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Linear = val;
       }
     }
 
     public void ChangeFlashLightQuadratic(float val) {
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        ((FlashLightColor)_pointLights[i].ItsColor).Quadratic = val;
+      for (int i = 0; i < _lights.Count; ++i) {
+        ((FlashLightColor)_lights[i].ItsColor).Quadratic = val;
       }
     }
 
