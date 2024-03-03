@@ -54,6 +54,8 @@ struct Material {
     float shiness;
 };
 
+uniform float edges;
+uniform vec3 edgesColor;
 uniform vec3 viewPos;
 uniform Material material;
 uniform DirLight dirlights[NR_DIRECTIONAL_LIGHTS];
@@ -136,5 +138,9 @@ void main() {
         }
     }
 
-    outColor = vec4(result, 1.0);
+    if (edges == 51.51f) {
+        outColor = vec4(edgesColor, 1.0);
+    } else {
+        outColor = vec4(result, 1.0);
+    }
 }

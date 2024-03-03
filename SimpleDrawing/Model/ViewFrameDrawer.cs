@@ -21,7 +21,6 @@ namespace SimpleDrawing.Model {
     private Shader _shader;
     private Shader _lampShader;
     private Shader _lettersShader;
-    private Shader _edgesShader;
 
     private Show _showType;
     private MoveVolume _moveVolume;
@@ -51,7 +50,6 @@ namespace SimpleDrawing.Model {
       _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
       _lampShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
       _lettersShader = new Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
-      _edgesShader = new Shader("Shaders/shader.vert", "Shaders/lightShader.frag");
 
       _camera = new Camera(OpenTK.Mathematics.Vector3.UnitZ * 3, _width / _height);
       _increase = true;
@@ -78,8 +76,6 @@ namespace SimpleDrawing.Model {
 
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
       (_directionalLights, _pointLights, _lights ) = Generator.GenerateLights(3, 2.0f);
-      _pointLights.Clear();
-      _directionalLights.Clear();
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
@@ -238,8 +234,6 @@ namespace SimpleDrawing.Model {
     }
 
     private void ShowFramed(int length) {
-      _edgesShader.SetUniform3("Color", _edgesColor);
-
       int bias = 0;
       int step = length / 3 / 6;
 
@@ -250,7 +244,6 @@ namespace SimpleDrawing.Model {
     }
 
     private void ShowPoints(int length) {
-      _edgesShader.SetUniform3("Color", _pointsColor);
       GL.DrawArrays(PrimitiveType.Points, 0, length / 3);
     }
 
@@ -320,7 +313,7 @@ namespace SimpleDrawing.Model {
         _lights[i].Bind(ref _lampShader);
       }
       for (int i = 0; i < _pointLights.Count; ++i) {
-        _pointLights[i].Bind(ref _shader);
+        _pointLights[i].Bind(ref _lampShader);
       }
       for (int i = 0; i < _directionalLights.Count; ++i) {
         _directionalLights[i].Bind(ref _lampShader);

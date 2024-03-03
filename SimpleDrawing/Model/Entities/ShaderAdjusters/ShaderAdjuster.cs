@@ -11,16 +11,21 @@ namespace SimpleDrawing.Model {
         shader.SetMatrix4("view", camera.GetViewMatrix());
 
       }
-      if (shader.UniformLocations.ContainsKey ("color")) {
+      if (shader.UniformLocations.ContainsKey("projection")) {
         shader.SetMatrix4("projection", camera.GetProjectionMatrix());
       }
     }
+
+
 
     public static void AdjustShader(ref Shader shader, float val, int flag) {
       if (flag == 0 && shader.UniformLocations.ContainsKey("morphingFactor")) {
         shader.SetFloat("morphingFactor", val);
       }
     }
+
+
+
 
     public static void AdjustShader(ref Matrix4 modelMatrix, ref Shader shader, int flag) {
       if (flag == 0 && shader.UniformLocations.ContainsKey("model")) {

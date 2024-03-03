@@ -13,8 +13,9 @@ namespace SimpleDrawing.Model {
     public abstract Matrix4 ComputeModelMatrix();
 
     public void Bind(ref Shader shader) {
-
-      Vao = GL.GenVertexArray();
+      if (Vao == -1) {
+        Vao = GL.GenVertexArray();
+      }
       GL.BindVertexArray(Vao);
 
       if (ItsForm.Vertices != null) {
