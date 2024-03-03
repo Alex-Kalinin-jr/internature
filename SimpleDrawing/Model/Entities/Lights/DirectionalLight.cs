@@ -1,6 +1,4 @@
 ﻿
-using SimpleDrawing.Model.Entities.ShaderAdjusters;
-
 namespace SimpleDrawing.Model {
   public class DirectionalLight : Light {
 

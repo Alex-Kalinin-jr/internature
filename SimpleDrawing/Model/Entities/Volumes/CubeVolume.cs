@@ -9,14 +9,7 @@ namespace SimpleDrawing.Model {
       ItsMaterial = new MaterialColor();
       ItsForm = Generator.GenerateCubeForm(10);
     }
-    public override void AdjustShader(ref Shader shader) {
-      ColorAdjuster.AdjustShader(ref ItsMaterial, ref shader, 0);
 
-      var modelMatrix = ComputeModelMatrix();
-      shader.SetMatrix4("model", modelMatrix);
-      modelMatrix.Invert();
-      shader.SetMatrix4("invertedModel", modelMatrix);
-    }
     public override Matrix4 ComputeModelMatrix() {
       return Matrix4.Identity * Matrix4.CreateScale(ItsPosition.ScaleVr) *
         Matrix4.CreateRotationX(MathHelper.DegreesToRadians(ItsPosition.RotationVr.X)) *

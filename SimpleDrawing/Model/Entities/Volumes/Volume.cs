@@ -10,7 +10,6 @@ namespace SimpleDrawing.Model {
     public Form ItsForm {  get; set; }
     public int Vao { get; set; }
     public int Texture { get; set; }
-    public abstract void AdjustShader(ref Shader shader);
     public abstract Matrix4 ComputeModelMatrix();
 
     public void Bind(ref Shader shader) {

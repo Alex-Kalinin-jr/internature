@@ -273,27 +273,25 @@ namespace SimpleDrawing.Model {
 
 
     private void ShowVolumes() {
-      _shader.SetFloat("morphingFactor", _interpolationKoeff);
-      _shader.SetUniform3("viewPos", _camera.Position);
-      _shader.SetMatrix4("view", _camera.GetViewMatrix());
-      _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-
-      for (int i = 0; i < _lights.Count; ++i) {
-          _lights[i].AdjustShader(ref _shader, i);
-      }
-
-      for (int i = 0; i < _directionalLights.Count; ++i) {
-        _directionalLights[i].AdjustShader(ref _shader, i);
-      }
-
-      for (int i = 0; i < _pointLights.Count; ++i) {
-        _pointLights[i].AdjustShader(ref _shader, i);
-      }
+      ShaderAdjuster.AdjustShader(ref _shader, _interpolationKoeff, 0);
+      ShaderAdjuster.AdjustShader(ref _camera, ref _shader);
+      AdjustShaderWithLights(ref _lights, ref _shader);
+      AdjustShaderWithLights(ref _directionalLights, ref _shader);
+      AdjustShaderWithLights(ref _pointLights, ref _shader);
 
       for (int i = 0; i < _volumes.Count; ++i) {
-        _volumes[i].AdjustShader(ref _shader);
+        ColorAdjuster.AdjustShader(ref _volumes[i].ItsMaterial, ref _shader, 0);
+        var modelMatrix = _volumes[i].ComputeModelMatrix();
+        ShaderAdjuster.AdjustShader(ref modelMatrix, ref _shader, 0);
         GL.BindVertexArray(_volumes[i].Vao);
         _showType(_volumes[i].ItsForm.Vertices.Length);
+      }
+    }
+
+
+    private void AdjustShaderWithLights(ref List<Light> lights, ref Shader shader) {
+      for (int i = 0; i < lights.Count; ++i) {
+        ColorAdjuster.AdjustShader(ref lights[i].ItsColor, ref shader, i);
       }
     }
 
