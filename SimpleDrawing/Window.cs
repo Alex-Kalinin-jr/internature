@@ -19,6 +19,10 @@ public class Window : GameWindow {
   private bool _areRotatedTwo;
   private bool _areShiftedUpDown;
 
+  private bool _areLightsRotatedOne;
+  private bool _areLightsRotatedTwo;
+  private bool _areLightsRotatedThree;
+
   int _cubesCount;
   float _step;
 
@@ -54,7 +58,7 @@ public class Window : GameWindow {
 
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
-
+    /*
     _directionalLight = new Model.DirectionalLight();
     _pointLight = new Model.PointLight();
     _flashLight = new Model.FlashLight();
@@ -62,8 +66,9 @@ public class Window : GameWindow {
     _flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
     _flashLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
     _flashPos = new System.Numerics.Vector3(2.0f, -2.0f, 2.0f);
-    _stopWatch = Stopwatch.StartNew();
+     */
 
+    _stopWatch = Stopwatch.StartNew();
     _cubesCount = 10;
     _step = 2.0f;
   }
@@ -113,9 +118,9 @@ public class Window : GameWindow {
     // customization
     CreateShowingTypeButtons();
     CreateColorPalette();
-    CreatePointLightPalette();
+    // CreatePointLightPalette();
     CreateFlasLightPalette();
-    CreateDirLightPalette();
+    // CreateDirLightPalette();
     CreateVolumesChanger();
     CreateMoveVolumeCheckboxes();
 
@@ -215,22 +220,23 @@ public class Window : GameWindow {
     ImGui.End();
 
     ImGui.Begin("Lights");
-    if (ImGui.Checkbox("Rotate 1", ref _areRotatedOne)) {
-      _scene.ChangeLightsMovements(0, _areRotatedOne);
+    if (ImGui.Checkbox("Rotate 1", ref _areLightsRotatedOne)) {
+      _scene.ChangeLightsMovements(0, _areLightsRotatedOne);
     }
 
-    if (ImGui.Checkbox("Rotate 2", ref _areRotatedTwo)) {
-      _scene.ChangeLightsMovements(1, _areRotatedTwo);
+    if (ImGui.Checkbox("Rotate 2", ref _areLightsRotatedTwo)) {
+      _scene.ChangeLightsMovements(1, _areLightsRotatedTwo);
     }
 
-    if (ImGui.Checkbox("Shift Up-Down", ref _areShiftedUpDown)) {
-      _scene.ChangeLightsMovements(2, _areShiftedUpDown);
+    if (ImGui.Checkbox("Shift Up-Down", ref _areLightsRotatedThree)) {
+      _scene.ChangeLightsMovements(2, _areLightsRotatedThree);
 
     }
     ImGui.End();
 
   }
 
+  /*
   private void CreateDirLightPalette() {
     ImGui.Begin("directional light");
     if (ImGui.SliderFloat3("direction", ref _directionalLight.Direction, -1.0f, 1.0f) ||
@@ -241,53 +247,54 @@ public class Window : GameWindow {
     }
     ImGui.End();
   }
+private void CreatePointLightPalette() {
+ImGui.Begin("point light");
+if (ImGui.SliderFloat3("color", ref _pointLight.Color, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("diffuse", ref _pointLight.Diffuse, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("specular", ref _pointLight.Specular, 0.0f, 1.0f) ||
+    ImGui.SliderFloat("constant koeff", ref _pointLight.Constant, 0.5f, 1.0f) ||
+    ImGui.SliderFloat("linear koeff", ref _pointLight.Linear, 0.07f, 0.3f) ||
+    ImGui.SliderFloat("quadratic koeff", ref _pointLight.Quadratic, 0.0f, 0.07f)) {
+  _scene.ChangePointLight(_pointLight);
+}
+ImGui.End();
+}
+  */
 
-  private void CreatePointLightPalette() {
-    ImGui.Begin("point light");
-    if (ImGui.SliderFloat3("color", ref _pointLight.Color, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("diffuse", ref _pointLight.Diffuse, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("specular", ref _pointLight.Specular, 0.0f, 1.0f) ||
-        ImGui.SliderFloat("constant koeff", ref _pointLight.Constant, 0.5f, 1.0f) ||
-        ImGui.SliderFloat("linear koeff", ref _pointLight.Linear, 0.07f, 0.3f) ||
-        ImGui.SliderFloat("quadratic koeff", ref _pointLight.Quadratic, 0.0f, 0.07f)) {
-      _scene.ChangePointLight(_pointLight);
-    }
-    ImGui.End();
-  }
+private void CreateVolumesChanger() {
+ImGui.Begin("Volumes");
+if (ImGui.SliderInt("Count", ref _cubesCount, 1, 100) ||
+    ImGui.SliderFloat("_step", ref _step, 2.0f, 10.0f)) {
+  _scene.ReGenerateVolumes(_cubesCount, _step);
+}
 
-  private void CreateVolumesChanger() {
-    ImGui.Begin("Volumes");
-    if (ImGui.SliderInt("Count", ref _cubesCount, 1, 100) ||
-        ImGui.SliderFloat("_step", ref _step, 2.0f, 10.0f)) {
-      _scene.ReGenerateVolumes(_cubesCount, _step);
-    }
+ImGui.End();
+}
 
-    ImGui.End();
-  }
+private void CreateFlasLightPalette() {
+ImGui.Begin("flash light");
 
-  private void CreateFlasLightPalette() {
-    ImGui.Begin("flash light");
-
-    if (ImGui.SliderFloat3("position", ref _flashPos, -6.0f, 6.0f)) {
-      _flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
-      _scene.ChangeFlashLight(_flashLight);
-    }
-
-    if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f) ||
-        ImGui.SliderFloat3("color", ref _flashLight.Color, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("diffuse", ref _flashLight.Diffuse, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("specular", ref _flashLight.Specular, 0.0f, 1.0f) ||
-        ImGui.SliderFloat("constant koeff", ref _flashLight.Constant, 0.5f, 1.0f) ||
-        ImGui.SliderFloat("linear koeff", ref _flashLight.Linear, 0.07f, 0.3f) ||
-        ImGui.SliderFloat("quadratic koeff", ref _flashLight.Quadratic, 0.0f, 0.07f)
-        ) {
-      _scene.ChangeFlashLight(_flashLight);
-    }
-    ImGui.End();
-  }
+if (ImGui.SliderFloat3("position", ref _flashPos, -6.0f, 6.0f)) {
+  _flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
+  _scene.ChangeFlashLight(_flashLight);
+}
+/*
+if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f) ||
+    ImGui.SliderFloat3("color", ref _flashLight.Color, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("diffuse", ref _flashLight.Diffuse, 0.0f, 1.0f) ||
+    ImGui.SliderFloat3("specular", ref _flashLight.Specular, 0.0f, 1.0f) ||
+    ImGui.SliderFloat("constant koeff", ref _flashLight.Constant, 0.5f, 1.0f) ||
+    ImGui.SliderFloat("linear koeff", ref _flashLight.Linear, 0.07f, 0.3f) ||
+    ImGui.SliderFloat("quadratic koeff", ref _flashLight.Quadratic, 0.0f, 0.07f)
+    ) {
+  _scene.ChangeFlashLight(_flashLight);
+}
+ImGui.End();
+ */
+}
 
 
-  private void CreateColorPalette() {
+private void CreateColorPalette() {
     ImGui.Begin("edges");
 
     if (ImGui.ColorEdit3("", ref _edgesColor) || ImGui.ColorPicker3("", ref _edgesColor)) {

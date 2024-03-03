@@ -23,7 +23,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Shaders\Class1.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Class1.backup" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Model\Entities\Colors\" />
+	  <Folder Include="Model\Entities\ShaderAdjusters\" />
 	</ItemGroup>
 
 </Project>

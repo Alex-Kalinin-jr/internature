@@ -2,9 +2,17 @@
 
 namespace SimpleDrawing.Model {
 
-  public abstract class Light : IBindable {
+  public class Light : IBindable {
 
     public Cube ItsVolume;
+    public Color ItsColor;
+
+    public Light() {
+      ItsVolume = new Cube(4);
+      ItsColor = new Color();
+      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+    }
+
     public virtual void AdjustShader(ref Shader shader, int i) { }
 
     public void Bind(ref Shader shader) {

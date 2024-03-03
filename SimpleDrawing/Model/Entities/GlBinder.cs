@@ -15,7 +15,7 @@ namespace SimpleDrawing.Model {
     public static void BindNormalBuffer(float[] normals, ref Shader shader) {
       int normalLocation = GL.GetAttribLocation(shader.Handle, "aNormal");
       GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-      GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float),
+      GL.BufferData(BufferTarget.ArrayBuffer, normals.Length * sizeof(float), 
           normals, BufferUsageHint.StaticDraw);
       GL.EnableVertexAttribArray(normalLocation);
       GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float,

@@ -18,6 +18,7 @@ namespace SimpleDrawing.Model {
     private Shader _shader;
     private Shader _lampShader;
     private Shader _lettersShader;
+    private Shader _edgesShader;
 
     private Show _showType;
     private MoveVolume _moveVolume;
@@ -47,6 +48,7 @@ namespace SimpleDrawing.Model {
       _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
       _lampShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
       _lettersShader = new Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
+      _edgesShader = new Shader("Shaders/shader.vert", "Shaders/lightShader.frag");
 
       _camera = new Camera(OpenTK.Mathematics.Vector3.UnitZ * 3, _width / _height);
       _increase = true;
@@ -226,7 +228,7 @@ namespace SimpleDrawing.Model {
     }
 
     private void ShowFramed(int length) {
-      _shader.SetUniform3("material.ambient", _edgesColor);
+      _edgesShader.SetUniform3("Color", _edgesColor);
 
       int bias = 0;
       int step = length / 3 / 6;
@@ -238,7 +240,7 @@ namespace SimpleDrawing.Model {
     }
 
     private void ShowPoints(int length) {
-      _shader.SetUniform3("material.ambient", _pointsColor);
+      _edgesShader.SetUniform3("Color", _pointsColor);
       GL.DrawArrays(PrimitiveType.Points, 0, length / 3);
     }
 
@@ -289,7 +291,7 @@ namespace SimpleDrawing.Model {
       for (int i = 0; i < _lights.Count; ++i) {
         OpenTK.Mathematics.Matrix4 modelLamp = _lights[i].ItsVolume.ComputeModelMatrix();
         _lampShader.SetMatrix4("model", modelLamp);
-        _lampShader.SetUniform3("aColor", _lights[i].ItsVolume.ItsMaterial.Ambient);
+        _lampShader.SetUniform3("Color", _lights[i].ItsVolume.ItsMaterial.Ambient);
         GL.BindVertexArray(_lights[i].ItsVolume.Vao);
         GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
       }

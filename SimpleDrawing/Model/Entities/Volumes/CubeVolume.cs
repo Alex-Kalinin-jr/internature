@@ -5,14 +5,22 @@ namespace SimpleDrawing.Model {
       Vao = -1;
       Texture = -1;
       ItsPosition = new Position();
-      ItsMaterial = new Material();
+      ItsMaterial = new MaterialColor();
       ItsForm = Generator.GenerateCubeForm(10);
     }
     public override void AdjustShader(ref Shader shader) {
-      shader.SetUniform3("material.ambient", ItsMaterial.Ambient);
-      shader.SetUniform3("material.diffuse", ItsMaterial.Diffuse);
-      shader.SetUniform3("material.specular", ItsMaterial.Specular);
-      shader.SetFloat("material.shiness", ItsMaterial.Shiness);
+      if (shader.UniformLocations.ContainsKey("material.ambient")) {
+        shader.SetUniform3("material.ambient", ItsMaterial.Ambient);
+      }
+      if (shader.UniformLocations.ContainsKey("material.diffuse")) {
+        shader.SetUniform3("material.diffuse", ItsMaterial.Diffuse);
+      }
+      if (shader.UniformLocations.ContainsKey("material.specular")) {
+        shader.SetUniform3("material.specular", ItsMaterial.Specular);
+      }
+      if (shader.UniformLocations.ContainsKey("material.shiness")) {
+        shader.SetFloat("material.shiness", ItsMaterial.Shiness);
+      }
 
       var modelMatrix = ComputeModelMatrix();
       shader.SetMatrix4("model", modelMatrix);

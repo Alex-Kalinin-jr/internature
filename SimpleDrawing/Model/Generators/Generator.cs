@@ -1,4 +1,5 @@
-﻿
+﻿using OpenTK.Mathematics;
+
 namespace SimpleDrawing.Model {
   public class Generator {
     public static Form GenerateCubeForm(int count) {
@@ -69,8 +70,8 @@ namespace SimpleDrawing.Model {
         for (float j = -range / 2; j < range / 2; j += step) {
           Cube buff = new Cube(10);
           int a = count % materials.Length;
-          buff.ItsMaterial = Material.CreateMaterial(materials[a]);
-          buff.ItsPosition.PosVr += new OpenTK.Mathematics.Vector3(i, 1.0f, j);
+          buff.ItsMaterial = MaterialColor.CreateMaterial(materials[a]);
+          buff.ItsPosition.PosVr += new Vector3(i, 1.0f, j);
           volumes.Add(buff);
           ++count;
         }
@@ -81,13 +82,14 @@ namespace SimpleDrawing.Model {
       var lights = new List<Light>();
 
       var dirLight = new DirectionalLight();
-      dirLight.Direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
-      dirLight.ItsVolume.ItsPosition.PosVr = new OpenTK.Mathematics.Vector3(0.0f, -3.0f, 1.0f);
-      dirLight.ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+      DirectionalLightColor color = (DirectionalLightColor)dirLight.ItsColor;
+      color.Direction = new Vector3(0.0f, 1.0f, 0.0f);
+      dirLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
+      dirLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
 
       var pointLight = new PointLight();
-      pointLight.ItsVolume.ItsPosition.PosVr = new OpenTK.Mathematics.Vector3(0.0f, -1.5f, -1.0f);
-      pointLight.ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+      pointLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, -1.5f, -1.0f);
+      pointLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
 
       lights.Add(dirLight);
       lights.Add(pointLight);
@@ -103,9 +105,10 @@ namespace SimpleDrawing.Model {
       for (float i = -range / 2; i < range / 2; i += step) {
         for (float j = -range / 2; j < range / 2; j += step) {
           var flashLight = new FlashLight();
-          flashLight.ItsVolume.ItsPosition.PosVr = new OpenTK.Mathematics.Vector3(i, -2.5f, j);
-          flashLight.Direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
-          flashLight.ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+          flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(i, -2.5f, j);
+          DirectionalLightColor color = (DirectionalLightColor)flashLight.ItsColor;
+          color.Direction = new Vector3(0.0f, 1.0f, 0.0f);
+          flashLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
           lights.Add(flashLight);
 
         }
@@ -117,10 +120,10 @@ namespace SimpleDrawing.Model {
     private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
 
       for (int i = 0; i < vertices.Length; i += 9) {
-        OpenTK.Mathematics.Vector3 v1 = new OpenTK.Mathematics.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]);
+        OpenTK.Mathematics.Vector3 v1 = new Vector3(vertices[i], vertices[i + 1], vertices[i + 2]);
 
-        OpenTK.Mathematics.Vector3 v2 = new OpenTK.Mathematics.Vector3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
-        OpenTK.Mathematics.Vector3 v3 = new OpenTK.Mathematics.Vector3(vertices[i + 6], vertices[i + 7], vertices[i + 8]);
+        OpenTK.Mathematics.Vector3 v2 = new Vector3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
+        OpenTK.Mathematics.Vector3 v3 = new Vector3(vertices[i + 6], vertices[i + 7], vertices[i + 8]);
         OpenTK.Mathematics.Vector3 edge1 = v2 - v1;
         OpenTK.Mathematics.Vector3 edge2 = v3 - v1;
         OpenTK.Mathematics.Vector3 triangleNormal = OpenTK.Mathematics.Vector3.Cross(edge1, edge2);
