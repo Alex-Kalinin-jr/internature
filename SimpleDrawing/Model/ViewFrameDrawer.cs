@@ -185,39 +185,125 @@ namespace SimpleDrawing.Model {
     public void ChangeCameraYaw(float val) {
       _camera.Yaw += val;
     }
+
     public void ChangeDirLightDirection(Vector3 val) {
       for (int i = 0; i < _directionalLights.Count; ++i) {
         ((DirectionalLightColor)_directionalLights[i].ItsColor).Direction = val;
       }
     }
+
     public void ChangeDirLightColor(Vector3 val) {
       for (int i = 0; i < _directionalLights.Count; ++i) {
         ((DirectionalLightColor)_directionalLights[i].ItsColor).Ambient = val;
       }
     }
+
     public void ChangeDirLightDiffuse(Vector3 val) {
       for (int i = 0; i < _directionalLights.Count; ++i) {
         ((DirectionalLightColor)_directionalLights[i].ItsColor).Diffuse = val;
       }
     }
+
     public void ChangeDirLightSpecular(Vector3 val) {
       for (int i = 0; i < _directionalLights.Count; ++i) {
         ((DirectionalLightColor)_directionalLights[i].ItsColor).Specular = val;
       }
     }
 
-    /*
-
-    public void ChangePointLight(PointLight val) {
-      val.ItsVolume.Vao = _lights[1].ItsVolume.Vao;
-      _lights[1] = val;
+    public void ChangePointLightColor(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((PointLightColor)_pointLights[i].ItsColor).Ambient = val;
+      }
     }
 
-    public void ChangeFlashLight(FlashLight val) {
-      val.ItsVolume.Vao = _lights[2].ItsVolume.Vao;
-      _lights[2] = val;
+    public void ChangePointLightDiffuse(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((PointLightColor)_pointLights[i].ItsColor).Diffuse = val;
+      }
     }
-    */
+
+    public void ChangePointLightSpecular(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((PointLightColor)_pointLights[i].ItsColor).Specular = val;
+      }
+    }
+
+    public void ChangePointLightConstant(float val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((PointLightColor)_pointLights[i].ItsColor).Constant = val;
+      }
+    }
+
+    public void ChangePointLightLinear(float val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((PointLightColor)_pointLights[i].ItsColor).Linear = val;
+      }
+    }
+
+    public void ChangePointLightQuadratic(float val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((PointLightColor)_pointLights[i].ItsColor).Quadratic = val;
+      }
+    }
+
+    public void ChangeFlashLightPosition(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        _pointLights[i].ItsVolume.ItsPosition.PosVr = val;
+      }
+    }
+    public void ChangeFlashLightDirection(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Direction = val;
+      }
+    }
+
+    public void ChangeFlashLightColor(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Ambient = val;
+      }
+    }
+
+
+    public void ChangeFlashLightDiffuse(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Diffuse = val;
+      }
+    }
+
+    public void ChangeFlashLightSpecular(Vector3 val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Specular = val;
+      }
+    }
+
+    public void ChangeFlashLightCutOff(float val) {
+
+    }
+
+    public void ChangeFlashLightOuterCutOff(float val) {
+
+    }
+
+    public void ChangeFlashLightConstant(float val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Constant = val;
+      }
+    }
+
+    public void ChangeFlashLightLinear(float val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Linear = val;
+      }
+    }
+
+    public void ChangeFlashLightQuadratic(float val) {
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        ((FlashLightColor)_pointLights[i].ItsColor).Quadratic = val;
+      }
+    }
+
+
+
     //  //////////////////////////////////////////////////////////////////////////////////////
     public void ReplaceVolumes(int countOfSide, float step) {
       _volumes.Clear();

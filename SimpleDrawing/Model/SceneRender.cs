@@ -147,11 +147,24 @@ namespace SimpleDrawing.Model {
     public void ChangeDirLightDiffuse(Vector3 dir) { _drawer.ChangeDirLightDiffuse(dir); }
     public void ChangeDirLightSpecular(Vector3 dir) { _drawer.ChangeDirLightSpecular(dir); }
 
-    /*
-    public void ChangePointLight(PointLight light) { _drawer.ChangePointLight(light); }
 
-    public void ChangeFlashLight(FlashLight light) { _drawer.ChangeFlashLight(light); }
-    */
+    public void ChangePointLightColor(Vector3 dir) { _drawer.ChangePointLightColor(dir); }
+    public void ChangePointLightDiffuse(Vector3 dir) { _drawer.ChangePointLightDiffuse(dir); }
+    public void ChangePointLightSpecular(Vector3 dir) { _drawer.ChangePointLightSpecular(dir); }
+    public void ChangePointLightConstant(float dir) { _drawer.ChangePointLightConstant(dir); }
+    public void ChangePointLightLinear(float dir) { _drawer.ChangePointLightLinear(dir); }
+    public void ChangePointLightQuadratic(float dir) { _drawer.ChangePointLightQuadratic(dir); }
+    
+    public void ChangeFlashLightPosition(Vector3 pos) { _drawer.ChangeFlashLightPosition(pos); }
+    public void ChangeFlashLightColor(Vector3 dir) { _drawer.ChangeFlashLightColor(dir); }
+    public void ChangeFlashLightDirection(Vector3 val) {  _drawer.ChangeFlashLightDirection(val); }
+    public void ChangeFlashLightDiffuse(Vector3 val) { _drawer.ChangeFlashLightDiffuse(val); }
+    public void ChangeFlashLightSpecular(Vector3 val) { _drawer.ChangeFlashLightSpecular(val); }
+    public void ChangeFlashLightCutOff(float val) { _drawer.ChangeFlashLightCutOff(val); }
+    public void ChangeFlashLightOuterCutOff(float val) { _drawer.ChangeFlashLightOuterCutOff(val); }
+    public void ChangeFlashLightConstant(float val) { _drawer.ChangeFlashLightConstant(val); }
+    public void ChangeFlashLightLinear(float val) { _drawer.ChangeFlashLightLinear(val); }
+    public void ChangeFlashLightQuadratic(float val) { _drawer.ChangeFlashLightQuadratic(val); }
 
     public void SetTime(string time) {
       _drawer.SetTime(time);
