@@ -1,4 +1,6 @@
 ﻿
+using SimpleDrawing.Model.Entities.ShaderAdjusters;
+
 namespace SimpleDrawing.Model {
   public class DirectionalLight : Light {
 
@@ -8,12 +10,7 @@ namespace SimpleDrawing.Model {
     }
 
     public override void AdjustShader(ref Shader shader, int i) {
-      if (ItsColor is DirectionalLightColor dL) {
-        shader.SetUniform3($"dirlights[{i}].direction", dL.Direction);
-      }
-      shader.SetUniform3($"dirlights[{i}].color", ItsColor.Ambient);
-      shader.SetUniform3($"dirlights[{i}].diffuse", ItsColor.Diffuse);
-      shader.SetUniform3($"dirlights[{i}].specular", ItsColor.Specular);
+        ColorAdjuster.AdjustShader((DirectionalLightColor)ItsColor, ref shader, i);
     }
 
   }

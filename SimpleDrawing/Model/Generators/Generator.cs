@@ -78,25 +78,24 @@ namespace SimpleDrawing.Model {
       }
       return volumes;
     }
-    public static List<Light> GenerateLights(int sideCount, float step) {
-      var lights = new List<Light>();
+    public static (List<Light>, List<Light>, List<Light>) GenerateLights(int sideCount, float step) {
+      var dirLights = new List<Light>();
+      var pointLights = new List<Light>();
+      var flashLights = new List<Light>();
+
 
       var dirLight = new DirectionalLight();
-      DirectionalLightColor color = (DirectionalLightColor)dirLight.ItsColor;
-      color.Direction = new Vector3(0.0f, 1.0f, 0.0f);
+      ((DirectionalLightColor)dirLight.ItsColor).Direction = new Vector3(0.0f, 1.0f, 0.0f);
       dirLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
-      dirLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+      dirLights.Add(dirLight);
 
       var pointLight = new PointLight();
       pointLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, -1.5f, -1.0f);
-      pointLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
+      pointLights.Add(pointLight);
 
-      lights.Add(dirLight);
-      lights.Add(pointLight);
+      flashLights.AddRange(GenerateFlashLights(sideCount, step));
 
-      lights.AddRange(GenerateFlashLights(sideCount, step));
-
-      return lights;
+      return (dirLights, pointLights, flashLights);
     }
     public static List<Light> GenerateFlashLights(int sideCount, float step) {
       var lights = new List<Light>();

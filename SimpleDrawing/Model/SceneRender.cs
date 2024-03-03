@@ -141,13 +141,13 @@ namespace SimpleDrawing.Model {
     public void ChangeCameraPitch(float val) { _drawer.ChangeCameraPitch(val); }
 
     public void ChangeCameraYaw(float val) { _drawer.ChangeCameraYaw(val); }
-
+    /*
     public void ChangeDirectionalLight(DirectionalLight light) { _drawer.ChangeDirLight(light); }
 
     public void ChangePointLight(PointLight light) { _drawer.ChangePointLight(light); }
 
     public void ChangeFlashLight(FlashLight light) { _drawer.ChangeFlashLight(light); }
-
+    */
     public void SetTime(string time) {
       _drawer.SetTime(time);
     }

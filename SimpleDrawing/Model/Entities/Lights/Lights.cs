@@ -10,7 +10,7 @@ namespace SimpleDrawing.Model {
     public Light() {
       ItsVolume = new Cube(4);
       ItsColor = new Color();
-      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.2f, 0.2f, 0.2f);
+      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
     }
 
     public virtual void AdjustShader(ref Shader shader, int i) { }

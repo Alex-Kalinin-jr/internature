@@ -119,7 +119,7 @@ public class Window : GameWindow {
     CreateShowingTypeButtons();
     CreateColorPalette();
     // CreatePointLightPalette();
-    CreateFlasLightPalette();
+    // CreateFlasLightPalette();
     // CreateDirLightPalette();
     CreateVolumesChanger();
     CreateMoveVolumeCheckboxes();
@@ -271,14 +271,15 @@ if (ImGui.SliderInt("Count", ref _cubesCount, 1, 100) ||
 ImGui.End();
 }
 
+/*
 private void CreateFlasLightPalette() {
 ImGui.Begin("flash light");
 
 if (ImGui.SliderFloat3("position", ref _flashPos, -6.0f, 6.0f)) {
+
   _flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(_flashPos.X, _flashPos.Y, _flashPos.Z);
   _scene.ChangeFlashLight(_flashLight);
 }
-/*
 if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f) ||
     ImGui.SliderFloat3("color", ref _flashLight.Color, 0.0f, 1.0f) ||
     ImGui.SliderFloat3("diffuse", ref _flashLight.Diffuse, 0.0f, 1.0f) ||
@@ -290,8 +291,8 @@ if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f) ||
   _scene.ChangeFlashLight(_flashLight);
 }
 ImGui.End();
- */
 }
+ */
 
 
 private void CreateColorPalette() {

@@ -13,7 +13,10 @@ namespace SimpleDrawing.Model {
     private Camera _camera;
     private Letters _letters;
     private List<Volume> _volumes;
+
     private List<Light> _lights;
+    private List<Light> _pointLights;
+    private List<Light> _directionalLights;
 
     private Shader _shader;
     private Shader _lampShader;
@@ -57,6 +60,8 @@ namespace SimpleDrawing.Model {
       _pointsColor = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 0.0f);
       _volumes = new List<Volume>();
       _lights = new List<Light>();
+      _pointLights = new List<Light>();
+      _directionalLights = new List<Light>();
       _letters = new Letters(0.05f, 0.1f);
 
       _circleShiftingMover = new CircleShiftingMover(1000);
@@ -72,7 +77,7 @@ namespace SimpleDrawing.Model {
     public void OnLoad() {
 
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
-      _lights.AddRange(Generator.GenerateLights(3, 2.0f));
+      (_directionalLights, _pointLights, _lights ) = Generator.GenerateLights(3, 2.0f);
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
@@ -98,7 +103,9 @@ namespace SimpleDrawing.Model {
       MoveLights();
 
       ShowVolumes();
-      ShowLamps();
+      ShowLamps(_lights);
+      ShowLamps(_directionalLights);
+      ShowLamps(_pointLights);
 
       _letters.DrawFps(ref _lettersShader, "FPS" + _renderTime);
 
@@ -186,7 +193,7 @@ namespace SimpleDrawing.Model {
     public void ChangeCameraYaw(float val) {
       _camera.Yaw += val;
     }
-
+    /*
     public void ChangeDirLight(DirectionalLight val) {
       val.ItsVolume.Vao = _lights[0].ItsVolume.Vao;
       _lights[0] = val;
@@ -201,6 +208,7 @@ namespace SimpleDrawing.Model {
       val.ItsVolume.Vao = _lights[2].ItsVolume.Vao;
       _lights[2] = val;
     }
+    */
     //  //////////////////////////////////////////////////////////////////////////////////////
     public void ReplaceVolumes(int countOfSide, float step) {
       _volumes.Clear();
@@ -253,7 +261,7 @@ namespace SimpleDrawing.Model {
     }
 
     private void MoveLights() {
-      for (int i = 2; i < _lights.Count; ++i) {
+      for (int i = 0; i < _lights.Count; ++i) {
         var light = _lights[i].ItsVolume.ItsPosition;
         _moveFlashLight?.Invoke(ref light);
         _lights[i].ItsVolume.ItsPosition = light;
@@ -283,19 +291,24 @@ namespace SimpleDrawing.Model {
       }
     }
 
-    private void ShowLamps() {
+    private void ShowLamps(List<Light> lights) {
 
       _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
       _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       for (int i = 0; i < _lights.Count; ++i) {
-        OpenTK.Mathematics.Matrix4 modelLamp = _lights[i].ItsVolume.ComputeModelMatrix();
+        OpenTK.Mathematics.Matrix4 modelLamp = lights[i].ItsVolume.ComputeModelMatrix();
         _lampShader.SetMatrix4("model", modelLamp);
-        _lampShader.SetUniform3("Color", _lights[i].ItsVolume.ItsMaterial.Ambient);
-        GL.BindVertexArray(_lights[i].ItsVolume.Vao);
-        GL.DrawArrays(PrimitiveType.Triangles, 0, _lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
+        _lampShader.SetUniform3("Color", lights[i].ItsVolume.ItsMaterial.Ambient);
+        GL.BindVertexArray(lights[i].ItsVolume.Vao);
+        GL.DrawArrays(PrimitiveType.Triangles, 0, lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
       }
     }
+
+
+
+
+
 
     private void CreateAndBindVolumesBuffers() {
       for (int i = 0; i<_volumes.Count; ++i) {
