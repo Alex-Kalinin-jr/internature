@@ -4,12 +4,22 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using SimpleDrawing.Model;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace SimpleDrawing;
 
 public class Window : GameWindow {
+
+  public struct TmpDirLight {
+    public System.Numerics.Vector3 Direction;
+    public System.Numerics.Vector3 Color;
+    public System.Numerics.Vector3 Diffuse;
+    public System.Numerics.Vector3 Specular;
+  };
+  private TmpDirLight _directionalLight;
+
 
   private bool _areFacesDrawn;
   private bool _areEdgesDrawn;
@@ -29,9 +39,7 @@ public class Window : GameWindow {
   private System.Numerics.Vector3 _edgesColor;
   private System.Numerics.Vector3 _pointsColor;
 
-  private Model.DirectionalLight _directionalLight;
-  private Model.PointLight _pointLight;
-  private Model.FlashLight _flashLight;
+  
   private System.Numerics.Vector3 _flashPos;
 
   private static DebugProc _debugProcCallback = DebugCallback;
@@ -41,10 +49,16 @@ public class Window : GameWindow {
   ImGuiController _controller;
   Model.SceneRender _scene;
 
+  Vector3 ConvertVector(System.Numerics.Vector3 v) {
+    return new Vector3(v.X, v.Y, v.Z);
+  }
 
   public Window() : base(GameWindowSettings.Default, new NativeWindowSettings() {
     Size = new Vector2i(1024, 768), APIVersion = new Version(3, 3)
   }) {
+
+    _directionalLight = new TmpDirLight();
+
     _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
     _scene = new Model.SceneRender(this);
 
@@ -59,7 +73,6 @@ public class Window : GameWindow {
     _edgesColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     _pointsColor = new System.Numerics.Vector3(0.0f, 0.0f, 0.0f);
     /*
-    _directionalLight = new Model.DirectionalLight();
     _pointLight = new Model.PointLight();
     _flashLight = new Model.FlashLight();
     _flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, 0.5f, 6.0f);
@@ -120,7 +133,7 @@ public class Window : GameWindow {
     CreateColorPalette();
     // CreatePointLightPalette();
     // CreateFlasLightPalette();
-    // CreateDirLightPalette();
+    CreateDirLightPalette();
     CreateVolumesChanger();
     CreateMoveVolumeCheckboxes();
 
@@ -236,17 +249,23 @@ public class Window : GameWindow {
 
   }
 
-  /*
   private void CreateDirLightPalette() {
     ImGui.Begin("directional light");
-    if (ImGui.SliderFloat3("direction", ref _directionalLight.Direction, -1.0f, 1.0f) ||
-        ImGui.SliderFloat3("color", ref _directionalLight.Color, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("diffuse", ref _directionalLight.Diffuse, 0.0f, 1.0f) ||
-        ImGui.SliderFloat3("specular", ref _directionalLight.Specular, 0.0f, 1.0f)) {
-      _scene.ChangeDirectionalLight(_directionalLight);
+    if (ImGui.SliderFloat3("direction", ref _directionalLight.Direction, -1.0f, 1.0f)) {
+      _scene.ChangeDirLightDirection(ConvertVector(_directionalLight.Direction));
+    }
+    if (ImGui.SliderFloat3("color", ref _directionalLight.Color, 0.0f, 1.0f)) {
+      _scene.ChangeDirLightColor(ConvertVector(_directionalLight.Color));
+    }
+    if (ImGui.SliderFloat3("diffuse", ref _directionalLight.Diffuse, 0.0f, 1.0f)) {
+      _scene.ChangeDirLightDiffuse(ConvertVector(_directionalLight.Diffuse));
+    }
+    if (ImGui.SliderFloat3("specular", ref _directionalLight.Specular, 0.0f, 1.0f)) {
+      _scene.ChangeDirLightSpecular(ConvertVector(_directionalLight.Specular));
     }
     ImGui.End();
   }
+  /*
 private void CreatePointLightPalette() {
 ImGui.Begin("point light");
 if (ImGui.SliderFloat3("color", ref _pointLight.Color, 0.0f, 1.0f) ||

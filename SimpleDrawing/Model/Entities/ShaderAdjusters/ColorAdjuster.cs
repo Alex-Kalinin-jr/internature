@@ -15,16 +15,16 @@ namespace SimpleDrawing.Model {
     }
 
     private static void AdjustDirLight(ref DirectionalLightColor dL, ref Shader shader, int i) {
-      if (shader.UniformLocations.ContainsKey("dirlights[{i}].direction")) {
+      if (shader.UniformLocations.ContainsKey($"dirlights[{i}].direction")) {
         shader.SetUniform3($"dirlights[{i}].direction", dL.Direction);
       }
-      if (shader.UniformLocations.ContainsKey("dirlights[{i}].color")) {
+      if (shader.UniformLocations.ContainsKey($"dirlights[{i}].color")) {
         shader.SetUniform3($"dirlights[{i}].color", dL.Ambient);
       }
-      if (shader.UniformLocations.ContainsKey("dirlights[{i}].diffuse")) {
+      if (shader.UniformLocations.ContainsKey($"dirlights[{i}].diffuse")) {
         shader.SetUniform3($"dirlights[{i}].diffuse", dL.Diffuse);
       }
-      if (shader.UniformLocations.ContainsKey("dirlights[{i}].specular")) {
+      if (shader.UniformLocations.ContainsKey($"dirlights[{i}].specular")) {
         shader.SetUniform3($"dirlights[{i}].specular", dL.Specular);
       }
     }

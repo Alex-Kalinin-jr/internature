@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace SimpleDrawing.Model {
   public delegate void Show(int length);
@@ -37,12 +38,8 @@ namespace SimpleDrawing.Model {
     RotaterMover _rotateaterMover;
     UpDownMover _upDownMover;
 
+//  //////////////////////////////////////////////////////////////////////////////////////
 
-    //  //////////////////////////////////////////////////////////////////////////////////////
-
-
-
-    //  //////////////////////////////////////////////////////////////////////////////////////
     public SceneDrawer() {
       _width = 1024;
       _height = 768;
@@ -67,11 +64,8 @@ namespace SimpleDrawing.Model {
       _upDownMover = new UpDownMover();
       
     }
-    //  //////////////////////////////////////////////////////////////////////////////////////
 
 
-
-    //  //////////////////////////////////////////////////////////////////////////////////////
     public void OnLoad() {
 
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
@@ -191,11 +185,28 @@ namespace SimpleDrawing.Model {
     public void ChangeCameraYaw(float val) {
       _camera.Yaw += val;
     }
-    /*
-    public void ChangeDirLight(DirectionalLight val) {
-      val.ItsVolume.Vao = _lights[0].ItsVolume.Vao;
-      _lights[0] = val;
+    public void ChangeDirLightDirection(Vector3 val) {
+      for (int i = 0; i < _directionalLights.Count; ++i) {
+        ((DirectionalLightColor)_directionalLights[i].ItsColor).Direction = val;
+      }
     }
+    public void ChangeDirLightColor(Vector3 val) {
+      for (int i = 0; i < _directionalLights.Count; ++i) {
+        ((DirectionalLightColor)_directionalLights[i].ItsColor).Ambient = val;
+      }
+    }
+    public void ChangeDirLightDiffuse(Vector3 val) {
+      for (int i = 0; i < _directionalLights.Count; ++i) {
+        ((DirectionalLightColor)_directionalLights[i].ItsColor).Diffuse = val;
+      }
+    }
+    public void ChangeDirLightSpecular(Vector3 val) {
+      for (int i = 0; i < _directionalLights.Count; ++i) {
+        ((DirectionalLightColor)_directionalLights[i].ItsColor).Specular = val;
+      }
+    }
+
+    /*
 
     public void ChangePointLight(PointLight val) {
       val.ItsVolume.Vao = _lights[1].ItsVolume.Vao;

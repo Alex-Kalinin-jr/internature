@@ -16,16 +16,11 @@ namespace SimpleDrawing.Model {
       }
     }
 
-
-
     public static void AdjustShader(ref Shader shader, float val, int flag) {
       if (flag == 0 && shader.UniformLocations.ContainsKey("morphingFactor")) {
         shader.SetFloat("morphingFactor", val);
       }
     }
-
-
-
 
     public static void AdjustShader(ref Matrix4 modelMatrix, ref Shader shader, int flag) {
       if (flag == 0 && shader.UniformLocations.ContainsKey("model")) {

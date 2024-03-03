@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace SimpleDrawing.Model {
 
@@ -141,13 +142,17 @@ namespace SimpleDrawing.Model {
     public void ChangeCameraPitch(float val) { _drawer.ChangeCameraPitch(val); }
 
     public void ChangeCameraYaw(float val) { _drawer.ChangeCameraYaw(val); }
-    /*
-    public void ChangeDirectionalLight(DirectionalLight light) { _drawer.ChangeDirLight(light); }
+    public void ChangeDirLightDirection(Vector3 dir) { _drawer.ChangeDirLightDirection(dir); }
+    public void ChangeDirLightColor(Vector3 dir) { _drawer.ChangeDirLightColor(dir); }
+    public void ChangeDirLightDiffuse(Vector3 dir) { _drawer.ChangeDirLightDiffuse(dir); }
+    public void ChangeDirLightSpecular(Vector3 dir) { _drawer.ChangeDirLightSpecular(dir); }
 
+    /*
     public void ChangePointLight(PointLight light) { _drawer.ChangePointLight(light); }
 
     public void ChangeFlashLight(FlashLight light) { _drawer.ChangeFlashLight(light); }
     */
+
     public void SetTime(string time) {
       _drawer.SetTime(time);
     }

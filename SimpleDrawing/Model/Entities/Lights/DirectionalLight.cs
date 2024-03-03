@@ -1,4 +1,4 @@
-﻿
+﻿ 
 namespace SimpleDrawing.Model {
   public class DirectionalLight : Light {
 
