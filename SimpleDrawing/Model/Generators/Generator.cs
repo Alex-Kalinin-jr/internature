@@ -106,7 +106,7 @@ namespace SimpleDrawing.Model {
           var flashLight = new FlashLight();
           flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(i, -2.5f, j);
           DirectionalLightColor color = (DirectionalLightColor)flashLight.ItsColor;
-          color.Direction = new Vector3(0.0f, 1.0f, 0.0f);
+          color.Direction = new Vector3(0.0f, -1.0f, 0.0f);
           flashLight.ItsVolume.ItsPosition.ScaleVr = new Vector3(0.1f, 0.1f, 0.1f);
           lights.Add(flashLight);
 

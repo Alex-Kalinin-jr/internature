@@ -78,6 +78,8 @@ namespace SimpleDrawing.Model {
 
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
       (_directionalLights, _pointLights, _lights ) = Generator.GenerateLights(3, 2.0f);
+      _pointLights.Clear();
+      _directionalLights.Clear();
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
@@ -277,11 +279,15 @@ namespace SimpleDrawing.Model {
       _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       for (int i = 0; i < _lights.Count; ++i) {
-        if (i < 2) {
-          _lights[i].AdjustShader(ref _shader, 0);
-        } else {
-          _lights[i].AdjustShader(ref _shader, i - 2);
-        }
+          _lights[i].AdjustShader(ref _shader, i);
+      }
+
+      for (int i = 0; i < _directionalLights.Count; ++i) {
+        _directionalLights[i].AdjustShader(ref _shader, i);
+      }
+
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        _pointLights[i].AdjustShader(ref _shader, i);
       }
 
       for (int i = 0; i < _volumes.Count; ++i) {
@@ -296,7 +302,7 @@ namespace SimpleDrawing.Model {
       _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
       _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
-      for (int i = 0; i < _lights.Count; ++i) {
+      for (int i = 0; i < lights.Count; ++i) {
         OpenTK.Mathematics.Matrix4 modelLamp = lights[i].ItsVolume.ComputeModelMatrix();
         _lampShader.SetMatrix4("model", modelLamp);
         _lampShader.SetUniform3("Color", lights[i].ItsVolume.ItsMaterial.Ambient);
@@ -304,11 +310,6 @@ namespace SimpleDrawing.Model {
         GL.DrawArrays(PrimitiveType.Triangles, 0, lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
       }
     }
-
-
-
-
-
 
     private void CreateAndBindVolumesBuffers() {
       for (int i = 0; i<_volumes.Count; ++i) {
@@ -319,6 +320,12 @@ namespace SimpleDrawing.Model {
     private void CreateAndBindLampsBuffers() {
       for (int i = 0; i < _lights.Count; ++i) {
         _lights[i].Bind(ref _lampShader);
+      }
+      for (int i = 0; i < _pointLights.Count; ++i) {
+        _pointLights[i].Bind(ref _shader);
+      }
+      for (int i = 0; i < _directionalLights.Count; ++i) {
+        _directionalLights[i].Bind(ref _lampShader);
       }
     }
 

@@ -8,11 +8,6 @@ namespace SimpleDrawing.Model {
       ItsColor = new FlashLightColor();
     }
 
-    public override void AdjustShader(ref Shader shader, int i) {
-      shader.SetUniform3($"flashLights[{i}].position", ItsVolume.ItsPosition.PosVr);
-      ColorAdjuster.AdjustShader((FlashLightColor)ItsColor, ref shader, i);
-    }
-
   }
 }
 

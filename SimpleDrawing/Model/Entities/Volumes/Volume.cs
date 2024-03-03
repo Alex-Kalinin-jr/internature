@@ -1,16 +1,17 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace SimpleDrawing.Model {
 
   public abstract class Volume : IBindable {
 
-    public MaterialColor ItsMaterial { get; set; }
+    public Color ItsMaterial;
     public Position ItsPosition { get; set; }
     public Form ItsForm {  get; set; }
     public int Vao { get; set; }
     public int Texture { get; set; }
     public abstract void AdjustShader(ref Shader shader);
-    public abstract OpenTK.Mathematics.Matrix4 ComputeModelMatrix();
+    public abstract Matrix4 ComputeModelMatrix();
 
     public void Bind(ref Shader shader) {
 

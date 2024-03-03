@@ -8,11 +8,6 @@ namespace SimpleDrawing.Model {
       ItsVolume = new Cube(4);
       ItsColor = new DirectionalLightColor();
     }
-
-    public override void AdjustShader(ref Shader shader, int i) {
-        ColorAdjuster.AdjustShader((DirectionalLightColor)ItsColor, ref shader, i);
-    }
-
   }
 }
 

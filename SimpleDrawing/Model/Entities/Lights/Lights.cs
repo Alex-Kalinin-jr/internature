@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using SimpleDrawing.Model.Entities.ShaderAdjusters;
 
 namespace SimpleDrawing.Model {
 
@@ -13,7 +14,9 @@ namespace SimpleDrawing.Model {
       ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
     }
 
-    public virtual void AdjustShader(ref Shader shader, int i) { }
+    public void AdjustShader(ref Shader shader, int i) {
+        ColorAdjuster.AdjustShader(ref ItsColor, ref shader, i);
+    }
 
     public void Bind(ref Shader shader) {
       ItsVolume.Vao = GL.GenVertexArray();

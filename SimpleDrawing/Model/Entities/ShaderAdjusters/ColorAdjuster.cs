@@ -1,17 +1,20 @@
 ﻿
-using ImGuiNET;
-
-namespace SimpleDrawing.Model.Entities.ShaderAdjusters {
+namespace SimpleDrawing.Model {
   public class ColorAdjuster {
 
-
-    public static void AdjustShader(Color color, Shader shader, int pos) {
-      if (color is Color) {
-
+    public static void AdjustShader(ref Color color, ref Shader shader, int pos) {
+      if (color is FlashLightColor fL) {
+        AdjustFlashLight(ref fL, ref shader, pos);
+      } else if (color is PointLightColor pL) {
+        AdjustPointLight(ref pL, ref shader, pos);
+      } else if (color is DirectionalLightColor dL) {
+        AdjustDirLight(ref dL, ref shader, pos);
+      } else if (color is MaterialColor mC) {
+        AdjustMaterial(ref mC, ref shader);
       }
     }
 
-    public static void AdjustShader(DirectionalLightColor dL, ref Shader shader, int i) {
+    private static void AdjustDirLight(ref DirectionalLightColor dL, ref Shader shader, int i) {
       if (shader.UniformLocations.ContainsKey("dirlights[{i}].direction")) {
         shader.SetUniform3($"dirlights[{i}].direction", dL.Direction);
       }
@@ -26,17 +29,28 @@ namespace SimpleDrawing.Model.Entities.ShaderAdjusters {
       }
     }
 
-    public static void AdjustShader(PointLightColor color, ref Shader shader, int i) {
-      shader.SetUniform3($"pointLights[{i}].color", color.Ambient);
-      shader.SetUniform3($"pointLights[{i}].diffuse", color.Diffuse);
-      shader.SetUniform3($"pointLights[{i}].specular", color.Specular);
-
-      shader.SetFloat($"pointLights[{i}].constant", color.Constant);
-      shader.SetFloat($"pointLights[{i}].linear", color.Linear);
-      shader.SetFloat($"pointLights[{i}].quadratic", color.Quadratic);
+    private static void AdjustPointLight(ref PointLightColor color, ref Shader shader, int i) {
+      if (shader.UniformLocations.ContainsKey($"pointLights[{i}].color")) {
+        shader.SetUniform3($"pointLights[{i}].color", color.Ambient);
+      }
+      if (shader.UniformLocations.ContainsKey($"pointLights[{i}].diffuse")) {
+        shader.SetUniform3($"pointLights[{i}].diffuse", color.Diffuse);
+      }
+      if (shader.UniformLocations.ContainsKey($"pointLights[{i}].specular")) {
+        shader.SetUniform3($"pointLights[{i}].specular", color.Specular);
+      }
+      if (shader.UniformLocations.ContainsKey($"pointLights[{i}].constant")) {
+        shader.SetFloat($"pointLights[{i}].constant", color.Constant);
+      }
+      if (shader.UniformLocations.ContainsKey($"pointLights[{i}].linear")) {
+        shader.SetFloat($"pointLights[{i}].linear", color.Linear);
+      }
+      if (shader.UniformLocations.ContainsKey($"pointLights[{i}].quadratic")) {
+        shader.SetFloat($"pointLights[{i}].quadratic", color.Quadratic);
+      }
     }
 
-    public static void Adjustshader(FlashLightColor color, ref Shader shader, int i) {
+    private static void AdjustFlashLight(ref FlashLightColor color, ref Shader shader, int i) {
 
       if (shader.UniformLocations.ContainsKey($"flashLights[{i}].direction")) {
         shader.SetUniform3($"flashLights[{i}].direction", color.Direction);
@@ -67,7 +81,20 @@ namespace SimpleDrawing.Model.Entities.ShaderAdjusters {
       }
     }
 
-    public static void AdjustShader(MaterialColor color, ref Shader shader, int pos) { }
+    private static void AdjustMaterial(ref MaterialColor color, ref Shader shader) {
+      if (shader.UniformLocations.ContainsKey("material.ambient")) {
+        shader.SetUniform3("material.ambient", color.Ambient);
+      }
+      if (shader.UniformLocations.ContainsKey("material.diffuse")) {
+        shader.SetUniform3("material.diffuse", color.Diffuse);
+      }
+      if (shader.UniformLocations.ContainsKey("material.specular")) {
+        shader.SetUniform3("material.specular", color.Specular);
+      }
+      if (shader.UniformLocations.ContainsKey("material.shiness")) {
+        shader.SetFloat("material.shiness", color.Shiness);
+      }
+    }
 
   }
 
