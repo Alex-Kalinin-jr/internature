@@ -5,7 +5,7 @@ namespace SimpleDrawing.Model {
 
   public abstract class Volume : IBindable {
 
-    public Color ItsMaterial;
+    public Color ItsMaterial { get; set; }
     public Position ItsPosition { get; set; }
     public Form ItsForm {  get; set; }
     public int Vao { get; set; }

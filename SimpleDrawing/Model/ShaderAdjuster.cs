@@ -5,11 +5,13 @@ namespace SimpleDrawing.Model {
   public class ShaderAdjuster {
 
     public enum mode {
+      notUsed,
       position,
       color,
       modelmatrix,
       morphingFactor
     }
+
     public static void BindBuffer(float[] vertices, ref Shader shader, int numOfComponents, string str) {
       int vertexLocation = GL.GetAttribLocation(shader.Handle, str);
       GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
@@ -34,19 +36,16 @@ namespace SimpleDrawing.Model {
       }
     }
 
-    public static void AdjustShader(ref Shader shader, float val, mode flag) {
+    public static void AdjustShader(float val, ref Shader shader, mode flag) {
       if (flag == mode.morphingFactor && shader.UniformLocations.ContainsKey("morphingFactor")) {
         shader.SetFloat("morphingFactor", val);
       }
     }
 
-    public static void AdjustShader(ref Shader shader, Vector3 val, int pos, mode flag) {
+    public static void AdjustShader(Vector3 val, ref Shader shader, int pos, mode flag) {
       if (flag == mode.position && shader.UniformLocations.ContainsKey($"flashLights[{pos}].position")) {
         shader.SetUniform3($"flashLights[{pos}].position", val);
       }
-    }
-
-    public static void AdjustShader(ref Shader shader, Vector3 val, mode flag) {
       if (flag == mode.color && shader.UniformLocations.ContainsKey("Color")) {
         shader.SetUniform3("Color", val);
       }
@@ -63,7 +62,7 @@ namespace SimpleDrawing.Model {
       }
     }
 
-    public static void AdjustShader(ref Color color, ref Shader shader, int pos) {
+    public static void AdjustShader(Color color, ref Shader shader, int pos) {
       if (color is FlashLightColor fL) {
         AdjustFlashLight(ref fL, ref shader, pos);
       } else if (color is PointLightColor pL) {

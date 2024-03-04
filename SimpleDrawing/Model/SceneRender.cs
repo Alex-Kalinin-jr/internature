@@ -119,14 +119,6 @@ namespace SimpleDrawing.Model {
       ImGui.End();
     }
 
-    public void SetEdgesColor(System.Numerics.Vector3 color) {
-      _drawer.ChangeEdgesColor(new OpenTK.Mathematics.Vector3(color.X, color.Y, color.Z));
-    }
-
-    public void SetPointsColor(System.Numerics.Vector3 color) {
-      _drawer.ChangePointsColor(new OpenTK.Mathematics.Vector3(color.X, color.Y, color.Z));
-    }
-
     public void MoveCameraFwd(float val) { _drawer.MoveCameraFwd(val); }
 
     public void MoveCameraBack(float val) { _drawer.MoveCameraBack(val); }
@@ -160,8 +152,6 @@ namespace SimpleDrawing.Model {
     public void ChangeFlashLightDirection(Vector3 val) {  _drawer.ChangeFlashLightDirection(val); }
     public void ChangeFlashLightDiffuse(Vector3 val) { _drawer.ChangeFlashLightDiffuse(val); }
     public void ChangeFlashLightSpecular(Vector3 val) { _drawer.ChangeFlashLightSpecular(val); }
-    public void ChangeFlashLightCutOff(float val) { _drawer.ChangeFlashLightCutOff(val); }
-    public void ChangeFlashLightOuterCutOff(float val) { _drawer.ChangeFlashLightOuterCutOff(val); }
     public void ChangeFlashLightConstant(float val) { _drawer.ChangeFlashLightConstant(val); }
     public void ChangeFlashLightLinear(float val) { _drawer.ChangeFlashLightLinear(val); }
     public void ChangeFlashLightQuadratic(float val) { _drawer.ChangeFlashLightQuadratic(val); }

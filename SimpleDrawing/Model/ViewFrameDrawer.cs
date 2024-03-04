@@ -31,9 +31,6 @@ namespace SimpleDrawing.Model {
     private float _interpolationKoeff;
     private bool _increase;
 
-    private OpenTK.Mathematics.Vector3 _edgesColor;
-    private OpenTK.Mathematics.Vector3 _pointsColor;
-
     CircleShiftingMover _circleShiftingMover;
     RotationMover _rotateaterMover;
     UpDownMover _upDownMover;
@@ -51,8 +48,6 @@ namespace SimpleDrawing.Model {
       _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
       _increase = true;
       _interpolationKoeff = 0.2f;
-      _edgesColor = new Vector3(0.0f, 0.0f, 0.0f);
-      _pointsColor = new Vector3(0.0f, 0.0f, 0.0f);
       _volumes = new List<Volume>();
       _lights = new List<Light>();
       _pointLights = new List<Light>();
@@ -145,14 +140,6 @@ namespace SimpleDrawing.Model {
     
     public void ChangeLightsMovings(int i, bool state) {
       ChangeMovingActions(i, state, ref _moveFlashLight);
-    }
-
-    public void ChangeEdgesColor(OpenTK.Mathematics.Vector3 color) {
-      _edgesColor = color;
-    }
-
-    public void ChangePointsColor(OpenTK.Mathematics.Vector3 color) {
-      _pointsColor = color;
     }
 
     public void MoveCameraFwd(float val) {
@@ -291,13 +278,6 @@ namespace SimpleDrawing.Model {
       }
     }
 
-    public void ChangeFlashLightCutOff(float val) {
-
-    }
-
-    public void ChangeFlashLightOuterCutOff(float val) {
-
-    }
 
     public void ChangeFlashLightConstant(float val) {
       for (int i = 0; i < _lights.Count; ++i) {
@@ -375,17 +355,15 @@ namespace SimpleDrawing.Model {
       }
     }
 
-
-
     private void ShowVolumes() {
-      ShaderAdjuster.AdjustShader(ref _shader, _interpolationKoeff, ShaderAdjuster.mode.morphingFactor);
+      ShaderAdjuster.AdjustShader(_interpolationKoeff, ref _shader, ShaderAdjuster.mode.morphingFactor);
       ShaderAdjuster.AdjustShader(ref _camera, ref _shader);
       AdjustShaderWithLights(ref _lights, ref _shader);
       AdjustShaderWithLights(ref _directionalLights, ref _shader);
       AdjustShaderWithLights(ref _pointLights, ref _shader);
 
       for (int i = 0; i < _volumes.Count; ++i) {
-        ShaderAdjuster.AdjustShader(ref _volumes[i].ItsMaterial, ref _shader, 0);
+        ShaderAdjuster.AdjustShader(_volumes[i].ItsMaterial, ref _shader, 0);
         var modelMatrix = _volumes[i].ComputeModelMatrix();
         ShaderAdjuster.AdjustShader(ref modelMatrix, ref _shader, ShaderAdjuster.mode.modelmatrix);
         GL.BindVertexArray(_volumes[i].Vao);
@@ -393,11 +371,10 @@ namespace SimpleDrawing.Model {
       }
     }
 
-
     private void AdjustShaderWithLights(ref List<Light> lights, ref Shader shader) {
       for (int i = 0; i < lights.Count; ++i) {
-        ShaderAdjuster.AdjustShader(ref lights[i].ItsColor, ref shader, i);
-        ShaderAdjuster.AdjustShader(ref _shader, lights[i].ItsVolume.ItsPosition.PosVr, i,
+        ShaderAdjuster.AdjustShader(lights[i].ItsColor, ref shader, i);
+        ShaderAdjuster.AdjustShader(lights[i].ItsVolume.ItsPosition.PosVr, ref _shader, i,
             ShaderAdjuster.mode.position);
       }
     }
@@ -408,7 +385,7 @@ namespace SimpleDrawing.Model {
       for (int i = 0; i < lights.Count; ++i) {
         Matrix4 modelLamp = lights[i].ItsVolume.ComputeModelMatrix();
         ShaderAdjuster.AdjustShader(ref modelLamp, ref _lampShader, ShaderAdjuster.mode.modelmatrix);
-        ShaderAdjuster.AdjustShader(ref _lampShader, lights[i].ItsVolume.ItsMaterial.Ambient, ShaderAdjuster.mode.color);
+        ShaderAdjuster.AdjustShader(lights[i].ItsVolume.ItsMaterial.Ambient, ref _lampShader, -1, ShaderAdjuster.mode.color);
         GL.BindVertexArray(lights[i].ItsVolume.Vao);
         GL.DrawArrays(PrimitiveType.Triangles, 0, lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
       }
