@@ -71,9 +71,6 @@ namespace SimpleDrawing.Model {
       _volumes.AddRange(Generator.GenerateVolumes(10, 2.0f));
       (_directionalLights, _pointLights, _lights ) = Generator.GenerateLights(3, 2.0f);
 
-      _pointLights.Clear();
-      _directionalLights.Clear();
-
       ChangeDrawingType(0, true);
 
       GL.Enable(EnableCap.ProgramPointSize);
@@ -381,7 +378,7 @@ namespace SimpleDrawing.Model {
 
 
     private void ShowVolumes() {
-      ShaderAdjuster.AdjustShader(ref _shader, _interpolationKoeff, 0);
+      ShaderAdjuster.AdjustShader(ref _shader, _interpolationKoeff, ShaderAdjuster.mode.morphingFactor);
       ShaderAdjuster.AdjustShader(ref _camera, ref _shader);
       AdjustShaderWithLights(ref _lights, ref _shader);
       AdjustShaderWithLights(ref _directionalLights, ref _shader);
@@ -390,7 +387,7 @@ namespace SimpleDrawing.Model {
       for (int i = 0; i < _volumes.Count; ++i) {
         ColorAdjuster.AdjustShader(ref _volumes[i].ItsMaterial, ref _shader, 0);
         var modelMatrix = _volumes[i].ComputeModelMatrix();
-        ShaderAdjuster.AdjustShader(ref modelMatrix, ref _shader, 0);
+        ShaderAdjuster.AdjustShader(ref modelMatrix, ref _shader, ShaderAdjuster.mode.modelmatrix);
         GL.BindVertexArray(_volumes[i].Vao);
         _showType(_volumes[i].ItsForm.Vertices.Length);
       }
@@ -400,19 +397,18 @@ namespace SimpleDrawing.Model {
     private void AdjustShaderWithLights(ref List<Light> lights, ref Shader shader) {
       for (int i = 0; i < lights.Count; ++i) {
         ColorAdjuster.AdjustShader(ref lights[i].ItsColor, ref shader, i);
-        ShaderAdjuster.AdjustShader(ref _shader, lights[i].ItsVolume.ItsPosition.PosVr, i, 0);
+        ShaderAdjuster.AdjustShader(ref _shader, lights[i].ItsVolume.ItsPosition.PosVr, i,
+            ShaderAdjuster.mode.position);
       }
     }
 
     private void ShowLamps(List<Light> lights) {
-
-      _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-      _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+      ShaderAdjuster.AdjustShader(ref _camera, ref _lampShader);
 
       for (int i = 0; i < lights.Count; ++i) {
         Matrix4 modelLamp = lights[i].ItsVolume.ComputeModelMatrix();
-        _lampShader.SetMatrix4("model", modelLamp);
-        _lampShader.SetUniform3("Color", lights[i].ItsVolume.ItsMaterial.Ambient);
+        ShaderAdjuster.AdjustShader(ref modelLamp, ref _lampShader, ShaderAdjuster.mode.modelmatrix);
+        ShaderAdjuster.AdjustShader(ref _lampShader, lights[i].ItsVolume.ItsMaterial.Ambient, ShaderAdjuster.mode.color);
         GL.BindVertexArray(lights[i].ItsVolume.Vao);
         GL.DrawArrays(PrimitiveType.Triangles, 0, lights[i].ItsVolume.ItsForm.Vertices.Length / 3);
       }

@@ -146,7 +146,7 @@ public class Window : GameWindow {
     _controller.StartDockspace();
     // customization
     CreateShowingTypeButtons();
-    CreateColorPalette();
+    // CreateColorPalette();
     CreatePointLightPalette();
     CreateFlasLightPalette();
     CreateDirLightPalette();
@@ -347,7 +347,7 @@ public class Window : GameWindow {
     ImGui.End();
   }
 
-
+  /*
   private void CreateColorPalette() {
     ImGui.Begin("edges");
 
@@ -362,7 +362,7 @@ public class Window : GameWindow {
     }
     ImGui.End();
   }
-
+*/
 
   protected override void OnUpdateFrame(FrameEventArgs e) {
     base.OnUpdateFrame(e);
