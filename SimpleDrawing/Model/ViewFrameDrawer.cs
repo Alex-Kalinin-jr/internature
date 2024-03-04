@@ -385,7 +385,7 @@ namespace SimpleDrawing.Model {
       AdjustShaderWithLights(ref _pointLights, ref _shader);
 
       for (int i = 0; i < _volumes.Count; ++i) {
-        ColorAdjuster.AdjustShader(ref _volumes[i].ItsMaterial, ref _shader, 0);
+        ShaderAdjuster.AdjustShader(ref _volumes[i].ItsMaterial, ref _shader, 0);
         var modelMatrix = _volumes[i].ComputeModelMatrix();
         ShaderAdjuster.AdjustShader(ref modelMatrix, ref _shader, ShaderAdjuster.mode.modelmatrix);
         GL.BindVertexArray(_volumes[i].Vao);
@@ -396,7 +396,7 @@ namespace SimpleDrawing.Model {
 
     private void AdjustShaderWithLights(ref List<Light> lights, ref Shader shader) {
       for (int i = 0; i < lights.Count; ++i) {
-        ColorAdjuster.AdjustShader(ref lights[i].ItsColor, ref shader, i);
+        ShaderAdjuster.AdjustShader(ref lights[i].ItsColor, ref shader, i);
         ShaderAdjuster.AdjustShader(ref _shader, lights[i].ItsVolume.ItsPosition.PosVr, i,
             ShaderAdjuster.mode.position);
       }
