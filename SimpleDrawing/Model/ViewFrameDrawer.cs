@@ -389,6 +389,7 @@ namespace SimpleDrawing.Model {
     private void AdjustShaderWithLights(ref List<Light> lights, ref Shader shader) {
       for (int i = 0; i < lights.Count; ++i) {
         ColorAdjuster.AdjustShader(ref lights[i].ItsColor, ref shader, i);
+        ShaderAdjuster.AdjustShader(ref _shader, lights[i].ItsVolume.ItsPosition.PosVr, i, 0);
       }
     }
 
@@ -398,7 +399,7 @@ namespace SimpleDrawing.Model {
       _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
       for (int i = 0; i < lights.Count; ++i) {
-        OpenTK.Mathematics.Matrix4 modelLamp = lights[i].ItsVolume.ComputeModelMatrix();
+        Matrix4 modelLamp = lights[i].ItsVolume.ComputeModelMatrix();
         _lampShader.SetMatrix4("model", modelLamp);
         _lampShader.SetUniform3("Color", lights[i].ItsVolume.ItsMaterial.Ambient);
         GL.BindVertexArray(lights[i].ItsVolume.Vao);

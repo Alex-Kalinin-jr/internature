@@ -51,7 +51,6 @@ namespace SimpleDrawing.Model {
     }
 
     private static void AdjustFlashLight(ref FlashLightColor color, ref Shader shader, int i) {
-
       if (shader.UniformLocations.ContainsKey($"flashLights[{i}].direction")) {
         shader.SetUniform3($"flashLights[{i}].direction", color.Direction);
       }

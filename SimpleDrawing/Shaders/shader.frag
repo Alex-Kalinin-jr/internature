@@ -56,7 +56,7 @@ struct Material {
 
 uniform float edges;
 uniform vec3 edgesColor;
-uniform vec3 viewPos;
+uniform vec3 viewPos; //
 uniform Material material;
 uniform DirLight dirlights[NR_DIRECTIONAL_LIGHTS];
 uniform FlashLight flashLights[NR_FLASHLIGHTS];

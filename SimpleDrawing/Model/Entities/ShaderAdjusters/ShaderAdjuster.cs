@@ -22,6 +22,12 @@ namespace SimpleDrawing.Model {
       }
     }
 
+    public static void AdjustShader(ref Shader shader, Vector3 val, int pos, int flag) {
+        if (flag == 0 && shader.UniformLocations.ContainsKey($"flashLights[{pos}].position")) {
+        shader.SetUniform3($"flashLights[{pos}].position", val);
+      }
+    }
+
     public static void AdjustShader(ref Matrix4 modelMatrix, ref Shader shader, int flag) {
       if (flag == 0 && shader.UniformLocations.ContainsKey("model")) {
         shader.SetMatrix4("model", modelMatrix);
