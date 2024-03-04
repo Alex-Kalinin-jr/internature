@@ -35,7 +35,7 @@ namespace SimpleDrawing.Model {
     private OpenTK.Mathematics.Vector3 _pointsColor;
 
     CircleShiftingMover _circleShiftingMover;
-    RotaterMover _rotateaterMover;
+    RotationMover _rotateaterMover;
     UpDownMover _upDownMover;
 
 //  //////////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ namespace SimpleDrawing.Model {
       _letters = new Letters(0.05f, 0.1f);
 
       _circleShiftingMover = new CircleShiftingMover(1000);
-      _rotateaterMover = new RotaterMover();
+      _rotateaterMover = new RotationMover();
       _upDownMover = new UpDownMover();
       
     }

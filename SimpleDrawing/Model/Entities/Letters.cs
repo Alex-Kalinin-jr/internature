@@ -86,8 +86,8 @@ namespace SimpleDrawing.Model {
       GL.Enable(EnableCap.Blend);
       GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-      GlBinder.BindPosBuffer(_vertices, ref shader, 2);
-      GlBinder.BindTextureBuffer(_texCoords, ref shader, 2);
+      ShaderAdjuster.BindBuffer(_vertices, ref shader, 2, "aPos");
+      ShaderAdjuster.BindBuffer(_texCoords, ref shader, 2, "aTexCoord");
     }
 
   }

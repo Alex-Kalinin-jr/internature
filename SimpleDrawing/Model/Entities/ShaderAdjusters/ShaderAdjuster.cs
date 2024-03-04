@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL4;
 
 namespace SimpleDrawing.Model {
   public class ShaderAdjuster {
@@ -8,6 +9,15 @@ namespace SimpleDrawing.Model {
       color,
       modelmatrix,
       morphingFactor
+    }
+    public static void BindBuffer(float[] vertices, ref Shader shader, int numOfComponents, string str) {
+      int vertexLocation = GL.GetAttribLocation(shader.Handle, str);
+      GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
+      GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float),
+          vertices, BufferUsageHint.StaticDraw);
+      GL.EnableVertexAttribArray(vertexLocation);
+      GL.VertexAttribPointer(vertexLocation, numOfComponents, 
+          VertexAttribPointerType.Float, false, numOfComponents * sizeof(float), 0);
     }
 
     public static void AdjustShader(ref Camera camera, ref Shader shader) {

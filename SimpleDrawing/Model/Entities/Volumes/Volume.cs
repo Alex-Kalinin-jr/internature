@@ -19,11 +19,11 @@ namespace SimpleDrawing.Model {
       GL.BindVertexArray(Vao);
 
       if (ItsForm.Vertices != null) {
-        GlBinder.BindPosBuffer(ItsForm.Vertices, ref shader, 3);
+        ShaderAdjuster.BindBuffer(ItsForm.Vertices, ref shader, 3, "aPos");
       }
 
       if (ItsForm.Normals != null) {
-        GlBinder.BindNormalBuffer(ItsForm.Normals, ref shader);
+        ShaderAdjuster.BindBuffer(ItsForm.Normals, ref shader, 3, "aNormal");
       }
     }
 
