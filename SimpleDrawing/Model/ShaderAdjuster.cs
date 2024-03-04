@@ -154,9 +154,5 @@ namespace SimpleDrawing.Model {
         shader.SetFloat("material.shiness", color.Shiness);
       }
     }
-
-
-
-
   }
 }

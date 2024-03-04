@@ -234,25 +234,6 @@ namespace SimpleDrawing.Model {
       }
     }
 
-
-
-
-    public void ChangeFlashLightPosition(Vector3 val) {
-      for (int i = 0; i < _lights.Count; ++i) {
-        Vector3 buff = _lights[i].ItsVolume.ItsPosition.PosVr;
-        if (buff.X != val.X) {
-          buff.X += (val.X - buff.X);
-        }
-        if (buff.Y != val.Y) {
-          buff.Y += (val.Y - buff.Y);
-        }
-        if (buff.Z != val.Z) {
-          buff.Z += (val.Z - buff.Z);
-        }
-        _lights[i].ItsVolume.ItsPosition.PosVr = buff;
-      }
-    }
-
     public void ChangeFlashLightDirection(Vector3 val) {
       for (int i = 0; i < _lights.Count; ++i) {
         ((FlashLightColor)_lights[i].ItsColor).Direction = val;
