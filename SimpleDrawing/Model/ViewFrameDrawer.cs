@@ -48,11 +48,11 @@ namespace SimpleDrawing.Model {
       _lampShader = new Shader("Shaders/lightShader.vert", "Shaders/lightShader.frag");
       _lettersShader = new Shader("Shaders/LetterShader.vert", "Shaders/LetterShader.frag");
 
-      _camera = new Camera(OpenTK.Mathematics.Vector3.UnitZ * 3, _width / _height);
+      _camera = new Camera(Vector3.UnitZ * 3, _width / _height);
       _increase = true;
       _interpolationKoeff = 0.2f;
-      _edgesColor = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 0.0f);
-      _pointsColor = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 0.0f);
+      _edgesColor = new Vector3(0.0f, 0.0f, 0.0f);
+      _pointsColor = new Vector3(0.0f, 0.0f, 0.0f);
       _volumes = new List<Volume>();
       _lights = new List<Light>();
       _pointLights = new List<Light>();
@@ -255,9 +255,20 @@ namespace SimpleDrawing.Model {
 
     public void ChangeFlashLightPosition(Vector3 val) {
       for (int i = 0; i < _lights.Count; ++i) {
-        _lights[i].ItsVolume.ItsPosition.PosVr = val;
+        Vector3 buff = _lights[i].ItsVolume.ItsPosition.PosVr;
+        if (buff.X != val.X) {
+          buff.X += (val.X - buff.X);
+        }
+        if (buff.Y != val.Y) {
+          buff.Y += (val.Y - buff.Y);
+        }
+        if (buff.Z != val.Z) {
+          buff.Z += (val.Z - buff.Z);
+        }
+        _lights[i].ItsVolume.ItsPosition.PosVr = buff;
       }
     }
+
     public void ChangeFlashLightDirection(Vector3 val) {
       for (int i = 0; i < _lights.Count; ++i) {
         ((FlashLightColor)_lights[i].ItsColor).Direction = val;

@@ -318,9 +318,11 @@ public class Window : GameWindow {
 
   private void CreateFlasLightPalette() {
     ImGui.Begin("flash light");
+    /*
     if (ImGui.SliderFloat3("position", ref _flashLight.Position, -6.0f, 6.0f)) {
       _scene.ChangeFlashLightPosition(ConvertVector(_flashLight.Position));
     }
+    */
     if (ImGui.SliderFloat3("direction", ref _flashLight.Direction, -1.0f, 1.0f)) {
       _scene.ChangeFlashLightDirection(ConvertVector(_flashLight.Direction));
     }
