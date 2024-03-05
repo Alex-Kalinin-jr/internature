@@ -2,6 +2,7 @@
 
 namespace SimpleDrawing.Model {
   public class Generator {
+
     public static Form GenerateCubeForm(int count) {
       Form form = new Form();
 
@@ -23,6 +24,7 @@ namespace SimpleDrawing.Model {
 
       return form;
     }
+
     public static Form GenerateCubeForm() {
       float[] vertices = {
         -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f,
@@ -68,7 +70,7 @@ namespace SimpleDrawing.Model {
       int count = 0;
       for (float i = -range / 2; i < range / 2; i += step) {
         for (float j = -range / 2; j < range / 2; j += step) {
-          Cube buff = new Cube(10);
+          Cube buff = new Cube(3);
           int a = count % materials.Length;
           buff.ItsMaterial = MaterialColor.CreateMaterial(materials[a]);
           buff.ItsPosition.PosVr += new Vector3(i, 1.0f, j);
@@ -78,6 +80,7 @@ namespace SimpleDrawing.Model {
       }
       return volumes;
     }
+
     public static (List<Light>, List<Light>, List<Light>) GenerateLights(int sideCount, float step) {
       var dirLights = new List<Light>();
       var pointLights = new List<Light>();
