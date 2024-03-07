@@ -11,10 +11,11 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using Vector3 = SharpDX.Vector3;
+using SharpDX.D3DCompiler;
 
 public class MyForm : IDisposable {
-  private const int Width = 300;
-  private const int Height = 200;
+  private const int Width = 800;
+  private const int Height = 600;
 
   private RenderForm _renderForm;
   private Button _button;
@@ -24,6 +25,9 @@ public class MyForm : IDisposable {
   private SwapChain _swapChain;
   private DeviceContext _context3D;
   private RenderTargetView _renderTargetView;
+
+  private VertexShader _vertexShader;
+  private PixelShader _pixelShader;
 
 
   // test
@@ -47,6 +51,7 @@ public class MyForm : IDisposable {
 
 
     InitializeDeviceResources();
+    InitializeShaders();
   }
 
 
@@ -70,12 +75,26 @@ public class MyForm : IDisposable {
       _renderTargetView = new RenderTargetView(_device3D, resource);
     }
 
-    Viewport port = new Viewport(0, 0, Width, Height);
-    _context3D.Rasterizer.SetViewport(port);
-
-
+    // Viewport port = new Viewport(0, 0, Width, Height);
+    // _context3D.Rasterizer.SetViewport(port);
+    _context3D.Rasterizer.SetViewport(0, 0, Width, Height);
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private void InitializeShaders() {
+
+    using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile("shaders.shader", "VShader", "vs_4_0", ShaderFlags.None, EffectFlags.None)) {
+      _vertexShader = new VertexShader(_device3D, vertexShaderByteCode);
+    }
+
+    using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile("shaders.shader", "PShader", "ps_4_0", ShaderFlags.None, EffectFlags.None))
+      _pixelShader = new PixelShader(_device3D, pixelShaderByteCode);
+
+    _context3D.VertexShader.Set(_vertexShader);
+    _context3D.PixelShader.Set(_pixelShader);
+
+  }
+
 
 
   public void Run() {
@@ -94,7 +113,6 @@ public class MyForm : IDisposable {
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
   private void RenderCallback() {
     _context3D.ClearRenderTargetView(_renderTargetView, _background);
-    _context3D.Rasterizer.SetViewport(0, 0, Width, Height);
 
     // my code
 
@@ -103,7 +121,12 @@ public class MyForm : IDisposable {
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
   public void Dispose() {
-
+    _context3D.ClearState();
+    _context3D.Flush();
+    _context3D.Dispose();
+    _device3D.Dispose();
+    _swapChain.Dispose();
+    _renderForm.Dispose();
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -167,37 +190,6 @@ class MyRenderForm : IDisposable {
     InitializeBuffers();
 
 
-  }
-
-  private void MyButton_Click(object sender, EventArgs e) {
-    // Handle button click event here
-  }
-
-
-  private void InitializeDeviceResources() {
-    var description = new SwapChainDescription {
-      BufferCount = 1,
-      ModeDescription = new ModeDescription(Width, Height, new Rational(60, 1),
-      Format.R8G8B8A8_UNorm),
-      IsWindowed = true,
-      OutputHandle = _renderForm.Handle,
-      SampleDescription = new SampleDescription(1, 0),
-      SwapEffect = SwapEffect.Discard,
-      Usage = Usage.RenderTargetOutput
-    };
-
-    Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, description, out _device3D, out _swapChain);
-    _context3D = _device3D.ImmediateContext;
-
-    using (var resource = SharpDX.Direct3D11.Resource.FromSwapChain<Texture2D>(_swapChain, 0)) {
-      _renderTargetView = new RenderTargetView(_device3D, resource);
-    }
-  }
-
-
-  public void Run() {
-    RenderLoop.Run(_renderForm, RenderCallback);
-  }
 
 
   private void RenderCallback() {
