@@ -15,8 +15,8 @@ using SharpDX.D3DCompiler;
 
 
 struct Vertex {
-  Vector3 _pos;
-  Color3 _color;
+  public Vector3 _pos;
+  public Color3 _color;
 }
 
 public class MyForm : IDisposable {
@@ -44,7 +44,10 @@ public class MyForm : IDisposable {
   // test
 
   public MyForm() {
-    // vertices to be added
+    _vertices = new Vertex[3];
+    _vertices[0] = new Vertex { _pos = new Vector3(-0.5f, 0.0f, 0.0f), _color = new Color3(0.0f, 0.0f, 1.0f) };
+    _vertices[1] = new Vertex { _pos = new Vector3(0.5f, 0.0f, 0.0f), _color = new Color3(1.0f, 0.0f, 0.0f) };
+    _vertices[2] = new Vertex { _pos = new Vector3(0.0f, 0.5f, 0.0f), _color = new Color3(0.0f, 1.0f, 0.0f) };
 
     _renderForm = new RenderForm();
     _renderForm.ClientSize = new Size(Width, Height);
@@ -99,7 +102,7 @@ public class MyForm : IDisposable {
       BindFlags = BindFlags.VertexBuffer,
       CpuAccessFlags = CpuAccessFlags.Write,
       OptionFlags = ResourceOptionFlags.None,
-      SizeInBytes = 3 * sizeof(float) * _vertices.Length,
+      SizeInBytes = Utilities.SizeOf<Vertex>() * _vertices.Length,
       Usage = ResourceUsage.Dynamic,
     };
 
@@ -110,6 +113,9 @@ public class MyForm : IDisposable {
 
     mappedResource.WriteRange(_vertices);
     _context3D.UnmapSubresource(_vertexBuffer, 0);
+
+
+
   }
 
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,6 +124,14 @@ public class MyForm : IDisposable {
 
     using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile("shaders.shader", "VShader", "vs_4_0", ShaderFlags.None, EffectFlags.None)) {
       _vertexShader = new VertexShader(_device3D, vertexShaderByteCode);
+
+      InputElement[] inputElements = new InputElement[] {
+        new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
+        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 0, 12),
+      };
+
+      InputLayout inputLayout = new InputLayout(_device3D, vertexShaderByteCode, inputElements);
+      _context3D.InputAssembler.InputLayout = inputLayout;
     }
 
     using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile("shaders.shader", "PShader", "ps_4_0", ShaderFlags.None, EffectFlags.None))
@@ -149,6 +163,12 @@ public class MyForm : IDisposable {
     _context3D.ClearRenderTargetView(_renderTargetView, _background);
 
     // my code
+    int stride = Utilities.SizeOf<Vertex>();
+    int offset = 0;
+    _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, stride, offset));
+    _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+    _context3D.Draw(3, 0);
+
 
     _swapChain.Present(0, PresentFlags.None);
 
