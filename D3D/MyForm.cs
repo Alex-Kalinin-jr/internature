@@ -5,7 +5,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Windows;
-
+using SharpDX;
 
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
@@ -18,6 +18,7 @@ public class MyForm : IDisposable {
 
   private RenderForm _renderForm;
   private Button _button;
+  private Button _buttonTwo;
 
   private Device _device3D;
   private SwapChain _swapChain;
@@ -35,9 +36,15 @@ public class MyForm : IDisposable {
 
     _button = new Button();
     _button.Text = "Click me";
-    _button.Location = new Point(10, 10);
+    _button.Location = new System.Drawing.Point(10, 10);
     _button.Click += Button_Click;
     _renderForm.Controls.Add(_button);
+    _buttonTwo = new Button();
+    _buttonTwo.Text = "Click me too";
+    _buttonTwo.Location = new System.Drawing.Point(10, 35);
+    _buttonTwo.Click += Button_Click_Two;
+    _renderForm.Controls.Add(_buttonTwo);
+
 
     InitializeDeviceResources();
   }
@@ -62,6 +69,11 @@ public class MyForm : IDisposable {
     using (var resource = SharpDX.Direct3D11.Resource.FromSwapChain<Texture2D>(_swapChain, 0)) {
       _renderTargetView = new RenderTargetView(_device3D, resource);
     }
+
+    Viewport port = new Viewport(0, 0, Width, Height);
+    _context3D.Rasterizer.SetViewport(port);
+
+
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -73,7 +85,11 @@ public class MyForm : IDisposable {
   private void Button_Click(object sender, EventArgs e) {
     _button.Text = "abc";
     _background = SharpDX.Color.Aquamarine;
+  }
 
+  private void Button_Click_Two(object sender, EventArgs e) {
+    _buttonTwo.Text = "abc";
+    _background = SharpDX.Color.Green;
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
   private void RenderCallback() {
