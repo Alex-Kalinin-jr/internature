@@ -13,6 +13,12 @@ using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using Vector3 = SharpDX.Vector3;
 using SharpDX.D3DCompiler;
 
+
+struct Vertex {
+  Vector3 _pos;
+  Color3 _color;
+}
+
 public class MyForm : IDisposable {
   private const int Width = 800;
   private const int Height = 600;
@@ -28,13 +34,18 @@ public class MyForm : IDisposable {
 
   private VertexShader _vertexShader;
   private PixelShader _pixelShader;
+  private Buffer _vertexBuffer;
+  private Buffer _indexBuffer;
 
+  Vertex[] _vertices;
 
   // test
   private SharpDX.Color _background = SharpDX.Color.White;
   // test
 
   public MyForm() {
+    // vertices to be added
+
     _renderForm = new RenderForm();
     _renderForm.ClientSize = new Size(Width, Height);
 
@@ -52,6 +63,7 @@ public class MyForm : IDisposable {
 
     InitializeDeviceResources();
     InitializeShaders();
+    InitializeBuffers();
   }
 
 
@@ -73,12 +85,33 @@ public class MyForm : IDisposable {
 
     using (var resource = SharpDX.Direct3D11.Resource.FromSwapChain<Texture2D>(_swapChain, 0)) {
       _renderTargetView = new RenderTargetView(_device3D, resource);
+
     }
 
-    // Viewport port = new Viewport(0, 0, Width, Height);
-    // _context3D.Rasterizer.SetViewport(port);
     _context3D.Rasterizer.SetViewport(0, 0, Width, Height);
+
   }
+  // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private void InitializeBuffers() {
+
+    BufferDescription bufferDescription = new BufferDescription() {
+      BindFlags = BindFlags.VertexBuffer,
+      CpuAccessFlags = CpuAccessFlags.Write,
+      OptionFlags = ResourceOptionFlags.None,
+      SizeInBytes = 3 * sizeof(float) * _vertices.Length,
+      Usage = ResourceUsage.Dynamic,
+    };
+
+    _vertexBuffer = Buffer.Create(_device3D, _vertices, bufferDescription);
+
+    DataStream mappedResource;
+    _context3D.MapSubresource(_vertexBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+
+    mappedResource.WriteRange(_vertices);
+    _context3D.UnmapSubresource(_vertexBuffer, 0);
+  }
+
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   private void InitializeShaders() {
@@ -96,11 +129,11 @@ public class MyForm : IDisposable {
   }
 
 
-
   public void Run() {
     RenderLoop.Run(_renderForm, RenderCallback);
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   private void Button_Click(object sender, EventArgs e) {
     _button.Text = "abc";
     _background = SharpDX.Color.Aquamarine;
@@ -111,6 +144,7 @@ public class MyForm : IDisposable {
     _background = SharpDX.Color.Green;
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   private void RenderCallback() {
     _context3D.ClearRenderTargetView(_renderTargetView, _background);
 
@@ -120,6 +154,7 @@ public class MyForm : IDisposable {
 
   }
   // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   public void Dispose() {
     _context3D.ClearState();
     _context3D.Flush();
@@ -252,7 +287,7 @@ class MyRenderForm : IDisposable {
         4, 5, 7
       };
 
-        _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices); 
+      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices); 
       _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, _indices);
     }
 
@@ -279,3 +314,5 @@ _context3D.VertexShader.Set(_vertexShader); _context3D.PixelShader.Set(_pixelSha
 
 _context3D.DrawIndexed(36, 0, 0); _swapChain.Present(0, PresentFlags.None);
 */
+
+
