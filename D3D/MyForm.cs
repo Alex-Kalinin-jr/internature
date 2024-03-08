@@ -19,8 +19,6 @@ namespace D3D {
     private const int Height = 600;
 
     private RenderForm _renderForm;
-    private Button _button;
-    private Button _buttonTwo;
 
     private Device _device3D;
     private SwapChain _swapChain;
@@ -28,10 +26,8 @@ namespace D3D {
     private RenderTargetView _renderTargetView;
 
     private Vertex[] _vertices;
-    private short[] _indices;
 
     private Buffer _vertexBuffer;
-    private Buffer _indexBuffer;
     private VertexShader _vertexShader;
     private PixelShader _pixelShader;
 
@@ -41,26 +37,13 @@ namespace D3D {
 
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
-
-    private Viewport _viewport;
+    // private Viewport _viewport;
 
     public MyForm() {
 
       _renderForm = new RenderForm();
       _renderForm.ClientSize = new Size(Width, Height);
       _renderForm.AllowUserResizing = false;
-
-      _button = new Button();
-      _button.Text = "Click me";
-      _button.Location = new System.Drawing.Point(10, 10);
-      _button.Click += Button_Click;
-      _renderForm.Controls.Add(_button);
-
-      _buttonTwo = new Button();
-      _buttonTwo.Text = "Click me too";
-      _buttonTwo.Location = new System.Drawing.Point(10, 35);
-      _buttonTwo.Click += Button_Click_Two;
-      _renderForm.Controls.Add(_buttonTwo);
 
       InitializeDeviceResources();
       InitializeShaders();
@@ -92,23 +75,20 @@ namespace D3D {
         _renderTargetView = new RenderTargetView(_device3D, backBuffer);
       }
 
-      _viewport = new Viewport(0, 0, Width, Height);
-      _context3D.Rasterizer.SetViewport(_viewport);
+      var viewport = new Viewport(0, 0, Width, Height);
+      _context3D.Rasterizer.SetViewport(viewport);
 
     }
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private void InitializeBuffers() {
       _vertices = new Vertex[] {
-      new Vertex(new Vector3(-0.5f, 0.5f, 0.0f), SharpDX.Color.Red),
-      new Vertex(new Vector3(0.5f, 0.5f, 0.0f), SharpDX.Color.Green),
-      new Vertex(new Vector3(-0.5f, -0.5f, 0.0f), SharpDX.Color.Blue),
+      new Vertex(new Vector3(-0.5f, 0.0f, 0.0f), SharpDX.Color.Red),
+      new Vertex(new Vector3(0.0f, 0.5f, 0.0f), SharpDX.Color.Green),
+      new Vertex(new Vector3(0.5f, -0.0f, 0.0f), SharpDX.Color.Blue),
     };
 
-      _indices = new short[] { 0, 1, 2 };
-
       _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
-      _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, _indices);
 
     }
 
@@ -141,24 +121,12 @@ namespace D3D {
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void Button_Click(object sender, EventArgs e) {
-      _button.Text = "abc";
-      _background = SharpDX.Color.Aquamarine;
-    }
-
-    private void Button_Click_Two(object sender, EventArgs e) {
-      _buttonTwo.Text = "abc";
-      _background = SharpDX.Color.Green;
-    }
-
-    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void RenderCallback() {
 
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
       _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
-      _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
-      _context3D.DrawIndexed(_indices.Length, 0, 0);
+      _context3D.Draw(Utilities.SizeOf<Vertex>(), 0);
 
       _swapChain.Present(0, PresentFlags.None);
 
@@ -170,7 +138,7 @@ namespace D3D {
       _inputLayout.Dispose();
       _inputSignature.Dispose();
       _vertexBuffer.Dispose();
-      _indexBuffer.Dispose();
+      // _indexBuffer.Dispose();
       _vertexShader.Dispose();
       _pixelShader.Dispose();
       _renderTargetView.Dispose();
@@ -183,8 +151,3 @@ namespace D3D {
 
   }
 }
-
-
-
-
-
