@@ -37,7 +37,6 @@ namespace D3D {
 
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
-    // private Viewport _viewport;
 
     public MyForm() {
 
@@ -83,13 +82,10 @@ namespace D3D {
 
     private void InitializeBuffers() {
       _vertices = new Vertex[] {
-      new Vertex(new Vector3(-0.5f, 0.0f, 0.0f), SharpDX.Color.Red),
-      new Vertex(new Vector3(0.0f, 0.5f, 0.0f), SharpDX.Color.Green),
-      new Vertex(new Vector3(0.5f, -0.0f, 0.0f), SharpDX.Color.Blue),
-    };
-
-      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
-
+        new Vertex(new Vector3(-0.5f, 0.0f, 0.0f), SharpDX.Color.Red),
+        new Vertex(new Vector3(0.0f, 0.5f, 0.0f), SharpDX.Color.Green),
+        new Vertex(new Vector3(0.5f, -0.0f, 0.0f), SharpDX.Color.Blue),
+      };
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,27 +104,35 @@ namespace D3D {
 
       _context3D.VertexShader.Set(_vertexShader);
       _context3D.PixelShader.Set(_pixelShader);
+
+      _inputLayout = new InputLayout(_device3D, _inputSignature, new [] {
+        new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0, InputClassification.PerVertexData, 0),
+        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12, 0, InputClassification.PerVertexData, 0)
+      });
+      _context3D.InputAssembler.InputLayout = _inputLayout;
+
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
 
-      _inputLayout = new InputLayout(_device3D, _inputSignature, new[] {
-        new InputElement("POSITION", 0, Format.R32G32B32_Float, 0),
-        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12)
-    });
-
-      _context3D.InputAssembler.InputLayout = _inputLayout;
-      _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
 
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void RenderCallback() {
+      if (_vertices[0].Color.Green < 1.0f) {
+        _vertices[0].Color.Green += 0.005f;
+      } else {
+        _vertices[2].Color.Green += 0.005f;
+      }
+      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
 
+      _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
-      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
       _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
-      _context3D.Draw(Utilities.SizeOf<Vertex>(), 0);
 
-      _swapChain.Present(0, PresentFlags.None);
+
+      _context3D.Draw(3, 0);
+
+      _swapChain.Present(1, PresentFlags.None);
 
     }
 
@@ -138,7 +142,6 @@ namespace D3D {
       _inputLayout.Dispose();
       _inputSignature.Dispose();
       _vertexBuffer.Dispose();
-      // _indexBuffer.Dispose();
       _vertexShader.Dispose();
       _pixelShader.Dispose();
       _renderTargetView.Dispose();
