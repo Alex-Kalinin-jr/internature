@@ -14,6 +14,14 @@ using Vector3 = SharpDX.Vector3;
 using SharpDX.D3DCompiler;
 
 namespace D3D {
+
+  struct VS_CONSTANT_BUFFER {
+    public Vector4 cl;
+  }
+
+
+
+
   public class MyForm : IDisposable {
     private const int Width = 800;
     private const int Height = 600;
@@ -28,6 +36,8 @@ namespace D3D {
     private Vertex[] _vertices;
 
     private Buffer _vertexBuffer;
+    private Buffer _constantBuffer;
+
     private VertexShader _vertexShader;
     private PixelShader _pixelShader;
 
@@ -118,11 +128,12 @@ namespace D3D {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void RenderCallback() {
-      if (_vertices[0].Color.Green < 1.0f) {
-        _vertices[0].Color.Green += 0.005f;
-      } else {
-        _vertices[2].Color.Green += 0.005f;
-      }
+      VS_CONSTANT_BUFFER tmp = new VS_CONSTANT_BUFFER();
+      tmp.cl = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+      _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
+      _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+
+
       _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
 
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
