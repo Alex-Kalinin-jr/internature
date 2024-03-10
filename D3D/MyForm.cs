@@ -17,9 +17,10 @@ namespace D3D {
 
   struct VS_CONSTANT_BUFFER {
     public Vector4 cl;
+    public Matrix model;
+    public Matrix view;
+    public Matrix projection;
   }
-
-
 
 
   public class MyForm : IDisposable {
@@ -130,6 +131,12 @@ namespace D3D {
     private void RenderCallback() {
       VS_CONSTANT_BUFFER tmp = new VS_CONSTANT_BUFFER();
       tmp.cl = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+      tmp.model = Matrix.Identity;
+      tmp.view = Matrix.Identity;
+      tmp.projection = Matrix.Identity;
+      
+
+
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
