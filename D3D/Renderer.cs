@@ -1,45 +1,151 @@
-﻿using D3D;
+﻿using System;
+using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Buffer = SharpDX.Direct3D11.Buffer;
+using Device = SharpDX.Direct3D11.Device;
+using DeviceContext = SharpDX.Direct3D11.DeviceContext;
+using Vector3 = SharpDX.Vector3;
+using SharpDX.D3DCompiler;
 
 namespace D3D {
-  public class Renderer {
 
+  public class Renderer : IDisposable {
+    private const int Width = 800;
+    private const int Height = 600;
+
+    private IntPtr _formPtr;
+
+    private Device _device3D;
+    private SwapChain _swapChain;
+    private DeviceContext _context3D;
+    private RenderTargetView _renderTargetView;
+
+    private Vertex[] _vertices;
+
+    private Buffer _vertexBuffer;
+    private Buffer _constantBuffer;
+
+    private VertexShader _vertexShader;
+    private PixelShader _pixelShader;
+
+    private Color _background = Color.White;
+
+    private ShaderSignature _inputSignature;
+    private InputLayout _inputLayout;
+
+    public Renderer(IntPtr ptr) {
+
+      _formPtr = ptr;
+
+      InitializeDeviceResources();
+      InitializeShaders();
+      InitializeBuffers();
+
+    }
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void InitializeDeviceResources() {
+      var description = new SwapChainDescription {
+        BufferCount = 1,
+        ModeDescription = new ModeDescription(Width, Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+        IsWindowed = true,
+        OutputHandle = _formPtr,
+        SampleDescription = new SampleDescription(1, 0),
+        SwapEffect = SwapEffect.Discard,
+        Usage = Usage.RenderTargetOutput
+      };
+
+      Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, description, out _device3D, out _swapChain);
+      _context3D = _device3D.ImmediateContext;
+
+      using (Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0)) {
+        _renderTargetView = new RenderTargetView(_device3D, backBuffer);
+      }
+
+      var viewport = new Viewport(0, 0, Width, Height);
+      _context3D.Rasterizer.SetViewport(viewport);
+
+    }
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void InitializeBuffers() {
+      _vertices = new Vertex[] {
+        new Vertex(new Vector3(-0.5f, 0.0f, 0.0f), SharpDX.Color.Red),
+        new Vertex(new Vector3(0.0f, 0.5f, 0.0f), SharpDX.Color.Green),
+        new Vertex(new Vector3(0.5f, -0.0f, 0.0f), SharpDX.Color.Blue),
+      };
+
+    }
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private void InitializeShaders() {
+
+      using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile(
+          "Shaders/VertexShader.hlsl", "main", "vs_4_0", ShaderFlags.Debug)) {
+        _inputSignature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
+        _vertexShader = new VertexShader(_device3D, vertexShaderByteCode);
+      }
+
+      using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile(
+          "Shaders/PixelShader.hlsl", "main", "ps_4_0", ShaderFlags.Debug)) {
+        _pixelShader = new PixelShader(_device3D, pixelShaderByteCode);
+      }
+
+      _context3D.VertexShader.Set(_vertexShader);
+      _context3D.PixelShader.Set(_pixelShader);
+
+      _inputLayout = new InputLayout(_device3D, _inputSignature, new[] {
+        new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0, InputClassification.PerVertexData, 0),
+        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12, 0, InputClassification.PerVertexData, 0)
+      });
+      _context3D.InputAssembler.InputLayout = _inputLayout;
+
+      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
+
+
+    }
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void RenderCallback() {
+
+      var tmp = new VS_CONSTANT_BUFFER();
+      tmp.vpMatrix = Matrix.Identity;
+      tmp.cl = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+
+      _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
+      _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+
+
+      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
+
+      _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
+      _context3D.ClearRenderTargetView(_renderTargetView, _background);
+      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
+
+
+      _context3D.Draw(3, 0);
+
+      _swapChain.Present(1, PresentFlags.None);
+
+    }
+
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void Dispose() {
+
+      _inputLayout.Dispose();
+      _inputSignature.Dispose();
+      _vertexBuffer.Dispose();
+      _vertexShader.Dispose();
+      _pixelShader.Dispose();
+      _renderTargetView.Dispose();
+      _swapChain.Dispose();
+      _device3D.Dispose();
+      _context3D.Dispose();
+
+    }
 
   }
 }
-
-
-
-/*
-// Update the model transform buffer for the hologram.
-context->UpdateSubresource(
-    m_modelConstantBuffer.Get(),
-    0,
-    nullptr,
-    &m_modelConstantBufferData,
-    0,
-    0
-);
-Matrix world = Matrix.Identity;
-Vector3 eyePos = new Vector3(0.0f, 0.0f, -2.0f);
-Vector3 lookAtPos = new Vector3(0.0f, 0.0f, 0.0f);
-Vector3 upVector = new Vector3(0.0f, 1.0f, 0.0f);
-Matrix view = Matrix.LookAtLH(eyePos, lookAtPos, upVector);
-
-float fovDegrees = 90.0f;
-float fovRadians = (fovDegrees / 360.0f) * MathUtil.Pi * 2;
-float aspectRatio = (float)Width / Height;
-float nearZ = 0.1f;
-float farZ = 1000.0f;
-Matrix projection = Matrix.PerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);
-
-VS_CONSTANT_BUFFER tmp = new VS_CONSTANT_BUFFER();
-tmp.cl = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-tmp.vpMatrix = world * view * projection;
-tmp.vpMatrix.Transpose();
-*/
