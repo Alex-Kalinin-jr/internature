@@ -7,17 +7,13 @@
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
     float4 cl;
-    matrix model;
-    matrix view;
-    matrix projection;
+    matrix vpMatrix;
 };
 
 VSOut main(float4 position : POSITION, float4 color : COLOR)
 {
     VSOut output;
-    matrix mvp = mul(model, view);
-    mvp = mul(mvp, projection);
-    output.position = mul(mvp, position);
+    output.position = mul(vpMatrix, position);
     output.color = cl;
 
     return output;
