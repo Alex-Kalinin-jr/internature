@@ -12,7 +12,6 @@ using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using Vector3 = SharpDX.Vector3;
 using SharpDX.D3DCompiler;
-using System.Runtime.Remoting.Contexts;
 
 namespace D3D {
 
@@ -128,38 +127,9 @@ namespace D3D {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void RenderCallback() {
-      Matrix world = Matrix.Identity;
-      Vector3 eyePos = new Vector3(0.0f, 0.0f, -2.0f);
-      Vector3 lookAtPos = new Vector3(0.0f, 0.0f, 0.0f);
-      Vector3 upVector = new Vector3(0.0f, 1.0f, 0.0f);
-      Matrix view = Matrix.LookAtLH(eyePos, lookAtPos, upVector);
 
-      float fovDegrees = 90.0f;
-      float fovRadians = (fovDegrees / 360.0f) * MathUtil.Pi * 2;
-      float aspectRatio = (float)Width / Height;
-      float nearZ = 0.1f;
-      float farZ = 1000.0f;
-      Matrix projection = Matrix.PerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);
-
-      VS_CONSTANT_BUFFER tmp = new VS_CONSTANT_BUFFER();
-      tmp.cl = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-      tmp.vpMatrix = world * view * projection;
-      tmp.vpMatrix.Transpose();
-
-      /*
-      // Update the model transform buffer for the hologram.
-      context->UpdateSubresource(
-          m_modelConstantBuffer.Get(),
-          0,
-          nullptr,
-          &m_modelConstantBufferData,
-          0,
-          0
-      );
-      */
-
-      _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
-      _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+      // _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
+      // _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
 
       _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
