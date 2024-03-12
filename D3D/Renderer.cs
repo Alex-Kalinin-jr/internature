@@ -7,8 +7,8 @@ using SharpDX;
 using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
-using Vector3 = SharpDX.Vector3;
 using SharpDX.D3DCompiler;
+using System.Drawing;
 
 namespace D3D {
 
@@ -16,6 +16,7 @@ namespace D3D {
     private const int Width = 800;
     private const int Height = 600;
 
+    public Camera _camera;
     private IntPtr _formPtr;
 
     private Device _device3D;
@@ -23,15 +24,14 @@ namespace D3D {
     private DeviceContext _context3D;
     private RenderTargetView _renderTargetView;
 
-    private Vertex[] _vertices;
-
     private Buffer _vertexBuffer;
+    private Buffer _indexBuffer;
     private Buffer _constantBuffer;
 
     private VertexShader _vertexShader;
     private PixelShader _pixelShader;
 
-    private Color _background = Color.White;
+    private SharpDX.Color _background = SharpDX.Color.White;
 
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
@@ -39,10 +39,11 @@ namespace D3D {
     public Renderer(IntPtr ptr) {
 
       _formPtr = ptr;
+      _camera = new Camera(new Vector3(0.0f, 0.0f, -3.0f),
+                          (float)Width / (float)Height);
 
       InitializeDeviceResources();
       InitializeShaders();
-      InitializeBuffers();
 
     }
 
@@ -71,14 +72,6 @@ namespace D3D {
     }
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void InitializeBuffers() {
-      _vertices = new Vertex[] {
-        new Vertex(new Vector3(-0.5f, 0.0f, 0.0f), SharpDX.Color.Red),
-        new Vertex(new Vector3(0.0f, 0.5f, 0.0f), SharpDX.Color.Green),
-        new Vertex(new Vector3(0.5f, -0.0f, 0.0f), SharpDX.Color.Blue),
-      };
-
-    }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void InitializeShaders() {
@@ -109,28 +102,43 @@ namespace D3D {
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void RenderCallback() {
+    public void RenderCallback(Vertex[] vertices, short[] indices) {
 
       var tmp = new VS_CONSTANT_BUFFER();
-      tmp.vpMatrix = Matrix.Identity;
-      tmp.cl = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+      tmp.view = _camera.GetViewMatrix();
+      tmp.projection = _camera.GetProjectionMatrix();
+      tmp.world = ComputeModelMatrix();
 
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
+      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
+      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
 
-      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, _vertices);
+      _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
+      _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
 
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
-      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
 
+      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
 
-      _context3D.Draw(3, 0);
+      _context3D.DrawIndexed(indices.Length, 0, 0);
 
       _swapChain.Present(1, PresentFlags.None);
 
     }
+
+    // mistake
+    public Matrix ComputeModelMatrix() {
+      var buff =
+        Matrix.RotationYawPitchRoll(0.0f, 0.0f, 0.0f);
+      Matrix.Translation(0.0f, 0.0f, 0.0f);
+      buff.Transpose();
+      return buff;
+    }
+
+
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Dispose() {
@@ -145,6 +153,26 @@ namespace D3D {
       _device3D.Dispose();
       _context3D.Dispose();
 
+    }
+
+    public void ChangePitch(float pitch) {
+      _camera.Pitch += pitch;
+    }
+
+    public void ChangeYaw(float yaw) { 
+      _camera.Yaw += yaw;
+    }
+
+    public void MoveCameraUpDown(float val) {
+      Vector3 buff = _camera.Position;
+      buff.Y += val;
+      _camera.Position = buff;
+    }
+
+    public void MoveCameraLeftRight(float val) {
+      Vector3 buff = _camera.Position;
+      buff.X += val;
+      _camera.Position = buff;
     }
 
   }

@@ -6,15 +6,22 @@
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
 {
-    float4 cl;
-    matrix vpMatrix;
+    Matrix world;
+    Matrix view;
+    Matrix projection;
 };
 
 VSOut main(float4 position : POSITION, float4 color : COLOR)
 {
     VSOut output;
-    output.position = position;
-    output.color = cl;
+    position.w = 1.0;
+    
+    output.position = mul(position, world);
+    output.position = mul(output.position, view);
+    output.position = mul(output.position, projection);
+    
+    
+    output.color = color;
 
     return output;
 }
