@@ -39,7 +39,7 @@ namespace D3D {
     public Renderer(IntPtr ptr) {
 
       _formPtr = ptr;
-      _camera = new Camera();
+      _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), (float)Width / (float)Height);
 
       InitializeDeviceResources();
       InitializeShaders();
@@ -102,12 +102,13 @@ namespace D3D {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void RenderCallback(Vertex[] vertices, short[] indices) {
-      _camera.Update();
+
       var tmp = new VS_CONSTANT_BUFFER();
-      tmp.view = _camera.View;
+
+      tmp.view = _camera.GetViewMatrix();
       tmp.view.Transpose();
 
-      tmp.projection = _camera.Projection;
+      tmp.projection = _camera.GetProjectionMatrix();
       tmp.projection.Transpose();
 
       tmp.world = ComputeModelMatrix();
@@ -160,33 +161,19 @@ namespace D3D {
     }
 
     public void ChangePitch(float pitch) {
-      _camera.RotateX(pitch);
+      _camera.Pitch += pitch;
     }
 
     public void ChangeYaw(float yaw) { 
-      _camera.RotateY(yaw);
+      _camera.Yaw += yaw;
     }
 
     public void MoveCameraUpDown(float val) {
 
-      Vector3 buff = _camera.Position;
-      buff.Y += val;
-      _camera.Position = buff;
-
-      buff = _camera.Target;
-      buff.Y += val;
-      _camera.Target = buff;
     }
 
     public void MoveCameraLeftRight(float val) {
 
-      Vector3 buff = _camera.Position;
-      buff.X += val;
-      _camera.Position = buff;
-
-      buff = _camera.Target;
-      buff.X += val;
-      _camera.Target = buff;
     }
 
   }

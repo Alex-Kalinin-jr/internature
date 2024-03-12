@@ -178,19 +178,19 @@ namespace D3D {
 
 
     void OnButtonDownClick(Object sender, EventArgs e) {
-      _renderer.ChangePitch(0.2f);
+      _renderer.ChangePitch(5.0f);
     }
 
     void OnButtonUpClick(Object sender, EventArgs e) {
-      _renderer.ChangePitch(-0.2f);
+      _renderer.ChangePitch(-5.0f);
     }
 
     void OnButtonLeftClick(Object sender, EventArgs e) {
-      _renderer.ChangeYaw(-0.2f);
+      _renderer.ChangeYaw(-5.0f);
     }
 
     void OnButtonRightClick(Object sender, EventArgs e) {
-      _renderer.ChangeYaw(0.2f);
+      _renderer.ChangeYaw(5.0f);
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
