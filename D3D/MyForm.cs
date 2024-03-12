@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using D3D;
-using SharpDX;
 using SharpDX.Windows;
 
 using Color = SharpDX.Color;
@@ -19,9 +17,6 @@ namespace D3D {
       }
     }
 
-    bool isMouseDown = false;
-    bool isRotationDown = false;
-
     private const int Width = 800;
     private const int Height = 600;
 
@@ -32,6 +27,8 @@ namespace D3D {
     private Vertex[] _vertices;
     private short[] _indices;
 
+    bool _isMouseDown = false;
+    bool _isRotationDown = false;
 
     public MyForm() {
 
@@ -45,9 +42,9 @@ namespace D3D {
       _renderForm.AllowUserResizing = false;
       _renderForm.SuspendLayout();
       _renderForm.Name = "MyForm";
-      _renderForm.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseDown);
-      _renderForm.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseMove);
-      _renderForm.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseUp);
+      _renderForm.MouseDown += new MouseEventHandler(this.MyForm_MouseDown);
+      _renderForm.MouseMove += new MouseEventHandler(this.MyForm_MouseMove);
+      _renderForm.MouseUp += new MouseEventHandler(this.MyForm_MouseUp);
       _renderForm.ResumeLayout(false);
 
       _renderForm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MyForm_KeyPress);
@@ -55,7 +52,6 @@ namespace D3D {
       _renderer = new Renderer(_renderForm.Handle);
 
     }
-
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void MyForm_KeyPress(object sender, KeyPressEventArgs e) {
@@ -65,7 +61,7 @@ namespace D3D {
         _renderer.MoveCameraBack();
       } else if (e.KeyChar == 'd') {
         _renderer.MoveCameraRight();
-      } else if (e.KeyChar == 'a') {
+      } else if (e.KeyChar == 'a') { 
         _renderer.MoveCameraLeft();
       } else if (e.KeyChar == '=') {
         _renderer.MoveCameraUp();
@@ -73,7 +69,6 @@ namespace D3D {
         _renderer.MoveCameraDown();
       }
     }
-
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Run() {
@@ -98,12 +93,12 @@ namespace D3D {
         MouseEventArgs mouseArgs = (MouseEventArgs)e;
         var deltaX = mouseArgs.X - _mouse.X;
         var deltaY = mouseArgs.Y - _mouse.Y;
-      if (isRotationDown) {
+      if (_isRotationDown) {
         _renderer.ChangePitch(deltaY / 10.0f);
         _renderer.ChangeYaw(deltaX / 10.0f);
         _mouse.X = mouseArgs.X;
         _mouse.Y = mouseArgs.Y;
-      } else if (isMouseDown) {
+      } else if (_isMouseDown) {
         if (deltaX > 0) {
           _renderer.MoveCameraLeft();
         } else {
@@ -124,9 +119,9 @@ namespace D3D {
       _mouse.Y = mouseArgs.Y;
 
       if (mouseArgs.Button == MouseButtons.Left) {
-        isMouseDown = true;
+        _isMouseDown = true;
       } else if (mouseArgs.Button == MouseButtons.Middle) {
-        isRotationDown = true;
+        _isRotationDown = true;
       }
 
     }
@@ -134,9 +129,9 @@ namespace D3D {
     private void MyForm_MouseUp(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = (MouseEventArgs)e;
       if (mouseArgs.Button == MouseButtons.Left) {
-        isMouseDown = false;
+        _isMouseDown = false;
       } else if (mouseArgs.Button == MouseButtons.Middle) {
-        isRotationDown = false;
+        _isRotationDown = false;
       }
     }
   }

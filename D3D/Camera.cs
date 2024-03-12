@@ -53,7 +53,7 @@ namespace D3D {
 
     public RawMatrix GetProjectionMatrix() {
       UpdateVectors();
-      return Matrix.PerspectiveFovLH(_fov, AspectRatio, 1.0f, 100f);
+      return Matrix.PerspectiveFovLH(_fov, AspectRatio, 0.1f, 1000f);
     }
 
     private void UpdateVectors() {
