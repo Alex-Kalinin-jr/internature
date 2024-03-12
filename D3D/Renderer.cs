@@ -8,7 +8,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
-using System.Drawing;
+using System.Runtime.Remoting.Contexts;
 
 namespace D3D {
 
@@ -36,13 +36,16 @@ namespace D3D {
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
 
+    private DepthStencilView _depthStencilView;
+
     public Renderer(IntPtr ptr) {
 
       _formPtr = ptr;
-      _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), (float)Width / (float)Height);
+      _camera = new Camera(new Vector3(0.0f, 1.0f, 3.0f), (float)Width / (float)Height);
 
       InitializeDeviceResources();
       InitializeShaders();
+      InitializeDepthBuffer();
 
     }
 
@@ -114,6 +117,8 @@ namespace D3D {
       tmp.world = ComputeModelMatrix();
       tmp.world.Transpose();
 
+      _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
+
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
@@ -157,6 +162,7 @@ namespace D3D {
       _swapChain.Dispose();
       _device3D.Dispose();
       _context3D.Dispose();
+      _depthStencilView.Dispose();
 
     }
 
@@ -168,13 +174,66 @@ namespace D3D {
       _camera.Yaw += yaw;
     }
 
-    public void MoveCameraUpDown(float val) {
-
+    public void MoveCameraUp() {
+      _camera.Position += 0.05f * _camera.Up;
     }
 
-    public void MoveCameraLeftRight(float val) {
-
+    public void MoveCameraDown() {
+      _camera.Position -= 0.05f * _camera.Up;
     }
 
+    public void MoveCameraLeft() {
+      _camera.Position += 0.05f * _camera.Right;
+    }
+
+    public void MoveCameraRight() {
+      _camera.Position -= 0.05f * _camera.Right;
+    }
+
+    public void MoveCameraFwd() {
+      _camera.Position += 0.05f * _camera.Front;
+    }
+
+    public void MoveCameraBack() {
+      _camera.Position -= 0.05f * _camera.Front;
+    }
+
+
+
+    public void InitializeDepthBuffer() {
+
+      var depthStencilDesc = new DepthStencilStateDescription {
+        IsDepthEnabled = true,
+        DepthWriteMask = DepthWriteMask.All,
+        DepthComparison = Comparison.Less,
+        IsStencilEnabled = false
+      };
+
+      var depthStencilState = new DepthStencilState(_device3D, depthStencilDesc);
+      _context3D.OutputMerger.SetDepthStencilState(depthStencilState);
+
+      var depthBufferDesc = new Texture2DDescription {
+        Width = Width,
+        Height = Height,
+        ArraySize = 1,
+        MipLevels = 1,
+        Format = Format.D24_UNorm_S8_UInt,
+        SampleDescription = new SampleDescription(1, 0),
+        Usage = ResourceUsage.Default,
+        BindFlags = BindFlags.DepthStencil,
+        CpuAccessFlags = CpuAccessFlags.None,
+        OptionFlags = ResourceOptionFlags.None
+      };
+
+      var depthBuffer = new Texture2D(_device3D, depthBufferDesc);
+
+      var depthStencilViewDesc = new DepthStencilViewDescription {
+        Format = depthBufferDesc.Format,
+        Dimension = DepthStencilViewDimension.Texture2D
+      };
+
+      _depthStencilView = new DepthStencilView(_device3D, depthBuffer, depthStencilViewDesc);
+      _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);
+    }
   }
 }

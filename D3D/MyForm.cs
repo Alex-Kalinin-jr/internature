@@ -9,13 +9,23 @@ using Color = SharpDX.Color;
 namespace D3D {
 
   public class MyForm : RenderForm, IDisposable {
+    public struct MousePos {
+      public int X;
+      public int Y;
 
-
+      public MousePos(int x = 0, int y = 0) {
+        X = x;
+        Y = y;
+      }
+    }
 
     bool isMouseDown = false;
+    bool isRotationDown = false;
 
     private const int Width = 800;
     private const int Height = 600;
+
+    private MousePos _mouse;
 
     private RenderForm _renderForm;
     private Renderer _renderer;
@@ -35,25 +45,25 @@ namespace D3D {
 
       _vertices = new Vertex[24];
 
-      _vertices[0] = new Vertex(new Vector3(-0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
-      _vertices[1] = new Vertex(new Vector3(0.5f, -0.5f, -0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
-      _vertices[2] = new Vertex(new Vector3(-0.5f, -0.5f, -0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
-      _vertices[3] = new Vertex(new Vector3(0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
+      _vertices[0] = new Vertex(new Vector3(-0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[1] = new Vertex(new Vector3(0.5f, -0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[2] = new Vertex(new Vector3(-0.5f, -0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[3] = new Vertex(new Vector3(0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
 
-      _vertices[4] = new Vertex(new Vector3(0.5f, -0.5f, -0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
-      _vertices[5] = new Vertex(new Vector3(0.5f, 0.5f, 0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
-      _vertices[6] = new Vertex(new Vector3(0.5f, -0.5f, 0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
-      _vertices[7] = new Vertex(new Vector3(0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 1.0f, 1.0f));
+      _vertices[4] = new Vertex(new Vector3(0.5f, -0.5f, -0.5f), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+      _vertices[5] = new Vertex(new Vector3(0.5f, 0.5f, 0.5f), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+      _vertices[6] = new Vertex(new Vector3(0.5f, -0.5f, 0.5f), new Color(1.0f, 1.0f, 1.0f, 1.0f));
+      _vertices[7] = new Vertex(new Vector3(0.5f, 0.5f, -0.5f), new Color(1.0f, 1.0f, 1.0f, 1.0f));
 
       _vertices[8] = new Vertex(new Vector3(-0.5f, 0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
       _vertices[9] = new Vertex(new Vector3(-0.5f, -0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
       _vertices[10] = new Vertex(new Vector3(-0.5f, -0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
       _vertices[11] = new Vertex(new Vector3(-0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
 
-      _vertices[12] = new Vertex(new Vector3(0.5f, 0.5f, 0.5f), new Color(1.0f, 0.0f, 0.0f, 1.0f));
-      _vertices[13] = new Vertex(new Vector3(-0.5f, -0.5f, 0.5f), new Color(1.0f, 0.0f, 0.0f, 1.0f));
-      _vertices[14] = new Vertex(new Vector3(0.5f, -0.5f, 0.5f), new Color(1.0f, 0.0f, 0.0f, 1.0f));
-      _vertices[15] = new Vertex(new Vector3(-0.5f, 0.5f, 0.5f), new Color(1.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[12] = new Vertex(new Vector3(0.5f, 0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[13] = new Vertex(new Vector3(-0.5f, -0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[14] = new Vertex(new Vector3(0.5f, -0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
+      _vertices[15] = new Vertex(new Vector3(-0.5f, 0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
 
       _vertices[16] = new Vertex(new Vector3(-0.5f, 0.5f, -0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
       _vertices[17] = new Vertex(new Vector3(0.5f, 0.5f, 0.5f), new Color(0.0f, 0.0f, 0.0f, 1.0f));
@@ -93,105 +103,23 @@ namespace D3D {
                 20, 23, 21, // second triangle
       };
 
+      _mouse = new MousePos();
+
       _renderForm = new RenderForm();
 
       _renderForm.ClientSize = new Size(Width, Height);
       _renderForm.AllowUserResizing = false;
+      _renderForm.SuspendLayout();
+      _renderForm.Name = "MyForm";
+      _renderForm.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseDown);
+      _renderForm.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseMove);
+      _renderForm.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseUp);
+      _renderForm.ResumeLayout(false);
 
       _renderer = new Renderer(_renderForm.Handle);
 
-      _buttonDown = new Button();
-      _buttonDown.Text = "down";
-      _buttonDown.Size = new Size(50, 25);
-      _buttonDown.Location = new System.Drawing.Point(10, 10);
-      _buttonDown.Click += OnButtonDownClick;
-      _renderForm.Controls.Add(_buttonDown);
-
-      _buttonUp = new Button();
-      _buttonUp.Text = "up";
-      _buttonUp.Size = new Size(50, 25);
-      _buttonUp.Location = new System.Drawing.Point(10, 40);
-      _buttonUp.Click += OnButtonUpClick;
-      _renderForm.Controls.Add(_buttonUp);
-
-      _buttonRight = new Button();
-      _buttonRight.Text = "right";
-      _buttonRight.Size = new Size(50, 25);
-      _buttonRight.Location = new System.Drawing.Point(10, 70);
-      _buttonRight.Click += OnButtonRightClick;
-      _renderForm.Controls.Add(_buttonRight);
-
-      _buttonLeft = new Button();
-      _buttonLeft.Text = "left";
-      _buttonLeft.Size = new Size(50, 25);
-      _buttonLeft.Location = new System.Drawing.Point(10, 100);
-      _buttonLeft.Click += OnButtonLeftClick;
-      _renderForm.Controls.Add(_buttonLeft);
-
-
-
-      _buttonMoveLeft = new Button();
-      _buttonMoveLeft.Text = "move left";
-      _buttonMoveLeft.Size = new Size(100, 25);
-      _buttonMoveLeft.Location = new System.Drawing.Point(100, 10);
-      _buttonMoveLeft.Click += OnButtonMoveLeftClick;
-      _renderForm.Controls.Add(_buttonMoveLeft);
-
-      _buttonMoveRight = new Button();
-      _buttonMoveRight.Text = "move right";
-      _buttonMoveRight.Size = new Size(100, 25);
-      _buttonMoveRight.Location = new System.Drawing.Point(100, 40);
-      _buttonMoveRight.Click += OnButtonMoveRightClick;
-      _renderForm.Controls.Add(_buttonMoveRight);
-
-      _buttonMoveDown = new Button();
-      _buttonMoveDown.Text = "move down";
-      _buttonMoveDown.Size = new Size(100, 25);
-      _buttonMoveDown.Location = new System.Drawing.Point(100, 70);
-      _buttonMoveDown.Click += OnButtonMoveUpClick;
-      _renderForm.Controls.Add(_buttonMoveDown);
-
-      _buttonMoveUp = new Button();
-      _buttonMoveUp.Text = "move up";
-      _buttonMoveUp.Size = new Size(100, 25);
-      _buttonMoveUp.Location = new System.Drawing.Point(100, 100);
-      _buttonMoveUp.Click += OnButtonMoveDownClick;
-      _renderForm.Controls.Add(_buttonMoveUp);
-
     }
 
-    void OnButtonMoveLeftClick(object sender, EventArgs e) {
-      _renderer.MoveCameraLeftRight(-0.2f);
-    }
-
-    void OnButtonMoveRightClick(object sender, EventArgs e) {
-      _renderer.MoveCameraLeftRight(0.2f);
-    }
-
-    void OnButtonMoveUpClick(object sender, EventArgs e) {
-      _renderer.MoveCameraUpDown(-0.2f);
-    }
-
-    void OnButtonMoveDownClick(object sender, EventArgs e) {
-      _renderer.MoveCameraUpDown(0.2f);
-    }
-
-
-    void OnButtonDownClick(Object sender, EventArgs e) {
-      _renderer.ChangePitch(5.0f);
-    }
-
-    void OnButtonUpClick(Object sender, EventArgs e) {
-      _renderer.ChangePitch(-5.0f);
-    }
-
-    void OnButtonLeftClick(Object sender, EventArgs e) {
-      _renderer.ChangeYaw(-5.0f);
-    }
-
-    void OnButtonRightClick(Object sender, EventArgs e) {
-      _renderer.ChangeYaw(5.0f);
-    }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Run() {
@@ -211,32 +139,51 @@ namespace D3D {
 
     }
 
-    private void InitializeComponent() {
-      this.SuspendLayout();
-      // 
-      // MyForm
-      // 
-      this.ClientSize = new System.Drawing.Size(800, 600);
-      this.Name = "MyForm";
-      this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseDown);
-      this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseMove);
-      this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MyForm_MouseUp);
-      this.ResumeLayout(false);
-
-    }
-
     private void MyForm_MouseMove(object sender, MouseEventArgs e) {
-      MouseEventArgs mouseArgs = (MouseEventArgs)e;
-      int mouseX = mouseArgs.X;
-      int mouseY = mouseArgs.Y;
+
+        MouseEventArgs mouseArgs = (MouseEventArgs)e;
+        var deltaX = mouseArgs.X - _mouse.X;
+        var deltaY = mouseArgs.Y - _mouse.Y;
+      if (isRotationDown) {
+        _renderer.ChangePitch(deltaY / 10.0f);
+        _renderer.ChangeYaw(deltaX / 10.0f);
+        _mouse.X = mouseArgs.X;
+        _mouse.Y = mouseArgs.Y;
+      } else if (isMouseDown) {
+        if (deltaX > 0) {
+          _renderer.MoveCameraLeft();
+        } else {
+          _renderer.MoveCameraRight();
+        }
+        if (deltaY > 0) {
+          _renderer.MoveCameraUp();
+        } else {
+          _renderer.MoveCameraDown();
+        }
+      }
     }
 
     private void MyForm_MouseDown(object sender, MouseEventArgs e) {
-      isMouseDown = true;
+
+      MouseEventArgs mouseArgs = (MouseEventArgs)e;
+      _mouse.X = mouseArgs.X;
+      _mouse.Y = mouseArgs.Y;
+
+      if (mouseArgs.Button == MouseButtons.Left) {
+        isMouseDown = true;
+      } else if (mouseArgs.Button == MouseButtons.Right) {
+        isRotationDown = true;
+      }
+
     }
 
     private void MyForm_MouseUp(object sender, MouseEventArgs e) {
-      isMouseDown = false;
+      MouseEventArgs mouseArgs = (MouseEventArgs)e;
+      if (mouseArgs.Button == MouseButtons.Left) {
+        isMouseDown = false;
+      } else if (mouseArgs.Button == MouseButtons.Right) {
+        isRotationDown = false;
+      }
     }
   }
 }
