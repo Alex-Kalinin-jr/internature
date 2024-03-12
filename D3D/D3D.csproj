@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Generator.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
