@@ -103,7 +103,7 @@ namespace D3D {
       _buttonDown = new Button();
       _buttonDown.Text = "down";
       _buttonDown.Size = new Size(50, 25);
-      _buttonDown.Location  = new System.Drawing.Point(10, 10);
+      _buttonDown.Location = new System.Drawing.Point(10, 10);
       _buttonDown.Click += OnButtonDownClick;
       _renderForm.Controls.Add(_buttonDown);
 
@@ -131,29 +131,29 @@ namespace D3D {
 
 
       _buttonMoveLeft = new Button();
-      _buttonMoveLeft.Text = "move l";
-      _buttonMoveLeft.Size = new Size(50, 25);
+      _buttonMoveLeft.Text = "move left";
+      _buttonMoveLeft.Size = new Size(100, 25);
       _buttonMoveLeft.Location = new System.Drawing.Point(100, 10);
       _buttonMoveLeft.Click += OnButtonMoveLeftClick;
       _renderForm.Controls.Add(_buttonMoveLeft);
 
       _buttonMoveRight = new Button();
-      _buttonMoveRight.Text = "move l";
-      _buttonMoveRight.Size = new Size(50, 25);
+      _buttonMoveRight.Text = "move right";
+      _buttonMoveRight.Size = new Size(100, 25);
       _buttonMoveRight.Location = new System.Drawing.Point(100, 40);
       _buttonMoveRight.Click += OnButtonMoveRightClick;
       _renderForm.Controls.Add(_buttonMoveRight);
 
       _buttonMoveDown = new Button();
-      _buttonMoveDown.Text = "move l";
-      _buttonMoveDown.Size = new Size(50, 25);
+      _buttonMoveDown.Text = "move down";
+      _buttonMoveDown.Size = new Size(100, 25);
       _buttonMoveDown.Location = new System.Drawing.Point(100, 70);
       _buttonMoveDown.Click += OnButtonMoveUpClick;
       _renderForm.Controls.Add(_buttonMoveDown);
 
       _buttonMoveUp = new Button();
-      _buttonMoveUp.Text = "move l";
-      _buttonMoveUp.Size = new Size(50, 25);
+      _buttonMoveUp.Text = "move up";
+      _buttonMoveUp.Size = new Size(100, 25);
       _buttonMoveUp.Location = new System.Drawing.Point(100, 100);
       _buttonMoveUp.Click += OnButtonMoveDownClick;
       _renderForm.Controls.Add(_buttonMoveUp);
@@ -161,36 +161,36 @@ namespace D3D {
     }
 
     void OnButtonMoveLeftClick(object sender, EventArgs e) {
-      _renderer.MoveCameraLeftRight(0.2f);
-    }
-
-    void OnButtonMoveRightClick(object sender, EventArgs e) {
       _renderer.MoveCameraLeftRight(-0.2f);
     }
 
+    void OnButtonMoveRightClick(object sender, EventArgs e) {
+      _renderer.MoveCameraLeftRight(0.2f);
+    }
+
     void OnButtonMoveUpClick(object sender, EventArgs e) {
-      _renderer.MoveCameraUpDown(0.2f);
+      _renderer.MoveCameraUpDown(-0.2f);
     }
 
     void OnButtonMoveDownClick(object sender, EventArgs e) {
-      _renderer.MoveCameraUpDown(-0.2f);
+      _renderer.MoveCameraUpDown(0.2f);
     }
 
 
     void OnButtonDownClick(Object sender, EventArgs e) {
-      _renderer.ChangePitch(-5.0f);
+      _renderer.ChangePitch(0.2f);
     }
 
     void OnButtonUpClick(Object sender, EventArgs e) {
-      _renderer.ChangePitch(+5.0f);
+      _renderer.ChangePitch(-0.2f);
     }
 
     void OnButtonLeftClick(Object sender, EventArgs e) {
-      _renderer.ChangeYaw(+5.0f);
+      _renderer.ChangeYaw(-0.2f);
     }
 
     void OnButtonRightClick(Object sender, EventArgs e) {
-      _renderer.ChangeYaw(-5.0f);
+      _renderer.ChangeYaw(0.2f);
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
