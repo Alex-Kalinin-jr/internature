@@ -49,7 +49,7 @@ namespace D3D {
     public MyForm() {
 
       _mesh = new List<Mesh> {
-        new Mesh("Resources/dragon.obj")
+        new Mesh("Resources/FinalBaseMesh.obj")
       };
 
       _mouse = new MousePos();
