@@ -19,6 +19,8 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
     Matrix projection;
 };
 
+
+
 VSOut main(VSIn input)
 {
     input.position.w = 1.0f;
