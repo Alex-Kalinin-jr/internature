@@ -14,7 +14,7 @@ struct PSIn
 
 float4 main(PSIn input) : SV_TARGET
 {
-    float4 volumeColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
+    float4 volumeColor = float4(0.0f, 1.0f, 0.0f, 1.0f);
     float4 color;
     float3 lightDir;
     float lightIntensity;

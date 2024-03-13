@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using SharpDX.Windows;
+using SharpDX;
 using System.Collections.Generic;
 
 
@@ -21,12 +22,15 @@ namespace D3D {
       }
     }
 
-    private const int Width = 800;
-    private const int Height = 600;
+    private const int Width = 1024;
+    private const int Height = 768;
 
     private MousePos _mouse;
 
     private RenderForm _renderForm;
+    private Label _labelHelp;
+    private Button _diffuseLightColor;
+
     private Renderer _renderer;
 
     private List<Mesh> _mesh;
@@ -36,14 +40,24 @@ namespace D3D {
 
     public MyForm() {
 
-      _mesh = new List<Mesh>();
-      _mesh.Add(new Mesh("Resources/mitsuba-sphere.obj"));
+      _mesh = new List<Mesh> {
+        new Mesh("Resources/mitsuba-sphere.obj")
+      };
 
       _mouse = new MousePos();
 
-      _renderForm = new RenderForm();
+      CreateRenderForm();
+      CreateHelpLabel();
+      CreateDiffuseColor();
 
+      _renderer = new Renderer(_renderForm.Handle);
+
+    }
+
+    private void CreateRenderForm() {
+      _renderForm = new RenderForm();
       _renderForm.ClientSize = new Size(Width, Height);
+      _renderForm.KeyPreview = true;
       _renderForm.AllowUserResizing = false;
       _renderForm.SuspendLayout();
       _renderForm.Name = "MyForm";
@@ -51,11 +65,7 @@ namespace D3D {
       _renderForm.MouseMove += new MouseEventHandler(this.MyForm_MouseMove);
       _renderForm.MouseUp += new MouseEventHandler(this.MyForm_MouseUp);
       _renderForm.ResumeLayout(false);
-
       _renderForm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MyForm_KeyPress);
-
-      _renderer = new Renderer(_renderForm.Handle);
-
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -145,5 +155,42 @@ namespace D3D {
         _isRotationDown = false;
       }
     }
+
+    private void CreateHelpLabel() {
+      _labelHelp = new Label();
+      _labelHelp.AutoSize = true;
+      _labelHelp.Location = new System.Drawing.Point(25, 25);
+      _labelHelp.Name = "help";
+      _labelHelp.TabIndex = 0;
+      _labelHelp.Text = "WASD- movings\n-= - Up-Down movings\nMouseWheelPressed - rotation of object\nRMB - rotation of camera";
+      _labelHelp.TextAlign = ContentAlignment.MiddleLeft;
+      _renderForm .Controls.Add(_labelHelp);
+    }
+
+
+
+    private void CreateDiffuseColor() {
+      _diffuseLightColor = new Button();
+      _diffuseLightColor.Location = new System.Drawing.Point(25, 100);
+      _diffuseLightColor.Size = new Size(100, 50);
+      _diffuseLightColor.Text = "diffuse";
+      _diffuseLightColor.Click += ChangeDiffuseColor;
+      _renderForm.Controls.Add(_diffuseLightColor);
+    }
+
+    private void ChangeDiffuseColor(object sender, EventArgs e) {
+
+      ColorDialog buff = new ColorDialog();
+      buff.AllowFullOpen = false;
+      buff.ShowHelp = true;
+      if (buff.ShowDialog() == DialogResult.OK) {
+        _renderer.ChangeDiffLightColor(new Vector4(buff.Color.R, buff.Color.G, buff.Color.B, buff.Color.A));
+      }
+
+    }
+
+
   }
 }
+
+//  

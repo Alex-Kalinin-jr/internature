@@ -20,7 +20,6 @@ cbuffer VsMvpConstantBuffer : register(b0)
 };
 
 
-
 VSOut main(VSIn input)
 {
     input.position.w = 1.0f;

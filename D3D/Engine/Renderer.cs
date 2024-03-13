@@ -12,8 +12,8 @@ using SharpDX.D3DCompiler;
 namespace D3D {
 
   public class Renderer : IDisposable {
-    private const int Width = 800;
-    private const int Height = 600;
+    private const int Width = 1024;
+    private const int Height = 768;
 
     public Camera _camera;
     private IntPtr _formPtr;
@@ -32,6 +32,8 @@ namespace D3D {
     private PixelShader _pixelShader;
 
     private SharpDX.Color _background = SharpDX.Color.White;
+    private PsLightConstantBuffer _diffuseColor = new PsLightConstantBuffer(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), 
+                                                                            new Vector3(0, 0.0f, -1.05f));
 
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
@@ -122,10 +124,8 @@ namespace D3D {
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
-      var tmp2 = new PsLightConstantBuffer(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), new Vector3(0, 0, 1.05f));
-
-      _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp2);
-      _context3D.VertexShader.SetConstantBuffer(1, _constantLightBuffer);
+      _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref _diffuseColor);
+      _context3D.PixelShader.SetConstantBuffer(0, _constantLightBuffer);
 
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
@@ -242,5 +242,14 @@ namespace D3D {
       _depthStencilView = new DepthStencilView(_device3D, depthBuffer, depthStencilViewDesc);
       _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);
     }
+
+    public void ChangeDiffLightColor(Vector4 color) {
+      _diffuseColor.Diffuse = color;
+    }
+
+    public void ChangeDiffLightDirectiron(Vector3 direction) {
+      _diffuseColor.LightDirection = direction;
+    }
+
   }
 }
