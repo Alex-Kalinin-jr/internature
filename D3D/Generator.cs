@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace D3D {
+
+  /*
   public class Generator {
 
     public static (Vertex[], short[]) GenerateCube() {
@@ -71,4 +73,5 @@ namespace D3D {
       return (_vertices, _indices);
     }
   }
+   */
 }

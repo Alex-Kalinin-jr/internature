@@ -1,7 +1,15 @@
 ﻿struct VSOut
 {
     float4 position : SV_POSITION;
-    float4 color : COLOR;
+    float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
+};
+
+struct VSIn
+{
+    float4 position : POSITION;
+    float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
 };
 
 cbuffer VS_CONSTANT_BUFFER : register(b0)
@@ -11,17 +19,19 @@ cbuffer VS_CONSTANT_BUFFER : register(b0)
     Matrix projection;
 };
 
-VSOut main(float4 position : POSITION, float4 color : COLOR)
+VSOut main(VSIn input)
 {
-    VSOut output;
-    position.w = 1.0;
+    input.position.w = 1.0f;
     
-    output.position = mul(position, world);
+    VSOut output;
+    
+    output.position = mul(input.position, world);
     output.position = mul(output.position, view);
     output.position = mul(output.position, projection);
     
     
-    output.color = color;
+    output.tex = input.tex;
+    output.normal = normalize(mul(input.normal, (float3x3) world));
 
     return output;
 }

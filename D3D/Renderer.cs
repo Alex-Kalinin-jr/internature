@@ -8,7 +8,6 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
-using System.Runtime.Remoting.Contexts;
 
 namespace D3D {
 
@@ -27,6 +26,7 @@ namespace D3D {
     private Buffer _vertexBuffer;
     private Buffer _indexBuffer;
     private Buffer _constantBuffer;
+    private Buffer _constantLightBuffer;
 
     private VertexShader _vertexShader;
     private PixelShader _pixelShader;
@@ -93,8 +93,9 @@ namespace D3D {
       _context3D.PixelShader.Set(_pixelShader);
 
       _inputLayout = new InputLayout(_device3D, _inputSignature, new[] {
-        new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0, InputClassification.PerVertexData, 0),
-        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12, 0, InputClassification.PerVertexData, 0)
+        new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
+        new InputElement("TEXCOORD0", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
+        new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0)
       });
       _context3D.InputAssembler.InputLayout = _inputLayout;
 
@@ -117,10 +118,15 @@ namespace D3D {
       tmp.world = ComputeModelMatrix();
       tmp.world.Transpose();
 
-      _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
-
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+
+      var tmp2 = new LightBuffer(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), new Vector3(0, 0, 1.05f));
+
+      _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp2);
+      _context3D.VertexShader.SetConstantBuffer(1, _constantLightBuffer);
+
+      _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
 
       _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
       _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));

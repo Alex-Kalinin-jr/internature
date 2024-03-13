@@ -1,15 +1,15 @@
 ﻿using SharpDX;
 using System.Runtime.InteropServices;
 
-namespace D3D {
-  [StructLayout(LayoutKind.Sequential)]
-  public struct Vertex {
-    public Vector3 Position;
-    public Color4 Color;
+[StructLayout(LayoutKind.Sequential)]
+public struct Vertex {
+  public Vector3 Position { get; set; }
+  public Vector2 Tex { get; set; }
+  public Vector3 Normal { get; set; }
 
-    public Vertex(Vector3 position, Color4 color) {
-      Position = position;
-      Color = color;
-    }
+  public Vertex(Vector3 pos, Vector3 norm, Vector2 uv) {
+    Position = pos;
+    Tex = uv;
+    Normal = norm;
   }
 }

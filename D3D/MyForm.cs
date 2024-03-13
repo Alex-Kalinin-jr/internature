@@ -2,9 +2,13 @@
 using System.Drawing;
 using System.Windows.Forms;
 using SharpDX.Windows;
+using System.Collections.Generic;
+
 
 using Color = SharpDX.Color;
 namespace D3D {
+
+
 
   public class MyForm : RenderForm, IDisposable {
     public struct MousePos {
@@ -24,15 +28,16 @@ namespace D3D {
 
     private RenderForm _renderForm;
     private Renderer _renderer;
-    private Vertex[] _vertices;
-    private short[] _indices;
+
+    private List<Mesh> _mesh;
 
     bool _isMouseDown = false;
     bool _isRotationDown = false;
 
     public MyForm() {
 
-      (_vertices, _indices) = Generator.GenerateCube();
+      _mesh = new List<Mesh>();
+      _mesh.Add(new Mesh("Models/mitsuba-sphere.obj"));
 
       _mouse = new MousePos();
 
@@ -61,7 +66,7 @@ namespace D3D {
         _renderer.MoveCameraBack();
       } else if (e.KeyChar == 'd') {
         _renderer.MoveCameraRight();
-      } else if (e.KeyChar == 'a') { 
+      } else if (e.KeyChar == 'a') {
         _renderer.MoveCameraLeft();
       } else if (e.KeyChar == '=') {
         _renderer.MoveCameraUp();
@@ -77,7 +82,9 @@ namespace D3D {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void RenderCallback() {
-      _renderer.RenderCallback(_vertices, _indices);
+      foreach (var form in _mesh) {
+        _renderer.RenderCallback(form.Vertices.ToArray(), form.Indices.ToArray());
+      }
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,25 +97,29 @@ namespace D3D {
 
     private void MyForm_MouseMove(object sender, MouseEventArgs e) {
 
-        MouseEventArgs mouseArgs = (MouseEventArgs)e;
-        var deltaX = mouseArgs.X - _mouse.X;
-        var deltaY = mouseArgs.Y - _mouse.Y;
+      MouseEventArgs mouseArgs = (MouseEventArgs)e;
+      var deltaX = mouseArgs.X - _mouse.X;
+      var deltaY = mouseArgs.Y - _mouse.Y;
+
       if (_isRotationDown) {
         _renderer.ChangePitch(deltaY / 10.0f);
         _renderer.ChangeYaw(deltaX / 10.0f);
         _mouse.X = mouseArgs.X;
         _mouse.Y = mouseArgs.Y;
       } else if (_isMouseDown) {
+
         if (deltaX > 0) {
           _renderer.MoveCameraLeft();
         } else {
           _renderer.MoveCameraRight();
         }
+
         if (deltaY > 0) {
           _renderer.MoveCameraUp();
         } else {
           _renderer.MoveCameraDown();
         }
+
       }
     }
 
