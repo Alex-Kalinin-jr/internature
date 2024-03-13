@@ -94,8 +94,8 @@ namespace D3D {
 
       _inputLayout = new InputLayout(_device3D, _inputSignature, new[] {
         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
-        new InputElement("TEXCOORD0", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
-        new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0)
+        new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
+        new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
       });
       _context3D.InputAssembler.InputLayout = _inputLayout;
 
