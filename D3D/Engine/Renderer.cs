@@ -97,6 +97,7 @@ namespace D3D {
         new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
         new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
       });
+
       _context3D.InputAssembler.InputLayout = _inputLayout;
 
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
@@ -107,7 +108,7 @@ namespace D3D {
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void RenderCallback(Vertex[] vertices, short[] indices) {
 
-      var tmp = new VS_CONSTANT_BUFFER();
+      var tmp = new VsMvpConstantBuffer();
 
       tmp.view = _camera.GetViewMatrix();
       tmp.view.Transpose();
@@ -121,7 +122,7 @@ namespace D3D {
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
-      var tmp2 = new LightBuffer(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), new Vector3(0, 0, 1.05f));
+      var tmp2 = new PsLightConstantBuffer(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), new Vector3(0, 0, 1.05f));
 
       _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp2);
       _context3D.VertexShader.SetConstantBuffer(1, _constantLightBuffer);

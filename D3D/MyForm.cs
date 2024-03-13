@@ -37,7 +37,7 @@ namespace D3D {
     public MyForm() {
 
       _mesh = new List<Mesh>();
-      _mesh.Add(new Mesh("Models/mitsuba-sphere.obj"));
+      _mesh.Add(new Mesh("Resources/mitsuba-sphere.obj"));
 
       _mouse = new MousePos();
 

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace D3D {
   [StructLayout(LayoutKind.Sequential)]
-  public struct LightBuffer {
+  public struct PsLightConstantBuffer {
     public Vector4 Diffuse;
 
     public Vector3 LightDirection;
 
     public float Padding;
 
-    public LightBuffer(Vector4 D, Vector3 L) {
+    public PsLightConstantBuffer(Vector4 D, Vector3 L) {
       Diffuse = D;
       LightDirection = L;
       Padding = 0;

@@ -1,5 +1,5 @@
 ﻿
-cbuffer LightBuffer : register(b0) {
+cbuffer PsLightConstantBuffer : register(b0) {
     float4 diffuseColor;
     float3 lightDirection;
     float padding;

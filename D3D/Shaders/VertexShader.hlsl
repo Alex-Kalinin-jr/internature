@@ -12,7 +12,7 @@ struct VSIn
     float3 normal : NORMAL;
 };
 
-cbuffer VS_CONSTANT_BUFFER : register(b0)
+cbuffer VsMvpConstantBuffer : register(b0)
 {
     Matrix world;
     Matrix view;
