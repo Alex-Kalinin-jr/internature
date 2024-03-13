@@ -49,7 +49,7 @@ namespace D3D {
     public MyForm() {
 
       _mesh = new List<Mesh> {
-        new Mesh("Resources/FinalBaseMesh.obj")
+        new Mesh("Resources/Tree.obj")
       };
 
 
@@ -182,8 +182,8 @@ namespace D3D {
     private void CreateDiffuseColor() {
       _diffuseLightColor = new Button();
       _diffuseLightColor.Location = new System.Drawing.Point(25, 100);
-      _diffuseLightColor.Size = new Size(100, 50);
-      _diffuseLightColor.Text = "diffuse";
+      _diffuseLightColor.Size = new Size(100, 25);
+      _diffuseLightColor.Text = "light color";
       _diffuseLightColor.Click += ChangeDiffuseColor;
       _renderForm.Controls.Add(_diffuseLightColor);
     }
@@ -194,7 +194,7 @@ namespace D3D {
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
-        _renderer.ChangeDiffLightColor(new Vector4(buff.Color.R, buff.Color.G, buff.Color.B, buff.Color.A));
+        _renderer.ChangeDiffLightColor(new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255));
       }
 
     }
@@ -202,7 +202,7 @@ namespace D3D {
     private void CreateDirectionTrackBars() {
 
       Label x = new Label();
-      x.Text = "x-direction";
+      x.Text = "x-coord";
       x.Location = new System.Drawing.Point(25, 160);
       _renderForm.Controls.Add(x);
 
@@ -215,7 +215,7 @@ namespace D3D {
       _xDirectionTrackBar.Location = new System.Drawing.Point(100, 150);
 
       Label y = new Label();
-      y.Text = "y-direction";
+      y.Text = "y-coord";
       y.Location = new System.Drawing.Point(25, 210);
       _renderForm.Controls.Add(y);
 
@@ -228,7 +228,7 @@ namespace D3D {
       _yDirectionTrackBar.Location = new System.Drawing.Point(100, 200);
 
       Label z = new Label();
-      z.Text = "y-direction";
+      z.Text = "z-coord";
       z.Location = new System.Drawing.Point(25, 260);
       _renderForm.Controls.Add(z);
 
@@ -246,9 +246,9 @@ namespace D3D {
     }
 
     private void DirectionTrackBar_Scroll(object sender, EventArgs e) {
-      float xDirection = _xDirectionTrackBar.Value / 100.0f;
-      float yDirection = _yDirectionTrackBar.Value / 100.0f;
-      float zDirection = _zDirectionTrackBar.Value / 100.0f;
+      float xDirection = _xDirectionTrackBar.Value / 20.0f;
+      float yDirection = _yDirectionTrackBar.Value / 20.0f;
+      float zDirection = _zDirectionTrackBar.Value / 20.0f;
       _renderer.ChangeDiffLightDirectiron(new Vector3(xDirection, yDirection, zDirection));
     }
 

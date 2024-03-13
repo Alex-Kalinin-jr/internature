@@ -17,7 +17,7 @@ struct PSIn
 
 float4 main(PSIn input) : SV_TARGET
 {
-    float3 volumeColor = float3(0.0f, 1.0f, 0.0f);
+    float3 volumeColor = float3(0.3f, 0.3f, 0.3f);
     
     float3 ambient = ambientStrength * color.xyz;
     
@@ -25,12 +25,12 @@ float4 main(PSIn input) : SV_TARGET
     float3 lightDir = normalize(position - input.fragPos);
     
     float diff = max(dot(norm, lightDir), 0.0f);
-    float3 diffuse = diff * color;
+    float3 diffuse = diff * color.xyz;
     
     float3 viewDir = normalize(viewPos - input.fragPos);
     float3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    float3 specular = specularStrength * spec * color;
+    float3 specular = specularStrength * spec * color.xyz;
     
     float3 result = (ambient + diffuse + specular) * volumeColor;
     
