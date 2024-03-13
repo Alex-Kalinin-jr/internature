@@ -3,6 +3,7 @@
     float4 position : SV_POSITION;
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
+    float3 fragPos : POSITION1;
 };
 
 struct VSIn
@@ -27,6 +28,7 @@ VSOut main(VSIn input)
     VSOut output;
     
     output.position = mul(input.position, world);
+    output.fragPos = output.position.xyz;
     output.position = mul(output.position, view);
     output.position = mul(output.position, projection);
     

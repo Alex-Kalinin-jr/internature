@@ -244,11 +244,11 @@ namespace D3D {
     }
 
     public void ChangeDiffLightColor(Vector4 color) {
-      _diffuseColor.Diffuse = color;
+      _diffuseColor.Color = color;
     }
 
-    public void ChangeDiffLightDirectiron(Vector3 direction) {
-      _diffuseColor.LightDirection = direction;
+    public void ChangeDiffLightDirectiron(Vector3 position) {
+      _diffuseColor.Position = position;
     }
 
   }

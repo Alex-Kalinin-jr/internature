@@ -1,24 +1,19 @@
 ﻿using SharpDX;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace D3D {
   [StructLayout(LayoutKind.Sequential)]
   public struct PsLightConstantBuffer {
-    public Vector4 Diffuse;
+    public Vector4 Color;
 
-    public Vector3 LightDirection;
+    public Vector3 Position;
 
-    public float Padding;
+    public float AmbientStrength;
 
     public PsLightConstantBuffer(Vector4 D, Vector3 L) {
-      Diffuse = D;
-      LightDirection = L;
-      Padding = 0;
+      Color = D;
+      Position = L;
+      AmbientStrength = 0.4f;
     }
 
   }
