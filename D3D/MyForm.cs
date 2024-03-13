@@ -52,6 +52,7 @@ namespace D3D {
         new Mesh("Resources/FinalBaseMesh.obj")
       };
 
+
       _mouse = new MousePos();
 
       CreateRenderForm();
