@@ -32,8 +32,8 @@ namespace D3D {
     private PixelShader _pixelShader;
 
     private SharpDX.Color _background = SharpDX.Color.White;
-    private PsLightConstantBuffer _diffuseColor = new PsLightConstantBuffer(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), 
-                                                                            new Vector3(0, 0.0f, -1.05f));
+    private PsLightConstantBuffer _lightColor = new PsLightConstantBuffer(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), 
+                                                                          new Vector3(0, 0.0f, -1.05f));
 
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
@@ -103,8 +103,6 @@ namespace D3D {
       _context3D.InputAssembler.InputLayout = _inputLayout;
 
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
-
-
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +122,8 @@ namespace D3D {
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
-      _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref _diffuseColor);
+      _lightColor.ViewPos = _camera.Position;
+      _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref _lightColor);
       _context3D.PixelShader.SetConstantBuffer(0, _constantLightBuffer);
 
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
@@ -244,11 +243,11 @@ namespace D3D {
     }
 
     public void ChangeDiffLightColor(Vector4 color) {
-      _diffuseColor.Color = color;
+      _lightColor.Color = color;
     }
 
     public void ChangeDiffLightDirectiron(Vector3 position) {
-      _diffuseColor.Position = position;
+      _lightColor.Position = position;
     }
 
   }
