@@ -29,7 +29,15 @@ namespace D3D {
 
     private RenderForm _renderForm;
     private Label _labelHelp;
+
+
+
     private Button _diffuseLightColor;
+    private TrackBar _xDirectionTrackBar;
+    private TrackBar _yDirectionTrackBar;
+    private TrackBar _zDirectionTrackBar;
+
+
 
     private Renderer _renderer;
 
@@ -41,7 +49,7 @@ namespace D3D {
     public MyForm() {
 
       _mesh = new List<Mesh> {
-        new Mesh("Resources/mitsuba-sphere.obj")
+        new Mesh("Resources/dragon.obj")
       };
 
       _mouse = new MousePos();
@@ -49,6 +57,7 @@ namespace D3D {
       CreateRenderForm();
       CreateHelpLabel();
       CreateDiffuseColor();
+      CreateDirectionTrackBars();
 
       _renderer = new Renderer(_renderForm.Handle);
 
@@ -189,6 +198,58 @@ namespace D3D {
 
     }
 
+    private void CreateDirectionTrackBars() {
+
+      Label x = new Label();
+      x.Text = "x-direction";
+      x.Location = new System.Drawing.Point(25, 160);
+      _renderForm.Controls.Add(x);
+
+      _xDirectionTrackBar = new TrackBar();
+      _xDirectionTrackBar.Minimum = -100;
+      _xDirectionTrackBar.Maximum = 100;
+      _xDirectionTrackBar.TickFrequency = 10;
+      _xDirectionTrackBar.LargeChange = 10;
+      _xDirectionTrackBar.Scroll += DirectionTrackBar_Scroll;
+      _xDirectionTrackBar.Location = new System.Drawing.Point(100, 150);
+
+      Label y = new Label();
+      y.Text = "y-direction";
+      y.Location = new System.Drawing.Point(25, 210);
+      _renderForm.Controls.Add(y);
+
+      _yDirectionTrackBar = new TrackBar();
+      _yDirectionTrackBar.Minimum = -100;
+      _yDirectionTrackBar.Maximum = 100;
+      _yDirectionTrackBar.TickFrequency = 10;
+      _yDirectionTrackBar.LargeChange = 10;
+      _yDirectionTrackBar.Scroll += DirectionTrackBar_Scroll;
+      _yDirectionTrackBar.Location = new System.Drawing.Point(100, 200);
+
+      Label z = new Label();
+      z.Text = "y-direction";
+      z.Location = new System.Drawing.Point(25, 260);
+      _renderForm.Controls.Add(z);
+
+      _zDirectionTrackBar = new TrackBar();
+      _zDirectionTrackBar.Minimum = -100;
+      _zDirectionTrackBar.Maximum = 100;
+      _zDirectionTrackBar.TickFrequency = 10;
+      _zDirectionTrackBar.LargeChange = 10;
+      _zDirectionTrackBar.Scroll += DirectionTrackBar_Scroll;
+      _zDirectionTrackBar.Location = new System.Drawing.Point(100, 250);
+
+      _renderForm.Controls.Add(_xDirectionTrackBar);
+      _renderForm.Controls.Add(_yDirectionTrackBar);
+      _renderForm.Controls.Add(_zDirectionTrackBar);
+    }
+
+    private void DirectionTrackBar_Scroll(object sender, EventArgs e) {
+      float xDirection = _xDirectionTrackBar.Value / 100.0f;
+      float yDirection = _yDirectionTrackBar.Value / 100.0f;
+      float zDirection = _zDirectionTrackBar.Value / 100.0f;
+      _renderer.ChangeDiffLightDirectiron(new Vector3(xDirection, yDirection, zDirection));
+    }
 
   }
 }
