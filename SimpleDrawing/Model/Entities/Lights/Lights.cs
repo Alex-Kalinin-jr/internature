@@ -10,7 +10,8 @@ namespace SimpleDrawing.Model {
     public Light() {
       ItsVolume = new Cube(4);
       ItsColor = new Color();
-      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+// as our scene consists of cubes with size 2x2x2, let us create light with different size.
+      ItsVolume.ItsPosition.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);  // ScaleVr - good thing to do that.
     }
 
     public void Bind(ref Shader shader) {

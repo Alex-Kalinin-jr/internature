@@ -6,9 +6,9 @@ namespace SimpleDrawing.Model {
     public float Quadratic;
 
     public PointLightColor() : base() {
-      Constant = 1.0f;
-      Linear = 0.09f;
-      Quadratic = 0.032f;
+      Constant = 1.0f; // just an examples
+      Linear = 0.09f; // just an examples, but do not set more than 0.3
+      Quadratic = 0.032f; // just an example, set significantly less that linear koeff
     }
   }
 

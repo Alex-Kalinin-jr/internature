@@ -2,7 +2,11 @@
 
 namespace SimpleDrawing.Model {
   public class Generator {
-
+    /// <summary>
+    /// generates cube of size 2x2x2, whose edges divided to count of "mini"-edges
+    /// </summary>
+    /// <param name="count"></param> count of edges after dividing certain edge
+    /// <returns></returns>
     public static Form GenerateCubeForm(int count) {
       Form form = new Form();
 
@@ -28,7 +32,10 @@ namespace SimpleDrawing.Model {
 
       return form;
     }
-
+    /// <summary>
+    /// Generates testing cube of predefined coordinates
+    /// </summary>
+    /// <returns></returns>
     public static Form GenerateCubeForm() {
       float[] vertices = {
         -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f,
@@ -66,7 +73,12 @@ namespace SimpleDrawing.Model {
 
       return form;
     }
-
+    /// <summary>
+    /// Generates scene, which consist of square cubes area
+    /// </summary>
+    /// <param name="countOfSide"></param> count of cubes on one side
+    /// <param name="step"></param> step between cubes 
+    /// <returns></returns>
     public static List<Cube> GenerateVolumes(int countOfSide, float step) {
       var volumes = new List<Cube>();
       float range = countOfSide * step;
@@ -84,7 +96,13 @@ namespace SimpleDrawing.Model {
       }
       return volumes;
     }
-
+    /// <summary>
+    /// Generates scene of lights, which consist of one directional light, one point light
+    /// and square area of flashlights.
+    /// </summary>
+    /// <param name="sideCount"></param> count of flashlights on one side
+    /// <param name="step"></param> step between flashlights
+    /// <returns></returns>
     public static (List<Light>, List<Light>, List<Light>) GenerateLights(int sideCount, float step) {
       var dirLights = new List<Light>();
       var pointLights = new List<Light>();
@@ -104,6 +122,12 @@ namespace SimpleDrawing.Model {
 
       return (dirLights, pointLights, flashLights);
     }
+    /// <summary>
+    /// Generates scene of flashlights.
+    /// </summary>
+    /// <param name="sideCount"></param> count of flashlights on one side
+    /// <param name="step"></param> step between flashlights
+    /// <returns></returns>
     public static List<Light> GenerateFlashLights(int sideCount, float step) {
       var lights = new List<Light>();
       float range = sideCount * step;
@@ -142,7 +166,6 @@ namespace SimpleDrawing.Model {
       }
 
     }
-
 
     private static void GeneratePlaneXy(int count, float step, float xStart,
         ref float[] cube, ref int ind, float zCoord) {

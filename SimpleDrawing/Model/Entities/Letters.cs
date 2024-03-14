@@ -20,13 +20,15 @@ namespace SimpleDrawing.Model {
 
       Width = width;
       Height = height;
-      CoordX = -1.0f + width + 0.05f;
-      CoordY = -1.0f + height + 0.05f;
+      CoordX = -1.0f + width + 0.05f; // theese is just a position in OpenGL coordinates
+      CoordY = -1.0f + height + 0.05f; // theese is just a position in OpenGL coordinates
       Scale = 1.5f;
       Color = new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f);
 
       _texturesByName = new Dictionary<char, Texture>();
+      // we divide rectangle of our letter to 2 triangles.
       _vertices = new float[] { 0.0f, Height, Width, Height, 0.0f, 0.0f, 0.0f, 0.0f, Width, Height, Width, 0.0f };
+      // we bind coordinates to texture so that it it fills theese 2 triangles 
       _texCoords = new float[] { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f };
 
       _texturesByName.Add('0',Texture.LoadFromFile("Resources/0.png"));

@@ -10,6 +10,7 @@ namespace SimpleDrawing.Model {
     public float Pitch {
       get => OpenTK.Mathematics.MathHelper.RadiansToDegrees(_pitch);
       set {
+        // we restrict our pitch as if it is human's head: not below and not above vertical direction
         var angle = OpenTK.Mathematics.MathHelper.Clamp(value, -89f, 89f);
         _pitch = OpenTK.Mathematics.MathHelper.DegreesToRadians(angle);
         UpdateVectors();
@@ -50,6 +51,7 @@ namespace SimpleDrawing.Model {
     }
 
     public OpenTK.Mathematics.Matrix4 GetProjectionMatrix() {
+      // these is standard arguments for perspective field of view
       return OpenTK.Mathematics.Matrix4.CreatePerspectiveFieldOfView(_fov, AspectRatio, 0.01f, 100f);
     }
 

@@ -52,7 +52,7 @@ namespace SimpleDrawing.Model {
       _lights = new List<Light>();
       _pointLights = new List<Light>();
       _directionalLights = new List<Light>();
-      _letters = new Letters(0.05f, 0.1f);
+      _letters = new Letters(0.05f, 0.1f); // just an example of width and height
 
       _circleShiftingMover = new CircleShiftingMover(1000);
       _rotateaterMover = new RotationMover();

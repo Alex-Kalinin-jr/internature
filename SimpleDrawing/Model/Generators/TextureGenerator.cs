@@ -7,7 +7,7 @@
         System.Drawing.Font font = new System.Drawing.Font(fontType, textureWidth,
           System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
 
-        int textureHeight = textureWidth / 2 * 3;
+        int textureHeight = textureWidth / 2 * 3; // aspect ratio is choosen 3 : 2
 
         System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(textureWidth,
             textureHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);

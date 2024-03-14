@@ -4,7 +4,7 @@
     public float Shiness;
 
     public MaterialColor() {
-      Shiness = 0.32f;
+      Shiness = 0.32f; // just an example (should be from 0 to 1)
     }
 
     public static MaterialColor CreateMaterial(string name) {
@@ -24,6 +24,7 @@
         return new MaterialColor();
       }
     }
+// just an example
     public static MaterialColor CreateEmerald() {
       MaterialColor buff = new MaterialColor();
       buff.Ambient = new OpenTK.Mathematics.Vector3(0.0215f, 0.1745f, 0.0215f);
@@ -32,7 +33,7 @@
       buff.Shiness = 0.6f;
       return buff;
     }
-
+// just an example
     public static MaterialColor CreateObsidian() {
       MaterialColor buff = new MaterialColor();
       buff.Ambient = new OpenTK.Mathematics.Vector3(0.05375f, 0.05f, 0.06625f);
@@ -41,7 +42,7 @@
       buff.Shiness = 0.3f;
       return buff;
     }
-
+// just an example
     public static MaterialColor CreateChrome() {
       MaterialColor buff = new MaterialColor();
       buff.Ambient = new OpenTK.Mathematics.Vector3(0.25f, 0.25f, 0.25f);
@@ -50,7 +51,7 @@
       buff.Shiness = 0.6f;
       return buff;
     }
-
+// just an example
     public static MaterialColor CreateBlackRubber() {
       MaterialColor buff = new MaterialColor();
       buff.Ambient = new OpenTK.Mathematics.Vector3(0.02f, 0.02f, 0.02f);
@@ -59,7 +60,7 @@
       buff.Shiness = 0.078125f;
       return buff;
     }
-
+// just an example
     public static MaterialColor CreateGreenPlastic() {
       MaterialColor buff = new MaterialColor();
       buff.Ambient = new OpenTK.Mathematics.Vector3(0.0f, 0.0f, 0.0f);
@@ -68,7 +69,7 @@
       buff.Shiness = 0.25f;
       return buff;
     }
-
+// just an example
     public static MaterialColor CreateBronze() {
       MaterialColor buff = new MaterialColor();
       buff.Ambient = new OpenTK.Mathematics.Vector3(0.2125f, 0.1275f, 0.054f);
