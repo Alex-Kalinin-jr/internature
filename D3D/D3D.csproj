@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStorage.cs" />
     <Compile Include="Engine\Camera.cs" />
     <Compile Include="Engine\Entities\Mesh.cs" />
     <Compile Include="MyForm.cs">
@@ -105,6 +106,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\Squirrel.obj" />
+    <None Include="Resources\Tree.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

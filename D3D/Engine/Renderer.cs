@@ -9,7 +9,6 @@ using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
 using System.Collections.Generic;
-using System.Drawing;
 
 namespace D3D {
 
@@ -33,19 +32,12 @@ namespace D3D {
     private VertexShader _vertexShader;
     private PixelShader _pixelShader;
 
-    private SharpDX.Color _background = SharpDX.Color.White;
-    private PsLightConstantBuffer[] _lightColor = new PsLightConstantBuffer[] {
-      new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
-      new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 1.0f, -1.0f)),
-      new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 2.0f, -1.0f))
-    };
-
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
 
     private DepthStencilView _depthStencilView;
 
-    private List<Matrix> _matrices;
+    private SharpDX.Color _background = SharpDX.Color.White;
 
     public Renderer(IntPtr ptr) {
 
@@ -55,19 +47,6 @@ namespace D3D {
       InitializeDeviceResources();
       InitializeShaders();
       InitializeDepthBuffer();
-
-      _matrices = new List<Matrix>();
-      float xVal = 0.0f;
-      float zVal = 0.0f;
-      for (int i = 0; i < 10; ++i) {
-        _matrices.Add(ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
-                                         new Vector3(xVal, 0.0f, zVal)));
-        xVal += 3.0f;
-        zVal += 3.0f;
-        if (i == 5) {
-          zVal = 0.0f;
-        }
-      }
 
     }
 
@@ -126,59 +105,55 @@ namespace D3D {
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void RenderCallback(Vertex[] vertices, short[] indices) {
+    public void RenderCallback(DataStorage storage) {
 
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
-
-      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
-      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
-
-      _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
-      _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
 
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
 
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
 
-      for (int i = 0; i < _lightColor.Length; i++) {
-        _lightColor[i].ViewPos = _camera.Position;
-        _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref _lightColor[i]);
+      PsLightConstantBuffer[] light = storage.Lights.ToArray();
+
+      for (int i = 0; i < light.Length; i++) {
+        light[i].ViewPos = _camera.Position;
+        _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref light[i]);
         _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffer);
       }
 
+      for (int i = 0; i < storage.MeshList.Count; ++i) {
+        var mesh = storage.MeshList[i];
+        var vertices = mesh.Volume.Vertices.ToArray();
+        var indices = mesh.Volume.Indices.ToArray();
+        var matrices = mesh.WorldMatrices;
 
+        _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
+        _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
 
+        _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
+        _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
 
-      var tmp = new VsMvpConstantBuffer();
+        var tmp = new VsMvpConstantBuffer();
+        tmp.view = _camera.GetViewMatrix();
+        tmp.view.Transpose();
+        tmp.projection = _camera.GetProjectionMatrix();
+        tmp.projection.Transpose();
 
-      tmp.view = _camera.GetViewMatrix();
-      tmp.view.Transpose();
+        foreach (var matr in matrices) {
+          tmp.world = matr;
+          tmp.world.Transpose();
 
-      tmp.projection = _camera.GetProjectionMatrix();
-      tmp.projection.Transpose();
+          _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
+          _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
-      foreach (var matr in _matrices) {
-        tmp.world = matr;
-        tmp.world.Transpose();
-
-        _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
-        _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
-
-        _context3D.DrawIndexed(indices.Length, 0, 0);
+          _context3D.DrawIndexed(indices.Length, 0, 0);
+        }
       }
-
 
       _swapChain.Present(1, PresentFlags.None);
 
     }
-
-
-    public Matrix ComputeModelMatrix(Vector3 rotations, Vector3 translations) {
-      var buff = Matrix.RotationYawPitchRoll(rotations.X, rotations.Y, rotations.Z) * Matrix.Translation(translations);
-      return buff;
-    }
-
 
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -266,18 +241,5 @@ namespace D3D {
       _depthStencilView = new DepthStencilView(_device3D, depthBuffer, depthStencilViewDesc);
       _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);
     }
-
-    public void ChangeDiffLightColor(Vector4 color) {
-      for (int i = 0; i < _lightColor.Length; ++i) {
-        _lightColor[i].Color = color;
-      }
-    }
-
-    public void ChangeDiffLightDirectiron(Vector3 position) {
-      for (int i = 0; i < _lightColor.Length; ++i) {
-        _lightColor[i].Position = position;
-      }
-    }
-
   }
 }

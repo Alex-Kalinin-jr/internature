@@ -30,30 +30,23 @@ namespace D3D {
     private RenderForm _renderForm;
     private Label _labelHelp;
 
-
-
     private Button _diffuseLightColor;
     private TrackBar _xDirectionTrackBar;
     private TrackBar _yDirectionTrackBar;
     private TrackBar _zDirectionTrackBar;
 
 
-
     private Renderer _renderer;
-
-    private List<Mesh> _mesh;
+    private DataStorage _dataStorage;
 
     bool _isMouseDown = false;
     bool _isRotationDown = false;
 
     public MyForm() {
-
-      _mesh = new List<Mesh> {
-        new Mesh("Resources/Tree.obj")
-      };
+      _dataStorage = DataStorage.CreateTestingDataStorage();
 
 
-      _mouse = new MousePos();
+    _mouse = new MousePos();
 
       CreateRenderForm();
       CreateHelpLabel();
@@ -102,9 +95,7 @@ namespace D3D {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void RenderCallback() {
-      foreach (var form in _mesh) {
-        _renderer.RenderCallback(form.Vertices.ToArray(), form.Indices.ToArray());
-      }
+        _renderer.RenderCallback(_dataStorage);
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,8 +168,6 @@ namespace D3D {
       _renderForm .Controls.Add(_labelHelp);
     }
 
-
-
     private void CreateDiffuseColor() {
       _diffuseLightColor = new Button();
       _diffuseLightColor.Location = new System.Drawing.Point(25, 100);
@@ -194,12 +183,9 @@ namespace D3D {
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
-        _renderer.ChangeDiffLightColor(new Vector4(buff.Color.R / 255, 
-                                                    buff.Color.G / 255, 
-                                                    buff.Color.B / 255, 
-                                                    buff.Color.A / 255));
+        _dataStorage.ChangeLightColor(new Vector4(buff.Color.R / 255, buff.Color.G / 255, 
+                                                  buff.Color.B / 255, buff.Color.A / 255));
       }
-
     }
 
     private void CreateDirectionTrackBars() {
@@ -252,10 +238,8 @@ namespace D3D {
       float xDirection = _xDirectionTrackBar.Value / 20.0f;
       float yDirection = _yDirectionTrackBar.Value / 20.0f;
       float zDirection = _zDirectionTrackBar.Value / 20.0f;
-      _renderer.ChangeDiffLightDirectiron(new Vector3(xDirection, yDirection, zDirection));
+      _dataStorage.ChangeLightDirectiron(new Vector3(xDirection, yDirection, zDirection));
     }
 
   }
 }
-
-//  
