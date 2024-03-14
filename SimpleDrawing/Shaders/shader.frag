@@ -1,7 +1,7 @@
 #version 330 core
 
 #define NR_POINTLIGHTS 1 
-#define NR_FLASHLIGHTS 1 
+#define NR_FLASHLIGHTS 100 
 #define NR_DIRECTIONAL_LIGHTS 1
 
 in vec3 Normal;
@@ -19,7 +19,7 @@ struct DirLight {
 
 
 struct PointLight {
-    vec3 position;
+    vec3 position;                                                   
 
     vec3 color;
     vec3 diffuse;
@@ -54,7 +54,9 @@ struct Material {
     float shiness;
 };
 
-uniform vec3 viewPos;
+uniform float edges;
+uniform vec3 edgesColor;
+uniform vec3 viewPos; //
 uniform Material material;
 uniform DirLight dirlights[NR_DIRECTIONAL_LIGHTS];
 uniform FlashLight flashLights[NR_FLASHLIGHTS];
@@ -136,5 +138,9 @@ void main() {
         }
     }
 
-    outColor = vec4(result, 1.0);
+    if (edges == 51.51f) {
+        outColor = vec4(edgesColor, 1.0);
+    } else {
+        outColor = vec4(result, 1.0);
+    }
 }

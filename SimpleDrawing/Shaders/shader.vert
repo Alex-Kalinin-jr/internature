@@ -5,9 +5,9 @@ layout (location = 2) in vec3 aNormal;
 
 uniform mat4 model; //
 uniform mat4 view; //
-uniform mat4 projection; //
-uniform mat4 invertedModel; //
-uniform float morphingFactor; //
+uniform mat4 projection;
+uniform mat4 invertedModel;
+uniform float morphingFactor; // 
 
 out vec3 Normal;
 out vec3 FragPos;

@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 
-namespace SimpleDrawing.Entities {
-  public class Letters {
+namespace SimpleDrawing.Model {
+  public class Letters : IBindable {
     public float Width { get; set; }
     public float Height { get; set; }
     public float CoordX { get; set; }
@@ -20,13 +20,15 @@ namespace SimpleDrawing.Entities {
 
       Width = width;
       Height = height;
-      CoordX = -1.0f + width + 0.05f;
-      CoordY = -1.0f + height + 0.05f;
+      CoordX = -1.0f + width + 0.05f; // theese is just a position in OpenGL coordinates
+      CoordY = -1.0f + height + 0.05f; // theese is just a position in OpenGL coordinates
       Scale = 1.5f;
       Color = new OpenTK.Mathematics.Vector3(1.0f, 0.0f, 0.0f);
 
       _texturesByName = new Dictionary<char, Texture>();
+      // we divide rectangle of our letter to 2 triangles.
       _vertices = new float[] { 0.0f, Height, Width, Height, 0.0f, 0.0f, 0.0f, 0.0f, Width, Height, Width, 0.0f };
+      // we bind coordinates to texture so that it it fills theese 2 triangles 
       _texCoords = new float[] { 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f };
 
       _texturesByName.Add('0',Texture.LoadFromFile("Resources/0.png"));
@@ -49,9 +51,9 @@ namespace SimpleDrawing.Entities {
     }
 
     public void DrawFps(ref Shader shader, string fps) {
-      shader.SetUniform3("color", Color);
 
-      BindTextureBuffer(shader.Handle);
+      Bind(ref shader);
+      shader.SetUniform3("color", Color);
 
       float x = CoordX;
 
@@ -81,24 +83,13 @@ namespace SimpleDrawing.Entities {
       }
     }
 
-    private void BindTextureBuffer(int shaderHandle) {
-
+    public void Bind(ref Shader shader) {
       GL.BindVertexArray(_vao);
       GL.Enable(EnableCap.Blend);
       GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
-      GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-      GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
-      int vertexLocation = GL.GetAttribLocation(shaderHandle, "aPosition");
-      GL.EnableVertexAttribArray(vertexLocation);
-      GL.VertexAttribPointer(vertexLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
-
-      GL.BindBuffer(BufferTarget.ArrayBuffer, GL.GenBuffer());
-      GL.BufferData(BufferTarget.ArrayBuffer, _texCoords.Length * sizeof(float), _texCoords, BufferUsageHint.StaticDraw);
-      int textureLocation = GL.GetAttribLocation(shaderHandle, "aTexCoord");
-      GL.EnableVertexAttribArray(textureLocation);
-      GL.VertexAttribPointer(textureLocation, 2, VertexAttribPointerType.Float, false, 2 * sizeof(float), 0);
-
+      ShaderAdjuster.BindBuffer(_vertices, ref shader, 2, "aPos");
+      ShaderAdjuster.BindBuffer(_texCoords, ref shader, 2, "aTexCoord");
     }
 
   }

@@ -1,31 +1,42 @@
-﻿
-namespace SimpleDrawing.Entities {
+﻿using OpenTK.Mathematics;
+
+namespace SimpleDrawing.Model {
   public class Generator {
+    /// <summary>
+    /// generates cube of size 2x2x2, whose edges divided to count of "mini"-edges
+    /// </summary>
+    /// <param name="count"></param> count of edges after dividing certain edge
+    /// <returns></returns>
+    public static Form GenerateCubeForm(int count) {
+      Form form = new Form();
 
-    public static (float[], Material, float[]) GenerateCube(int count, OpenTK.Mathematics.Vector3 color) {
-
-      float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
+      int numOfEdges = 6;
+      int rangOf3dSystem = 3;
+      int trianglePointCount = 3;
+      int pseudoTesselationCount = 2;
+      float[] cube = new float[numOfEdges * rangOf3dSystem * (count - 1) * (count - 1) * trianglePointCount * pseudoTesselationCount];
+      float[] normals = new float[cube.Length];
       float step = 2.0f / (count - 1);
       int ind = 0;
 
-      float[] normals = new float[cube.Length];
       GeneratePlaneYz(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GeneratePlaneYz(count, -step, 1.0f, ref cube, ref ind, 1.0f);
       GeneratePlaneXz(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GeneratePlaneXz(count, -step, 1.0f, ref cube, ref ind, 1.0f);
       GeneratePlaneXy(count, step, -1.0f, ref cube, ref ind, -1.0f);
       GeneratePlaneXy(count, -step, 1.0f, ref cube, ref ind, 1.0f);
-
-      Material material = new Material();
-      material.Ambient = color;
-
       GenerateNormals(ref cube, ref normals);
 
-      return (cube, material, normals);
+      form.Vertices = cube;
+      form.Normals = normals;
+
+      return form;
     }
-
-
-    public static (float[], Material, float[]) GenerateTestingCube() {
+    /// <summary>
+    /// Generates testing cube of predefined coordinates
+    /// </summary>
+    /// <returns></returns>
+    public static Form GenerateCubeForm() {
       float[] vertices = {
         -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f,
         0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f,
@@ -56,59 +67,89 @@ namespace SimpleDrawing.Entities {
         1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f
       };
 
-      Material material = new Material();
-      material.Ambient = new OpenTK.Mathematics.Vector3(1.0f, 0.5f, 0.0f);
+      Form form = new Form();
+      form.Vertices = vertices;
+      form.Normals = normals;
 
-      return (vertices, material, normals);
+      return form;
     }
-
-
-    public static List<Cube> GenerateVolumes() {
+    /// <summary>
+    /// Generates scene, which consist of square cubes area
+    /// </summary>
+    /// <param name="countOfSide"></param> count of cubes on one side
+    /// <param name="step"></param> step between cubes 
+    /// <returns></returns>
+    public static List<Cube> GenerateVolumes(int countOfSide, float step) {
       var volumes = new List<Cube>();
-
-      for (float i = -50.0f; i <= 50.0f; i += 2.0f) {
-        for (float j = -50.0f; j <= 50.0f; j += 2.0f) {
-          Cube buff = new Cube(4, new OpenTK.Mathematics.Vector3(0.2125f, 0.1275f, 0.054f));
-          buff.PosVr += new OpenTK.Mathematics.Vector3(i, 1.0f, j);
+      float range = countOfSide * step;
+      string[] materials = {"emerald", "obsidian", "chrome", "blackRubber", "bronze"};
+      int count = 0;
+      for (float i = -range / 2; i < range / 2; i += step) {
+        for (float j = -range / 2; j < range / 2; j += step) {
+          Cube buff = new Cube(3);
+          int a = count % materials.Length;
+          buff.ItsMaterial = MaterialColor.CreateMaterial(materials[a]);
+          buff.ItsPosition.PosVr += new Vector3(i, 1.0f, j);
           volumes.Add(buff);
+          ++count;
         }
       }
       return volumes;
     }
+    /// <summary>
+    /// Generates scene of lights, which consist of one directional light, one point light
+    /// and square area of flashlights.
+    /// </summary>
+    /// <param name="sideCount"></param> count of flashlights on one side
+    /// <param name="step"></param> step between flashlights
+    /// <returns></returns>
+    public static (List<Light>, List<Light>, List<Light>) GenerateLights(int sideCount, float step) {
+      var dirLights = new List<Light>();
+      var pointLights = new List<Light>();
+      var flashLights = new List<Light>();
 
-
-    public static List<Light> GenerateLights() {
-      var lights = new List<Light>();
 
       var dirLight = new DirectionalLight();
-      dirLight.Direction = new System.Numerics.Vector3(0.0f, 1.0f, 0.0f);
-      dirLight.Form.PosVr = new OpenTK.Mathematics.Vector3(0.0f, -3.0f, 1.0f);
-      dirLight.Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+      ((DirectionalLightColor)dirLight.ItsColor).Direction = new Vector3(0.0f, 1.0f, 0.0f);
+      dirLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, -3.0f, 1.0f);
+      dirLights.Add(dirLight);
 
       var pointLight = new PointLight();
-      pointLight.Form.PosVr = new OpenTK.Mathematics.Vector3(0.0f, -1.5f, -1.0f);
-      pointLight.Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+      pointLight.ItsVolume.ItsPosition.PosVr = new Vector3(0.0f, -1.5f, -1.0f);
+      pointLights.Add(pointLight);
 
-      var flashLight = new FlashLight();
-      flashLight.Form.PosVr = new OpenTK.Mathematics.Vector3(0.0f, 0.5f, 6.0f);
-      flashLight.Direction = new System.Numerics.Vector3(0.0f, 0.0f, -1.0f);
-      flashLight.Form.ScaleVr = new OpenTK.Mathematics.Vector3(0.1f, 0.1f, 0.1f);
+      flashLights.AddRange(GenerateFlashLights(sideCount, step));
 
-      lights.Add(dirLight);
-      lights.Add(pointLight);
-      lights.Add(flashLight);
+      return (dirLights, pointLights, flashLights);
+    }
+    /// <summary>
+    /// Generates scene of flashlights.
+    /// </summary>
+    /// <param name="sideCount"></param> count of flashlights on one side
+    /// <param name="step"></param> step between flashlights
+    /// <returns></returns>
+    public static List<Light> GenerateFlashLights(int sideCount, float step) {
+      var lights = new List<Light>();
+      float range = sideCount * step;
+
+      for (float i = -range / 2; i < range / 2; i += step) {
+        for (float j = -range / 2; j < range / 2; j += step) {
+          var flashLight = new FlashLight();
+          flashLight.ItsVolume.ItsPosition.PosVr = new Vector3(i, -2.5f, j);
+          lights.Add(flashLight);
+        }
+      }
 
       return lights;
-    }
-
+    } 
 
     private static void GenerateNormals(ref float[] vertices, ref float[] normals) {
 
       for (int i = 0; i < vertices.Length; i += 9) {
-        OpenTK.Mathematics.Vector3 v1 = new OpenTK.Mathematics.Vector3(vertices[i], vertices[i + 1], vertices[i + 2]);
+        OpenTK.Mathematics.Vector3 v1 = new Vector3(vertices[i], vertices[i + 1], vertices[i + 2]);
 
-        OpenTK.Mathematics.Vector3 v2 = new OpenTK.Mathematics.Vector3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
-        OpenTK.Mathematics.Vector3 v3 = new OpenTK.Mathematics.Vector3(vertices[i + 6], vertices[i + 7], vertices[i + 8]);
+        OpenTK.Mathematics.Vector3 v2 = new Vector3(vertices[i + 3], vertices[i + 4], vertices[i + 5]);
+        OpenTK.Mathematics.Vector3 v3 = new Vector3(vertices[i + 6], vertices[i + 7], vertices[i + 8]);
         OpenTK.Mathematics.Vector3 edge1 = v2 - v1;
         OpenTK.Mathematics.Vector3 edge2 = v3 - v1;
         OpenTK.Mathematics.Vector3 triangleNormal = OpenTK.Mathematics.Vector3.Cross(edge1, edge2);
@@ -125,7 +166,6 @@ namespace SimpleDrawing.Entities {
       }
 
     }
-
 
     private static void GeneratePlaneXy(int count, float step, float xStart,
         ref float[] cube, ref int ind, float zCoord) {

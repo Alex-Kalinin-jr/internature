@@ -1,10 +1,10 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace SimpleDrawing.Entities {
+namespace SimpleDrawing.Model {
   public class Shader {
 
-    private readonly Dictionary<string, int> _uniformLocations;
+    public readonly Dictionary<string, int> UniformLocations;
 
     public int Handle { get; init; }
     private bool _disposedValue = false;
@@ -36,12 +36,12 @@ namespace SimpleDrawing.Entities {
       GL.DeleteShader(FragmentShader);
 
       GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numOfUniforms);
-      _uniformLocations = new Dictionary<string, int>();
+      UniformLocations = new Dictionary<string, int>();
 
       for (var i = 0; i < numOfUniforms; ++i) {
         var key = GL.GetActiveUniform(Handle, i, out _, out _);
         var location = GL.GetUniformLocation(Handle, key);
-        _uniformLocations.Add(key, location);
+        UniformLocations.Add(key, location);
       }
 
     }
@@ -71,21 +71,21 @@ namespace SimpleDrawing.Entities {
 
     public void SetInt(string name, int num) {
       GL.UseProgram(Handle);
-      GL.Uniform1(_uniformLocations[name], num);
+      GL.Uniform1(UniformLocations[name], num);
     }
 
     public void SetFloat(string name, float num) {
       GL.UseProgram(Handle);
-      GL.Uniform1(_uniformLocations[name], num);
+      GL.Uniform1(UniformLocations[name], num);
     }
 
     public void SetMatrix4(string name, Matrix4 data) {
       GL.UseProgram(Handle);
-      GL.UniformMatrix4(_uniformLocations[name], true, ref data);
+      GL.UniformMatrix4(UniformLocations[name], true, ref data);
     }
     public void SetUniform3(string name, Vector3 data) {
       GL.UseProgram(Handle);
-      GL.Uniform3(_uniformLocations[name], data);
+      GL.Uniform3(UniformLocations[name], data);
     }
 
     private static void CompileShader(int shader) {
