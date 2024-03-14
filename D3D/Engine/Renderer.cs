@@ -8,7 +8,6 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
-using System.Collections.Generic;
 
 namespace D3D {
 

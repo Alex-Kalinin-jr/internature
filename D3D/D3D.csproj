@@ -69,9 +69,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStorage.cs" />
-    <Compile Include="Engine\Camera.cs" />
+    <Compile Include="Engine\Entities\DataStorage.cs" />
+    <Compile Include="Engine\Entities\Camera.cs" />
+    <Compile Include="Engine\Entities\Figure.cs" />
     <Compile Include="Engine\Entities\Mesh.cs" />
+    <Compile Include="Engine\Entities\Mouse.cs" />
+    <Compile Include="Engine\Generator.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,7 +86,7 @@
     <Compile Include="Engine\Renderer.cs" />
     <Compile Include="Engine\Entities\Vertex.cs" />
     <Compile Include="Engine\Entities\VsConstantBuffer.cs" />
-    <Compile Include="Engine\Entities\PsLightBuffer.cs" />
+    <Compile Include="Engine\Entities\PsLightConstantBuffer.cs" />
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.cs</DependentUpon>
     </EmbeddedResource>

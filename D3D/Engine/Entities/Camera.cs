@@ -38,7 +38,7 @@ namespace D3D {
     private Vector3 _up = Vector3.UnitY;
     private Vector3 _right = Vector3.UnitX;
     private float _pitch;
-    private float _yaw = -MathUtil.PiOverTwo;
+    private float _yaw = 0;
     private float _fov = MathUtil.PiOverTwo;
 
     public Camera(Vector3 position, float aspectRatio) {
