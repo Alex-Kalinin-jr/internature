@@ -194,7 +194,10 @@ namespace D3D {
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
-        _renderer.ChangeDiffLightColor(new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255));
+        _renderer.ChangeDiffLightColor(new Vector4(buff.Color.R / 255, 
+                                                    buff.Color.G / 255, 
+                                                    buff.Color.B / 255, 
+                                                    buff.Color.A / 255));
       }
 
     }

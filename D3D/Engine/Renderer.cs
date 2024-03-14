@@ -9,6 +9,7 @@ using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace D3D {
 
@@ -33,8 +34,11 @@ namespace D3D {
     private PixelShader _pixelShader;
 
     private SharpDX.Color _background = SharpDX.Color.White;
-    private PsLightConstantBuffer _lightColor = new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), 
-                                                                          new Vector3(0, 0.0f, -1.0f));
+    private PsLightConstantBuffer[] _lightColor = new PsLightConstantBuffer[] {
+      new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
+      new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 1.0f, -1.0f)),
+      new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 2.0f, -1.0f))
+    };
 
     private ShaderSignature _inputSignature;
     private InputLayout _inputLayout;
@@ -56,7 +60,7 @@ namespace D3D {
       float xVal = 0.0f;
       float zVal = 0.0f;
       for (int i = 0; i < 10; ++i) {
-        _matrices.Add(ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), 
+        _matrices.Add(ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
                                          new Vector3(xVal, 0.0f, zVal)));
         xVal += 3.0f;
         zVal += 3.0f;
@@ -137,9 +141,14 @@ namespace D3D {
 
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
 
-      _lightColor.ViewPos = _camera.Position;
-      _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref _lightColor);
-      _context3D.PixelShader.SetConstantBuffer(0, _constantLightBuffer);
+      for (int i = 0; i < _lightColor.Length; i++) {
+        _lightColor[i].ViewPos = _camera.Position;
+        _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref _lightColor[i]);
+        _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffer);
+      }
+
+
+
 
       var tmp = new VsMvpConstantBuffer();
 
@@ -192,7 +201,7 @@ namespace D3D {
       _camera.Pitch += pitch;
     }
 
-    public void ChangeYaw(float yaw) { 
+    public void ChangeYaw(float yaw) {
       _camera.Yaw += yaw;
     }
 
@@ -259,11 +268,15 @@ namespace D3D {
     }
 
     public void ChangeDiffLightColor(Vector4 color) {
-      _lightColor.Color = color;
+      for (int i = 0; i < _lightColor.Length; ++i) {
+        _lightColor[i].Color = color;
+      }
     }
 
     public void ChangeDiffLightDirectiron(Vector3 position) {
-      _lightColor.Position = position;
+      for (int i = 0; i < _lightColor.Length; ++i) {
+        _lightColor[i].Position = position;
+      }
     }
 
   }
