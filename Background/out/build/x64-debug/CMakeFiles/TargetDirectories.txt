@@ -1,3 +1,0 @@
-C:/Users/alex/source/repos/Alex-Kalinin-jr/internature/Background/out/build/x64-debug/CMakeFiles/Background.dir
-C:/Users/alex/source/repos/Alex-Kalinin-jr/internature/Background/out/build/x64-debug/CMakeFiles/edit_cache.dir
-C:/Users/alex/source/repos/Alex-Kalinin-jr/internature/Background/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
