@@ -6,7 +6,11 @@ namespace SimpleDrawing.Model {
     public static Form GenerateCubeForm(int count) {
       Form form = new Form();
 
-      float[] cube = new float[6 * 3 * (count - 1) * (count - 1) * 6];
+      int numOfEdges = 6;
+      int rangOf3dSystem = 3;
+      int trianglePointCount = 3;
+      int pseudoTesselationCount = 2;
+      float[] cube = new float[numOfEdges * rangOf3dSystem * (count - 1) * (count - 1) * trianglePointCount * pseudoTesselationCount];
       float[] normals = new float[cube.Length];
       float step = 2.0f / (count - 1);
       int ind = 0;
