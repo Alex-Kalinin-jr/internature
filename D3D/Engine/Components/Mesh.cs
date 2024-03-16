@@ -14,25 +14,29 @@ namespace D3D {
       var camera = IamEntity.GetComponent<CCamera>();
       var transform = IamEntity.GetComponent<CTransform>();
 
-      if (lights != null) {
-        PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
-        for (int i = 0; i < light.Length; i++) {
-          light[i].ViewPos = camera.IamCamera.Position;
-        }
-      }
       var vertices = IamMesh.Vertices.ToArray();
       var indices = IamMesh.Indices.ToArray();
       var matr = transform.IamTransform;
-      var tmp = new VsMvpConstantBuffer();
-      tmp.view = camera.IamCamera.GetViewMatrix();
-      tmp.view.Transpose();
-      tmp.projection = camera.IamCamera.GetProjectionMatrix();
-      tmp.projection.Transpose();
+      var renderer = Renderer.GetRenderer();
 
-      // here // here
-      for (int i = 0; i< positions.IamWorldMatrices.Count; i++) {
-        tmp.world = 
+      PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
+      for (int i = 0; i < light.Length; ++i) {
+        light[i].ViewPos = camera.IamCamera.Position;
       }
+
+
+      matr.view = camera.IamCamera.GetViewMatrix();
+      matr.view.Transpose();
+      matr.projection = camera.IamCamera.GetProjectionMatrix();
+      matr.projection.Transpose();
+
+      for (int i = 0; i < positions.IamWorldMatrices.Count; ++i) {
+        matr.world = positions.IamWorldMatrices[i];
+        matr.world.Transpose();
+        renderer.RenderCallback(light, vertices, indices, matr);
+      }
+
+      renderer.Present();
     }
   }
 }

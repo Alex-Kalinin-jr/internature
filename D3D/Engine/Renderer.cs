@@ -124,44 +124,29 @@ namespace D3D {
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
     }
-    
+
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void RenderCallback(PsLightConstantBuffer[] amLightData, 
-                              ) {
+                               VsBuffer[] vertices, 
+                               short[] indices,
+                               VsMvpConstantBuffer matrices) {
 
-      for (int i = 0; i < amLightData.Length; i++) {
+      for (int i = 0; i < amLightData.Length; ++i) {
         _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
         _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffer);
       }
 
-      for (int i = 0; i < storage.MeshList.Count; ++i) {
-        var mesh = storage.MeshList[i];
-        var vertices = mesh.Volume.Vertices.ToArray();
-        var indices = mesh.Volume.Indices.ToArray();
-        var matrices = mesh.WorldMatrices;
+      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
+      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
 
-        _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
-        _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
+      _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
+      _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
 
-        _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
-        _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
 
-        var tmp = new VsMvpConstantBuffer();
-        tmp.view = _camera.GetViewMatrix();
-        tmp.view.Transpose();
-        tmp.projection = _camera.GetProjectionMatrix();
-        tmp.projection.Transpose();
+      _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
+      _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
 
-        foreach (var matr in matrices) {
-          tmp.world = matr;
-          tmp.world.Transpose();
-
-          _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref tmp);
-          _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
-
-          _context3D.DrawIndexed(indices.Length, 0, 0);
-        }
-      }
+      _context3D.DrawIndexed(indices.Length, 0, 0);
     }
 
     public void Present() {
