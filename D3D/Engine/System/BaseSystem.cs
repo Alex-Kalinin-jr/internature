@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace D3D {
   class BaseSystem<T> where T : Component {
@@ -22,22 +20,5 @@ namespace D3D {
   class CameraSystem : BaseSystem<CCamera> { }
   class WorldSystem : BaseSystem<CWorldPositions> { }
   class DrawSystem : BaseSystem<CMesh> { }
-
+  class LightSystem : BaseSystem<CLight> { }
 }
-
-/*
-    public void ChangeLightColor(Vector4 color) {
-      for (int i = 0; i < Lights.Count; ++i) {
-        PsLightConstantBuffer light = Lights[i];
-        light.Color = color;
-        Lights[i] = light;
-      }
-    }
-
-    public void ChangeLightDirectiron(Vector3 position) {
-      for (int i = 0; i < Lights.Count; ++i) {
-        PsLightConstantBuffer light = Lights[i];
-        light.Position = position;
-        Lights[i] = light;
-      }
- */

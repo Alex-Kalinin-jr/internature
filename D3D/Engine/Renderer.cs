@@ -8,7 +8,6 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
-using System.Collections.Generic;
 
 namespace D3D {
 
@@ -44,12 +43,10 @@ namespace D3D {
 
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
-      _camera = new Camera(new Vector3(0.0f, 1.0f, 3.0f), 1024.0f / 768.0f);
 
       InitializeDeviceResources();
       InitializeShaders();
       InitializeDepthBuffer();
-
     }
 
     public static Renderer GetRenderer(IntPtr ptr) {
@@ -86,8 +83,6 @@ namespace D3D {
       _context3D.Rasterizer.SetViewport(viewport);
 
     }
-    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void InitializeShaders() {
@@ -126,27 +121,31 @@ namespace D3D {
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void RenderCallback(PsLightConstantBuffer[] amLightData, 
-                               VsBuffer[] vertices, 
-                               short[] indices,
-                               VsMvpConstantBuffer matrices) {
 
+    public void SetLightConstantBuffer(PsLightConstantBuffer[] amLightData) {
       for (int i = 0; i < amLightData.Length; ++i) {
         _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
         _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffer);
       }
+    }
 
+    public void SetVerticesBuffer(VsBuffer[] vertices) {
       _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
       _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
+    }
 
+    public void SetIndicesBuffer(short[] indices) {
       _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
       _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
+    }
 
-
+    public void SetMvpConstantBuffer(VsMvpConstantBuffer matrices) {
       _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
       _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+    }
 
-      _context3D.DrawIndexed(indices.Length, 0, 0);
+    public void Draw(int count) {
+      _context3D.DrawIndexed(count, 0, 0);
     }
 
     public void Present() {
@@ -169,40 +168,6 @@ namespace D3D {
       _depthStencilView.Dispose();
 
     }
-
-    public void ChangePitch(float pitch) {
-      _camera.Pitch += pitch;
-    }
-
-    public void ChangeYaw(float yaw) {
-      _camera.Yaw += yaw;
-    }
-
-    public void MoveCameraUp() {
-      _camera.Position += 0.05f * _camera.Up;
-    }
-
-    public void MoveCameraDown() {
-      _camera.Position -= 0.05f * _camera.Up;
-    }
-
-    public void MoveCameraLeft() {
-      _camera.Position += 0.05f * _camera.Right;
-    }
-
-    public void MoveCameraRight() {
-      _camera.Position -= 0.05f * _camera.Right;
-    }
-
-    public void MoveCameraFwd() {
-      _camera.Position += 0.05f * _camera.Front;
-    }
-
-    public void MoveCameraBack() {
-      _camera.Position -= 0.05f * _camera.Front;
-    }
-
-
 
     public void InitializeDepthBuffer() {
 

@@ -11,6 +11,15 @@ namespace D3D {
       component.IamEntity = this;
     }
 
+    public void RemoveComponent<T>() {
+      foreach (Component component in _components) {
+        if (component.GetType().Equals(typeof(T))) {
+          _components.Remove(component);
+          return;
+        }
+      }
+    }
+
     public T GetComponent<T>() where T : Component {
       foreach (Component component in _components) {
         if (component.GetType().Equals(typeof(T))) {

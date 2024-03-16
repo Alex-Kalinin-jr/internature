@@ -69,16 +69,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Components\CBackCameraMoving.cs" />
     <Compile Include="Engine\Components\CCamera.cs" />
+    <Compile Include="Engine\Components\CDownCameraMoving.cs" />
+    <Compile Include="Engine\Components\CFwdCameraMoving.cs" />
     <Compile Include="Engine\Components\CLight.cs" />
+    <Compile Include="Engine\Components\CNewLightColor.cs" />
+    <Compile Include="Engine\Components\CNewLightPosition.cs" />
     <Compile Include="Engine\Components\Component.cs" />
+    <Compile Include="Engine\Components\CLeftCameraMover.cs" />
+    <Compile Include="Engine\Components\CUpCameraMoving.cs" />
     <Compile Include="Engine\Components\CVertex.cs" />
     <Compile Include="Engine\Components\CWorldPositions.cs" />
+    <Compile Include="Engine\Components\CYaw.cs" />
     <Compile Include="Engine\Components\Mesh.cs" />
+    <Compile Include="Engine\Components\CPitch.cs" />
+    <Compile Include="Engine\Components\CRightCameraMoving.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Components\ComponentsDrivers\Camera.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
-    <Compile Include="Engine\Entities\Figure.cs" />
+    <Compile Include="Engine\Entities\Scene.cs" />
     <Compile Include="Engine\Components\ComponentsDrivers\Mesh.cs" />
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />

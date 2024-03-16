@@ -15,12 +15,11 @@ namespace D3D {
     private MousePos _mouse;
 
     private RenderForm _renderForm;
-    private Renderer _renderer;
     private Scene _scene;
 
-    private TrackBar _xDirectionTrackBar;
-    private TrackBar _yDirectionTrackBar;
-    private TrackBar _zDirectionTrackBar;
+    private TrackBar _xPositionTrackBar;
+    private TrackBar _yPositionTrackBar;
+    private TrackBar _zPositionTrackBar;
 
 
     bool _isMouseDown = false;
@@ -29,10 +28,9 @@ namespace D3D {
     public MyForm() {
       CreateRenderForm();
       CreateHelpLabel();
-      CreateDiffuseColor();
+      CreateLightColorButton();
       CreateDirectionTrackBars();
 
-      _renderer = Renderer.GetRenderer(_renderForm.Handle);
       _mouse = new MousePos();
       _scene = Generator.CreateTestingScene();
 
@@ -45,6 +43,8 @@ namespace D3D {
     private void RenderCallback() {
       var renderer = Renderer.GetRenderer();
       renderer.Update();
+      CameraSystem.Update();
+      LightSystem.Update();
       DrawSystem.Update();
       renderer.Present();
     }
@@ -55,30 +55,30 @@ namespace D3D {
       _labelHelp.Location = new System.Drawing.Point(25, 25);
       _labelHelp.Name = "help";
       _labelHelp.TabIndex = 0;
-      _labelHelp.Text = "WASD- movings\n-= - Up-Down movings\nMouseWheelPressed - rotation of object\nRMB - rotation of camera";
+      string text = "W - move fwd\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
+      _labelHelp.Text = text;
       _labelHelp.TextAlign = ContentAlignment.MiddleLeft;
       _renderForm.Controls.Add(_labelHelp);
     }
 
-    private void CreateDiffuseColor() {
+    private void CreateLightColorButton() {
       Button _diffuseLightColor = new Button();
-      _diffuseLightColor.Location = new System.Drawing.Point(25, 100);
+      _diffuseLightColor.Location = new System.Drawing.Point(25, 300);
       _diffuseLightColor.Size = new Size(100, 25);
       _diffuseLightColor.Text = "light color";
-      _diffuseLightColor.Click += ChangeDiffuseColor;
+      _diffuseLightColor.Click += ChangeLightColor;
       _renderForm.Controls.Add(_diffuseLightColor);
     }
 
-    private void ChangeDiffuseColor(object sender, EventArgs e) {
-      /*
+    private void ChangeLightColor(object sender, EventArgs e) {
       ColorDialog buff = new ColorDialog();
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
-        _dataStorage.ChangeLightColor(new Vector4(buff.Color.R / 255, buff.Color.G / 255,
-                                                  buff.Color.B / 255, buff.Color.A / 255));
+        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255,
+                                                  buff.Color.B / 255, buff.Color.A / 255);
+        _scene.AddComponent(new CNewLightColor(color));
       }
-       */
     }
 
     private void CreateDirectionTrackBars() {
@@ -88,56 +88,57 @@ namespace D3D {
       x.Location = new System.Drawing.Point(25, 160);
       _renderForm.Controls.Add(x);
 
-      _xDirectionTrackBar = new TrackBar();
-      _xDirectionTrackBar.Minimum = -100;
-      _xDirectionTrackBar.Maximum = 100;
-      _xDirectionTrackBar.TickFrequency = 10;
-      _xDirectionTrackBar.LargeChange = 10;
-      _xDirectionTrackBar.Scroll += DirectionTrackBarScroll;
-      _xDirectionTrackBar.Location = new System.Drawing.Point(100, 150);
+      _xPositionTrackBar = new TrackBar();
+      _xPositionTrackBar.Minimum = -100;
+      _xPositionTrackBar.Maximum = 100;
+      _xPositionTrackBar.TickFrequency = 10;
+      _xPositionTrackBar.LargeChange = 10;
+      _xPositionTrackBar.Scroll += DirectionTrackBarScroll;
+      _xPositionTrackBar.Location = new System.Drawing.Point(100, 150);
 
       Label y = new Label();
       y.Text = "y-coord";
       y.Location = new System.Drawing.Point(25, 210);
       _renderForm.Controls.Add(y);
 
-      _yDirectionTrackBar = new TrackBar();
-      _yDirectionTrackBar.Minimum = -100;
-      _yDirectionTrackBar.Maximum = 100;
-      _yDirectionTrackBar.TickFrequency = 10;
-      _yDirectionTrackBar.LargeChange = 10;
-      _yDirectionTrackBar.Scroll += DirectionTrackBarScroll;
-      _yDirectionTrackBar.Location = new System.Drawing.Point(100, 200);
+      _yPositionTrackBar = new TrackBar();
+      _yPositionTrackBar.Minimum = -100;
+      _yPositionTrackBar.Maximum = 100;
+      _yPositionTrackBar.TickFrequency = 10;
+      _yPositionTrackBar.LargeChange = 10;
+      _yPositionTrackBar.Scroll += DirectionTrackBarScroll;
+      _yPositionTrackBar.Location = new System.Drawing.Point(100, 200);
 
       Label z = new Label();
       z.Text = "z-coord";
       z.Location = new System.Drawing.Point(25, 260);
       _renderForm.Controls.Add(z);
 
-      _zDirectionTrackBar = new TrackBar();
-      _zDirectionTrackBar.Minimum = -100;
-      _zDirectionTrackBar.Maximum = 100;
-      _zDirectionTrackBar.TickFrequency = 10;
-      _zDirectionTrackBar.LargeChange = 10;
-      _zDirectionTrackBar.Scroll += DirectionTrackBarScroll;
-      _zDirectionTrackBar.Location = new System.Drawing.Point(100, 250);
+      _zPositionTrackBar = new TrackBar();
+      _zPositionTrackBar.Minimum = -100;
+      _zPositionTrackBar.Maximum = 100;
+      _zPositionTrackBar.TickFrequency = 10;
+      _zPositionTrackBar.LargeChange = 10;
+      _zPositionTrackBar.Scroll += DirectionTrackBarScroll;
+      _zPositionTrackBar.Location = new System.Drawing.Point(100, 250);
 
-      _renderForm.Controls.Add(_xDirectionTrackBar);
-      _renderForm.Controls.Add(_yDirectionTrackBar);
-      _renderForm.Controls.Add(_zDirectionTrackBar);
+      _renderForm.Controls.Add(_xPositionTrackBar);
+      _renderForm.Controls.Add(_yPositionTrackBar);
+      _renderForm.Controls.Add(_zPositionTrackBar);
     }
 
     private void DirectionTrackBarScroll(object sender, EventArgs e) {
-      /*
-      float xDirection = _xDirectionTrackBar.Value / 20.0f;
-      float yDirection = _yDirectionTrackBar.Value / 20.0f;
-      float zDirection = _zDirectionTrackBar.Value / 20.0f;
-      _dataStorage.ChangeLightDirectiron(new Vector3(xDirection, yDirection, zDirection));
-       */
+      float xDirection = _xPositionTrackBar.Value / 20.0f;
+      float yDirection = _yPositionTrackBar.Value / 20.0f;
+      float zDirection = _zPositionTrackBar.Value / 20.0f;
+      _scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
     }
 
     private void CreateRenderForm() {
+
       _renderForm = new RenderForm();
+      Renderer.GetRenderer(_renderForm.Handle);
+
       _renderForm.ClientSize = new Size(Width, Height);
       _renderForm.KeyPreview = true;
       _renderForm.AllowUserResizing = false;
@@ -152,17 +153,17 @@ namespace D3D {
 
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
       if (e.KeyChar == 'w') {
-        _renderer.MoveCameraFwd();
+        _scene.AddComponent(new CFwdCameraMoving());
       } else if (e.KeyChar == 's') {
-        _renderer.MoveCameraBack();
+        _scene.AddComponent(new CBackCameraMoving());
       } else if (e.KeyChar == 'd') {
-        _renderer.MoveCameraRight();
+        _scene.AddComponent(new CRightCameraMoving());
       } else if (e.KeyChar == 'a') {
-        _renderer.MoveCameraLeft();
+        _scene.AddComponent(new CLeftCameraMoving());
       } else if (e.KeyChar == '=') {
-        _renderer.MoveCameraUp();
+        _scene.AddComponent(new CUpCameraMoving());
       } else if (e.KeyChar == '-') {
-        _renderer.MoveCameraDown();
+        _scene.AddComponent(new CDownCameraMoving());
       }
     }
 
@@ -173,22 +174,22 @@ namespace D3D {
       var deltaY = mouseArgs.Y - _mouse.Y;
 
       if (_isRotationDown) {
-        _renderer.ChangePitch(deltaY / 10.0f);
-        _renderer.ChangeYaw(deltaX / 10.0f);
+        _scene.AddComponent(new CPitch((float)deltaY / 10.0f));
+        _scene.AddComponent(new CYaw((float)deltaX / 10.0f));
         _mouse.X = mouseArgs.X;
         _mouse.Y = mouseArgs.Y;
       } else if (_isMouseDown) {
 
         if (deltaX > 0) {
-          _renderer.MoveCameraLeft();
+          _scene.AddComponent(new CLeftCameraMoving());
         } else {
-          _renderer.MoveCameraRight();
+          _scene.AddComponent(new CRightCameraMoving());
         }
 
         if (deltaY > 0) {
-          _renderer.MoveCameraUp();
+          _scene.AddComponent(new CUpCameraMoving());
         } else {
-          _renderer.MoveCameraDown();
+          _scene.AddComponent(new CDownCameraMoving());
         }
 
       }
@@ -205,7 +206,6 @@ namespace D3D {
       } else if (mouseArgs.Button == MouseButtons.Middle) {
         _isRotationDown = true;
       }
-
     }
 
     private void MyFormMouseUp(object sender, MouseEventArgs e) {
@@ -216,6 +216,5 @@ namespace D3D {
         _isRotationDown = false;
       }
     }
-
   }
 }

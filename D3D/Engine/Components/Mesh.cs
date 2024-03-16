@@ -31,10 +31,17 @@ namespace D3D {
       matr.projection = camera.IamCamera.GetProjectionMatrix();
       matr.projection.Transpose();
 
+      renderer.SetLightConstantBuffer(light);
+      renderer.SetVerticesBuffer(vertices);
+      renderer.SetIndicesBuffer(indices);
+
+
       for (int i = 0; i < positions.IamWorldMatrices.Count; ++i) {
         matr.world = positions.IamWorldMatrices[i];
         matr.world.Transpose();
-        renderer.RenderCallback(light, vertices, indices, matr);
+
+        renderer.SetMvpConstantBuffer(matr);
+        renderer.Draw(indices.Length);
       }
     }
   }
