@@ -8,6 +8,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
+using System.Collections.Generic;
 
 namespace D3D {
 
@@ -117,20 +118,19 @@ namespace D3D {
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void RenderCallback(DataStorage storage) {
-
+    public void Update() {
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
-
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
-
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
+    }
+    
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void RenderCallback(PsLightConstantBuffer[] amLightData, 
+                              ) {
 
-      PsLightConstantBuffer[] light = storage.Lights.ToArray();
-
-      for (int i = 0; i < light.Length; i++) {
-        light[i].ViewPos = _camera.Position;
-        _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref light[i]);
+      for (int i = 0; i < amLightData.Length; i++) {
+        _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
         _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffer);
       }
 
@@ -162,9 +162,10 @@ namespace D3D {
           _context3D.DrawIndexed(indices.Length, 0, 0);
         }
       }
+    }
 
+    public void Present() {
       _swapChain.Present(1, PresentFlags.None);
-
     }
 
 

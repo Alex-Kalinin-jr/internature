@@ -74,7 +74,6 @@
     <Compile Include="Engine\Components\Component.cs" />
     <Compile Include="Engine\Components\CVertex.cs" />
     <Compile Include="Engine\Components\CWorldPositions.cs" />
-    <Compile Include="Engine\Components\Figure.cs" />
     <Compile Include="Engine\Components\Mesh.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Entities\DataStorage.cs" />

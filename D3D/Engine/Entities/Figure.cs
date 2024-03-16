@@ -5,15 +5,19 @@ using SharpDX;
 namespace D3D {
   public class Scene : Entity {
 
-    public Figure(string filepath) {
+    public Scene(string filepath, List<Matrix> worldMatrices) {
 
       var volume = new CMesh(filepath);
       AddComponent(volume);
 
-      var WorldMatrices = new CWorldPositions();
+      var WorldMatrices = new CWorldPositions(worldMatrices);
       AddComponent(WorldMatrices);
 
+      var lights = new CLight();
+      AddComponent(lights);
 
+      var camera = new CCamera();
+      AddComponent(camera);
     }
   }
 }

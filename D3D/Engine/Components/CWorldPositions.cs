@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace D3D {
   public class CWorldPositions : Component {
-    public List<Matrix> WorldMatrices;
+    public List<Matrix> IamWorldMatrices;
 
     public CWorldPositions(List<Matrix> worldMatrices) {
-      WorldMatrices = worldMatrices;
+      IamWorldMatrices = worldMatrices;
       WorldSystem.Register(this);
     }
   }

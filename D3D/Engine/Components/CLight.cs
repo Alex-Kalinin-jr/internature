@@ -1,6 +1,7 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace D3D {
   public class CLight : Component {
-    PsLightConstantBuffer IamLightData;
+    public List<PsLightConstantBuffer> IamLightData;
   }
 }

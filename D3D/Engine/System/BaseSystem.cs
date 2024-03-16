@@ -11,7 +11,7 @@ namespace D3D {
       Components.Add(component);
     }
 
-    public static void Update(float gameTime) {
+    public static void Update() {
       foreach (T component in Components) {
         component.Update();
       }
@@ -20,8 +20,7 @@ namespace D3D {
 
   class TransformSystem : BaseSystem<CTransform> { }
   class CameraSystem : BaseSystem<CCamera> { }
-  class DrawingSystem : BaseSystem<Figure> { }
-  // intended for upgrading world matrices
   class WorldSystem : BaseSystem<CWorldPositions> { }
+  class DrawSystem : BaseSystem<CMesh> { }
 
 }
