@@ -24,3 +24,20 @@ namespace D3D {
   class DrawSystem : BaseSystem<CMesh> { }
 
 }
+
+/*
+    public void ChangeLightColor(Vector4 color) {
+      for (int i = 0; i < Lights.Count; ++i) {
+        PsLightConstantBuffer light = Lights[i];
+        light.Color = color;
+        Lights[i] = light;
+      }
+    }
+
+    public void ChangeLightDirectiron(Vector3 position) {
+      for (int i = 0; i < Lights.Count; ++i) {
+        PsLightConstantBuffer light = Lights[i];
+        light.Position = position;
+        Lights[i] = light;
+      }
+ */

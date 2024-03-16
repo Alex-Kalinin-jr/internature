@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SharpDX.Windows;
@@ -15,7 +16,7 @@ namespace D3D {
 
     private RenderForm _renderForm;
     private Renderer _renderer;
-    private DataStorage _dataStorage;
+    private Scene _scene;
 
     private TrackBar _xDirectionTrackBar;
     private TrackBar _yDirectionTrackBar;
@@ -31,9 +32,10 @@ namespace D3D {
       CreateDiffuseColor();
       CreateDirectionTrackBars();
 
-      _dataStorage = Generator.CreateTestingDataStorage();
       _renderer = Renderer.GetRenderer(_renderForm.Handle);
       _mouse = new MousePos();
+      _scene = Generator.CreateTestingScene();
+
     }
 
     public void Run() {
@@ -41,7 +43,7 @@ namespace D3D {
     }
 
     private void RenderCallback() {
-      _renderer.RenderCallback(_dataStorage);
+      DrawSystem.Update();
     }
 
     private void CreateHelpLabel() {
@@ -65,7 +67,7 @@ namespace D3D {
     }
 
     private void ChangeDiffuseColor(object sender, EventArgs e) {
-
+      /*
       ColorDialog buff = new ColorDialog();
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
@@ -73,6 +75,7 @@ namespace D3D {
         _dataStorage.ChangeLightColor(new Vector4(buff.Color.R / 255, buff.Color.G / 255,
                                                   buff.Color.B / 255, buff.Color.A / 255));
       }
+       */
     }
 
     private void CreateDirectionTrackBars() {
@@ -122,10 +125,12 @@ namespace D3D {
     }
 
     private void DirectionTrackBarScroll(object sender, EventArgs e) {
+      /*
       float xDirection = _xDirectionTrackBar.Value / 20.0f;
       float yDirection = _yDirectionTrackBar.Value / 20.0f;
       float zDirection = _zDirectionTrackBar.Value / 20.0f;
       _dataStorage.ChangeLightDirectiron(new Vector3(xDirection, yDirection, zDirection));
+       */
     }
 
     private void CreateRenderForm() {

@@ -76,7 +76,6 @@
     <Compile Include="Engine\Components\CWorldPositions.cs" />
     <Compile Include="Engine\Components\Mesh.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
-    <Compile Include="Engine\Entities\DataStorage.cs" />
     <Compile Include="Engine\Components\ComponentsDrivers\Camera.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Figure.cs" />

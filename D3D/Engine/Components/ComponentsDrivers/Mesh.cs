@@ -32,7 +32,7 @@ namespace D3D {
 
       AssimpContext importer = new AssimpContext();
 
-      Scene model = importer.ImportFile(FileName, Flags);
+      Assimp.Scene model = importer.ImportFile(FileName, Flags);
 
 
       foreach (Assimp.Mesh mesh in model.Meshes) {

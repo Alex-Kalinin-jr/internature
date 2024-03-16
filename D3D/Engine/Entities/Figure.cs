@@ -13,7 +13,7 @@ namespace D3D {
       var WorldMatrices = new CWorldPositions(worldMatrices);
       AddComponent(WorldMatrices);
 
-      var lights = new CLight();
+      var lights = new CLight(Generator.CreateTestingPsLightConstantBuffers());
       AddComponent(lights);
 
       var camera = new CCamera();
