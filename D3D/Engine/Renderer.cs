@@ -44,7 +44,7 @@ namespace D3D {
 
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
-      _camera = new Camera(new Vector3(0.0f, 1.0f, 3.0f), (float)Width / (float)Height);
+      _camera = new Camera(new Vector3(0.0f, 1.0f, 3.0f), 1024.0f / 768.0f);
 
       InitializeDeviceResources();
       InitializeShaders();

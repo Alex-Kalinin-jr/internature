@@ -7,8 +7,11 @@ namespace D3D {
 
     public Scene(string filepath, List<Matrix> worldMatrices) {
 
-      var volume = new CMesh(filepath);
+      var volume = new CMesh(filepath); 
       AddComponent(volume);
+
+      var transform = new CTransform();
+      AddComponent(transform);
 
       var WorldMatrices = new CWorldPositions(worldMatrices);
       AddComponent(WorldMatrices);
@@ -17,6 +20,7 @@ namespace D3D {
       AddComponent(lights);
 
       var camera = new CCamera();
+      camera.IamCamera = new Camera(new Vector3(0.0f, 1.0f, 3.0f), 1024.0f / 768.0f);
       AddComponent(camera);
     }
   }

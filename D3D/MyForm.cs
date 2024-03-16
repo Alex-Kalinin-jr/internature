@@ -43,7 +43,10 @@ namespace D3D {
     }
 
     private void RenderCallback() {
+      var renderer = Renderer.GetRenderer();
+      renderer.Update();
       DrawSystem.Update();
+      renderer.Present();
     }
 
     private void CreateHelpLabel() {

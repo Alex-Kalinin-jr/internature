@@ -6,9 +6,10 @@ namespace D3D {
 
     public CMesh(string path) {
       IamMesh = new Mesh(path);
+      DrawSystem.Register(this);
     }
 
-    public void Update() {
+    public override void Update() {
       var lights = IamEntity.GetComponent<CLight>();
       var positions = IamEntity.GetComponent<CWorldPositions>();
       var camera = IamEntity.GetComponent<CCamera>();
@@ -35,8 +36,6 @@ namespace D3D {
         matr.world.Transpose();
         renderer.RenderCallback(light, vertices, indices, matr);
       }
-
-      renderer.Present();
     }
   }
 }
