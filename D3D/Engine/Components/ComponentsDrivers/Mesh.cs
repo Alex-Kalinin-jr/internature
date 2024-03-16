@@ -12,7 +12,7 @@ namespace D3D {
     public int IndexSizeInBytes { get; set; }
     public int IndexSize { get; set; }
 
-    public List<Vertex> Vertices;
+    public List<VsBuffer> Vertices;
     public List<short> Indices;
 
 
@@ -23,7 +23,7 @@ namespace D3D {
 
     public Mesh(string FileName) {
 
-      Vertices = new List<Vertex>();
+      Vertices = new List<VsBuffer>();
 
       Indices = new List<short>();
 
@@ -42,7 +42,7 @@ namespace D3D {
           Vector3D Normal = mesh.Normals[i];
           Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
 
-          Vertices.Add(new Vertex(new Vector3(Pos.X, Pos.Y, Pos.Z), new Vector3(Normal.X, Normal.Y, Normal.Z), new Vector2(Tex.X, Tex.Y)));
+          Vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z), new Vector3(Normal.X, Normal.Y, Normal.Z), new Vector2(Tex.X, Tex.Y)));
         }
 
         int indexBase = (short)Indices.Count();
@@ -61,9 +61,9 @@ namespace D3D {
 
       IndexCount = Indices.Count();
 
-      Size = Utilities.SizeOf<Vertex>();
+      Size = Utilities.SizeOf<VsBuffer>();
 
-      SizeInBytes = Utilities.SizeOf<Vertex>() * Vertices.Count();
+      SizeInBytes = Utilities.SizeOf<VsBuffer>() * Vertices.Count();
 
       IndexSize = Utilities.SizeOf<int>();
 

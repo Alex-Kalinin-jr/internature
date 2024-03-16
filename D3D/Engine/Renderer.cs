@@ -12,6 +12,7 @@ using SharpDX.D3DCompiler;
 namespace D3D {
 
   public class Renderer : IDisposable {
+
     private const int Width = 1024;
     private const int Height = 768;
 
@@ -38,8 +39,9 @@ namespace D3D {
 
     private SharpDX.Color _background = SharpDX.Color.White;
 
-    public Renderer(IntPtr ptr) {
+    private static Renderer _instance;
 
+    private Renderer(IntPtr ptr) {
       _formPtr = ptr;
       _camera = new Camera(new Vector3(0.0f, 1.0f, 3.0f), (float)Width / (float)Height);
 
@@ -47,6 +49,17 @@ namespace D3D {
       InitializeShaders();
       InitializeDepthBuffer();
 
+    }
+
+    public static Renderer GetRenderer(IntPtr ptr) {
+      if (_instance == null) {
+        _instance = new Renderer(ptr);
+      }
+      return _instance;
+    }
+
+    public static Renderer GetRenderer() {
+      return _instance;
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +141,7 @@ namespace D3D {
         var matrices = mesh.WorldMatrices;
 
         _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
-        _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<Vertex>(), 0));
+        _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
 
         _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
         _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);

@@ -1,0 +1,23 @@
+﻿using System.Collections.Generic;
+
+
+namespace D3D {
+  public class Entity {
+    public int Id { get; set; }
+    List<Component> _components = new List<Component>();
+
+    public void AddComponent(Component component) {
+      _components.Add(component);
+      component.IamEntity = this;
+    }
+
+    public T GetComponent<T>() where T : Component {
+      foreach (Component component in _components) {
+        if (component.GetType().Equals(typeof(T))) {
+          return (T)component;
+        }
+      }
+      return null;
+    }
+  }
+}

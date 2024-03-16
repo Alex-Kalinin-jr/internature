@@ -69,12 +69,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\Components\CCamera.cs" />
+    <Compile Include="Engine\Components\CLight.cs" />
+    <Compile Include="Engine\Components\Component.cs" />
+    <Compile Include="Engine\Components\CVertex.cs" />
+    <Compile Include="Engine\Components\CWorldPositions.cs" />
+    <Compile Include="Engine\Components\Figure.cs" />
+    <Compile Include="Engine\Components\Mesh.cs" />
+    <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Entities\DataStorage.cs" />
-    <Compile Include="Engine\Entities\Camera.cs" />
+    <Compile Include="Engine\Components\ComponentsDrivers\Camera.cs" />
+    <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Figure.cs" />
-    <Compile Include="Engine\Entities\Mesh.cs" />
-    <Compile Include="Engine\Entities\Mouse.cs" />
+    <Compile Include="Engine\Components\ComponentsDrivers\Mesh.cs" />
+    <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
+    <Compile Include="Engine\System\BaseSystem.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,9 +94,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Renderer.cs" />
-    <Compile Include="Engine\Entities\Vertex.cs" />
-    <Compile Include="Engine\Entities\VsConstantBuffer.cs" />
-    <Compile Include="Engine\Entities\PsLightConstantBuffer.cs" />
+    <Compile Include="Engine\Components\ComponentsDrivers\VsBuffer.cs" />
+    <Compile Include="Engine\Components\ComponentsDrivers\VsConstantBuffer.cs" />
+    <Compile Include="Engine\Components\ComponentsDrivers\PsLightConstantBuffer.cs" />
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.cs</DependentUpon>
     </EmbeddedResource>

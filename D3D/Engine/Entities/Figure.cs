@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using SharpDX;
 
 namespace D3D {
-  public class Figure : IDisposable {
-    public Mesh Volume;
-    public List<Matrix> WorldMatrices;
+  public class Scene : Entity {
 
-    public Figure() {
-      WorldMatrices = new List<Matrix>();
-    }
+    public Figure(string filepath) {
 
-    public void Dispose() {
-      WorldMatrices.Clear();
+      var volume = new CMesh(filepath);
+      AddComponent(volume);
+
+      var WorldMatrices = new CWorldPositions();
+      AddComponent(WorldMatrices);
+
+
     }
   }
 }

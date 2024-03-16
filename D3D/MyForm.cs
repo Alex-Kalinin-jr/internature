@@ -32,7 +32,7 @@ namespace D3D {
       CreateDirectionTrackBars();
 
       _dataStorage = Generator.CreateTestingDataStorage();
-      _renderer = new Renderer(_renderForm.Handle);
+      _renderer = Renderer.GetRenderer(_renderForm.Handle);
       _mouse = new MousePos();
     }
 
