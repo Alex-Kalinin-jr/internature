@@ -16,7 +16,6 @@ namespace D3D {
     private const int Width = 1024;
     private const int Height = 768;
 
-    public Camera _camera;
     private IntPtr _formPtr;
 
     private Device _device3D;
@@ -108,8 +107,6 @@ namespace D3D {
       });
 
       _context3D.InputAssembler.InputLayout = _inputLayout;
-
-      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +114,7 @@ namespace D3D {
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
-      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
+      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
     }
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -7,68 +7,6 @@ using SharpDX;
 
 namespace D3D {
   public class Mesh {
-    public int SizeInBytes { get; set; }
-    public int Size { get; set; }
-    public int IndexSizeInBytes { get; set; }
-    public int IndexSize { get; set; }
 
-    public List<VsBuffer> Vertices;
-    public List<short> Indices;
-
-
-    public int VertexCount { get; set; }
-    public int IndexCount { get; set; }
-
-
-
-    public Mesh(string FileName) {
-
-      Vertices = new List<VsBuffer>();
-
-      Indices = new List<short>();
-
-
-      PostProcessSteps Flags = PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.Triangulate;
-
-      AssimpContext importer = new AssimpContext();
-
-      Assimp.Scene model = importer.ImportFile(FileName, Flags);
-
-
-      foreach (Assimp.Mesh mesh in model.Meshes) {
-
-        for (int i = 0; i < mesh.VertexCount; ++i) {
-          Vector3D Pos = mesh.Vertices[i];
-          Vector3D Normal = mesh.Normals[i];
-          Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
-
-          Vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z), new Vector3(Normal.X, Normal.Y, Normal.Z), new Vector2(Tex.X, Tex.Y)));
-        }
-
-        int indexBase = (short)Indices.Count();
-
-        foreach (Face Faces in mesh.Faces) {
-          if (Faces.IndexCount != 3)
-            continue;
-
-          Indices.Add((short)(indexBase + Faces.Indices[0]));
-          Indices.Add((short)(indexBase + Faces.Indices[1]));
-          Indices.Add((short)(indexBase + Faces.Indices[2]));
-        }
-      }
-
-      VertexCount = Vertices.Count();
-
-      IndexCount = Indices.Count();
-
-      Size = Utilities.SizeOf<VsBuffer>();
-
-      SizeInBytes = Utilities.SizeOf<VsBuffer>() * Vertices.Count();
-
-      IndexSize = Utilities.SizeOf<int>();
-
-      IndexSizeInBytes = Utilities.SizeOf<int>() * Indices.Count();
-
-    }
   }
 }

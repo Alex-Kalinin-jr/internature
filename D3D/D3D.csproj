@@ -82,7 +82,7 @@
     <Compile Include="Engine\Components\CVertex.cs" />
     <Compile Include="Engine\Components\CWorldPositions.cs" />
     <Compile Include="Engine\Components\CYaw.cs" />
-    <Compile Include="Engine\Components\Mesh.cs" />
+    <Compile Include="Engine\Components\CMesh.cs" />
     <Compile Include="Engine\Components\CPitch.cs" />
     <Compile Include="Engine\Components\CRightCameraMoving.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
@@ -93,6 +93,9 @@
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
     <Compile Include="Engine\System\BaseSystem.cs" />
+    <Compile Include="Engine\System\CameraSystem.cs" />
+    <Compile Include="Engine\System\DrawSystem.cs" />
+    <Compile Include="Engine\System\LightSystem.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace D3D {
-  class BaseSystem<T> where T : Component {
+  public class BaseSystem<T> where T : Component {
 
     public static List<T> Components = new List<T>();
 
@@ -9,16 +9,9 @@ namespace D3D {
       Components.Add(component);
     }
 
-    public static void Update() {
-      foreach (T component in Components) {
-        component.Update();
-      }
-    }
+    public static void Update() { }
   }
 
   class TransformSystem : BaseSystem<CTransform> { }
-  class CameraSystem : BaseSystem<CCamera> { }
   class WorldSystem : BaseSystem<CWorldPositions> { }
-  class DrawSystem : BaseSystem<CMesh> { }
-  class LightSystem : BaseSystem<CLight> { }
 }

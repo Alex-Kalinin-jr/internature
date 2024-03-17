@@ -1,4 +1,3 @@
-﻿
-namespace D3D {
+﻿namespace D3D {
   public class CRightCameraMoving : Component { }
 }

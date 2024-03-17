@@ -1,10 +1,51 @@
-﻿using SharpDX;
+﻿using Assimp;
+using SharpDX;
 using SharpDX.DXGI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace D3D {
 // this is just debugging class. Imagine all generations you want for setting your scene, properties and so on.
   public class Generator {
+
+    public static (List<VsBuffer>, List<short>) GenerateMesh(string FileName) {
+
+      var vertices = new List<VsBuffer>();
+
+      var indices = new List<short>();
+
+
+      PostProcessSteps Flags = PostProcessSteps.GenerateSmoothNormals | PostProcessSteps.CalculateTangentSpace | PostProcessSteps.Triangulate;
+
+      AssimpContext importer = new AssimpContext();
+
+      Assimp.Scene model = importer.ImportFile(FileName, Flags);
+
+
+      foreach (Assimp.Mesh mesh in model.Meshes) {
+
+        for (int i = 0; i < mesh.VertexCount; ++i) {
+          Vector3D Pos = mesh.Vertices[i];
+          Vector3D Normal = mesh.Normals[i];
+          Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
+
+          vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z), new Vector3(Normal.X, Normal.Y, Normal.Z), new Vector2(Tex.X, Tex.Y)));
+        }
+
+        int indexBase = (short)indices.Count();
+
+        foreach (Face Faces in mesh.Faces) {
+          if (Faces.IndexCount != 3)
+            continue;
+
+          indices.Add((short)(indexBase + Faces.Indices[0]));
+          indices.Add((short)(indexBase + Faces.Indices[1]));
+          indices.Add((short)(indexBase + Faces.Indices[2]));
+        }
+      }
+      return (vertices, indices);
+    }
+
 
     public static Scene CreateTestingScene() {
       List<Matrix> matrices = new List<Matrix>();

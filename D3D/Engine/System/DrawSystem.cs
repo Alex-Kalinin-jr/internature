@@ -1,22 +1,19 @@
-﻿using Assimp;
-
-namespace D3D {
-  public class CMesh : Component {
-    public Mesh IamMesh;
-
-    public CMesh(string path) {
-      IamMesh = new Mesh(path);
-      DrawSystem.Register(this);
+﻿namespace D3D {
+  public class DrawSystem : BaseSystem<CMesh> {
+    new public static void Update() {
+      foreach (var mesh in Components) {
+        DrawMesh(mesh);
+      }
     }
 
-    public override void Update() {
-      var lights = IamEntity.GetComponent<CLight>();
-      var positions = IamEntity.GetComponent<CWorldPositions>();
-      var camera = IamEntity.GetComponent<CCamera>();
-      var transform = IamEntity.GetComponent<CTransform>();
+    private static void DrawMesh(CMesh mesh) {
+      var lights = mesh.IamEntity.GetComponent<CLight>();
+      var positions = mesh.IamEntity.GetComponent<CWorldPositions>();
+      var camera = mesh.IamEntity.GetComponent<CCamera>();
+      var transform = mesh.IamEntity.GetComponent<CTransform>();
 
-      var vertices = IamMesh.Vertices.ToArray();
-      var indices = IamMesh.Indices.ToArray();
+      var vertices = mesh.Vertices.ToArray();
+      var indices = mesh.Indices.ToArray();
       var matr = transform.IamTransform;
       var renderer = Renderer.GetRenderer();
 

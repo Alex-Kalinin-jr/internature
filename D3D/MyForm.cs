@@ -21,7 +21,6 @@ namespace D3D {
     private TrackBar _yPositionTrackBar;
     private TrackBar _zPositionTrackBar;
 
-
     bool _isMouseDown = false;
     bool _isRotationDown = false;
 
