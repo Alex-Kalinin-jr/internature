@@ -50,8 +50,8 @@ namespace D3D {
       var scene = new Scene();
       float xVal = 0.0f;
       float zVal = 0.0f;
-      for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
+      for (int i = 0; i < 1; ++i) {
+        for (int j = 0; j < 1; ++j) {
           var matr = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(xVal, 0.0f, zVal));
           matr.Transpose();
           VsMvpConstantBuffer buff = new VsMvpConstantBuffer();

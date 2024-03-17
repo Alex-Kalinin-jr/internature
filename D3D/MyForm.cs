@@ -32,11 +32,6 @@ namespace D3D {
 
       _mouse = new MousePos();
       _scene = Generator.CreateTestingScene();
-      var matr = Generator.ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      matr.Transpose();
-      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-      buff.world = matr;
-      _scene.AddComponent(new CFigure("Resources/FinalBaseMesh.obj", buff));
     }
 
     public void Run() {

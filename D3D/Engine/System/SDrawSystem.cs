@@ -16,10 +16,10 @@
 
 
       var renderer = Renderer.GetRenderer();
-      renderer.SetLightConstantBuffer(light);
-      renderer.SetVerticesBuffer(vertices);
-      renderer.SetIndicesBuffer(indices);
-      renderer.SetMvpConstantBuffer(matr);
+      renderer.SetLightConstantBuffer(ref light);
+      renderer.SetVerticesBuffer(ref vertices);
+      renderer.SetIndicesBuffer(ref indices);
+      renderer.SetMvpConstantBuffer(ref matr);
       renderer.Draw(indices.Length);
     }
   }

@@ -26,8 +26,11 @@ namespace D3D {
 
     private long _indicesCount;
     private long _verticesCount;
+
     private Buffer _vertexBuffer;
     private Buffer _indexBuffer;
+    private Buffer[] _constantLightBuffers;
+    private Buffer _constantBuffer;
 
     private SharpDX.Color _background = SharpDX.Color.White;
 
@@ -45,7 +48,7 @@ namespace D3D {
         new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
         new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
       };
-      InitializeVertexShader("Shaders/VertexShader.hlsl", element);
+      InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");
       InitializeDepthBuffer();
     }
@@ -90,7 +93,7 @@ namespace D3D {
       _context3D.Rasterizer.SetViewport(viewport);
     }
 
-    public void InitializeVertexShader(string path, InputElement[] elem) {
+    public void InitializeVertexShader(string path, ref InputElement[] elem) {
 
       using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile(path, "main", "vs_4_0", ShaderFlags.Debug)) {
         var signature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
@@ -115,14 +118,26 @@ namespace D3D {
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
     }
 
-    public void SetLightConstantBuffer(PsLightConstantBuffer[] amLightData) {
-      for (int i = 0; i < amLightData.Length; ++i) {
-        var constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
-        _context3D.PixelShader.SetConstantBuffer(i, constantLightBuffer);
+    
+    public void SetLightConstantBuffer(ref PsLightConstantBuffer[] amLightData) {
+      if (_constantLightBuffers == null || _constantLightBuffers.Length != amLightData.Length) {
+        for (int i = 0; i < _constantLightBuffers?.Length; i++) {
+          _constantLightBuffers[i]?.Dispose();
+        }
+        _constantLightBuffers = new Buffer[amLightData.Length];
+      }
+
+      for (int i = 0; i < amLightData.Length; i++) {
+        if (_constantLightBuffers[i] == null) {
+          _constantLightBuffers[i] = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
+        } else {
+          _context3D.UpdateSubresource(ref amLightData[i], _constantLightBuffers[i]);
+        }
+        _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffers[i]);
       }
     }
 
-    public void SetVerticesBuffer(VsBuffer[] vertices) {
+    public void SetVerticesBuffer(ref VsBuffer[] vertices) {
       if (_vertexBuffer == null || _verticesCount != vertices.Length) {
         _vertexBuffer?.Dispose();
 
@@ -135,7 +150,7 @@ namespace D3D {
     }
 
 
-    public void SetIndicesBuffer(short[] indices) {
+    public void SetIndicesBuffer(ref short[] indices) {
       if (_indexBuffer == null || _indicesCount != indices.Length) {
         _indexBuffer?.Dispose();
 
@@ -147,9 +162,13 @@ namespace D3D {
       }
     }
 
-    public void SetMvpConstantBuffer(VsMvpConstantBuffer matrices) {
-      var constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
-      _context3D.VertexShader.SetConstantBuffer(0, constantBuffer);
+    public void SetMvpConstantBuffer(ref VsMvpConstantBuffer matrices) {
+      if (_constantBuffer == null) {
+        _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
+        _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+      } else {
+        _context3D.UpdateSubresource(ref matrices, _constantBuffer);
+      }
     }
 
     public void Draw(int count) {
