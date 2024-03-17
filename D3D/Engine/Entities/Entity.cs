@@ -9,6 +9,7 @@ namespace D3D {
     public void AddComponent(Component component) {
       _components.Add(component);
       component.IamEntity = this;
+      component.UpdateLinks();
     }
 
     public void RemoveComponent<T>() {

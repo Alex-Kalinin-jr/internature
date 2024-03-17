@@ -1,7 +1,7 @@
 ﻿using SharpDX;
 
 namespace D3D {
-  public class LightSystem : BaseSystem<CLight> {
+  public class SLightSystem : BaseSystem<CLight> {
     new public static void Update() {
       foreach (var component in Components) {
 

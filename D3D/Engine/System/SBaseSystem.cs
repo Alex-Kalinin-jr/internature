@@ -7,11 +7,8 @@ namespace D3D {
 
     public static void Register(T component) {
       Components.Add(component);
-      component.UpdateLinks();
     }
 
     public static void Update() { }
   }
-
-  class TransformSystem : BaseSystem<CTransform> { }
 }

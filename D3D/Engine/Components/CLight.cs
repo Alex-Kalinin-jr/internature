@@ -6,7 +6,7 @@ namespace D3D {
 
     public CLight(List<PsLightConstantBuffer> data) {
       IamLightData = data;
-      LightSystem.Register(this);
+      SLightSystem.Register(this);
     }
   }
 }

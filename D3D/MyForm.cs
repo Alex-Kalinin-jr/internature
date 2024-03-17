@@ -43,7 +43,8 @@ namespace D3D {
       var renderer = Renderer.GetRenderer();
       renderer.Update();
       CameraSystem.Update();
-      LightSystem.Update();
+      TransformSystem.Update();
+      SLightSystem.Update();
       DrawSystem.Update();
       renderer.Present();
     }

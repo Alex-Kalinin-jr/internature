@@ -17,18 +17,8 @@
 
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
       for (int i = 0; i < light.Length; ++i) {
-        light[i].ViewPos = camera.IamCamera.Position;
+        light[i].ViewPos = camera.Position;
       }
-
-
-      // to be set into camera component
-      matr.view = camera.IamCamera.GetViewMatrix();
-      matr.view.Transpose();
-      matr.projection = camera.IamCamera.GetProjectionMatrix();
-      matr.projection.Transpose();
-
-
-
 
       renderer.SetLightConstantBuffer(light);
       renderer.SetVerticesBuffer(vertices);

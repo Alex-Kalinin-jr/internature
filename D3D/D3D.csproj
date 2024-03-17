@@ -86,16 +86,15 @@
     <Compile Include="Engine\Components\CPitch.cs" />
     <Compile Include="Engine\Components\CRightCameraMoving.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
-    <Compile Include="Engine\Components\ComponentsDrivers\Camera.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Scene.cs" />
-    <Compile Include="Engine\Components\ComponentsDrivers\Mesh.cs" />
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
-    <Compile Include="Engine\System\BaseSystem.cs" />
-    <Compile Include="Engine\System\CameraSystem.cs" />
-    <Compile Include="Engine\System\DrawSystem.cs" />
-    <Compile Include="Engine\System\LightSystem.cs" />
+    <Compile Include="Engine\System\SBaseSystem.cs" />
+    <Compile Include="Engine\System\SCameraSystem.cs" />
+    <Compile Include="Engine\System\SDrawSystem.cs" />
+    <Compile Include="Engine\System\SLightSystem.cs" />
+    <Compile Include="Engine\System\STransformSystem.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
