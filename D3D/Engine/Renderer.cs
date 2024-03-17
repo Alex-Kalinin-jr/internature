@@ -22,18 +22,6 @@ namespace D3D {
     private SwapChain _swapChain;
     private DeviceContext _context3D;
     private RenderTargetView _renderTargetView;
-
-    private Buffer _vertexBuffer;
-    private Buffer _indexBuffer;
-    private Buffer _constantBuffer;
-    private Buffer _constantLightBuffer;
-
-    private VertexShader _vertexShader;
-    private PixelShader _pixelShader;
-
-    private ShaderSignature _inputSignature;
-    private InputLayout _inputLayout;
-
     private DepthStencilView _depthStencilView;
 
     private SharpDX.Color _background = SharpDX.Color.White;
@@ -44,7 +32,14 @@ namespace D3D {
       _formPtr = ptr;
 
       InitializeDeviceResources();
-      InitializeShaders();
+      SetViewPort();
+      InputElement[] element = new[] {
+        new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
+        new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
+        new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
+      };
+      InitializeVertexShader("Shaders/VertexShader.hlsl", element);
+      InitializePixelShader("Shaders/PixelShader.hlsl");
       InitializeDepthBuffer();
     }
 
@@ -62,54 +57,50 @@ namespace D3D {
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void InitializeDeviceResources() {
       var description = new SwapChainDescription {
-        BufferCount = 1,
-        ModeDescription = new ModeDescription(Width, Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
-        IsWindowed = true,
-        OutputHandle = _formPtr,
-        SampleDescription = new SampleDescription(1, 0),
-        SwapEffect = SwapEffect.Discard,
-        Usage = Usage.RenderTargetOutput
+          BufferCount = 1,
+          ModeDescription = new ModeDescription(Width, Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
+          IsWindowed = true,
+          OutputHandle = _formPtr,
+          SampleDescription = new SampleDescription(1, 0),
+          SwapEffect = SwapEffect.Discard,
+          Usage = Usage.RenderTargetOutput
       };
 
-      Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, description, out _device3D, out _swapChain);
+      Device.CreateWithSwapChain(DriverType.Hardware, 
+                                 DeviceCreationFlags.None, 
+                                 description, 
+                                 out _device3D, 
+                                 out _swapChain);
       _context3D = _device3D.ImmediateContext;
 
       using (Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0)) {
         _renderTargetView = new RenderTargetView(_device3D, backBuffer);
       }
+    }
 
+    public void SetViewPort() {
       var viewport = new Viewport(0, 0, Width, Height);
       _context3D.Rasterizer.SetViewport(viewport);
+    }
+
+    public void InitializeVertexShader(string path, InputElement[] elem) {
+
+      using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile(path, "main", "vs_4_0", ShaderFlags.Debug)) {
+        var signature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
+        var vShader = new VertexShader(_device3D, vertexShaderByteCode);
+        _context3D.VertexShader.Set(vShader);
+        _context3D.InputAssembler.InputLayout = new InputLayout(_device3D, signature, elem);
+      }
 
     }
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void InitializeShaders() {
-
-      using (var vertexShaderByteCode = ShaderBytecode.CompileFromFile(
-          "Shaders/VertexShader.hlsl", "main", "vs_4_0", ShaderFlags.Debug)) {
-        _inputSignature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
-        _vertexShader = new VertexShader(_device3D, vertexShaderByteCode);
+    public void InitializePixelShader(string path) {
+      using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile(path, "main", "ps_4_0", ShaderFlags.Debug)) {
+        var pShader = new PixelShader(_device3D, pixelShaderByteCode);
+        _context3D.PixelShader.Set(pShader);
       }
-
-      using (var pixelShaderByteCode = ShaderBytecode.CompileFromFile(
-          "Shaders/PixelShader.hlsl", "main", "ps_4_0", ShaderFlags.Debug)) {
-        _pixelShader = new PixelShader(_device3D, pixelShaderByteCode);
-      }
-
-      _context3D.VertexShader.Set(_vertexShader);
-      _context3D.PixelShader.Set(_pixelShader);
-
-      _inputLayout = new InputLayout(_device3D, _inputSignature, new[] {
-        new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
-        new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
-        new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
-      });
-
-      _context3D.InputAssembler.InputLayout = _inputLayout;
     }
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Update() {
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
@@ -117,28 +108,26 @@ namespace D3D {
       _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
     }
 
-    // /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     public void SetLightConstantBuffer(PsLightConstantBuffer[] amLightData) {
       for (int i = 0; i < amLightData.Length; ++i) {
-        _constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
-        _context3D.PixelShader.SetConstantBuffer(i, _constantLightBuffer);
+        var constantLightBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref amLightData[i]);
+        _context3D.PixelShader.SetConstantBuffer(i, constantLightBuffer);
       }
     }
 
     public void SetVerticesBuffer(VsBuffer[] vertices) {
-      _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
-      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
+      var vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
+      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
     }
 
     public void SetIndicesBuffer(short[] indices) {
-      _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
-      _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
+      var indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
+      _context3D.InputAssembler.SetIndexBuffer(indexBuffer, Format.R16_UInt, 0);
     }
 
     public void SetMvpConstantBuffer(VsMvpConstantBuffer matrices) {
-      _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
-      _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
+      var constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
+      _context3D.VertexShader.SetConstantBuffer(0, constantBuffer);
     }
 
     public void Draw(int count) {
@@ -152,21 +141,14 @@ namespace D3D {
 
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Dispose() {
-
-      _inputLayout.Dispose();
-      _inputSignature.Dispose();
-      _vertexBuffer.Dispose();
-      _vertexShader.Dispose();
-      _pixelShader.Dispose();
       _renderTargetView.Dispose();
       _swapChain.Dispose();
       _device3D.Dispose();
       _context3D.Dispose();
       _depthStencilView.Dispose();
-
     }
 
-    public void InitializeDepthBuffer() {
+    private void InitializeDepthBuffer() {
 
       var depthStencilDesc = new DepthStencilStateDescription {
         IsDepthEnabled = true,
