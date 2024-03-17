@@ -13,5 +13,4 @@ namespace D3D {
   }
 
   class TransformSystem : BaseSystem<CTransform> { }
-  class WorldSystem : BaseSystem<CWorldPositions> { }
 }

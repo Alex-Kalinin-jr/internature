@@ -1,6 +1,5 @@
 ﻿using Assimp;
 using SharpDX;
-using SharpDX.DXGI;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -48,19 +47,23 @@ namespace D3D {
 
 
     public static Scene CreateTestingScene() {
-      List<Matrix> matrices = new List<Matrix>();
+      var scene = new Scene();
       float xVal = 0.0f;
       float zVal = 0.0f;
       for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
-          matrices.Add((ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(xVal, 0.0f, zVal))));
+          var matr = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(xVal, 0.0f, zVal));
+          matr.Transpose();
+          VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+          buff.world = matr;
+          scene.AddComponent(new CFigure("Resources/Tree.obj", buff));
 
           xVal += 4.0f;
         }
         zVal += 4.0f;
         xVal = 0.0f;
       }
-      return new Scene("Resources/Tree.obj", matrices);
+      return scene;
     }
 
     public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {

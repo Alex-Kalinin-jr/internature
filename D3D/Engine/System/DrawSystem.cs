@@ -1,20 +1,18 @@
 ﻿namespace D3D {
-  public class DrawSystem : BaseSystem<CMesh> {
+  public class DrawSystem : BaseSystem<CFigure> {
     new public static void Update() {
-      foreach (var mesh in Components) {
-        DrawMesh(mesh);
+      foreach (var figure in Components) {
+        DrawFigure(figure);
       }
     }
 
-    private static void DrawMesh(CMesh mesh) {
-      var lights = mesh.IamEntity.GetComponent<CLight>();
-      var positions = mesh.IamEntity.GetComponent<CWorldPositions>();
-      var camera = mesh.IamEntity.GetComponent<CCamera>();
-      var transform = mesh.IamEntity.GetComponent<CTransform>();
+    private static void DrawFigure(CFigure figure) {
+      var lights = figure.IamEntity.GetComponent<CLight>();
+      var camera = figure.IamEntity.GetComponent<CCamera>();
 
-      var vertices = mesh.Vertices.ToArray();
-      var indices = mesh.Indices.ToArray();
-      var matr = transform.IamTransform;
+      var vertices = figure.IamMesh.Vertices.ToArray();
+      var indices = figure.IamMesh.Indices.ToArray();
+      var matr = figure.IamTransform.IamTransform;
       var renderer = Renderer.GetRenderer();
 
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
@@ -23,23 +21,23 @@
       }
 
 
+
+
+      // to be set into camera component
       matr.view = camera.IamCamera.GetViewMatrix();
       matr.view.Transpose();
       matr.projection = camera.IamCamera.GetProjectionMatrix();
       matr.projection.Transpose();
 
+
+
+
       renderer.SetLightConstantBuffer(light);
       renderer.SetVerticesBuffer(vertices);
       renderer.SetIndicesBuffer(indices);
 
-
-      for (int i = 0; i < positions.IamWorldMatrices.Count; ++i) {
-        matr.world = positions.IamWorldMatrices[i];
-        matr.world.Transpose();
-
-        renderer.SetMvpConstantBuffer(matr);
-        renderer.Draw(indices.Length);
-      }
+      renderer.SetMvpConstantBuffer(matr);
+      renderer.Draw(indices.Length);
     }
   }
 }

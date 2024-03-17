@@ -196,7 +196,7 @@ namespace D3D {
 
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
 
-      MouseEventArgs mouseArgs = (MouseEventArgs)e;
+      MouseEventArgs mouseArgs = e;
       _mouse.X = mouseArgs.X;
       _mouse.Y = mouseArgs.Y;
 

@@ -72,6 +72,7 @@
     <Compile Include="Engine\Components\CBackCameraMoving.cs" />
     <Compile Include="Engine\Components\CCamera.cs" />
     <Compile Include="Engine\Components\CDownCameraMoving.cs" />
+    <Compile Include="Engine\Components\CFigure.cs" />
     <Compile Include="Engine\Components\CFwdCameraMoving.cs" />
     <Compile Include="Engine\Components\CLight.cs" />
     <Compile Include="Engine\Components\CNewLightColor.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="Engine\Components\CLeftCameraMover.cs" />
     <Compile Include="Engine\Components\CUpCameraMoving.cs" />
     <Compile Include="Engine\Components\CVertex.cs" />
-    <Compile Include="Engine\Components\CWorldPositions.cs" />
     <Compile Include="Engine\Components\CYaw.cs" />
     <Compile Include="Engine\Components\CMesh.cs" />
     <Compile Include="Engine\Components\CPitch.cs" />

@@ -7,7 +7,6 @@ namespace D3D {
 
     public CMesh(string path) {
       (Vertices, Indices) = Generator.GenerateMesh(path); // testing initializing
-      DrawSystem.Register(this);
     }
   }
 }
