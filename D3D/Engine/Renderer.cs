@@ -24,12 +24,19 @@ namespace D3D {
     private RenderTargetView _renderTargetView;
     private DepthStencilView _depthStencilView;
 
+    private long _indicesCount;
+    private long _verticesCount;
+    private Buffer _vertexBuffer;
+    private Buffer _indexBuffer;
+
     private SharpDX.Color _background = SharpDX.Color.White;
 
     private static Renderer _instance;
 
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
+      _verticesCount = 0;
+      _indicesCount = 0;
 
       InitializeDeviceResources();
       SetViewPort();
@@ -116,13 +123,28 @@ namespace D3D {
     }
 
     public void SetVerticesBuffer(VsBuffer[] vertices) {
-      var vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
-      _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
+      if (_vertexBuffer == null || _verticesCount != vertices.Length) {
+        _vertexBuffer?.Dispose();
+
+        _vertexBuffer = Buffer.Create(_device3D, BindFlags.VertexBuffer, vertices);
+        _verticesCount = vertices.Length;
+        _context3D.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(_vertexBuffer, Utilities.SizeOf<VsBuffer>(), 0));
+      } else {
+        _context3D.UpdateSubresource(vertices, _vertexBuffer);
+      }
     }
 
+
     public void SetIndicesBuffer(short[] indices) {
-      var indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
-      _context3D.InputAssembler.SetIndexBuffer(indexBuffer, Format.R16_UInt, 0);
+      if (_indexBuffer == null || _indicesCount != indices.Length) {
+        _indexBuffer?.Dispose();
+
+        _indexBuffer = Buffer.Create(_device3D, BindFlags.IndexBuffer, indices);
+        _indicesCount = indices.Length;
+        _context3D.InputAssembler.SetIndexBuffer(_indexBuffer, Format.R16_UInt, 0);
+      } else {
+        _context3D.UpdateSubresource(indices, _indexBuffer);
+      }
     }
 
     public void SetMvpConstantBuffer(VsMvpConstantBuffer matrices) {

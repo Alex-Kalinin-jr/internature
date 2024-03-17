@@ -1,5 +1,4 @@
-﻿using Assimp;
-using SharpDX;
+﻿using SharpDX;
 
 namespace D3D {
   public class SLightSystem : BaseSystem<CLight> {
