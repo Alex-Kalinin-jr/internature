@@ -7,23 +7,18 @@
     }
 
     private static void DrawFigure(CFigure figure) {
-      var lights = figure.IamEntity.GetComponent<CLight>();
-      var camera = figure.IamEntity.GetComponent<CCamera>();
 
       var vertices = figure.IamMesh.Vertices.ToArray();
       var indices = figure.IamMesh.Indices.ToArray();
       var matr = figure.IamTransform.IamTransform;
-      var renderer = Renderer.GetRenderer();
-
+      var lights = figure.IamEntity.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
-      for (int i = 0; i < light.Length; ++i) {
-        light[i].ViewPos = camera.Position;
-      }
 
+
+      var renderer = Renderer.GetRenderer();
       renderer.SetLightConstantBuffer(light);
       renderer.SetVerticesBuffer(vertices);
       renderer.SetIndicesBuffer(indices);
-
       renderer.SetMvpConstantBuffer(matr);
       renderer.Draw(indices.Length);
     }

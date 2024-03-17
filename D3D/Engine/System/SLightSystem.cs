@@ -1,9 +1,12 @@
-﻿using SharpDX;
+﻿using Assimp;
+using SharpDX;
 
 namespace D3D {
   public class SLightSystem : BaseSystem<CLight> {
     new public static void Update() {
       foreach (var component in Components) {
+
+        SetViewPosition(component);
 
         var color = component.IamEntity.GetComponent<CNewLightColor>();
         if (color != null) {
@@ -33,6 +36,16 @@ namespace D3D {
         component.IamLightData[i] = tmp;
       }
       component.IamEntity.RemoveComponent<CNewLightPosition>();
+    }
+
+    private static void SetViewPosition(CLight component) {
+      var camera = component.IamEntity.GetComponent<CCamera>();
+      var light = component.IamLightData;
+      for (int i = 0; i < light.Count; ++i) {
+        var buff = light[i];
+        buff.ViewPos = camera.Position;
+        light[i] = buff;
+      }
     }
   }
 }

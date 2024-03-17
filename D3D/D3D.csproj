@@ -69,22 +69,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\Components\CBackCameraMoving.cs" />
-    <Compile Include="Engine\Components\CCamera.cs" />
-    <Compile Include="Engine\Components\CDownCameraMoving.cs" />
+    <Compile Include="Engine\Components\Camera\CBackCameraMoving.cs" />
+    <Compile Include="Engine\Components\Camera\CCamera.cs" />
+    <Compile Include="Engine\Components\Camera\CDownCameraMoving.cs" />
     <Compile Include="Engine\Components\CFigure.cs" />
-    <Compile Include="Engine\Components\CFwdCameraMoving.cs" />
-    <Compile Include="Engine\Components\CLight.cs" />
-    <Compile Include="Engine\Components\CNewLightColor.cs" />
-    <Compile Include="Engine\Components\CNewLightPosition.cs" />
+    <Compile Include="Engine\Components\Camera\CFwdCameraMoving.cs" />
+    <Compile Include="Engine\Components\Light\CLight.cs" />
+    <Compile Include="Engine\Components\Light\CNewLightColor.cs" />
+    <Compile Include="Engine\Components\Light\CNewLightPosition.cs" />
     <Compile Include="Engine\Components\Component.cs" />
-    <Compile Include="Engine\Components\CLeftCameraMover.cs" />
-    <Compile Include="Engine\Components\CUpCameraMoving.cs" />
-    <Compile Include="Engine\Components\CVertex.cs" />
-    <Compile Include="Engine\Components\CYaw.cs" />
+    <Compile Include="Engine\Components\Camera\CLeftCameraMoving.cs" />
+    <Compile Include="Engine\Components\Camera\CUpCameraMoving.cs" />
+    <Compile Include="Engine\Components\Camera\CYaw.cs" />
     <Compile Include="Engine\Components\CMesh.cs" />
-    <Compile Include="Engine\Components\CPitch.cs" />
-    <Compile Include="Engine\Components\CRightCameraMoving.cs" />
+    <Compile Include="Engine\Components\Camera\CPitch.cs" />
+    <Compile Include="Engine\Components\Camera\CRightCameraMoving.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Scene.cs" />
@@ -104,9 +103,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\Renderer.cs" />
-    <Compile Include="Engine\Components\ComponentsDrivers\VsBuffer.cs" />
-    <Compile Include="Engine\Components\ComponentsDrivers\VsConstantBuffer.cs" />
-    <Compile Include="Engine\Components\ComponentsDrivers\PsLightConstantBuffer.cs" />
+    <Compile Include="Engine\Storages\VsBuffer.cs" />
+    <Compile Include="Engine\Storages\VsConstantBuffer.cs" />
+    <Compile Include="Engine\Storages\PsLightConstantBuffer.cs" />
     <EmbeddedResource Include="MyForm.resx">
       <DependentUpon>MyForm.cs</DependentUpon>
     </EmbeddedResource>

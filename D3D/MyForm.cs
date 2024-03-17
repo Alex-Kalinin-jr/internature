@@ -13,9 +13,9 @@ namespace D3D {
     new private const int Height = 768;
 
     private MousePos _mouse;
+    private Scene _scene;
 
     private RenderForm _renderForm;
-    private Scene _scene;
 
     private TrackBar _xPositionTrackBar;
     private TrackBar _yPositionTrackBar;
@@ -32,7 +32,11 @@ namespace D3D {
 
       _mouse = new MousePos();
       _scene = Generator.CreateTestingScene();
-
+      var matr = Generator.ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      matr.Transpose();
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      buff.world = matr;
+      _scene.AddComponent(new CFigure("Resources/FinalBaseMesh.obj", buff));
     }
 
     public void Run() {
@@ -144,11 +148,11 @@ namespace D3D {
       _renderForm.AllowUserResizing = false;
       _renderForm.SuspendLayout();
       _renderForm.Name = "MyForm";
-      _renderForm.MouseDown += new MouseEventHandler(this.MyFormMouseDown);
-      _renderForm.MouseMove += new MouseEventHandler(this.MyFormMouseMove);
-      _renderForm.MouseUp += new MouseEventHandler(this.MyFormMouseUp);
+      _renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
+      _renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
+      _renderForm.MouseUp += new MouseEventHandler(MyFormMouseUp);
       _renderForm.ResumeLayout(false);
-      _renderForm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MyFormKeyPress);
+      _renderForm.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
     }
 
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
