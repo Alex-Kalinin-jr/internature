@@ -11,5 +11,10 @@ namespace D3D {
       IamTransform = new CTransform(matr);
       DrawSystem.Register(this);
     }
+
+    public override void UpdateLinks() {
+      IamMesh.IamEntity = IamEntity;
+      IamTransform.IamEntity = IamEntity;
+    }
   }
 }

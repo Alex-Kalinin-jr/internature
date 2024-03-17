@@ -21,8 +21,6 @@
       }
 
 
-
-
       // to be set into camera component
       matr.view = camera.IamCamera.GetViewMatrix();
       matr.view.Transpose();
