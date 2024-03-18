@@ -12,6 +12,18 @@ namespace D3D {
       DrawSystem.Register(this);
     }
 
+    public CFigure(CMesh iamMesh, CTransform iamTransform) {
+      IamMesh = iamMesh;
+      IamTransform = iamTransform;
+      DrawSystem.Register(this);
+    }
+
+    public CFigure(CMesh iamMesh, VsMvpConstantBuffer matr) {
+      IamMesh = iamMesh;
+      IamTransform = new CTransform(matr);
+      DrawSystem.Register(this);
+    }
+
     public override void UpdateLinks() {
       IamMesh.IamEntity = IamEntity;
       IamTransform.IamEntity = IamEntity;

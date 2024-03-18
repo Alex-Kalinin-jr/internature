@@ -1,10 +1,11 @@
 ﻿using Assimp;
 using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace D3D {
-// this is just debugging class. Imagine all generations you want for setting your scene, properties and so on.
+  // this is just debugging class. Imagine all generations you want for setting your scene, properties and so on.
   public class Generator {
 
     public static (List<VsBuffer>, List<short>) GenerateMesh(string FileName) {
@@ -52,10 +53,9 @@ namespace D3D {
       float zVal = 0.0f;
       for (int i = 0; i < 1; ++i) {
         for (int j = 0; j < 1; ++j) {
-          var matr = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(xVal, 0.0f, zVal));
-          matr.Transpose();
           VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-          buff.world = matr;
+          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
+                                                 new Vector3(xVal, 0.0f, zVal));
           scene.AddComponent(new CFigure("Resources/Tree.obj", buff));
 
           xVal += 4.0f;
@@ -66,6 +66,44 @@ namespace D3D {
       return scene;
     }
 
+
+    public static Scene CreateGridTestingScene() {
+      var scene = new Scene();
+
+      for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
+          VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(i, 0.0f, j));
+          scene.AddComponent(new CFigure(CreateTestingQuadroMesh(), buff));
+        }
+      }
+      return scene;
+    }
+
+
+    public static CMesh CreateTestingQuadroMesh() {
+      List<VsBuffer> vertices = new List<VsBuffer>();
+      List<short> indices = new List<short>();
+
+      var vertex1 = new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f));
+      var vertex2 = new VsBuffer(new Vector3(1.0f, 0.0f, 0.0f));
+      var vertex3 = new VsBuffer(new Vector3(1.0f, 0.0f, 1.0f));
+      var vertex4 = new VsBuffer(new Vector3(0.0f, 0.0f, 1.0f));
+
+      vertices.Add(vertex1);
+      vertices.Add(vertex2);
+      vertices.Add(vertex3);
+      vertices.Add(vertex4);
+
+      indices.Add(0);
+      indices.Add(1);
+      indices.Add(2);
+      indices.Add(3);
+
+      return new CMesh(vertices, indices);
+    }
+
+
     public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {
       var output = new List<PsLightConstantBuffer> {
         new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
@@ -75,8 +113,10 @@ namespace D3D {
       return output;
     }
 
+
     public static Matrix ComputeTestingModelMatrix(Vector3 rotations, Vector3 translations) {
       var buff = Matrix.RotationYawPitchRoll(rotations.X, rotations.Y, rotations.Z) * Matrix.Translation(translations);
+      buff.Transpose();
       return buff;
     }
   }

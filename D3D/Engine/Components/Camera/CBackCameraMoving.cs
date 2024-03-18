@@ -1,4 +1,3 @@
 ﻿namespace D3D {
-  public class CBackCameraMoving : Component {
-  }
+  public class CBackCameraMoving : Component {}
 }

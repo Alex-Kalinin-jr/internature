@@ -8,5 +8,15 @@ namespace D3D {
     public CMesh(string path) {
       (Vertices, Indices) = Generator.GenerateMesh(path); // testing initializing
     }
+
+    public CMesh() {
+      Vertices = new List<VsBuffer>();
+      Indices = new List<short>();
+    }
+
+    public CMesh(List<VsBuffer> vertices, List<short> indices) {
+      Vertices = vertices;
+      Indices = indices;
+    }
   }
 }

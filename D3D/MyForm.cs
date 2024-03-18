@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
+using Assimp;
 
 namespace D3D {
 
@@ -31,7 +32,8 @@ namespace D3D {
       CreateDirectionTrackBars();
 
       _mouse = new MousePos();
-      _scene = Generator.CreateTestingScene();
+      _scene = Generator.CreateGridTestingScene();
+
     }
 
     public void Run() {
