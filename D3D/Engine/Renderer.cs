@@ -111,11 +111,14 @@ namespace D3D {
       }
     }
 
+    public void ChangePrimitiveTopology(PrimitiveTopology type) {
+      _context3D.InputAssembler.PrimitiveTopology = type;
+    }
+
     public void Update() {
       _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
-      _context3D.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
     }
 
     

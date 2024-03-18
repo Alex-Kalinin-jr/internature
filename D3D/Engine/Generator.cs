@@ -1,5 +1,6 @@
 ﻿using Assimp;
 using SharpDX;
+using SharpDX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,18 +52,19 @@ namespace D3D {
       var scene = new Scene();
       float xVal = 0.0f;
       float zVal = 0.0f;
-      for (int i = 0; i < 1; ++i) {
-        for (int j = 0; j < 1; ++j) {
+      for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
           VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
           buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
                                                  new Vector3(xVal, 0.0f, zVal));
           scene.AddComponent(new CFigure("Resources/Tree.obj", buff));
 
-          xVal += 4.0f;
+          xVal += 5.0f;
         }
-        zVal += 4.0f;
+        zVal += 5.0f;
         xVal = 0.0f;
       }
+      scene.AddComponent(new CRenderParams(PrimitiveTopology.TriangleList));
       return scene;
     }
 
@@ -77,6 +79,7 @@ namespace D3D {
           scene.AddComponent(new CFigure(CreateTestingQuadroMesh(), buff));
         }
       }
+      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineStrip));
       return scene;
     }
 

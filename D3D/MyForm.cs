@@ -14,7 +14,7 @@ namespace D3D {
     new private const int Height = 768;
 
     private MousePos _mouse;
-    private Scene _scene;
+    private List<Scene> _scene;
 
     private RenderForm _renderForm;
 
@@ -32,7 +32,9 @@ namespace D3D {
       CreateDirectionTrackBars();
 
       _mouse = new MousePos();
-      _scene = Generator.CreateGridTestingScene();
+      _scene = new List<Scene>();
+      _scene.Add(Generator.CreateGridTestingScene());
+      _scene.Add(Generator.CreateTestingScene());
 
     }
 
@@ -78,7 +80,9 @@ namespace D3D {
       if (buff.ShowDialog() == DialogResult.OK) {
         var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255,
                                                   buff.Color.B / 255, buff.Color.A / 255);
-        _scene.AddComponent(new CNewLightColor(color));
+        foreach (var scene in _scene) {
+          scene.AddComponent(new CNewLightColor(color));
+        }
       }
     }
 
@@ -132,7 +136,9 @@ namespace D3D {
       float xDirection = _xPositionTrackBar.Value / 20.0f;
       float yDirection = _yPositionTrackBar.Value / 20.0f;
       float zDirection = _zPositionTrackBar.Value / 20.0f;
-      _scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
+      foreach (var scene in _scene) {
+        scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
+      }
     }
 
     private void CreateRenderForm() {
@@ -153,18 +159,20 @@ namespace D3D {
     }
 
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
-      if (e.KeyChar == 'w') {
-        _scene.AddComponent(new CFwdCameraMoving());
-      } else if (e.KeyChar == 's') {
-        _scene.AddComponent(new CBackCameraMoving());
-      } else if (e.KeyChar == 'd') {
-        _scene.AddComponent(new CRightCameraMoving());
-      } else if (e.KeyChar == 'a') {
-        _scene.AddComponent(new CLeftCameraMoving());
-      } else if (e.KeyChar == '=') {
-        _scene.AddComponent(new CUpCameraMoving());
-      } else if (e.KeyChar == '-') {
-        _scene.AddComponent(new CDownCameraMoving());
+      foreach (var scene in _scene) {
+        if (e.KeyChar == 'w') {
+          scene.AddComponent(new CFwdCameraMoving());
+        } else if (e.KeyChar == 's') {
+          scene.AddComponent(new CBackCameraMoving());
+        } else if (e.KeyChar == 'd') {
+          scene.AddComponent(new CRightCameraMoving());
+        } else if (e.KeyChar == 'a') {
+          scene.AddComponent(new CLeftCameraMoving());
+        } else if (e.KeyChar == '=') {
+          scene.AddComponent(new CUpCameraMoving());
+        } else if (e.KeyChar == '-') {
+          scene.AddComponent(new CDownCameraMoving());
+        }
       }
     }
 
@@ -173,26 +181,27 @@ namespace D3D {
       MouseEventArgs mouseArgs = (MouseEventArgs)e;
       var deltaX = mouseArgs.X - _mouse.X;
       var deltaY = mouseArgs.Y - _mouse.Y;
+      _mouse.X = mouseArgs.X;
+      _mouse.Y = mouseArgs.Y;
 
-      if (_isRotationDown) {
-        _scene.AddComponent(new CPitch((float)deltaY / 10.0f));
-        _scene.AddComponent(new CYaw((float)deltaX / 10.0f));
-        _mouse.X = mouseArgs.X;
-        _mouse.Y = mouseArgs.Y;
-      } else if (_isMouseDown) {
+      foreach (var scene in _scene) {
+        if (_isRotationDown) {
+          scene.AddComponent(new CPitch((float)deltaY / 10.0f));
+          scene.AddComponent(new CYaw((float)deltaX / 10.0f));
+        } else if (_isMouseDown) {
 
-        if (deltaX > 0) {
-          _scene.AddComponent(new CLeftCameraMoving());
-        } else {
-          _scene.AddComponent(new CRightCameraMoving());
+          if (deltaX > 0) {
+            scene.AddComponent(new CLeftCameraMoving());
+          } else {
+            scene.AddComponent(new CRightCameraMoving());
+          }
+
+          if (deltaY > 0) {
+            scene.AddComponent(new CUpCameraMoving());
+          } else {
+            scene.AddComponent(new CDownCameraMoving());
+          }
         }
-
-        if (deltaY > 0) {
-          _scene.AddComponent(new CUpCameraMoving());
-        } else {
-          _scene.AddComponent(new CDownCameraMoving());
-        }
-
       }
     }
 
