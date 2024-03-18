@@ -10,7 +10,7 @@
 
       var vertices = figure.IamMesh.Vertices.ToArray();
       var indices = figure.IamMesh.Indices.ToArray();
-      var matr = figure.IamTransform.IamTransform;
+      var matrix = figure.IamTransform.IamTransform;
       var lights = figure.IamEntity.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
       var topology = figure.IamEntity.GetComponent<CRenderParams>().IamTopology.IamTopology;
@@ -21,7 +21,7 @@
       renderer.SetLightConstantBuffer(ref light);
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
-      renderer.SetMvpConstantBuffer(ref matr);
+      renderer.SetMvpConstantBuffer(ref matrix);
       renderer.Draw(indices.Length);
     }
   }

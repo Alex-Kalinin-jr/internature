@@ -22,8 +22,11 @@ namespace D3D {
     private TrackBar _yPositionTrackBar;
     private TrackBar _zPositionTrackBar;
 
-    bool _isMouseDown = false;
-    bool _isRotationDown = false;
+    private bool _isMouseDown = false;
+    private bool _isRotationDown = false;
+
+    private const float _rotationSpeed = 10.0f;
+    private const float _positionSpeed = 20.0f;
 
     public MyForm() {
       CreateRenderForm();
@@ -58,7 +61,7 @@ namespace D3D {
       _labelHelp.Location = new System.Drawing.Point(25, 25);
       _labelHelp.Name = "help";
       _labelHelp.TabIndex = 0;
-      string text = "W - move fwd\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
+      string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
       _labelHelp.Text = text;
       _labelHelp.TextAlign = ContentAlignment.MiddleLeft;
       _renderForm.Controls.Add(_labelHelp);
@@ -133,9 +136,9 @@ namespace D3D {
     }
 
     private void DirectionTrackBarScroll(object sender, EventArgs e) {
-      float xDirection = _xPositionTrackBar.Value / 20.0f;
-      float yDirection = _yPositionTrackBar.Value / 20.0f;
-      float zDirection = _zPositionTrackBar.Value / 20.0f;
+      float xDirection = _xPositionTrackBar.Value / _positionSpeed;
+      float yDirection = _yPositionTrackBar.Value / _positionSpeed;
+      float zDirection = _zPositionTrackBar.Value / _positionSpeed;
       foreach (var scene in _scene) {
         scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
       }
@@ -186,8 +189,8 @@ namespace D3D {
 
       foreach (var scene in _scene) {
         if (_isRotationDown) {
-          scene.AddComponent(new CPitch((float)deltaY / 10.0f));
-          scene.AddComponent(new CYaw((float)deltaX / 10.0f));
+          scene.AddComponent(new CPitch((float)deltaY / _rotationSpeed));
+          scene.AddComponent(new CYaw((float)deltaX / _rotationSpeed));
         } else if (_isMouseDown) {
 
           if (deltaX > 0) {

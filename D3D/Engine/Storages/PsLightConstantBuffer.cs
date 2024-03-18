@@ -14,9 +14,9 @@ namespace D3D {
 
     public Vector3 ViewPos;
 
-    public PsLightConstantBuffer(Vector4 D, Vector3 L) {
-      Color = D;
-      Position = L;
+    public PsLightConstantBuffer(Vector4 color, Vector3 position) {
+      Color = color;
+      Position = position;
       AmbientStrength = 0.4f;
       SpecularStrength = 0.5f;
       ViewPos = new Vector3(0, 0, 0);

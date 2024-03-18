@@ -1,7 +1,4 @@
-﻿using Assimp;
-using SharpDX;
-using System.Diagnostics;
-using System.Drawing;
+﻿using SharpDX;
 using System;
 
 namespace D3D {

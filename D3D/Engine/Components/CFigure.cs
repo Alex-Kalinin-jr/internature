@@ -6,9 +6,9 @@ namespace D3D {
     public CMesh IamMesh;
     public CTransform IamTransform;
 
-    public CFigure(string path, VsMvpConstantBuffer matr) {
+    public CFigure(string path, VsMvpConstantBuffer matrix) {
       IamMesh = new CMesh(path);
-      IamTransform = new CTransform(matr);
+      IamTransform = new CTransform(matrix);
       DrawSystem.Register(this);
     }
 
@@ -18,9 +18,9 @@ namespace D3D {
       DrawSystem.Register(this);
     }
 
-    public CFigure(CMesh iamMesh, VsMvpConstantBuffer matr) {
+    public CFigure(CMesh iamMesh, VsMvpConstantBuffer matrix) {
       IamMesh = iamMesh;
-      IamTransform = new CTransform(matr);
+      IamTransform = new CTransform(matrix);
       DrawSystem.Register(this);
     }
 
