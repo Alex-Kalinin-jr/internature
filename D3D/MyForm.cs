@@ -12,12 +12,9 @@ namespace D3D {
 
     private List<Scene> _scene;
 
-    private CRenderForm _renderForm;
     private Layout _layout;
 
-    private CPositionTrackBar _xPositionTrackBar;
-    private CPositionTrackBar _yPositionTrackBar;
-    private CPositionTrackBar _zPositionTrackBar;
+    private CPositionTrackBar _positionTrackBar;
 
     private bool _isMouseDown = false;
     private bool _isRotationDown = false;
@@ -25,8 +22,15 @@ namespace D3D {
 
     public MyForm() {
       _layout = new Layout();
+
       var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
+      var trackBar = _layout.GetComponent<CPositionTrackBar>();
+      trackBar.IamXTrackBar.Scroll += ChangeLightPosition;
+      trackBar.IamYTrackBar.Scroll += ChangeLightPosition;
+      trackBar.IamZTrackBar.Scroll += ChangeLightPosition;
+
       Renderer.GetRenderer(renderForm.Handle);
+
       renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
       renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
       renderForm.MouseUp += new MouseEventHandler(MyFormMouseUp);
@@ -39,7 +43,8 @@ namespace D3D {
     }
 
     public void Run() {
-      RenderLoop.Run(_renderForm.IamRenderForm, RenderCallback);
+      var form = _layout.GetComponent<CRenderForm>();
+      RenderLoop.Run(form.IamRenderForm, RenderCallback);
     }
 
     private void RenderCallback() {
@@ -66,9 +71,10 @@ namespace D3D {
     }
 
     private void ChangeLightPosition(object sender, EventArgs e) {
-      float xDirection = _xPositionTrackBar.IamTrackBar.Value / _movingParams.IamShiftDivider;
-      float yDirection = _yPositionTrackBar.IamTrackBar.Value / _movingParams.IamShiftDivider;
-      float zDirection = _zPositionTrackBar.IamTrackBar.Value / _movingParams.IamShiftDivider;
+      var trackBar = _layout.GetComponent<CPositionTrackBar>();
+      float xDirection = trackBar.IamXTrackBar.Value / _movingParams.IamShiftDivider;
+      float yDirection = trackBar.IamYTrackBar.Value / _movingParams.IamShiftDivider;
+      float zDirection = trackBar.IamZTrackBar.Value / _movingParams.IamShiftDivider;
       foreach (var scene in _scene) {
         scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
       }
@@ -95,11 +101,12 @@ namespace D3D {
 
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
 
-      MouseEventArgs mouseArgs = (MouseEventArgs)e;
-      var deltaX = mouseArgs.X - _mouse.X;
-      var deltaY = mouseArgs.Y - _mouse.Y;
-      _mouse.X = mouseArgs.X;
-      _mouse.Y = mouseArgs.Y;
+      MouseEventArgs mouseArgs = e;
+      var mouse = _layout.GetComponent<CMousePos>();
+      var deltaX = mouseArgs.X - mouse.X;
+      var deltaY = mouseArgs.Y - mouse.Y;
+      mouse.X = mouseArgs.X;
+      mouse.Y = mouseArgs.Y;
 
       foreach (var scene in _scene) {
         if (_isRotationDown) {
@@ -125,8 +132,9 @@ namespace D3D {
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
 
       MouseEventArgs mouseArgs = e;
-      _mouse.X = mouseArgs.X;
-      _mouse.Y = mouseArgs.Y;
+      var mouse = _layout.GetComponent<CMousePos>();
+      mouse.X = mouseArgs.X;
+      mouse.Y = mouseArgs.Y;
 
       if (mouseArgs.Button == MouseButtons.Left) {
         _isMouseDown = true;

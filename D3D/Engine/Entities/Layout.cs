@@ -16,20 +16,17 @@ namespace D3D {
       string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
       new CLabel(renderForm.IamRenderForm, new Point(25, 25), text);
 
-      var button = new CButton(renderForm.IamRenderForm, new System.Drawing.Point(25, 300), "light color");
-      button.IamButton.Click += ChangeLightColor;
+      new CLabel(renderForm.IamRenderForm, new Point(25, 160), "x-coord");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 210), "y-coord");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 260), "z-coord");
 
-      new CLabel(renderForm.IamRenderForm, new System.Drawing.Point(25, 160), "x-coord");
-      var xTrackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 150));
-      xTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
 
-      new CLabel(renderForm.IamRenderForm, new System.Drawing.Point(25, 210), "y-coord");
-      var yTrackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 200));
-      yTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
+      var button = new CButton(renderForm.IamRenderForm, new Point(25, 300), "light color");
+      AddComponent(button);
+      // button.IamButton.Click += ChangeLightColor;
+      var trackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 150), 50);
+      AddComponent(trackBar);
 
-      new CLabel(_renderForm.IamRenderForm, new System.Drawing.Point(25, 260), "z-coord");
-      var zTrackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 250));
-      zTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
 
     }
   }

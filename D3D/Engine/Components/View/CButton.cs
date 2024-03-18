@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 
 namespace D3D {
-  public class CButton {
+  public class CButton : Component {
     public Button IamButton;
 
     public CButton(RenderForm form, Point position, string text) {
