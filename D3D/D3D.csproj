@@ -88,6 +88,7 @@
     <Compile Include="Engine\Components\Renderer\CRenderParams.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
+    <Compile Include="Engine\Entities\Layout.cs" />
     <Compile Include="Engine\Entities\Scene.cs" />
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
@@ -96,6 +97,9 @@
     <Compile Include="Engine\System\SDrawSystem.cs" />
     <Compile Include="Engine\System\SLightSystem.cs" />
     <Compile Include="Engine\System\STransformSystem.cs" />
+    <Compile Include="Engine\View\CButton.cs" />
+    <Compile Include="Engine\View\CLabel.cs" />
+    <Compile Include="Engine\View\CPositionTrackBar.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
 using Assimp;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace D3D {
 
@@ -13,14 +15,14 @@ namespace D3D {
     new private const int Width = 1024;
     new private const int Height = 768;
 
-    private MousePos _mouse;
+    private CMousePos _mouse;
     private List<Scene> _scene;
 
     private RenderForm _renderForm;
 
-    private TrackBar _xPositionTrackBar;
-    private TrackBar _yPositionTrackBar;
-    private TrackBar _zPositionTrackBar;
+    private CPositionTrackBar _xPositionTrackBar;
+    private CPositionTrackBar _yPositionTrackBar;
+    private CPositionTrackBar _zPositionTrackBar;
 
     private bool _isMouseDown = false;
     private bool _isRotationDown = false;
@@ -30,14 +32,27 @@ namespace D3D {
 
     public MyForm() {
       CreateRenderForm();
-      CreateHelpLabel();
-      CreateLightColorButton();
-      CreateDirectionTrackBars();
 
-      _mouse = new MousePos();
-      _scene = new List<Scene>();
-      _scene.Add(Generator.CreateGridTestingScene());
-      _scene.Add(Generator.CreateTestingScene());
+      _mouse = new CMousePos();
+      _scene = new List<Scene> {Generator.CreateGridTestingScene(), Generator.CreateTestingScene()};
+
+      string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
+      new CLabel(_renderForm, new System.Drawing.Point(25, 25), text);
+
+      var button = new CButton(_renderForm, new System.Drawing.Point(25, 300), "light color");
+      button.IamButton.Click += ChangeLightColor;
+
+      new CLabel(_renderForm, new System.Drawing.Point(25, 160), "x-coord");
+      _xPositionTrackBar = new CPositionTrackBar(_renderForm, new System.Drawing.Point(100, 150));
+      _xPositionTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
+
+      new CLabel(_renderForm, new System.Drawing.Point(25, 210), "y-coord");
+      _yPositionTrackBar = new CPositionTrackBar(_renderForm, new System.Drawing.Point(100, 200));
+      _yPositionTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
+
+      new CLabel(_renderForm, new System.Drawing.Point(25, 260), "z-coord");
+      _zPositionTrackBar = new CPositionTrackBar(_renderForm, new System.Drawing.Point(100, 250));
+      _zPositionTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
 
     }
 
@@ -55,27 +70,6 @@ namespace D3D {
       renderer.Present();
     }
 
-    private void CreateHelpLabel() {
-      Label _labelHelp = new Label();
-      _labelHelp.AutoSize = true;
-      _labelHelp.Location = new System.Drawing.Point(25, 25);
-      _labelHelp.Name = "help";
-      _labelHelp.TabIndex = 0;
-      string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
-      _labelHelp.Text = text;
-      _labelHelp.TextAlign = ContentAlignment.MiddleLeft;
-      _renderForm.Controls.Add(_labelHelp);
-    }
-
-    private void CreateLightColorButton() {
-      Button _diffuseLightColor = new Button();
-      _diffuseLightColor.Location = new System.Drawing.Point(25, 300);
-      _diffuseLightColor.Size = new Size(100, 25);
-      _diffuseLightColor.Text = "light color";
-      _diffuseLightColor.Click += ChangeLightColor;
-      _renderForm.Controls.Add(_diffuseLightColor);
-    }
-
     private void ChangeLightColor(object sender, EventArgs e) {
       ColorDialog buff = new ColorDialog();
       buff.AllowFullOpen = false;
@@ -89,56 +83,10 @@ namespace D3D {
       }
     }
 
-    private void CreateDirectionTrackBars() {
-
-      Label x = new Label();
-      x.Text = "x-coord";
-      x.Location = new System.Drawing.Point(25, 160);
-      _renderForm.Controls.Add(x);
-
-      _xPositionTrackBar = new TrackBar();
-      _xPositionTrackBar.Minimum = -100;
-      _xPositionTrackBar.Maximum = 100;
-      _xPositionTrackBar.TickFrequency = 10;
-      _xPositionTrackBar.LargeChange = 10;
-      _xPositionTrackBar.Scroll += DirectionTrackBarScroll;
-      _xPositionTrackBar.Location = new System.Drawing.Point(100, 150);
-
-      Label y = new Label();
-      y.Text = "y-coord";
-      y.Location = new System.Drawing.Point(25, 210);
-      _renderForm.Controls.Add(y);
-
-      _yPositionTrackBar = new TrackBar();
-      _yPositionTrackBar.Minimum = -100;
-      _yPositionTrackBar.Maximum = 100;
-      _yPositionTrackBar.TickFrequency = 10;
-      _yPositionTrackBar.LargeChange = 10;
-      _yPositionTrackBar.Scroll += DirectionTrackBarScroll;
-      _yPositionTrackBar.Location = new System.Drawing.Point(100, 200);
-
-      Label z = new Label();
-      z.Text = "z-coord";
-      z.Location = new System.Drawing.Point(25, 260);
-      _renderForm.Controls.Add(z);
-
-      _zPositionTrackBar = new TrackBar();
-      _zPositionTrackBar.Minimum = -100;
-      _zPositionTrackBar.Maximum = 100;
-      _zPositionTrackBar.TickFrequency = 10;
-      _zPositionTrackBar.LargeChange = 10;
-      _zPositionTrackBar.Scroll += DirectionTrackBarScroll;
-      _zPositionTrackBar.Location = new System.Drawing.Point(100, 250);
-
-      _renderForm.Controls.Add(_xPositionTrackBar);
-      _renderForm.Controls.Add(_yPositionTrackBar);
-      _renderForm.Controls.Add(_zPositionTrackBar);
-    }
-
-    private void DirectionTrackBarScroll(object sender, EventArgs e) {
-      float xDirection = _xPositionTrackBar.Value / _positionSpeed;
-      float yDirection = _yPositionTrackBar.Value / _positionSpeed;
-      float zDirection = _zPositionTrackBar.Value / _positionSpeed;
+    private void ChangeLightPosition(object sender, EventArgs e) {
+      float xDirection = _xPositionTrackBar.IamTrackBar.Value / _positionSpeed;
+      float yDirection = _yPositionTrackBar.IamTrackBar.Value / _positionSpeed;
+      float zDirection = _zPositionTrackBar.IamTrackBar.Value / _positionSpeed;
       foreach (var scene in _scene) {
         scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
       }

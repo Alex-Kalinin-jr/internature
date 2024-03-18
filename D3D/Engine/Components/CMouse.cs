@@ -1,5 +1,5 @@
 ﻿namespace D3D {
-  public class MousePos : Component {
+  public class CMousePos : Component {
     public int X;
     public int Y;
   }
