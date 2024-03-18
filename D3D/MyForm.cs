@@ -4,21 +4,16 @@ using System.Drawing;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
-using Assimp;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+
 
 namespace D3D {
 
   public class MyForm : RenderForm {
 
-    new private const int Width = 1024;
-    new private const int Height = 768;
-
-    private CMousePos _mouse;
     private List<Scene> _scene;
 
-    private RenderForm _renderForm;
+    private CRenderForm _renderForm;
+    private Layout _layout;
 
     private CPositionTrackBar _xPositionTrackBar;
     private CPositionTrackBar _yPositionTrackBar;
@@ -26,38 +21,25 @@ namespace D3D {
 
     private bool _isMouseDown = false;
     private bool _isRotationDown = false;
-
-    private const float _rotationSpeed = 10.0f;
-    private const float _positionSpeed = 20.0f;
+    private CMouseMovingParams _movingParams;
 
     public MyForm() {
-      CreateRenderForm();
+      _layout = new Layout();
+      var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
+      Renderer.GetRenderer(renderForm.Handle);
+      renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
+      renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
+      renderForm.MouseUp += new MouseEventHandler(MyFormMouseUp);
+      renderForm.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
 
-      _mouse = new CMousePos();
       _scene = new List<Scene> {Generator.CreateGridTestingScene(), Generator.CreateTestingScene()};
 
-      string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
-      new CLabel(_renderForm, new System.Drawing.Point(25, 25), text);
-
-      var button = new CButton(_renderForm, new System.Drawing.Point(25, 300), "light color");
-      button.IamButton.Click += ChangeLightColor;
-
-      new CLabel(_renderForm, new System.Drawing.Point(25, 160), "x-coord");
-      _xPositionTrackBar = new CPositionTrackBar(_renderForm, new System.Drawing.Point(100, 150));
-      _xPositionTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
-
-      new CLabel(_renderForm, new System.Drawing.Point(25, 210), "y-coord");
-      _yPositionTrackBar = new CPositionTrackBar(_renderForm, new System.Drawing.Point(100, 200));
-      _yPositionTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
-
-      new CLabel(_renderForm, new System.Drawing.Point(25, 260), "z-coord");
-      _zPositionTrackBar = new CPositionTrackBar(_renderForm, new System.Drawing.Point(100, 250));
-      _zPositionTrackBar.IamTrackBar.Scroll += ChangeLightPosition;
+      _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
     }
 
     public void Run() {
-      RenderLoop.Run(_renderForm, RenderCallback);
+      RenderLoop.Run(_renderForm.IamRenderForm, RenderCallback);
     }
 
     private void RenderCallback() {
@@ -84,30 +66,14 @@ namespace D3D {
     }
 
     private void ChangeLightPosition(object sender, EventArgs e) {
-      float xDirection = _xPositionTrackBar.IamTrackBar.Value / _positionSpeed;
-      float yDirection = _yPositionTrackBar.IamTrackBar.Value / _positionSpeed;
-      float zDirection = _zPositionTrackBar.IamTrackBar.Value / _positionSpeed;
+      float xDirection = _xPositionTrackBar.IamTrackBar.Value / _movingParams.IamShiftDivider;
+      float yDirection = _yPositionTrackBar.IamTrackBar.Value / _movingParams.IamShiftDivider;
+      float zDirection = _zPositionTrackBar.IamTrackBar.Value / _movingParams.IamShiftDivider;
       foreach (var scene in _scene) {
         scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
       }
     }
 
-    private void CreateRenderForm() {
-
-      _renderForm = new RenderForm();
-      Renderer.GetRenderer(_renderForm.Handle);
-
-      _renderForm.ClientSize = new Size(Width, Height);
-      _renderForm.KeyPreview = true;
-      _renderForm.AllowUserResizing = false;
-      _renderForm.SuspendLayout();
-      _renderForm.Name = "MyForm";
-      _renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
-      _renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
-      _renderForm.MouseUp += new MouseEventHandler(MyFormMouseUp);
-      _renderForm.ResumeLayout(false);
-      _renderForm.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
-    }
 
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
       foreach (var scene in _scene) {
@@ -137,8 +103,8 @@ namespace D3D {
 
       foreach (var scene in _scene) {
         if (_isRotationDown) {
-          scene.AddComponent(new CPitch((float)deltaY / _rotationSpeed));
-          scene.AddComponent(new CYaw((float)deltaX / _rotationSpeed));
+          scene.AddComponent(new CPitch(deltaY / _movingParams.IamRotDivider));
+          scene.AddComponent(new CYaw(deltaX / _movingParams.IamRotDivider));
         } else if (_isMouseDown) {
 
           if (deltaX > 0) {

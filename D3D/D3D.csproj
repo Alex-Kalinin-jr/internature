@@ -87,6 +87,9 @@
     <Compile Include="Engine\Components\Renderer\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\Renderer\CRenderParams.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
+    <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />
+    <Compile Include="Engine\Components\View\CRenderForm.cs" />
+    <Compile Include="Engine\Components\View\CScreenSize.cs" />
     <Compile Include="Engine\Entities\Entity.cs" />
     <Compile Include="Engine\Entities\Layout.cs" />
     <Compile Include="Engine\Entities\Scene.cs" />
@@ -97,9 +100,9 @@
     <Compile Include="Engine\System\SDrawSystem.cs" />
     <Compile Include="Engine\System\SLightSystem.cs" />
     <Compile Include="Engine\System\STransformSystem.cs" />
-    <Compile Include="Engine\View\CButton.cs" />
-    <Compile Include="Engine\View\CLabel.cs" />
-    <Compile Include="Engine\View\CPositionTrackBar.cs" />
+    <Compile Include="Engine\Components\View\CButton.cs" />
+    <Compile Include="Engine\Components\View\CLabel.cs" />
+    <Compile Include="Engine\Components\View\CPositionTrackBar.cs" />
     <Compile Include="MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
