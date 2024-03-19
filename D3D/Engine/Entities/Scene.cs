@@ -3,7 +3,6 @@ using SharpDX;
 
 namespace D3D {
   public class Scene : Entity {
-
     public Scene( ) {
 
       var lights = new CLight(Generator.CreateTestingPsLightConstantBuffers());
