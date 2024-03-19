@@ -13,7 +13,7 @@ namespace D3D {
       var vertices = figure.IamMesh.Vertices.ToArray();
       var indices = figure.IamMesh.Indices.ToArray();
 
-      var meshes = Generator.GeneratePipe(Generator.Convert(vertices));
+      // var meshes = Generator.GeneratePipe(Generator.Convert(vertices));
 
       var matrix = figure.IamTransform.IamTransform;
       var lights = figure.IamEntity.GetComponent<CLight>();

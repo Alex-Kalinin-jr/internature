@@ -6,7 +6,7 @@ namespace D3D {
     public List<short> Indices;
 
     public CMesh(string path) {
-      (Vertices, Indices) = Generator.GenerateMesh(path); // testing initializing
+      (Vertices, Indices) = Generator.GenerateMeshFromFile(path); // testing initializing
     }
 
     public CMesh() {

@@ -9,6 +9,7 @@ namespace D3D {
   internal static class Program {
     [STAThread]
     static void Main(string[] args) {
+      Generator.CreateTestingPipeLineMesh();
       using (var temp = new MyForm()) {
         temp.Run();
       }
