@@ -84,6 +84,18 @@ namespace D3D {
     }
 
 
+    public static Scene CreatePipeTestingScene() {
+      var scene = new Scene();
+      
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      scene.AddComponent(new CFigure(CreateTestingPipeLineMesh(), buff));
+      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineList));
+
+      return scene;
+    }
+
+
     public static CMesh CreateTestingQuadroMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
@@ -106,6 +118,33 @@ namespace D3D {
       return new CMesh(vertices, indices);
     }
 
+    public static CMesh CreateTestingPipeLineMesh() {
+      VsBuffer[] buff = new VsBuffer[7];
+      buff[0].Position = new Vector3(0.0f, 0.0f, 0.0f);
+      buff[1].Position = new Vector3(0.0f, 0.0f, 1.0f);
+      buff[2].Position = new Vector3(0.0f, 0.0f, 2.0f);
+      buff[3].Position = new Vector3(0.0f, 0.5f, 3.0f);
+      buff[4].Position = new Vector3(0.0f, 0.5f, 4.0f);
+      buff[5].Position = new Vector3(0.0f, 0.0f, 5.0f);
+      buff[6].Position = new Vector3(0.0f, 0.0f, 6.0f);
+
+      List<VsBuffer> vertices = new List<VsBuffer>();
+      foreach(var vertex in buff) {
+        vertices.Add(vertex);
+      }
+
+      List<short> indices = new List<short>();
+      indices.Add(0);
+      indices.Add(1);
+      indices.Add(2);
+      indices.Add(3);
+      indices.Add(4);
+      indices.Add(5);
+      indices.Add(6);
+
+      return new CMesh(vertices, indices);
+    }
+
 
     public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {
       var output = new List<PsLightConstantBuffer> {
@@ -124,14 +163,14 @@ namespace D3D {
     }
 
 
-    public static (Vector3[] vertices, short[] indices) GeneratePipe(Vector3[] vertices) {
+    public static (VsBuffer[], short[]) GeneratePipe(Vector3[] vertices) {
       if (vertices.Length < 2) {
         return (null, null);
       }
 
       Vector3[] pathVertices = vertices;
       float pipeRadius = 0.5f; // Example radius 
-      int segments = 4; // Number of segments for the circle
+      int segments = 20; // Number of segments for the circle
       List<Vector3> circleVertices = new List<Vector3>();
 
       for (int i = 0; i < segments; ++i) {
@@ -171,66 +210,52 @@ namespace D3D {
           indices.Add((short)(i * segments + j));
           if (j != segments - 1) {
             indices.Add((short)(i * segments + j + 1));
+            indices.Add((short)(i * segments + j + 1));
             indices.Add((short)((i + 1) * segments + j + 1));
+            indices.Add((short)((i + 1) * segments + j + 1));
+            indices.Add((short)((i + 1) * segments + j));
             indices.Add((short)((i + 1) * segments + j));
           } else {
             indices.Add((short)(i * segments));
+            indices.Add((short)(i * segments));
+            indices.Add((short)((i + 1) * segments));
             indices.Add((short)((i + 1) * segments));
             indices.Add((short)((i + 1) * segments + j));
+            indices.Add((short)((i + 1) * segments + j));
           }
+          indices.Add((short)(i * segments + j));
         }
       }
-
-      return (pipeVertices.ToArray(), indices.ToArray());
+      VsBuffer[] outVertices = new VsBuffer[vertices.Length];
+      for (int i = 0; i < vertices.Length; ++i) {
+        outVertices[i].Position = vertices[i];
+      }
+      return (outVertices, indices.ToArray());
     }
 
-/*
-public static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
-    Vector3 normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
-    normal.Normalize();
 
-    Vector3 rotationAxis = Vector3.Cross(normal, direction);
-    rotationAxis.Normalize();
+    public static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
+      Vector3 normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
+      normal.Normalize();
 
-    float rotationAngle = Vector3.Dot(normal, direction);
+      Vector3 rotationAxis = Vector3.Cross(normal, direction);
+      rotationAxis.Normalize();
 
-    Matrix rotationMatrix = Matrix.RotationAxis(rotationAxis, rotationAngle);
+      double rotationAngle = Math.Acos(Vector3.Dot(normal, direction));
 
-    Vector3[] rotatedVertices = new Vector3[vertices.Count];
-    for (int i = 0; i < vertices.Count; i++) {
-      Vector4 rotatedVertex = Vector4.Transform(new Vector4(vertices[i] - vertices[0], 1.0f), rotationMatrix) + new Vector4(vertices[0], 1.0f);
-      rotatedVertices[i] = new Vector3(rotatedVertex.X, rotatedVertex.Y, rotatedVertex.Z);
+      SharpDX.Quaternion rotationQuaternion = SharpDX.Quaternion.RotationAxis(rotationAxis, (float)rotationAngle);
+
+      Vector3[] rotatedVertices = new Vector3[vertices.Count];
+      for (int i = 0; i < vertices.Count; i++) {
+        Vector3 rotatedVertex = Vector3.Transform(vertices[i] - vertices[0], rotationQuaternion);
+        rotatedVertices[i] = rotatedVertex + vertices[0];
+      }
+
+      return rotatedVertices;
     }
 
-    return rotatedVertices;
-  }
- */
-
-public static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
-    Vector3 normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
-    normal.Normalize();
-
-    Vector3 rotationAxis = Vector3.Cross(normal, direction);
-    rotationAxis.Normalize();
-
-    double rotationAngle = Math.Acos(Vector3.Dot(normal, direction));
-
-    SharpDX.Quaternion rotationQuaternion = SharpDX.Quaternion.RotationAxis(rotationAxis, (float)rotationAngle);
-
-    Vector3[] rotatedVertices = new Vector3[vertices.Count];
-    for (int i = 0; i < vertices.Count; i++) {
-      Vector3 rotatedVertex = Vector3.Transform(vertices[i] - vertices[0], rotationQuaternion);
-      rotatedVertices[i] = rotatedVertex + vertices[0];
-    }
-
-    return rotatedVertices;
-  }
-
-
-
-
-  // function to convert VSbuffer positions to array of vector
-  public static Vector3[] Convert(VsBuffer[] verts) {
+    // function to convert VSbuffer positions to array of vector
+    public static Vector3[] Convert(VsBuffer[] verts) {
       var output = new Vector3[verts.Length];
       for (int i = 0; i < verts.Length; ++i) {
         output[i] = verts[i].Position;
@@ -238,12 +263,5 @@ public static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction
       return output;
     }
 
-    public static VsBuffer[] GenerateTestPipe() {
-      VsBuffer[] buff = new VsBuffer[3];
-      buff[0].Position = new Vector3(0.0f, 0.0f, 0.0f);
-      buff[1].Position = new Vector3(0.0f, 1.0f, 0.0f);
-      buff[2].Position = new Vector3(0.0f, 2.0f, 0.0f);
-      return buff;
-    }
   }
 }

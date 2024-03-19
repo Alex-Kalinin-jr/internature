@@ -12,6 +12,9 @@ namespace D3D {
 
       var vertices = figure.IamMesh.Vertices.ToArray();
       var indices = figure.IamMesh.Indices.ToArray();
+
+      (vertices, indices) = Generator.GeneratePipe(Generator.Convert(vertices));
+
       var matrix = figure.IamTransform.IamTransform;
       var lights = figure.IamEntity.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
@@ -23,6 +26,7 @@ namespace D3D {
       renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
       renderer.Draw(indices.Length);
+
     }
   }
 }
