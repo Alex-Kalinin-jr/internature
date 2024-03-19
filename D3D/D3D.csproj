@@ -72,7 +72,7 @@
     <Compile Include="Engine\Components\Camera\CBackCameraMoving.cs" />
     <Compile Include="Engine\Components\Camera\CCamera.cs" />
     <Compile Include="Engine\Components\Camera\CDownCameraMoving.cs" />
-    <Compile Include="Engine\Components\CFigure.cs" />
+    <Compile Include="Engine\Components\Figure\CFigure.cs" />
     <Compile Include="Engine\Components\Camera\CFwdCameraMoving.cs" />
     <Compile Include="Engine\Components\Light\CLight.cs" />
     <Compile Include="Engine\Components\Light\CNewLightColor.cs" />
@@ -87,6 +87,7 @@
     <Compile Include="Engine\Components\Renderer\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\Renderer\CRenderParams.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
+    <Compile Include="Engine\Components\View\CRadioButton.cs" />
     <Compile Include="Engine\Components\View\CLightColorChanged.cs" />
     <Compile Include="Engine\Components\View\CLightPositionChanged.cs" />
     <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />

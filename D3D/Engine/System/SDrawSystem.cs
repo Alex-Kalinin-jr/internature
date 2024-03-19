@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace D3D {
+
+  public enum FigureType {
+    General,
+    Line,
+    Pipe
+  };
+
   public class DrawSystem : BaseSystem<CFigure> {
 
-    public enum FigureType {
-      General,
-      Grid,
-      Pipe
-    };
 
     public static List<bool> Visibility = new List<bool>();
     public static List<FigureType> Types = new List<FigureType>();
 
     private static Dictionary<FigureType, FigureType> _antitypes = new Dictionary<FigureType, FigureType>() {
-        { FigureType.Grid, FigureType.Pipe },
-        { FigureType.Pipe, FigureType.Grid },
+        { FigureType.Line, FigureType.Pipe },
+        { FigureType.Pipe, FigureType.Line },
     };
 
 
@@ -35,7 +37,7 @@ namespace D3D {
     new public static void Update() {
       foreach (var figure in Components) {
         int index = Components.IndexOf(figure);
-        if (Visibility[index]) { 
+        if (Visibility[index]) {
           DrawFigure(figure);
         }
       }
@@ -43,11 +45,11 @@ namespace D3D {
 
     public static void ChangePipeType(FigureType type) {
       FigureType antyType = _antitypes[type];
-      foreach(var figure in Components) {
+      foreach (var figure in Components) {
         int ind = Components.IndexOf(figure);
         if (Types[ind] == type) {
           Visibility[ind] = true;
-        } else if (Types[ind] == type) {
+        } else if (Types[ind] == antyType) {
           Visibility[ind] = false;
         }
       }

@@ -6,11 +6,11 @@ namespace D3D {
     new public static void Update() {
       foreach (var component in Components) {
 
+// to be rewritten
         var pitch = component.IamEntity.GetComponent<CPitch>();
         if (pitch != null) {
           ChangePitch(component, pitch.Pitch);
         }
-
         var yaw = component.IamEntity.GetComponent<CYaw>();
         if (yaw != null) {
           ChangeYaw(component, yaw.Yaw);

@@ -27,7 +27,8 @@ namespace D3D {
       var trackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 150), 50);
       AddComponent(trackBar);
 
-
+      var radioBtnA = new CRadioButton(renderForm.IamRenderForm, new System.Drawing.Point(25, 400));
+      AddComponent(radioBtnA);
     }
   }
 }

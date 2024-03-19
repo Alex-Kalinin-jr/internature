@@ -81,8 +81,10 @@ namespace D3D {
       var scene = new Scene();
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      scene.AddComponent(new CFigure(MeshConverter.ConvertToPipe(Generator.CreateTestingLineMesh(), 0.5f, 30), buff));
-      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineList));
+      var mesh = Generator.CreateTestingLineMesh();
+      scene.AddComponent(new CFigure(mesh, buff));
+      scene.AddComponent(new CFigure(MeshConverter.ConvertToPipe(mesh, 0.5f, 30), buff));
+      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineList)); // should be handled
       return scene;
     }
 

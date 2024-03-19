@@ -33,6 +33,8 @@ namespace D3D {
       trackBar.IamXTrackBar.Scroll += ChangeLightPosition;
       trackBar.IamYTrackBar.Scroll += ChangeLightPosition;
       trackBar.IamZTrackBar.Scroll += ChangeLightPosition;
+      var radioButton = _layout.GetComponent<CRadioButton>();
+      radioButton.RadioButton1.CheckedChanged += ChangePipeShowType;
 
       Renderer.GetRenderer(renderForm.Handle);
       renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
@@ -59,6 +61,14 @@ namespace D3D {
       renderer.Present();
     }
 
+    private void ChangePipeShowType(object sender, EventArgs e) {
+      var bttn = sender as RadioButton;
+      if (bttn.Checked) {
+        DrawSystem.ChangePipeType(FigureType.Pipe);
+      } else {
+        DrawSystem.ChangePipeType(FigureType.Line);
+      }
+    }
 
     private void ChangeLightColor(object sender, EventArgs e) {
       ColorDialog buff = new ColorDialog();
