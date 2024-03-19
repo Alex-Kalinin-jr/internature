@@ -81,8 +81,8 @@ namespace D3D {
       var scene = new Scene();
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      scene.AddComponent(new CFigure(CreateTestingPipeLineMesh(), buff));
-      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineStrip));
+      scene.AddComponent(new CFigure(MeshConverter.ConvertToPipe(Generator.CreateTestingLineMesh(), 0.5f, 30), buff));
+      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineList));
       return scene;
     }
 
@@ -92,12 +92,13 @@ namespace D3D {
           new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)), new VsBuffer(new Vector3(1.0f, 0.0f, 0.0f)),
           new VsBuffer(new Vector3(1.0f, 0.0f, 1.0f)), new VsBuffer(new Vector3(0.0f, 0.0f, 1.0f))
       };
-      return new CMesh(vertices, new List<short>() { 0, 1, 2, 3 });
+      return new CMesh(vertices, new List<short>() { 0, 1, 2, 3, 0 });
     }
 
-    public static CMesh CreateTestingPipeLineMesh() {
+    public static CMesh CreateTestingLineMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
-          new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)), new VsBuffer(new Vector3(0.0f, 1.0f, 2.0f)),
+          new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
+          new VsBuffer(new Vector3(0.0f, 0.5f, 2.0f)),
           new VsBuffer(new Vector3(0.0f, 0.0f, 4.0f))
       };
       return new CMesh(vertices, new List<short>() { 0, 1, 2 });

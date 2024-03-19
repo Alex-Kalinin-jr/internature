@@ -6,14 +6,16 @@ using System.Linq;
 namespace D3D {
   public class MeshConverter {
 
-    public static List<CMesh> GeneratePipe(Vector3[] vertices, float pipeRadius, int segments) {
+    public static CMesh ConvertToPipe(CMesh lineMesh, float pipeRadius, int segments) {
+      var vertices = lineMesh.Vertices.Select(v => v.Position).ToArray();
+
       if (vertices.Length < 2) {
         return null;
       }
 
-      var pipeVertices = new List<Vector3>();
+      var pipeVertices = new List<Vector3>(vertices.Length * segments);
       var indices = GenerateIndices(vertices.Length, segments);
-      var circleVertices = GenerateCircleOfRadAndSegments(pipeRadius, segments);
+      var circleVertices = GenerateCircleVertices(pipeRadius, segments);
 
       Vector3 startPoint = vertices[0];
       Vector3 endPoint = vertices[1];
@@ -32,38 +34,12 @@ namespace D3D {
         pipeVertices.AddRange(rotatedVertices);
       }
 
-      // var meshes = GenerateMeshes();
-      return null;
+      List<VsBuffer> points = pipeVertices.Select(v => new VsBuffer(v)).ToList();
+
+      return new CMesh(points, indices);
     }
 
-    /*
-    private List<CMesh> GenerateMeshes() {
-      List<CMesh> meshes = new List<CMesh>();
-      for (int i = 0, j = 0; i < vertices.Length; ++i) {
-        List<VsBuffer> outVertices = new List<VsBuffer>(4);
-        List<short> outIndices = new List<short>(5);
-        VsBuffer vsBuffer = new VsBuffer();
-        vsBuffer.Position = vertices[i]; 
-        outVertices.Add(vsBuffer);
-        vsBuffer.Position = vertices[i + 1];
-        outVertices.Add(vsBuffer);
-        vsBuffer.Position = vertices[i + 2];
-        outVertices.Add(vsBuffer);
-        vsBuffer.Position = vertices[i + 3];
-        outVertices.Add(vsBuffer);
-
-        outIndices.Add(indices[j++]);
-        outIndices.Add(indices[j++]);
-        outIndices.Add(indices[j++]);
-        outIndices.Add(indices[j++]);
-        outIndices.Add(indices[j++]);
-        meshes.Add(new CMesh(outVertices, outIndices));
-        return meshes;
-      }
-    }
-     */
-
-    private static List<Vector3> GenerateCircleOfRadAndSegments(float pipeRadius, int segments) {
+    private static List<Vector3> GenerateCircleVertices(float pipeRadius, int segments) {
       List<Vector3> circleVertices = new List<Vector3>();
       for (int i = 0; i < segments; ++i) {
         float angle = (float)(2 * Math.PI * i / segments);
@@ -82,14 +58,21 @@ namespace D3D {
           indices.Add((short)(i * numOfSegments + j));
           if (j != numOfSegments - 1) {
             indices.Add((short)(i * numOfSegments + j + 1));
+            indices.Add((short)(i * numOfSegments + j + 1));
             indices.Add((short)((i + 1) * numOfSegments + j + 1));
+            indices.Add((short)((i + 1) * numOfSegments + j + 1));
+            indices.Add((short)((i + 1) * numOfSegments + j));
             indices.Add((short)((i + 1) * numOfSegments + j));
           } else {
             indices.Add((short)(i * numOfSegments));
+            indices.Add((short)(i * numOfSegments));
             indices.Add((short)((i + 1) * numOfSegments));
+            indices.Add((short)((i + 1) * numOfSegments));
+            indices.Add((short)((i + 1) * numOfSegments + j));
             indices.Add((short)((i + 1) * numOfSegments + j));
           }
           indices.Add((short)(i * numOfSegments + j));
+
         }
       }
       return indices;
@@ -115,14 +98,5 @@ namespace D3D {
 
       return rotatedVertices;
     }
-
-    public static Vector3[] Convert(VsBuffer[] verts) {
-      var output = new Vector3[verts.Length];
-      for (int i = 0; i < verts.Length; ++i) {
-        output[i] = verts[i].Position;
-      }
-      return output;
-    }
-
   }
 }

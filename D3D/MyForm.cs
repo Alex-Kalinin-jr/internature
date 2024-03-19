@@ -25,7 +25,7 @@ namespace D3D {
                                 Generator.CreateTestingScene(), 
                                 Generator.CreatePipeTestingScene()};
       */
-      _scene = new List<Scene> {Generator.CreatePipeTestingScene(), Generator.CreateTestingScene() };
+      _scene = new List<Scene> {Generator.CreateGridTestingScene(), Generator.CreateTestingScene(), Generator.CreatePipeTestingScene() };
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
       var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
@@ -54,7 +54,7 @@ namespace D3D {
       renderer.Update();
       CameraSystem.Update();
       TransformSystem.Update();
-      SLightSystem.Update();
+      LightSystem.Update();
       DrawSystem.Update();
       renderer.Present();
     }
