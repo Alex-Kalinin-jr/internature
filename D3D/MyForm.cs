@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
@@ -61,8 +60,7 @@ namespace D3D {
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
-        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255,
-                                                  buff.Color.B / 255, buff.Color.A / 255);
+        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255);
         foreach (var scene in _scene) {
           scene.AddComponent(new CNewLightColor(color));
         }

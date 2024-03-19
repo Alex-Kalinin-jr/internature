@@ -1,4 +1,6 @@
-﻿namespace D3D {
+﻿using SharpDX;
+
+namespace D3D {
   public class DrawSystem : BaseSystem<CFigure> {
     new public static void Update() {
       foreach (var figure in Components) {
@@ -14,8 +16,6 @@
       var lights = figure.IamEntity.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
       var topology = figure.IamEntity.GetComponent<CRenderParams>().IamTopology.IamTopology;
-
-
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology);
       renderer.SetLightConstantBuffer(ref light);

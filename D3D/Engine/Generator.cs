@@ -122,6 +122,98 @@ namespace D3D {
       buff.Transpose();
       return buff;
     }
-  }
 
+
+    public static (Vector3[] vertices, short[] indices) GeneratePipe(Vector3[] vertices) {
+      Vector3[] pathVertices = vertices;
+      float pipeRadius = 0.5f; // Example radius 
+      int segments = 20; // Number of segments for the circle
+      List<Vector3> circleVertices = new List<Vector3>();
+
+      for (int i = 0; i < segments; ++i) {
+        float angle = (float)(2 * Math.PI * i / segments);
+        float x = (float)(pipeRadius * Math.Cos(angle));
+        float y = (float)(pipeRadius * Math.Sin(angle));
+        circleVertices.Add(new Vector3(x, y, 0));
+      }
+
+      List<Vector3> pipeVertices = new List<Vector3>();
+      List<short> indices = new List<short>();
+
+      for (int i = 0; i < pathVertices.Length - 1; ++i) {
+        Vector3 startPoint = pathVertices[i];
+        Vector3 endPoint = pathVertices[i + 1];
+        Vector3 direction = Vector3.Normalize(endPoint - startPoint);
+
+        for (int j = 0; j < circleVertices.Count; ++j) {
+          Vector3 vertex = startPoint + circleVertices[j];
+          pipeVertices.Add(vertex);
+          indices.Add((short)(pipeVertices.Count - segments + j));
+          indices.Add((short)(pipeVertices.Count - segments + (j + 1) % segments));
+          if (i < pathVertices.Length - 2) {
+            indices.Add((short)(pipeVertices.Count - segments + j));
+            indices.Add((short)(pipeVertices.Count + j));
+          }
+        }
+        // circleVertices = RotateVertices(circleVertices, direction);
+      }
+      return (vertices.ToArray(), indices.ToArray());
+    }
+
+
+    /*
+    private List<Vector3> RotateVertices(List<Vector3> vertices, Vector3 rotationAxis) {
+      List<Vector3> rotatedVertices = new List<Vector3>();
+
+      foreach (Vector3 vertex in vertices) {
+        // Calculate the rotation matrix based on the rotation axis
+        Vector3 normalizedAxis = Vector3.Normalize(rotationAxis);
+        float cosTheta = MathF.Cos(MathF.PI / 4); // Example angle
+        float sinTheta = MathF.Sin(MathF.PI / 4); // Example angle
+        float x = normalizedAxis.X;
+        float y = normalizedAxis.Y;
+        float z = normalizedAxis.Z;
+
+        float xSquare = x * x;
+        float ySquare = y * y;
+        float zSquare = z * z;
+
+        float xy = x * y;
+        float xz = x * z;
+        float yz = y * z;
+
+        float xCos = x * cosTheta;
+        float yCos = y * cosTheta;
+        float zCos = z * cosTheta;
+
+        float xSin = x * sinTheta;
+        float ySin = y * sinTheta;
+        float zSin = z * sinTheta;
+        float rotatedX = rotationMatrixElements[0] * vertex.X + rotationMatrixElements[1] * vertex.Y + rotationMatrixElements[2] * vertex.Z;
+        float rotatedY = rotationMatrixElements[3] * vertex.X + rotationMatrixElements[4] * vertex.Y + rotationMatrixElements[5] * vertex.Z;
+        float rotatedZ = rotationMatrixElements[6] * vertex.X + rotationMatrixElements[7] * vertex.Y + rotationMatrixElements[8] * vertex.Z;
+
+        rotatedVertices.Add(new Vector3(rotatedX, rotatedY, rotatedZ));
+      }
+
+      return rotatedVertices;
+    }
+     */
+
+    // function to convert VSbuffer positions to array of vector
+    public static Vector3[] Convert(VsBuffer[] verts) {
+      var output = new Vector3[verts.Length];
+      for (int i = 0; i < verts.Length; ++i) {
+        output[i] = verts[i].Position;
+      }
+      return output;
+    }
+
+    public static VsBuffer[] GenerateTestPipe() {
+      VsBuffer[] buff = new VsBuffer[2];
+      buff[0].Position = new Vector3(0.0f, 0.0f, 0.0f);
+      buff[1].Position = new Vector3(0.0f, 0.0f, 1.0f);
+      return buff;
+    }
+  }
 }
