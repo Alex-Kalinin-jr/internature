@@ -87,6 +87,8 @@
     <Compile Include="Engine\Components\Renderer\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\Renderer\CRenderParams.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
+    <Compile Include="Engine\Components\View\CLightColorChanged.cs" />
+    <Compile Include="Engine\Components\View\CLightPositionChanged.cs" />
     <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />
     <Compile Include="Engine\Components\View\CRenderForm.cs" />
     <Compile Include="Engine\Components\View\CScreenSize.cs" />

@@ -11,17 +11,18 @@ namespace D3D {
   public class MyForm : RenderForm {
 
     private List<Scene> _scene;
-
     private Layout _layout;
-
-    private CPositionTrackBar _positionTrackBar;
+    private CMouseMovingParams _movingParams;
 
     private bool _isMouseDown = false;
     private bool _isRotationDown = false;
-    private CMouseMovingParams _movingParams;
+
 
     public MyForm() {
+
       _layout = new Layout();
+      _scene = new List<Scene> {Generator.CreateGridTestingScene(), Generator.CreateTestingScene()};
+      _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
       var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
@@ -30,22 +31,19 @@ namespace D3D {
       trackBar.IamZTrackBar.Scroll += ChangeLightPosition;
 
       Renderer.GetRenderer(renderForm.Handle);
-
       renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
       renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
       renderForm.MouseUp += new MouseEventHandler(MyFormMouseUp);
       renderForm.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
 
-      _scene = new List<Scene> {Generator.CreateGridTestingScene(), Generator.CreateTestingScene()};
-
-      _movingParams = new CMouseMovingParams(10.0f, 20.0f);
-
     }
+
 
     public void Run() {
       var form = _layout.GetComponent<CRenderForm>();
       RenderLoop.Run(form.IamRenderForm, RenderCallback);
     }
+
 
     private void RenderCallback() {
       var renderer = Renderer.GetRenderer();
@@ -56,6 +54,7 @@ namespace D3D {
       DrawSystem.Update();
       renderer.Present();
     }
+
 
     private void ChangeLightColor(object sender, EventArgs e) {
       ColorDialog buff = new ColorDialog();
@@ -69,6 +68,7 @@ namespace D3D {
         }
       }
     }
+
 
     private void ChangeLightPosition(object sender, EventArgs e) {
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
@@ -98,6 +98,7 @@ namespace D3D {
         }
       }
     }
+
 
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
 
@@ -129,6 +130,7 @@ namespace D3D {
       }
     }
 
+
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
 
       MouseEventArgs mouseArgs = e;
@@ -142,6 +144,7 @@ namespace D3D {
         _isRotationDown = true;
       }
     }
+
 
     private void MyFormMouseUp(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = (MouseEventArgs)e;
