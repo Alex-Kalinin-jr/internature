@@ -89,7 +89,8 @@ namespace D3D {
       var pipeMesh = MeshConverter.ConvertToPipe(mesh, 0.5f, 40);
       for (int i = 0; i < 1; ++i) {
         for (int j = 0; j < 1; ++j) {
-          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(5 * i, 0.0f, 5 * j));
+          // buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(5 * i, 0.0f, 5 * j));
+          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(10.0f, 0.0f, 5.0f));
           scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
           scene.AddComponent(new CFigure(pipeMesh, buff, FigureType.Pipe, PrimitiveTopology.LineList));
         }
@@ -107,22 +108,26 @@ namespace D3D {
     }
 
     public static CMesh CreateTestingGridMesh() {
-      // to be analyzed 
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
       int p = 0;
-      for (int i = 0; i < 100; ++i) {
-        for (int k = 0; k < 100; ++k) {
+      var random = new Random();
+      for (int i = 0; i < 30; ++i) {
+        float r = (float)random.NextDouble(0.0f, 1.0f);
+        float g = (float)random.NextDouble(0.0f, 1.0f);
+        float b = (float)random.NextDouble(0.0f, 1.0f);
+        Vector3 color = new Vector3(r, g, b);
+        for (int k = 0; k < 30; ++k) {
           for (int j = 0; j < 10; ++j) {
-            vertices.Add(new VsBuffer(new Vector3(i, j, k)));
-            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1)));
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1)));
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k)));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k)));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1)));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1)));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k)));
+            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color));
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             p += 8;
           }

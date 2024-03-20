@@ -4,6 +4,7 @@
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 fragPos : POSITION1;
+    float3 color : COLOR;
 };
 
 struct VSIn
@@ -11,6 +12,7 @@ struct VSIn
     float4 position : POSITION;
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
+    float3 color : COLOR;
 };
 
 cbuffer VsMvpConstantBuffer : register(b0)
@@ -35,6 +37,7 @@ VSOut main(VSIn input)
     
     output.tex = input.tex;
     output.normal = normalize(mul(input.normal, (float3x3) world));
+    output.color = input.color;
 
     return output;
 }

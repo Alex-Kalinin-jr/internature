@@ -70,19 +70,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Components\Camera\CCamera.cs" />
-    <Compile Include="Engine\Components\Figure\CFigure.cs" />
-    <Compile Include="Engine\Components\Light\CLight.cs" />
-    <Compile Include="Engine\Components\Light\CNewLightColor.cs" />
-    <Compile Include="Engine\Components\Light\CNewLightPosition.cs" />
+    <Compile Include="Engine\Components\CFigure.cs" />
+    <Compile Include="Engine\Components\CLight.cs" />
     <Compile Include="Engine\Components\Component.cs" />
     <Compile Include="Engine\Components\Camera\CYaw.cs" />
     <Compile Include="Engine\Components\CMesh.cs" />
     <Compile Include="Engine\Components\Camera\CPitch.cs" />
-    <Compile Include="Engine\Components\Renderer\CPrimitiveTopology.cs" />
+    <Compile Include="Engine\Components\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Components\View\CRadioButton.cs" />
-    <Compile Include="Engine\Components\View\CLightColorChanged.cs" />
-    <Compile Include="Engine\Components\View\CLightPositionChanged.cs" />
     <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />
     <Compile Include="Engine\Components\View\CRenderForm.cs" />
     <Compile Include="Engine\Components\View\CScreenSize.cs" />

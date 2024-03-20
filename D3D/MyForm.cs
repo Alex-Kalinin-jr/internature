@@ -20,7 +20,7 @@ namespace D3D {
     public MyForm() {
 
       _layout = new Layout();
-      _scene = new List<Scene> {Generator.CreateGridTestingScene(), 
+      _scene = new List<Scene> {Generator.CreateGridTestingScene(),
                                 Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
@@ -31,6 +31,9 @@ namespace D3D {
       trackBar.IamZTrackBar.Scroll += ChangeLightPosition;
       var radioButton = _layout.GetComponent<CRadioButton>();
       radioButton.RadioButton1.CheckedChanged += ChangePipeShowType;
+
+      var button = _layout.GetComponent<CButton>();
+      button.IamButton.Click += ChangeLightColor;
 
       Renderer.GetRenderer(renderForm.Handle);
       renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
@@ -72,9 +75,7 @@ namespace D3D {
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
         var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255);
-        foreach (var scene in _scene) {
-          scene.AddComponent(new CNewLightColor(color));
-        }
+        LightSystem.ChangeColor(color);
       }
     }
 
@@ -84,9 +85,7 @@ namespace D3D {
       float xDirection = trackBar.IamXTrackBar.Value / _movingParams.IamShiftDivider;
       float yDirection = trackBar.IamYTrackBar.Value / _movingParams.IamShiftDivider;
       float zDirection = trackBar.IamZTrackBar.Value / _movingParams.IamShiftDivider;
-      foreach (var scene in _scene) {
-        scene.AddComponent(new CNewLightPosition(new Vector3(xDirection, yDirection, zDirection)));
-      }
+      LightSystem.ChangePosition(new Vector3(xDirection, yDirection, zDirection));
     }
 
 
@@ -141,7 +140,6 @@ namespace D3D {
 
 
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
-
       MouseEventArgs mouseArgs = e;
       var mouse = _layout.GetComponent<CMousePos>();
       mouse.X = mouseArgs.X;

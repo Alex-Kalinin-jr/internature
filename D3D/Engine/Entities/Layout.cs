@@ -23,7 +23,7 @@ namespace D3D {
 
       var button = new CButton(renderForm.IamRenderForm, new Point(25, 300), "light color");
       AddComponent(button);
-      // button.IamButton.Click += ChangeLightColor;
+
       var trackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 150), 50);
       AddComponent(trackBar);
 
