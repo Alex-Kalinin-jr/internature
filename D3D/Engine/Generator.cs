@@ -64,13 +64,9 @@ namespace D3D {
 
     public static Scene CreateGridTestingScene() {
       var scene = new Scene();
-      for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-          VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(i, 0.0f, j));
-          scene.AddComponent(new CFigure(CreateTestingQuadroMesh(), buff, default, PrimitiveTopology.LineStrip));
-        }
-      }
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      scene.AddComponent(new CFigure(CreateTestingGridMesh(), buff, default, PrimitiveTopology.LineList));
       return scene;
     }
 
@@ -91,8 +87,8 @@ namespace D3D {
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       var mesh = Generator.CreateAnotherTestingLineMesh();
       var pipeMesh = MeshConverter.ConvertToPipe(mesh, 0.5f, 40);
-      for (int i = 0; i < 20; ++i) {
-        for (int j = 0; j < 20; ++j) {
+      for (int i = 0; i < 1; ++i) {
+        for (int j = 0; j < 1; ++j) {
           buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(5 * i, 0.0f, 5 * j));
           scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
           scene.AddComponent(new CFigure(pipeMesh, buff, FigureType.Pipe, PrimitiveTopology.LineList));
@@ -108,6 +104,31 @@ namespace D3D {
           new VsBuffer(new Vector3(1.0f, 0.0f, 1.0f)), new VsBuffer(new Vector3(0.0f, 0.0f, 1.0f))
       };
       return new CMesh(vertices, new List<short>() { 0, 1, 2, 3, 0 });
+    }
+
+    public static CMesh CreateTestingGridMesh() {
+
+      List<VsBuffer> vertices = new List<VsBuffer>();
+      List<short> indices = new List<short>();
+      List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
+      for (int i = 0; i < 10; ++i) {
+        for (int j = 0; j < 10; ++j) {
+          for (int k = 0; k < 10; ++k) {
+            vertices.Add(new VsBuffer(new Vector3(i, j, k)));
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1)));
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1)));
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k)));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k)));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1)));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1)));
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k)));
+            indices.AddRange(pseudoIndices.Select(v => (short)(v + 24 * i)));
+          }
+        }
+      }
+
+
+      return new CMesh(vertices, indices);
     }
 
     public static CMesh CreateTestingLineMesh() {
