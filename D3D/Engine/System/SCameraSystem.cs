@@ -20,17 +20,6 @@ namespace D3D {
     }
 
 
-    private static void UpdateData(CCamera camera) {
-      camera.Front.X = (float)(Math.Cos(camera.Pitch) * Math.Cos(camera.Yaw));
-      camera.Front.Y = (float)Math.Sin(camera.Pitch);
-      camera.Front.Z = (float)(Math.Cos(camera.Pitch) * Math.Sin(camera.Yaw));
-
-      camera.Front = Vector3.Normalize(camera.Front);
-      camera.Right = Vector3.Normalize(Vector3.Cross(camera.Front, Vector3.UnitY));
-      camera.Up = Vector3.Normalize(Vector3.Cross(camera.Right, camera.Front));
-    }
-
-
     public static void ChangePitch(CCamera camera, float pitch) {
       var angle = MathUtil.Clamp(pitch, -89f, 89f);
       camera.Pitch += MathUtil.DegreesToRadians(angle);
@@ -76,6 +65,16 @@ namespace D3D {
       foreach (var component in Components) {
         component.Position -= 0.05f * component.Front;
       }
+    }
+
+    private static void UpdateData(CCamera camera) {
+      camera.Front.X = (float)(Math.Cos(camera.Pitch) * Math.Cos(camera.Yaw));
+      camera.Front.Y = (float)Math.Sin(camera.Pitch);
+      camera.Front.Z = (float)(Math.Cos(camera.Pitch) * Math.Sin(camera.Yaw));
+
+      camera.Front = Vector3.Normalize(camera.Front);
+      camera.Right = Vector3.Normalize(Vector3.Cross(camera.Front, Vector3.UnitY));
+      camera.Up = Vector3.Normalize(Vector3.Cross(camera.Right, camera.Front));
     }
   }
 }

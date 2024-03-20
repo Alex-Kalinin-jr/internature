@@ -107,13 +107,14 @@ namespace D3D {
     }
 
     public static CMesh CreateTestingGridMesh() {
-
+      // to be analyzed 
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
-      for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 2; ++j) {
-          for (int k = 0; k < 2; ++k) {
+      int p = 0;
+      for (int i = 0; i < 100; ++i) {
+        for (int k = 0; k < 100; ++k) {
+          for (int j = 0; j < 10; ++j) {
             vertices.Add(new VsBuffer(new Vector3(i, j, k)));
             vertices.Add(new VsBuffer(new Vector3(i, j, k + 1)));
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1)));
@@ -122,7 +123,8 @@ namespace D3D {
             vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1)));
             vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1)));
             vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k)));
-            indices.AddRange(pseudoIndices.Select(v => (short)(v + 24 * i)));
+            indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
+            p += 8;
           }
         }
       }
