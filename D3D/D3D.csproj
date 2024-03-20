@@ -85,7 +85,6 @@
     <Compile Include="Engine\Components\Camera\CPitch.cs" />
     <Compile Include="Engine\Components\Camera\CRightCameraMoving.cs" />
     <Compile Include="Engine\Components\Renderer\CPrimitiveTopology.cs" />
-    <Compile Include="Engine\Components\Renderer\CRenderParams.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Components\View\CRadioButton.cs" />
     <Compile Include="Engine\Components\View\CLightColorChanged.cs" />

@@ -58,7 +58,6 @@ namespace D3D {
         zVal += 5.0f;
         xVal = 0.0f;
       }
-      scene.AddComponent(new CRenderParams(PrimitiveTopology.TriangleList));
       return scene;
     }
 
@@ -69,10 +68,9 @@ namespace D3D {
         for (int j = 0; j < 10; ++j) {
           VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
           buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(i, 0.0f, j));
-          scene.AddComponent(new CFigure(CreateTestingQuadroMesh(), buff));
+          scene.AddComponent(new CFigure(CreateTestingQuadroMesh(), buff, default, PrimitiveTopology.LineStrip));
         }
       }
-      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineStrip));
       return scene;
     }
 
@@ -82,12 +80,27 @@ namespace D3D {
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
       var mesh = Generator.CreateTestingLineMesh();
-      scene.AddComponent(new CFigure(mesh, buff, FigureType.Line));
-      scene.AddComponent(new CFigure(MeshConverter.ConvertToPipe(mesh, 0.5f, 30), buff, FigureType.Pipe));
-      scene.AddComponent(new CRenderParams(PrimitiveTopology.LineList)); // should be handled
+      scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
+      scene.AddComponent(new CFigure(MeshConverter.ConvertToPipe(mesh, 0.5f, 30), buff,
+                                     FigureType.Pipe, PrimitiveTopology.LineList));
       return scene;
     }
 
+    public static Scene CreateAnotherPipeTestingScene() {
+      var scene = new Scene();
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      var mesh = Generator.CreateAnotherTestingLineMesh();
+      var pipeMesh = MeshConverter.ConvertToPipe(mesh, 0.5f, 40);
+      for (int i = 0; i < 20; ++i) {
+        for (int j = 0; j < 20; ++j) {
+          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(5 * i, 0.0f, 5 * j));
+          scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
+          scene.AddComponent(new CFigure(pipeMesh, buff, FigureType.Pipe, PrimitiveTopology.LineList));
+        }
+
+      }
+      return scene;
+    }
 
     public static CMesh CreateTestingQuadroMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
@@ -104,6 +117,17 @@ namespace D3D {
           new VsBuffer(new Vector3(0.0f, 0.0f, 4.0f))
       };
       return new CMesh(vertices, new List<short>() { 0, 1, 2 });
+    }
+
+    public static CMesh CreateAnotherTestingLineMesh() {
+      List<VsBuffer> vertices = new List<VsBuffer>() {
+          new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
+          new VsBuffer(new Vector3(0.0f, 2.5f, 0.0f)),
+          new VsBuffer(new Vector3(0.0f, 5.0f, 0.5f)),
+          new VsBuffer(new Vector3(0.0f, 8.5f, -0.5f)),
+          new VsBuffer(new Vector3(0.0f, 10.5f, 0.5f))
+      };
+      return new CMesh(vertices, new List<short>() { 0, 1, 2, 3 });
     }
 
 

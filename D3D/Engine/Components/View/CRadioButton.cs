@@ -9,11 +9,11 @@ namespace D3D {
     public CRadioButton(RenderForm form, Point positionOnForm) {
 
       RadioButton1 = new RadioButton();
-      RadioButton1.Text = "Option 1";
+      RadioButton1.Text = "Line";
       RadioButton1.Location = positionOnForm;
 
       RadioButton2 = new RadioButton();
-      RadioButton2.Text = "Option 2";
+      RadioButton2.Text = "Grid";
       RadioButton2.Location = new Point(positionOnForm.X, positionOnForm.Y + 30);
 
       form.Controls.Add(RadioButton1);

@@ -62,7 +62,7 @@ namespace D3D {
       var matrix = figure.IamTransform.IamTransform;
       var lights = figure.IamEntity.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
-      var topology = figure.IamEntity.GetComponent<CRenderParams>().IamTopology.IamTopology;
+      var topology = figure.IamTopology.IamTopology;
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology);
       renderer.SetLightConstantBuffer(ref light);

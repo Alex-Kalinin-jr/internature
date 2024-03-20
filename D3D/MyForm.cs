@@ -20,12 +20,10 @@ namespace D3D {
     public MyForm() {
 
       _layout = new Layout();
-      /*
       _scene = new List<Scene> {Generator.CreateGridTestingScene(), 
                                 Generator.CreateTestingScene(), 
-                                Generator.CreatePipeTestingScene()};
-      */
-      _scene = new List<Scene> {Generator.CreateGridTestingScene(), Generator.CreateTestingScene(), Generator.CreatePipeTestingScene() };
+                                Generator.CreatePipeTestingScene(),
+                                Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
       var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
