@@ -69,21 +69,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\Components\Camera\CBackCameraMoving.cs" />
     <Compile Include="Engine\Components\Camera\CCamera.cs" />
-    <Compile Include="Engine\Components\Camera\CDownCameraMoving.cs" />
     <Compile Include="Engine\Components\Figure\CFigure.cs" />
-    <Compile Include="Engine\Components\Camera\CFwdCameraMoving.cs" />
     <Compile Include="Engine\Components\Light\CLight.cs" />
     <Compile Include="Engine\Components\Light\CNewLightColor.cs" />
     <Compile Include="Engine\Components\Light\CNewLightPosition.cs" />
     <Compile Include="Engine\Components\Component.cs" />
-    <Compile Include="Engine\Components\Camera\CLeftCameraMoving.cs" />
-    <Compile Include="Engine\Components\Camera\CUpCameraMoving.cs" />
     <Compile Include="Engine\Components\Camera\CYaw.cs" />
     <Compile Include="Engine\Components\CMesh.cs" />
     <Compile Include="Engine\Components\Camera\CPitch.cs" />
-    <Compile Include="Engine\Components\Camera\CRightCameraMoving.cs" />
     <Compile Include="Engine\Components\Renderer\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
     <Compile Include="Engine\Components\View\CRadioButton.cs" />

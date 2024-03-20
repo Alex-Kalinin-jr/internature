@@ -6,42 +6,19 @@ namespace D3D {
     new public static void Update() {
       foreach (var component in Components) {
 
-// to be rewritten
         var pitch = component.IamEntity.GetComponent<CPitch>();
         if (pitch != null) {
           ChangePitch(component, pitch.Pitch);
         }
+
         var yaw = component.IamEntity.GetComponent<CYaw>();
         if (yaw != null) {
           ChangeYaw(component, yaw.Yaw);
         }
-
-        if (component.IamEntity.GetComponent<CUpCameraMoving>() != null) {
-          ShiftUp(component);
-        }
-
-        if (component.IamEntity.GetComponent<CDownCameraMoving>() != null) {
-          ShiftDown(component);
-        }
-
-        if (component.IamEntity.GetComponent<CLeftCameraMoving>() != null) {
-          ShiftLeft(component);
-        }
-
-        if (component.IamEntity.GetComponent<CRightCameraMoving>() != null) {
-          ShiftRight(component);
-        }
-
-        if (component.IamEntity.GetComponent<CFwdCameraMoving>() != null) {
-          ShiftFwd(component);
-        }
-
-        if (component.IamEntity.GetComponent<CBackCameraMoving>() != null) {
-          ShiftBack(component);
-        }
         UpdateData(component);
       }
     }
+
 
     private static void UpdateData(CCamera camera) {
       camera.Front.X = (float)(Math.Cos(camera.Pitch) * Math.Cos(camera.Yaw));
@@ -54,45 +31,51 @@ namespace D3D {
     }
 
 
-    private static void ChangePitch(CCamera camera, float pitch) {
+    public static void ChangePitch(CCamera camera, float pitch) {
       var angle = MathUtil.Clamp(pitch, -89f, 89f);
       camera.Pitch += MathUtil.DegreesToRadians(angle);
       camera.IamEntity.RemoveComponent<CPitch>();
     }
 
-    private static void ChangeYaw(CCamera camera, float yaw) {
+    public static void ChangeYaw(CCamera camera, float yaw) {
       camera.Yaw += MathUtil.DegreesToRadians(yaw);
       camera.IamEntity.RemoveComponent<CYaw>();
     }
 
-    private static void ShiftUp(CCamera component) {
-      component.Position += 0.05f * component.Up;
-      component.IamEntity.RemoveComponent<CUpCameraMoving>();
+    public static void ShiftUp() {
+      foreach (var component in Components) {
+        component.Position += 0.05f * component.Up;
+      }
     }
 
-    private static void ShiftDown(CCamera component) {
-      component.Position -= 0.05f * component.Up;
-      component.IamEntity.RemoveComponent<CDownCameraMoving>();
+    public static void ShiftDown() {
+      foreach (var component in Components) {
+        component.Position -= 0.05f * component.Up;
+      }
     }
 
-    private static void ShiftLeft(CCamera component) {
-      component.Position += 0.05f * component.Right;
-      component.IamEntity.RemoveComponent<CLeftCameraMoving>();
+    public static void ShiftLeft( ) {
+      foreach (var component in Components) {
+        component.Position += 0.05f * component.Right;
+      }
     }
 
-    private static void ShiftRight(CCamera component) {
-      component.Position -= 0.05f * component.Right;
-      component.IamEntity.RemoveComponent<CRightCameraMoving>();
+    public static void ShiftRight() {
+      foreach (var component in Components) {
+        component.Position -= 0.05f * component.Right;
+      }
     }
 
-    private static void ShiftFwd(CCamera component) {
-      component.Position += 0.05f * component.Front;
-      component.IamEntity.RemoveComponent<CFwdCameraMoving>();
+    public static void ShiftFwd() {
+      foreach (var component in Components) {
+        component.Position += 0.05f * component.Front;
+      }
     }
 
-    private static void ShiftBack(CCamera component) {
-      component.Position -= 0.05f * component.Front;
-      component.IamEntity.RemoveComponent<CBackCameraMoving>();
+    public static void ShiftBack() {
+      foreach (var component in Components) {
+        component.Position -= 0.05f * component.Front;
+      }
     }
   }
 }

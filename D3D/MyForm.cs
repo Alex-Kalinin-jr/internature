@@ -93,17 +93,17 @@ namespace D3D {
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
       foreach (var scene in _scene) {
         if (e.KeyChar == 'w') {
-          scene.AddComponent(new CFwdCameraMoving());
+          CameraSystem.ShiftFwd();
         } else if (e.KeyChar == 's') {
-          scene.AddComponent(new CBackCameraMoving());
+          CameraSystem.ShiftBack();
         } else if (e.KeyChar == 'd') {
-          scene.AddComponent(new CRightCameraMoving());
+          CameraSystem.ShiftRight();
         } else if (e.KeyChar == 'a') {
-          scene.AddComponent(new CLeftCameraMoving());
+          CameraSystem.ShiftLeft();
         } else if (e.KeyChar == '=') {
-          scene.AddComponent(new CUpCameraMoving());
+          CameraSystem.ShiftUp();
         } else if (e.KeyChar == '-') {
-          scene.AddComponent(new CDownCameraMoving());
+          CameraSystem.ShiftDown();
         }
       }
     }
@@ -125,15 +125,15 @@ namespace D3D {
         } else if (_isMouseDown) {
 
           if (deltaX > 0) {
-            scene.AddComponent(new CLeftCameraMoving());
+            CameraSystem.ShiftLeft();
           } else {
-            scene.AddComponent(new CRightCameraMoving());
+            CameraSystem.ShiftRight();
           }
 
           if (deltaY > 0) {
-            scene.AddComponent(new CUpCameraMoving());
+            CameraSystem.ShiftUp();
           } else {
-            scene.AddComponent(new CDownCameraMoving());
+            CameraSystem.ShiftDown();
           }
         }
       }
