@@ -19,16 +19,22 @@ namespace D3D {
       new CLabel(renderForm.IamRenderForm, new Point(25, 160), "x-coord");
       new CLabel(renderForm.IamRenderForm, new Point(25, 210), "y-coord");
       new CLabel(renderForm.IamRenderForm, new Point(25, 260), "z-coord");
+      var trackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 150), 50);
+      AddComponent(trackBar);
 
 
       var button = new CButton(renderForm.IamRenderForm, new Point(25, 300), "light color");
       AddComponent(button);
 
-      var trackBar = new CPositionTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 150), 50);
-      AddComponent(trackBar);
 
       var radioBtnA = new CRadioButton(renderForm.IamRenderForm, new System.Drawing.Point(25, 400));
       AddComponent(radioBtnA);
+
+      new CLabel(renderForm.IamRenderForm, new Point(25, 460), "x-coord");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 510), "y-coord");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 560), "z-coord");
+      var cliceBar = new CCliceTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 450), 50);
+      AddComponent(cliceBar);
     }
   }
 }

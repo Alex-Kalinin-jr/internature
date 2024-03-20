@@ -66,7 +66,7 @@ namespace D3D {
       var scene = new Scene();
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      scene.AddComponent(new CFigure(CreateTestingGridMesh(), buff, default, PrimitiveTopology.LineList));
+      scene.AddComponent(new CGridFigure(CreateTestingGridMesh(), buff, default, PrimitiveTopology.LineList));
       return scene;
     }
 
@@ -81,6 +81,7 @@ namespace D3D {
                                      FigureType.Pipe, PrimitiveTopology.LineList));
       return scene;
     }
+
 
     public static Scene CreateAnotherPipeTestingScene() {
       var scene = new Scene();
@@ -99,6 +100,7 @@ namespace D3D {
       return scene;
     }
 
+
     public static CMesh CreateTestingQuadroMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
           new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)), new VsBuffer(new Vector3(1.0f, 0.0f, 0.0f)),
@@ -107,7 +109,8 @@ namespace D3D {
       return new CMesh(vertices, new List<short>() { 0, 1, 2, 3, 0 });
     }
 
-    public static CMesh CreateTestingGridMesh() {
+
+    public static CMesh CreateTestingGridMesh(int xCount = 30, int yCount = 30, int zCount = 10) {
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
@@ -133,10 +136,16 @@ namespace D3D {
           }
         }
       }
-
-
-      return new CMesh(vertices, indices);
+      var mesh = new CMesh(vertices, indices);
+      mesh.XCount = xCount;
+      mesh.YCount = yCount;
+      mesh.ZCount = zCount;
+      mesh.CurrentXCount = xCount;
+      mesh.CurrentYCount = yCount;
+      mesh.CurrentZCount = zCount;
+      return mesh;
     }
+
 
     public static CMesh CreateTestingLineMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
@@ -146,6 +155,7 @@ namespace D3D {
       };
       return new CMesh(vertices, new List<short>() { 0, 1, 2 });
     }
+
 
     public static CMesh CreateAnotherTestingLineMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {

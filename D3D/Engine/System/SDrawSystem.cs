@@ -55,6 +55,20 @@ namespace D3D {
       }
     }
 
+    public static void CliceGrid(Vector3 vec) {
+      foreach (var figure in Components) { 
+        if (figure.GetType().Equals(typeof(CGridFigure))) {
+          PrepareClicing((CGridFigure)figure, vec);
+        }
+      }
+    }
+
+    private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
+      figure.CurrentXCount = (int)vec.X;
+      figure.CurrentYCount = (int)vec.Y;
+      figure.CurrentZCount = (int)vec.Z;
+    }
+
     private static void DrawFigure(CFigure figure) {
 
       var vertices = figure.IamMesh.Vertices.ToArray();

@@ -79,7 +79,7 @@ namespace D3D {
     }
 
 
-    public static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
+    private static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
       Vector3 normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
       normal.Normalize();
 

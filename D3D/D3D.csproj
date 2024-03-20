@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AssimpNet, Version=4.1.0.0, Culture=neutral, PublicKeyToken=0d51b391f59f42a6, processorArchitecture=MSIL">
-      <HintPath>a\Src\packages\AssimpNet.4.1.0\lib\net40\AssimpNet.dll</HintPath>
+      <HintPath>packages\AssimpNet.4.1.0\lib\net40\AssimpNet.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Engine\Components\Camera\CCamera.cs" />
     <Compile Include="Engine\Components\CFigure.cs" />
+    <Compile Include="Engine\Components\CGridFigure.cs" />
     <Compile Include="Engine\Components\CLight.cs" />
     <Compile Include="Engine\Components\Component.cs" />
     <Compile Include="Engine\Components\Camera\CYaw.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Engine\Components\Camera\CPitch.cs" />
     <Compile Include="Engine\Components\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\Transform.cs" />
+    <Compile Include="Engine\Components\View\CCliceTrackBar.cs" />
     <Compile Include="Engine\Components\View\CRadioButton.cs" />
     <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />
     <Compile Include="Engine\Components\View\CRenderForm.cs" />
@@ -149,11 +151,12 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="a\Src\packages\AssimpNet.4.1.0\build\AssimpNet.targets" Condition="Exists('a\Src\packages\AssimpNet.4.1.0\build\AssimpNet.targets')" />
+  <Import Project="$(MSBuildToolsPath)\AssimpNet.4.1.0\build\AssimpNet.targets" Condition="Exists('a\Src\packages\AssimpNet.4.1.0\build\AssimpNet.targets')" />
+  <Import Project="packages\AssimpNet.4.1.0\build\AssimpNet.targets" Condition="Exists('packages\AssimpNet.4.1.0\build\AssimpNet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>Данный проект ссылается на пакеты NuGet, отсутствующие на этом компьютере. Используйте восстановление пакетов NuGet, чтобы скачать их.  Дополнительную информацию см. по адресу: http://go.microsoft.com/fwlink/?LinkID=322105. Отсутствует следующий файл: {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('a\Src\packages\AssimpNet.4.1.0\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', 'a\Src\packages\AssimpNet.4.1.0\build\AssimpNet.targets'))" />
+    <Error Condition="!Exists('packages\AssimpNet.4.1.0\build\AssimpNet.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\AssimpNet.4.1.0\build\AssimpNet.targets'))" />
   </Target>
 </Project>

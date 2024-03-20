@@ -25,10 +25,18 @@ namespace D3D {
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
       var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
+
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
       trackBar.IamXTrackBar.Scroll += ChangeLightPosition;
       trackBar.IamYTrackBar.Scroll += ChangeLightPosition;
       trackBar.IamZTrackBar.Scroll += ChangeLightPosition;
+
+      var cliceBar = _layout.GetComponent<CCliceTrackBar>();
+      cliceBar.IamXTrackBar.Scroll += CliceGrid;
+      cliceBar.IamYTrackBar.Scroll += CliceGrid;
+      cliceBar.IamZTrackBar.Scroll += CliceGrid;
+
+
       var radioButton = _layout.GetComponent<CRadioButton>();
       radioButton.RadioButton1.CheckedChanged += ChangePipeShowType;
 
@@ -74,7 +82,8 @@ namespace D3D {
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
       if (buff.ShowDialog() == DialogResult.OK) {
-        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255);
+        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, 
+                                buff.Color.B / 255, buff.Color.A / 255);
         LightSystem.ChangeColor(color);
       }
     }
@@ -160,6 +169,14 @@ namespace D3D {
       } else if (mouseArgs.Button == MouseButtons.Middle) {
         _isRotationDown = false;
       }
+    }
+
+    private void CliceGrid(object sender, EventArgs e) {
+      var trackBar = _layout.GetComponent<CCliceTrackBar>();
+      var x = trackBar.IamXTrackBar.Value;
+      var y = trackBar.IamYTrackBar.Value;
+      var z = trackBar.IamZTrackBar.Value;
+      DrawSystem.CliceGrid(new Vector3(x, y, z));
     }
   }
 }
