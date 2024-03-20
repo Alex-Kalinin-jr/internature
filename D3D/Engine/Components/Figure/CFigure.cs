@@ -6,22 +6,22 @@ namespace D3D {
     public CMesh IamMesh;
     public CTransform IamTransform;
 
-    public CFigure(string path, VsMvpConstantBuffer matrix) {
+    public CFigure(string path, VsMvpConstantBuffer matrix, FigureType type = FigureType.General) {
       IamMesh = new CMesh(path);
       IamTransform = new CTransform(matrix);
-      DrawSystem.Register(this);
+      DrawSystem.Register(this, type);
     }
 
-    public CFigure(CMesh iamMesh, CTransform iamTransform) {
+    public CFigure(CMesh iamMesh, CTransform iamTransform, FigureType type = FigureType.General) {
       IamMesh = iamMesh;
       IamTransform = iamTransform;
-      DrawSystem.Register(this);
+      DrawSystem.Register(this, type);
     }
 
-    public CFigure(CMesh iamMesh, VsMvpConstantBuffer matrix) {
+    public CFigure(CMesh iamMesh, VsMvpConstantBuffer matrix, FigureType type = FigureType.General) {
       IamMesh = iamMesh;
       IamTransform = new CTransform(matrix);
-      DrawSystem.Register(this);
+      DrawSystem.Register(this, type);
     }
 
     public override void UpdateLinks() {
