@@ -67,19 +67,16 @@ namespace D3D {
     private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
       var indCountInCube = 24;
 
-      float stepX = 1000000 / figure.XCount;
-      float stepY = 1000000 / figure.YCount;
-      float stepZ = 1000000 / figure.ZCount;
+      
+      figure.CurrentXCount = (int)vec.X;
+      figure.CurrentYCount = (int)vec.Y;
+      figure.CurrentZCount = (int)vec.Z;
 
-      int x = (int)(vec.X / stepX);
-      int y = (int)(vec.Y / stepY);
-      int z = (int)(vec.Z / stepZ);
+      int x  = figure.CurrentXCount;
+      int y = figure.CurrentYCount;
+      int z = figure.CurrentZCount;
 
-      figure.CurrentXCount = x;
-      figure.CurrentYCount = y;
-      figure.CurrentZCount = z;
-
-      figure.MeshObj.Indices = figure.FullIndices.GetRange(0, indCountInCube * z * y * (x - 1) - 1);
+      figure.MeshObj.Indices = figure.FullIndices.GetRange(0, indCountInCube * z * y * (x));
     }
 
     private static void DrawFigure(CFigure figure) {

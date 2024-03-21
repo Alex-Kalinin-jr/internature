@@ -66,8 +66,8 @@ namespace D3D {
       var scene = new Scene();
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      int x = 6;
-      int y = 4;
+      int x = 10;
+      int y = 5;
       int z = 2;
       var fig = new CGridFigure(CreateTestingGridMesh(x, y, z), buff, default, PrimitiveTopology.LineList);
       fig.CurrentXCount = x;

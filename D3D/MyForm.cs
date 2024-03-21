@@ -32,17 +32,17 @@ namespace D3D {
       trackBar.ZTrackbarObj.Scroll += ChangeLightPosition;
 
       var cliceBar = _layout.GetComponent<CCliceTrackBar>();
-      cliceBar.XTrackbarObj.Minimum = 0;
-      cliceBar.YTrackbarObj.Minimum = 0;
-      cliceBar.ZTrackbarObj.Minimum = 0;
+      cliceBar.XTrackbarObj.Minimum = 1;
+      cliceBar.YTrackbarObj.Minimum = 1;
+      cliceBar.ZTrackbarObj.Minimum = 1;
 
-      cliceBar.XTrackbarObj.Maximum = 1000000;
-      cliceBar.YTrackbarObj.Maximum = 1000000;
-      cliceBar.ZTrackbarObj.Maximum = 1000000;
+      cliceBar.XTrackbarObj.Maximum = 10;
+      cliceBar.YTrackbarObj.Maximum = 5;
+      cliceBar.ZTrackbarObj.Maximum = 2;
 
-      cliceBar.XTrackbarObj.Value = 1000000;
-      cliceBar.YTrackbarObj.Value = 1000000;
-      cliceBar.ZTrackbarObj.Value = 1000000;
+      cliceBar.XTrackbarObj.Value = 10;
+      cliceBar.YTrackbarObj.Value = 5;
+      cliceBar.ZTrackbarObj.Value = 2;
 
       cliceBar.XTrackbarObj.Scroll += CliceGrid;
       cliceBar.YTrackbarObj.Scroll += CliceGrid;
