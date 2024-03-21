@@ -66,7 +66,17 @@ namespace D3D {
       var scene = new Scene();
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      scene.AddComponent(new CGridFigure(CreateTestingGridMesh(), buff, default, PrimitiveTopology.LineList));
+      int x = 6;
+      int y = 4;
+      int z = 2;
+      var fig = new CGridFigure(CreateTestingGridMesh(x, y, z), buff, default, PrimitiveTopology.LineList);
+      fig.CurrentXCount = x;
+      fig.CurrentYCount = y;
+      fig.CurrentZCount = z;
+      fig.XCount = x;
+      fig.YCount = y;
+      fig.ZCount = z;
+      scene.AddComponent(fig);
       return scene;
     }
 
@@ -116,13 +126,13 @@ namespace D3D {
       List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
       int p = 0;
       var random = new Random();
-      for (int i = 0; i < 30; ++i) {
+      for (int i = 0; i < xCount; ++i) {
         float r = (float)random.NextDouble(0.0f, 1.0f);
-        float g = (float)random.NextDouble(0.0f, 1.0f);
+        float g = (float)random.NextDouble(0.0f, 0.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
-        for (int k = 0; k < 30; ++k) {
-          for (int j = 0; j < 10; ++j) {
+        for (int j = 0; j < yCount; ++j) {
+          for (int k = 0; k < zCount; ++k) {
             vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color));
             vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color));
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color));
@@ -137,12 +147,6 @@ namespace D3D {
         }
       }
       var mesh = new CMesh(vertices, indices);
-      mesh.XCount = xCount;
-      mesh.YCount = yCount;
-      mesh.ZCount = zCount;
-      mesh.CurrentXCount = xCount;
-      mesh.CurrentYCount = yCount;
-      mesh.CurrentZCount = zCount;
       return mesh;
     }
 

@@ -5,36 +5,36 @@ using System.Windows.Forms;
 
 namespace D3D {
   public class CPositionTrackBar : Component {
-    public TrackBar IamXTrackBar;
-    public TrackBar IamYTrackBar;
-    public TrackBar IamZTrackBar;
+    public TrackBar XTrackbarObj;
+    public TrackBar YTrackbarObj;
+    public TrackBar ZTrackbarObj;
 
 
     public CPositionTrackBar(RenderForm form, Point position, int yStep) {
-      IamXTrackBar = new TrackBar();
-      IamXTrackBar.Minimum = -100;
-      IamXTrackBar.Maximum = 100;
-      IamXTrackBar.TickFrequency = 10;
-      IamXTrackBar.LargeChange = 10;
-      IamXTrackBar.Location = position;
+      XTrackbarObj = new TrackBar();
+      XTrackbarObj.Minimum = -100;
+      XTrackbarObj.Maximum = 100;
+      XTrackbarObj.TickFrequency = 10;
+      XTrackbarObj.LargeChange = 10;
+      XTrackbarObj.Location = position;
 
-      IamYTrackBar = new TrackBar();
-      IamYTrackBar.Minimum = -100;
-      IamYTrackBar.Maximum = 100;
-      IamYTrackBar.TickFrequency = 10;
-      IamYTrackBar.LargeChange = 10;
-      IamYTrackBar.Location = new Point(position.X, position.Y + yStep);
+      YTrackbarObj = new TrackBar();
+      YTrackbarObj.Minimum = -100;
+      YTrackbarObj.Maximum = 100;
+      YTrackbarObj.TickFrequency = 10;
+      YTrackbarObj.LargeChange = 10;
+      YTrackbarObj.Location = new Point(position.X, position.Y + yStep);
 
-      IamZTrackBar = new TrackBar();
-      IamZTrackBar.Minimum = -100;
-      IamZTrackBar.Maximum = 100;
-      IamZTrackBar.TickFrequency = 10;
-      IamZTrackBar.LargeChange = 10;
-      IamZTrackBar.Location = new Point(position.X, position.Y + 2 * yStep);
+      ZTrackbarObj = new TrackBar();
+      ZTrackbarObj.Minimum = -100;
+      ZTrackbarObj.Maximum = 100;
+      ZTrackbarObj.TickFrequency = 10;
+      ZTrackbarObj.LargeChange = 10;
+      ZTrackbarObj.Location = new Point(position.X, position.Y + 2 * yStep);
 
-      form.Controls.Add(IamXTrackBar);
-      form.Controls.Add(IamYTrackBar);
-      form.Controls.Add(IamZTrackBar);
+      form.Controls.Add(XTrackbarObj);
+      form.Controls.Add(YTrackbarObj);
+      form.Controls.Add(ZTrackbarObj);
     }
   }
 }

@@ -30,9 +30,9 @@ namespace D3D {
       var radioBtnA = new CRadioButton(renderForm.IamRenderForm, new System.Drawing.Point(25, 400));
       AddComponent(radioBtnA);
 
-      new CLabel(renderForm.IamRenderForm, new Point(25, 460), "x-coord");
-      new CLabel(renderForm.IamRenderForm, new Point(25, 510), "y-coord");
-      new CLabel(renderForm.IamRenderForm, new Point(25, 560), "z-coord");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 460), "slice-x");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 510), "slice-y");
+      new CLabel(renderForm.IamRenderForm, new Point(25, 560), "slice-z");
       var cliceBar = new CCliceTrackBar(renderForm.IamRenderForm, new System.Drawing.Point(100, 450), 50);
       AddComponent(cliceBar);
     }

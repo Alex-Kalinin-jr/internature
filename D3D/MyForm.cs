@@ -27,21 +27,33 @@ namespace D3D {
       var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
 
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
-      trackBar.IamXTrackBar.Scroll += ChangeLightPosition;
-      trackBar.IamYTrackBar.Scroll += ChangeLightPosition;
-      trackBar.IamZTrackBar.Scroll += ChangeLightPosition;
+      trackBar.XTrackbarObj.Scroll += ChangeLightPosition;
+      trackBar.YTrackbarObj.Scroll += ChangeLightPosition;
+      trackBar.ZTrackbarObj.Scroll += ChangeLightPosition;
 
       var cliceBar = _layout.GetComponent<CCliceTrackBar>();
-      cliceBar.IamXTrackBar.Scroll += CliceGrid;
-      cliceBar.IamYTrackBar.Scroll += CliceGrid;
-      cliceBar.IamZTrackBar.Scroll += CliceGrid;
+      cliceBar.XTrackbarObj.Minimum = 0;
+      cliceBar.YTrackbarObj.Minimum = 0;
+      cliceBar.ZTrackbarObj.Minimum = 0;
+
+      cliceBar.XTrackbarObj.Maximum = 1000000;
+      cliceBar.YTrackbarObj.Maximum = 1000000;
+      cliceBar.ZTrackbarObj.Maximum = 1000000;
+
+      cliceBar.XTrackbarObj.Value = 1000000;
+      cliceBar.YTrackbarObj.Value = 1000000;
+      cliceBar.ZTrackbarObj.Value = 1000000;
+
+      cliceBar.XTrackbarObj.Scroll += CliceGrid;
+      cliceBar.YTrackbarObj.Scroll += CliceGrid;
+      cliceBar.ZTrackbarObj.Scroll += CliceGrid;
 
 
       var radioButton = _layout.GetComponent<CRadioButton>();
       radioButton.RadioButton1.CheckedChanged += ChangePipeShowType;
 
       var button = _layout.GetComponent<CButton>();
-      button.IamButton.Click += ChangeLightColor;
+      button.ButtonObj.Click += ChangeLightColor;
 
       Renderer.GetRenderer(renderForm.Handle);
       renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
@@ -91,9 +103,9 @@ namespace D3D {
 
     private void ChangeLightPosition(object sender, EventArgs e) {
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
-      float xDirection = trackBar.IamXTrackBar.Value / _movingParams.IamShiftDivider;
-      float yDirection = trackBar.IamYTrackBar.Value / _movingParams.IamShiftDivider;
-      float zDirection = trackBar.IamZTrackBar.Value / _movingParams.IamShiftDivider;
+      float xDirection = trackBar.XTrackbarObj.Value / _movingParams.IamShiftDivider;
+      float yDirection = trackBar.YTrackbarObj.Value / _movingParams.IamShiftDivider;
+      float zDirection = trackBar.ZTrackbarObj.Value / _movingParams.IamShiftDivider;
       LightSystem.ChangePosition(new Vector3(xDirection, yDirection, zDirection));
     }
 
@@ -173,9 +185,9 @@ namespace D3D {
 
     private void CliceGrid(object sender, EventArgs e) {
       var trackBar = _layout.GetComponent<CCliceTrackBar>();
-      var x = trackBar.IamXTrackBar.Value;
-      var y = trackBar.IamYTrackBar.Value;
-      var z = trackBar.IamZTrackBar.Value;
+      var x = trackBar.XTrackbarObj.Value;
+      var y = trackBar.YTrackbarObj.Value;
+      var z = trackBar.ZTrackbarObj.Value;
       DrawSystem.CliceGrid(new Vector3(x, y, z));
     }
   }

@@ -4,7 +4,7 @@ using SharpDX.Direct3D;
 
 namespace D3D {
   public class CFigure : Component {
-    public CMesh IamMesh;
+    public CMesh MeshObj;
     public CTransform IamTransform;
     public CPrimitiveTopology IamTopology;
 
@@ -12,7 +12,7 @@ namespace D3D {
                    VsMvpConstantBuffer matrix,
                    FigureType type = FigureType.General, 
                    PrimitiveTopology topology = PrimitiveTopology.TriangleList) {
-      IamMesh = new CMesh(path);
+      MeshObj = new CMesh(path);
       IamTransform = new CTransform(matrix);
       IamTopology = new CPrimitiveTopology(topology);
       DrawSystem.Register(this, type);
@@ -22,7 +22,7 @@ namespace D3D {
                    CTransform iamTransform, 
                    FigureType type = FigureType.General,
                    PrimitiveTopology topology = PrimitiveTopology.TriangleList) {
-      IamMesh = iamMesh;
+      MeshObj = iamMesh;
       IamTransform = iamTransform;
       IamTopology = new CPrimitiveTopology(topology);
       DrawSystem.Register(this, type);
@@ -32,14 +32,14 @@ namespace D3D {
                    VsMvpConstantBuffer matrix, 
                    FigureType type = FigureType.General,
                    PrimitiveTopology topology = PrimitiveTopology.TriangleList) {
-      IamMesh = iamMesh;
+      MeshObj = iamMesh;
       IamTransform = new CTransform(matrix);
       IamTopology = new CPrimitiveTopology(topology);
       DrawSystem.Register(this, type);
     }
 
     public override void UpdateLinks() {
-      IamMesh.IamEntity = IamEntity;
+      MeshObj.IamEntity = IamEntity;
       IamTransform.IamEntity = IamEntity;
       IamTopology.IamEntity = IamEntity;
     }

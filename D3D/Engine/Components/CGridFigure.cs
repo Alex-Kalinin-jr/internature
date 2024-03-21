@@ -16,19 +16,19 @@ namespace D3D {
     public CGridFigure(string path, VsMvpConstantBuffer matrix, FigureType type = FigureType.General,
                        PrimitiveTopology topology = PrimitiveTopology.TriangleList)
         : base(path, matrix, type, topology) {
-      FullIndices = base.IamMesh.Indices;
+      FullIndices = base.MeshObj.Indices;
     }
 
     public CGridFigure(CMesh iamMesh, CTransform iamTransform, FigureType type = FigureType.General,
                        PrimitiveTopology topology = PrimitiveTopology.TriangleList)
         : base(iamMesh, iamTransform, type, topology) {
-      FullIndices = base.IamMesh.Indices;
+      FullIndices = base.MeshObj.Indices;
     }
 
     public CGridFigure(CMesh iamMesh, VsMvpConstantBuffer matrix, FigureType type = FigureType.General,
                    PrimitiveTopology topology = PrimitiveTopology.TriangleList)
         : base(iamMesh, matrix, type, topology) {
-      FullIndices = base.IamMesh.Indices;
+      FullIndices = base.MeshObj.Indices;
     }
   }
 }

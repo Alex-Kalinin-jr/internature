@@ -59,20 +59,33 @@ namespace D3D {
       foreach (var figure in Components) { 
         if (figure.GetType().Equals(typeof(CGridFigure))) {
           PrepareClicing((CGridFigure)figure, vec);
-        }
+        } 
       }
     }
+// it is intended that forming of indices array was perfomed in the next way:
 
     private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
-      figure.CurrentXCount = (int)vec.X;
-      figure.CurrentYCount = (int)vec.Y;
-      figure.CurrentZCount = (int)vec.Z;
+      var indCountInCube = 24;
+
+      float stepX = 1000000 / figure.XCount;
+      float stepY = 1000000 / figure.YCount;
+      float stepZ = 1000000 / figure.ZCount;
+
+      int x = (int)(vec.X / stepX);
+      int y = (int)(vec.Y / stepY);
+      int z = (int)(vec.Z / stepZ);
+
+      figure.CurrentXCount = x;
+      figure.CurrentYCount = y;
+      figure.CurrentZCount = z;
+
+      figure.MeshObj.Indices = figure.FullIndices.GetRange(0, indCountInCube * z * y * (x - 1) - 1);
     }
 
     private static void DrawFigure(CFigure figure) {
 
-      var vertices = figure.IamMesh.Vertices.ToArray();
-      var indices = figure.IamMesh.Indices.ToArray();
+      var vertices = figure.MeshObj.Vertices.ToArray();
+      var indices = figure.MeshObj.Indices.ToArray();
       var matrix = figure.IamTransform.IamTransform;
       var lights = figure.IamEntity.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
