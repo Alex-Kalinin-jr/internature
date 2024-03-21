@@ -6,12 +6,12 @@ namespace D3D {
     new public static void Update() {
       foreach (var component in Components) {
 
-        var pitch = component.IamEntity.GetComponent<CPitch>();
+        var pitch = component.EntityObj.GetComponent<CPitch>();
         if (pitch != null) {
           ChangePitch(component, pitch.Pitch);
         }
 
-        var yaw = component.IamEntity.GetComponent<CYaw>();
+        var yaw = component.EntityObj.GetComponent<CYaw>();
         if (yaw != null) {
           ChangeYaw(component, yaw.Yaw);
         }
@@ -23,12 +23,12 @@ namespace D3D {
     public static void ChangePitch(CCamera camera, float pitch) {
       var angle = MathUtil.Clamp(pitch, -89f, 89f);
       camera.Pitch += MathUtil.DegreesToRadians(angle);
-      camera.IamEntity.RemoveComponent<CPitch>();
+      camera.EntityObj.RemoveComponent<CPitch>();
     }
 
     public static void ChangeYaw(CCamera camera, float yaw) {
       camera.Yaw += MathUtil.DegreesToRadians(yaw);
-      camera.IamEntity.RemoveComponent<CYaw>();
+      camera.EntityObj.RemoveComponent<CYaw>();
     }
 
     public static void ShiftUp() {

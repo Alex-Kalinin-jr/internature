@@ -1,11 +1,9 @@
-﻿using SharpDX;
-
-namespace D3D {
+﻿namespace D3D {
   public class CTransform : Component {
-    public VsMvpConstantBuffer IamTransform;
+    public VsMvpConstantBuffer TransformObj;
 
     public CTransform(VsMvpConstantBuffer matrix) {
-      IamTransform = matrix;
+      TransformObj = matrix;
       TransformSystem.Register(this);
     }
 

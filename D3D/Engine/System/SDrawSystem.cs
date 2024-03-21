@@ -62,8 +62,9 @@ namespace D3D {
         } 
       }
     }
-// it is intended that forming of indices array was perfomed in the next way:
 
+
+// it is intended that forming of indices array was perfomed in the next way:
     private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
       var indCountInCube = 24;
 
@@ -83,10 +84,10 @@ namespace D3D {
 
       var vertices = figure.MeshObj.Vertices.ToArray();
       var indices = figure.MeshObj.Indices.ToArray();
-      var matrix = figure.IamTransform.IamTransform;
-      var lights = figure.IamEntity.GetComponent<CLight>();
-      PsLightConstantBuffer[] light = lights.IamLightData.ToArray();
-      var topology = figure.IamTopology.IamTopology;
+      var matrix = figure.TransformObj.TransformObj;
+      var lights = figure.EntityObj.GetComponent<CLight>();
+      PsLightConstantBuffer[] light = lights.LightDataObj.ToArray();
+      var topology = figure.TopologyObj.TopologyObj;
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology);
       renderer.SetLightConstantBuffer(ref light);

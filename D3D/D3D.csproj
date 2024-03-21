@@ -78,7 +78,7 @@
     <Compile Include="Engine\Components\CMesh.cs" />
     <Compile Include="Engine\Components\Camera\CPitch.cs" />
     <Compile Include="Engine\Components\CPrimitiveTopology.cs" />
-    <Compile Include="Engine\Components\Transform.cs" />
+    <Compile Include="Engine\Components\CTransform.cs" />
     <Compile Include="Engine\Components\View\CCliceTrackBar.cs" />
     <Compile Include="Engine\Components\View\CRadioButton.cs" />
     <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />

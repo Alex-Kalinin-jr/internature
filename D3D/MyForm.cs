@@ -24,7 +24,7 @@ namespace D3D {
                                 Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
-      var renderForm = _layout.GetComponent<CRenderForm>().IamRenderForm;
+      var renderForm = _layout.GetComponent<CRenderForm>().RenderFormObj;
 
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
       trackBar.XTrackbarObj.Scroll += ChangeLightPosition;
@@ -66,7 +66,7 @@ namespace D3D {
 
     public void Run() {
       var form = _layout.GetComponent<CRenderForm>();
-      RenderLoop.Run(form.IamRenderForm, RenderCallback);
+      RenderLoop.Run(form.RenderFormObj, RenderCallback);
     }
 
 
@@ -103,9 +103,9 @@ namespace D3D {
 
     private void ChangeLightPosition(object sender, EventArgs e) {
       var trackBar = _layout.GetComponent<CPositionTrackBar>();
-      float xDirection = trackBar.XTrackbarObj.Value / _movingParams.IamShiftDivider;
-      float yDirection = trackBar.YTrackbarObj.Value / _movingParams.IamShiftDivider;
-      float zDirection = trackBar.ZTrackbarObj.Value / _movingParams.IamShiftDivider;
+      float xDirection = trackBar.XTrackbarObj.Value / _movingParams.ShiftDivider;
+      float yDirection = trackBar.YTrackbarObj.Value / _movingParams.ShiftDivider;
+      float zDirection = trackBar.ZTrackbarObj.Value / _movingParams.ShiftDivider;
       LightSystem.ChangePosition(new Vector3(xDirection, yDirection, zDirection));
     }
 
@@ -140,8 +140,8 @@ namespace D3D {
 
       foreach (var scene in _scene) {
         if (_isRotationDown) {
-          scene.AddComponent(new CPitch(deltaY / _movingParams.IamRotDivider));
-          scene.AddComponent(new CYaw(deltaX / _movingParams.IamRotDivider));
+          scene.AddComponent(new CPitch(deltaY / _movingParams.RotDivider));
+          scene.AddComponent(new CYaw(deltaX / _movingParams.RotDivider));
         } else if (_isMouseDown) {
 
           if (deltaX > 0) {

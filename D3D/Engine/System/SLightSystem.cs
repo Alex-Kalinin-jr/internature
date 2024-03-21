@@ -10,28 +10,28 @@ namespace D3D {
 
     public static void ChangeColor(Vector4 color) {
       foreach ( var component in Components) {
-        for (int i = 0; i < component.IamLightData.Count; i++) {
-          var tmp = component.IamLightData[i];
+        for (int i = 0; i < component.LightDataObj.Count; i++) {
+          var tmp = component.LightDataObj[i];
           tmp.Color = color;
-          component.IamLightData[i] = tmp;
+          component.LightDataObj[i] = tmp;
         }
       }
     }
 
     public static void ChangePosition(Vector3 position) {
       foreach (var component in Components) {
-        for (int i = 0; i < component.IamLightData.Count; i++) {
-          var tmp = component.IamLightData[i];
+        for (int i = 0; i < component.LightDataObj.Count; i++) {
+          var tmp = component.LightDataObj[i];
           tmp.Position = position;
-          component.IamLightData[i] = tmp;
+          component.LightDataObj[i] = tmp;
         }
 
       }
     }
 
     private static void SetViewPosition(CLight component) {
-      var camera = component.IamEntity.GetComponent<CCamera>();
-      var light = component.IamLightData;
+      var camera = component.EntityObj.GetComponent<CCamera>();
+      var light = component.LightDataObj;
       for (int i = 0; i < light.Count; ++i) {
         var buff = light[i];
         buff.ViewPos = camera.Position;

@@ -5,16 +5,16 @@ using System.Drawing;
 
 namespace D3D {
   public class CRenderForm : Component {
-    public RenderForm IamRenderForm;
+    public RenderForm RenderFormObj;
 
     public CRenderForm(Size size) {
-      IamRenderForm = new RenderForm();
-      IamRenderForm.ClientSize = size;
-      IamRenderForm.KeyPreview = true;
-      IamRenderForm.AllowUserResizing = false;
-      IamRenderForm.SuspendLayout();
-      IamRenderForm.Name = "MyForm";
-      IamRenderForm.ResumeLayout(false);
+      RenderFormObj = new RenderForm();
+      RenderFormObj.ClientSize = size;
+      RenderFormObj.KeyPreview = true;
+      RenderFormObj.AllowUserResizing = false;
+      RenderFormObj.SuspendLayout();
+      RenderFormObj.Name = "MyForm";
+      RenderFormObj.ResumeLayout(false);
     }
   }
 }
