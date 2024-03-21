@@ -72,7 +72,6 @@ namespace D3D {
       figure.CurrentYCount = (int)vec.Y;
       figure.CurrentZCount = (int)vec.Z;
 
-      int fullX  = figure.XCount;
       int fullY = figure.YCount;
       int fullZ = figure.ZCount;
 
@@ -81,15 +80,23 @@ namespace D3D {
       int z = figure.CurrentZCount;
 
       var firstFigure = figure.FullIndices.GetRange(0, indCountInCube * fullZ * fullY * x);
-      var nextFigure = new List<short>();
 
+      var nextFigure = new List<short>();
       for (int i = 0; i < x; ++i) {
         int start = indCountInCube * i * fullZ * fullY;
         int bias = indCountInCube * fullZ * y;
         nextFigure.AddRange(firstFigure.GetRange(start, bias));
       }
 
-      figure.MeshObj.Indices = nextFigure;
+      var lastFigure = new List<short>();
+      for (int i = 0; i < y * x; ++i) {
+        int start = indCountInCube * i * fullZ;
+        int bias = indCountInCube * z;
+        lastFigure.AddRange(nextFigure.GetRange(start, bias));
+      }
+
+
+      figure.MeshObj.Indices = lastFigure;
     }
 
     private static void DrawFigure(CFigure figure) {
