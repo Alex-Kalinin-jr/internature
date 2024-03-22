@@ -145,11 +145,11 @@ namespace D3D {
       }
     }
 
-    public static void CliceGridZ(int x) {
+    public static void CliceGridZ(int x, int y, int z) {
       for (int i = 0; i < Components.Count; ++i) {
         if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
           var buff = (CNewGridFigure)Components[i];
-          if (buff.ZCoord != x) {
+          if (buff.XCoord != x && buff.YCoord != y && buff.ZCoord != z) {
             Visibility[i] = false;
           } else {
             Visibility[i] = true;

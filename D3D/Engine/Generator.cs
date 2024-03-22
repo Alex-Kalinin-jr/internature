@@ -83,7 +83,7 @@ namespace D3D {
 
     public static Scene CreateNewGridTestingScene() {
       var scene = new Scene();
-      var figures = CreateNewGridFigures(5, 5, 3);
+      var figures = CreateNewGridFigures(10, 10, 10);
       foreach (var figure in figures) {
         scene.AddComponent(figure);
       }
@@ -166,19 +166,11 @@ namespace D3D {
       List<CNewGridFigure> output = new List<CNewGridFigure>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5, 5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1, 1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       var random = new Random();
-      float r = 0.0f;
-      float g = 0.0f;
-      float b = 0.0f;
       for (int i = 0; i < xCount; ++i) {
-        /*
         float r = (float)random.NextDouble(0.0f, 1.0f);
         float g = (float)random.NextDouble(0.0f, 0.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
-         */
         Vector3 color = new Vector3(r, g, b);
-        if (r < 1.0f) {
-          r += 0.05f;
-        }
         for (int j = 0; j < yCount; ++j) {
           for (int k = 0; k < zCount; ++k) {
             List<VsBuffer> vertices = new List<VsBuffer>();

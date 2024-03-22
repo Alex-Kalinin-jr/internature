@@ -194,18 +194,14 @@ namespace D3D {
     }
 
     private void CliceGridNewly(object sender, EventArgs e) {
-      var trackBar = (System.Windows.Forms.TrackBar)sender;
-      if ((string)trackBar.Tag == "xSlice") {
-        var x = trackBar.Value;
-        DrawSystem.CliceGridX(x);
-      }
-      if ((string)trackBar.Tag == "ySlice") {
-        var y = trackBar.Value;
-        DrawSystem.CliceGridY(y);
-      }
-      if ((string)trackBar.Tag == "zSlice") {
-        var z = trackBar.Value;
-        DrawSystem.CliceGridZ(z);
+      var trackBars = _layout.GetComponent<CCliceTrackBar>();
+
+      if (trackBars != null ) {
+        var x = trackBars.XTrackbarObj.Value;
+        var y = trackBars.YTrackbarObj.Value;
+        var z = trackBars.ZTrackbarObj.Value;
+        DrawSystem.CliceGridZ(x, y, z);
+
       }
     }
   }
