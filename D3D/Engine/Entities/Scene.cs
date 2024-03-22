@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
-using SharpDX;
+﻿using SharpDX;
 
 namespace D3D {
   public class Scene : Entity {
-    public Scene( ) {
+    public Scene() {
 
       var lights = new CLight(Generator.CreateTestingPsLightConstantBuffers());
       AddComponent(lights);
 
-      var camera = new CCamera(new Vector3(0.0f, 1.0f, 3.0f), 1024.0f / 768.0f);
+      var viewPosition = new Vector3(-20.0f, 40.0f, 0.0f);
+      var aspectRatio = 1024.0f / 768.0f; // to be refactored
+      var camera = new CCamera(viewPosition, aspectRatio);
       AddComponent(camera);
 
     }

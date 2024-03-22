@@ -25,7 +25,7 @@ namespace D3D {
       _form = new RenderForm();
       _form.ClientSize = new Size(_size.Width, _size.Height);
       _form.KeyPreview = true;
-      _form.AllowUserResizing = false;
+      _form.AllowUserResizing = true;
       _form.SuspendLayout();
       _form.Name = "MyForm";
       _form.ResumeLayout(false);
@@ -36,43 +36,47 @@ namespace D3D {
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
       ////////////////////////////////////////////////////////////////////
-      string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
-      AddLabel("help", text, new System.Drawing.Point(25, 25));
-      AddLabel("lights-x", "x-coord", new System.Drawing.Point(25, 160));
-      AddLabel("lights-y", "y-coord", new System.Drawing.Point(25, 210));
-      AddLabel("lights-z", "z-coord", new System.Drawing.Point(25, 260));
+      // string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
+      // AddLabel("help", text, new System.Drawing.Point(25, 25));
+      // AddLabel("lightXlabel", "x-coord", new System.Drawing.Point(25, 160));
+      // AddLabel("lightYlabel", "y-coord", new System.Drawing.Point(25, 210));
+      // AddLabel("lightZlabel", "z-coord", new System.Drawing.Point(25, 260));
 
-      AddTrackbar("lightX", new System.Drawing.Point(100, 150), ChangeLightPosition);
-      AddTrackbar("lightY", new System.Drawing.Point(100, 190), ChangeLightPosition);
-      AddTrackbar("lightZ", new System.Drawing.Point(100, 230), ChangeLightPosition);
-      AddButton(new System.Drawing.Point(25, 300), "light color", ChangeLightColor);
+      // AddTrackbar("lightX", new System.Drawing.Point(100, 150), ChangeLightPosition, -100, 100, 10);
+      // AddTrackbar("lightY", new System.Drawing.Point(100, 190), ChangeLightPosition, -100, 100, 10);
+      // AddTrackbar("lightZ", new System.Drawing.Point(100, 230), ChangeLightPosition, -100, 100, 10);
+      // AddButton(new System.Drawing.Point(25, 300), "light color", ChangeLightColor);
 
-      AddRadioButton("line", "Line", new System.Drawing.Point(25, 400), ChangePipeShowType);
-      AddRadioButton("line", "Line", new System.Drawing.Point(25, 430), ChangePipeShowType);
+      AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 10));
+      AddRadioButton("line", "Line", new System.Drawing.Point(20, 30), ChangePipeShowType);
+      AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 50), ChangePipeShowType);
 
-      AddLabel("sliceX", "slice-x", new System.Drawing.Point(25, 460));
-      AddLabel("sliceY", "slice-x", new System.Drawing.Point(25, 510));
-      AddLabel("sliceZ", "slice-x", new System.Drawing.Point(25, 560));
 
-      AddTrackbar("sliceX", new System.Drawing.Point(100, 450), CliceGridNewly);
-      AddTrackbar("sliceY", new System.Drawing.Point(100, 500), CliceGridNewly);
-      AddTrackbar("sliceZ", new System.Drawing.Point(100, 550), CliceGridNewly);
+      AddCheckBox("Slice", "Slice", new System.Drawing.Point(50, 70), TurnOnOffSliceMode);
+      AddLabel("sliceXlabel", "X", new System.Drawing.Point(20, 100));
+      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(20, 140));
+      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(20, 180));
 
-      AddCheckBox("Slice", "Slice", new System.Drawing.Point(200, 450), TurnOnOffSliceMode);
+      AddTrackbar("sliceX", new System.Drawing.Point(40, 95), CliceGridNewly, 0, 20, 1);
+      AddTrackbar("sliceY", new System.Drawing.Point(40, 135), CliceGridNewly, 0, 20, 1);
+      AddTrackbar("sliceZ", new System.Drawing.Point(40, 175), CliceGridNewly, 0, 20, 1);
+
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
       _form.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
     }
-
+    // logic
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private void AddRadioButton(string name, string text, System.Drawing.Point position, EventHandler handler) {
-      var RadioButton = new RadioButton();
-      RadioButton.Name = name;
-      RadioButton.Text = text;
-      RadioButton.Location = position;
-      RadioButton.CheckedChanged += handler;
-      _form.Controls.Add(RadioButton);
+      var radioButton = new RadioButton();
+      radioButton.Name = name;
+      radioButton.Text = text;
+      radioButton.Location = position;
+      radioButton.AutoSize = true;
+      radioButton.CheckedChanged += handler;
+      _form.Controls.Add(radioButton);
     }
 
     private void AddLabel(string name, string text, System.Drawing.Point pos) {
@@ -84,38 +88,6 @@ namespace D3D {
       label.Text = text;
       label.TextAlign = ContentAlignment.MiddleLeft;
       _form.Controls.Add(label);
-    }
-
-
-    private void AddTrackbar(string name, System.Drawing.Point position, EventHandler handler) {
-      var trackbar = new TrackBar();
-      trackbar.Name = name;
-      trackbar.Minimum = -100;
-      trackbar.Maximum = 100;
-      trackbar.TickFrequency = 10;
-      trackbar.LargeChange = 10;
-      trackbar.Location = position;
-      trackbar.Scroll += handler;
-      _form.Controls.Add(trackbar);
-    }
-
-    private void AddButton(System.Drawing.Point position, string text, EventHandler handler) {
-      var button = new Button();
-      button.Location = position;
-      button.AutoSize = true;
-      button.Text = text;
-      _form.Controls.Add(button);
-      button.Click += handler;
-    }
-
-    private void AddCheckBox(string name, string text, System.Drawing.Point position, EventHandler handler) {
-      var checkBox = new CheckBox();
-      checkBox.Checked = true;
-      checkBox.Text = "Slicing";
-      checkBox.Tag = "Slicing";
-      checkBox.Location = position;
-      _form.Controls.Add(checkBox);
-      checkBox.CheckedChanged += handler;
     }
 
     private void TurnOnOffSliceMode(Object sender, EventArgs e) {
@@ -155,7 +127,7 @@ namespace D3D {
 
     private void ChangePipeShowType(object sender, EventArgs e) {
       var bttn = sender as RadioButton;
-      if (bttn.Checked) {
+      if (bttn.Name == "pipe" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Pipe);
       } else {
         DrawSystem.ChangePipeType(FigureType.Line);
@@ -263,6 +235,39 @@ namespace D3D {
       control = _form.Controls.Find("sliceZ", true);
       var zTrackbar = control[0] as TrackBar;
       DrawSystem.CliceGrid(xTrackbar.Value, yTrackbar.Value, zTrackbar.Value);
+    }
+
+    // forming
+    // ////////////////////////////////////////////////////////////////////////////////////
+    private void AddTrackbar(string name, System.Drawing.Point position, EventHandler handler, int bottom, int top, int step) {
+      var trackbar = new TrackBar();
+      trackbar.Name = name;
+      trackbar.Minimum = bottom;
+      trackbar.Maximum = top;
+      trackbar.TickFrequency = step;
+      trackbar.LargeChange = step * 3;
+      trackbar.Location = position;
+      trackbar.Scroll += handler;
+      _form.Controls.Add(trackbar);
+    }
+
+    private void AddButton(System.Drawing.Point position, string text, EventHandler handler) {
+      var button = new Button();
+      button.Location = position;
+      button.AutoSize = true;
+      button.Text = text;
+      _form.Controls.Add(button);
+      button.Click += handler;
+    }
+
+    private void AddCheckBox(string name, string text, System.Drawing.Point position, EventHandler handler) {
+      var checkBox = new CheckBox();
+      checkBox.Checked = false;
+      checkBox.Text = "Slicing";
+      checkBox.Tag = "Slicing";
+      checkBox.Location = position;
+      _form.Controls.Add(checkBox);
+      checkBox.CheckedChanged += handler;
     }
   }
 }
