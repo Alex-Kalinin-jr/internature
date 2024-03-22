@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Drawing;
 
 
 namespace D3D {
@@ -11,92 +11,137 @@ namespace D3D {
   public class MyForm : RenderForm {
 
     private List<Scene> _scene;
-    private Layout _layout;
     private CMouseMovingParams _movingParams;
-
     private bool _isMouseDown = false;
     private bool _isRotationDown = false;
 
+    private RenderForm _form;
+    private CScreenSize _size;
+    private CMousePos _mousePos;
 
     public MyForm() {
+      _size = new CScreenSize();
 
-      _layout = new Layout();
+      _form = new RenderForm();
+      _form.ClientSize = new Size(_size.Width, _size.Height);
+      _form.KeyPreview = true;
+      _form.AllowUserResizing = false;
+      _form.SuspendLayout();
+      _form.Name = "MyForm";
+      _form.ResumeLayout(false);
+
+      _mousePos = new CMousePos();
       _scene = new List<Scene> {Generator.CreateNewGridTestingScene(),
                                 Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
-      var renderForm = _layout.GetComponent<CRenderForm>().RenderFormObj;
+      ////////////////////////////////////////////////////////////////////
+      string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
+      AddLabel("help", text, new System.Drawing.Point(25, 25));
+      AddLabel("lights-x", "x-coord", new System.Drawing.Point(25, 160));
+      AddLabel("lights-y", "y-coord", new System.Drawing.Point(25, 210));
+      AddLabel("lights-z", "z-coord", new System.Drawing.Point(25, 260));
 
-      var trackBar = _layout.GetComponent<CPositionTrackBar>();
-      trackBar.XTrackbarObj.Scroll += ChangeLightPosition;
-      trackBar.YTrackbarObj.Scroll += ChangeLightPosition;
-      trackBar.ZTrackbarObj.Scroll += ChangeLightPosition;
+      AddTrackbar("lightX", new System.Drawing.Point(100, 150), ChangeLightPosition);
+      AddTrackbar("lightY", new System.Drawing.Point(100, 190), ChangeLightPosition);
+      AddTrackbar("lightZ", new System.Drawing.Point(100, 230), ChangeLightPosition);
+      AddButton(new System.Drawing.Point(25, 300), "light color", ChangeLightColor);
 
-      var cliceBar = _layout.GetComponent<CCliceTrackBar>();
-      cliceBar.XTrackbarObj.Minimum = 0;
-      cliceBar.YTrackbarObj.Minimum = 0;
-      cliceBar.ZTrackbarObj.Minimum = 0;
+      AddRadioButton("line", "Line", new System.Drawing.Point(25, 400), ChangePipeShowType);
+      AddRadioButton("line", "Line", new System.Drawing.Point(25, 430), ChangePipeShowType);
 
-      cliceBar.XTrackbarObj.Maximum = 10;
-      cliceBar.YTrackbarObj.Maximum = 10;
-      cliceBar.ZTrackbarObj.Maximum = 10;
+      AddLabel("sliceX", "slice-x", new System.Drawing.Point(25, 460));
+      AddLabel("sliceY", "slice-x", new System.Drawing.Point(25, 510));
+      AddLabel("sliceZ", "slice-x", new System.Drawing.Point(25, 560));
 
-      cliceBar.XTrackbarObj.Value = 10;
-      cliceBar.YTrackbarObj.Value = 10;
-      cliceBar.ZTrackbarObj.Value = 10;
-      /**/
-      cliceBar.XTrackbarObj.Scroll += CliceGridNewly;
-      cliceBar.YTrackbarObj.Scroll += CliceGridNewly;
-      cliceBar.ZTrackbarObj.Scroll += CliceGridNewly;
+      AddTrackbar("sliceX", new System.Drawing.Point(100, 450), CliceGridNewly);
+      AddTrackbar("sliceY", new System.Drawing.Point(100, 500), CliceGridNewly);
+      AddTrackbar("sliceZ", new System.Drawing.Point(100, 550), CliceGridNewly);
 
+      AddCheckBox("Slice", "Slice", new System.Drawing.Point(200, 450), TurnOnOffSliceMode);
 
-
-      var radioButton = _layout.GetComponent<CRadioButton>();
-      radioButton.RadioButton1.CheckedChanged += ChangePipeShowType;
-
-      var button = _layout.GetComponent<CButton>();
-      button.ButtonObj.Click += ChangeLightColor;
-
-      var form = _layout.GetComponent<CRenderForm>().RenderFormObj;
-      foreach(var control in form.Controls) {
-        if (control is CheckBox && ((CheckBox)control).Tag.ToString() == "Slicing") {
-          ((CheckBox)control).CheckedChanged += TurnOnOffSliceMode;
-        }
-      }
-
-      Renderer.GetRenderer(renderForm.Handle);
-      renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
-      renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
-      renderForm.MouseUp += new MouseEventHandler(MyFormMouseUp);
-      renderForm.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
-
+      _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
+      _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
+      _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
+      _form.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
     }
 
+    private void AddRadioButton(string name, string text, System.Drawing.Point position, EventHandler handler) {
+      var RadioButton = new RadioButton();
+      RadioButton.Name = name;
+      RadioButton.Text = text;
+      RadioButton.Location = position;
+      RadioButton.CheckedChanged += handler;
+      _form.Controls.Add(RadioButton);
+    }
+
+    private void AddLabel(string name, string text, System.Drawing.Point pos) {
+      Label label = new Label();
+      label.AutoSize = true;
+      label.Location = pos;
+      label.Name = name;
+      label.TabIndex = 0;
+      label.Text = text;
+      label.TextAlign = ContentAlignment.MiddleLeft;
+      _form.Controls.Add(label);
+    }
+
+
+    private void AddTrackbar(string name, System.Drawing.Point position, EventHandler handler) {
+      var trackbar = new TrackBar();
+      trackbar.Name = name;
+      trackbar.Minimum = -100;
+      trackbar.Maximum = 100;
+      trackbar.TickFrequency = 10;
+      trackbar.LargeChange = 10;
+      trackbar.Location = position;
+      trackbar.Scroll += handler;
+      _form.Controls.Add(trackbar);
+    }
+
+    private void AddButton(System.Drawing.Point position, string text, EventHandler handler) {
+      var button = new Button();
+      button.Location = position;
+      button.AutoSize = true;
+      button.Text = text;
+      _form.Controls.Add(button);
+      button.Click += handler;
+    }
+
+    private void AddCheckBox(string name, string text, System.Drawing.Point position, EventHandler handler) {
+      var checkBox = new CheckBox();
+      checkBox.Checked = true;
+      checkBox.Text = "Slicing";
+      checkBox.Tag = "Slicing";
+      checkBox.Location = position;
+      _form.Controls.Add(checkBox);
+      checkBox.CheckedChanged += handler;
+    }
 
     private void TurnOnOffSliceMode(Object sender, EventArgs e) {
-      var cliceBar = _layout.GetComponent<CCliceTrackBar>();
+      var control = _form.Controls.Find("sliceX", true);
+      var xTrackbar = control[0] as TrackBar;
+      control = _form.Controls.Find("sliceY", true);
+      var yTrackbar = control[0] as TrackBar;
+      control = _form.Controls.Find("sliceZ", true);
+      var zTrackbar = control[0] as TrackBar;
+
       if (((CheckBox)sender).Checked) {
         CliceGridNewly(null, null);
-        cliceBar.XTrackbarObj.Scroll += CliceGridNewly;
-        cliceBar.YTrackbarObj.Scroll += CliceGridNewly;
-        cliceBar.ZTrackbarObj.Scroll += CliceGridNewly;
+        xTrackbar.Scroll += CliceGridNewly;
+        yTrackbar.Scroll += CliceGridNewly;
+        zTrackbar.Scroll += CliceGridNewly;
       } else {
         DrawSystem.RestoreAllGrids();
-        cliceBar.XTrackbarObj.Scroll -= CliceGridNewly;
-        cliceBar.YTrackbarObj.Scroll -= CliceGridNewly;
-        cliceBar.ZTrackbarObj.Scroll -= CliceGridNewly;
+        xTrackbar.Scroll -= CliceGridNewly;
+        yTrackbar.Scroll -= CliceGridNewly;
+        zTrackbar.Scroll -= CliceGridNewly;
       }
     }
 
-
-
-
-
     public void Run() {
-      var form = _layout.GetComponent<CRenderForm>();
-      RenderLoop.Run(form.RenderFormObj, RenderCallback);
+      RenderLoop.Run(_form, RenderCallback);
     }
-
 
     private void RenderCallback() {
       var renderer = Renderer.GetRenderer();
@@ -121,22 +166,27 @@ namespace D3D {
       ColorDialog buff = new ColorDialog();
       buff.AllowFullOpen = false;
       buff.ShowHelp = true;
+
       if (buff.ShowDialog() == DialogResult.OK) {
-        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, 
-                                buff.Color.B / 255, buff.Color.A / 255);
+        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255);
         LightSystem.ChangeColor(color);
       }
     }
 
-
     private void ChangeLightPosition(object sender, EventArgs e) {
-      var trackBar = _layout.GetComponent<CPositionTrackBar>();
-      float xDirection = trackBar.XTrackbarObj.Value / _movingParams.ShiftDivider;
-      float yDirection = trackBar.YTrackbarObj.Value / _movingParams.ShiftDivider;
-      float zDirection = trackBar.ZTrackbarObj.Value / _movingParams.ShiftDivider;
+      var control = _form.Controls.Find("lightX", true);
+      var xTracbar = control[0] as TrackBar;
+      control = _form.Controls.Find("lightY", true);
+      var yTracbar = control[0] as TrackBar;
+      control = _form.Controls.Find("lightZ", true);
+      var zTracbar = control[0] as TrackBar;
+
+      float xDirection = xTracbar.Value / _movingParams.ShiftDivider;
+      float yDirection = yTracbar.Value / _movingParams.ShiftDivider;
+      float zDirection = zTracbar.Value / _movingParams.ShiftDivider;
+
       LightSystem.ChangePosition(new Vector3(xDirection, yDirection, zDirection));
     }
-
 
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
       foreach (var scene in _scene) {
@@ -157,13 +207,11 @@ namespace D3D {
     }
 
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
-
       MouseEventArgs mouseArgs = e;
-      var mouse = _layout.GetComponent<CMousePos>();
-      var deltaX = mouseArgs.X - mouse.X;
-      var deltaY = mouseArgs.Y - mouse.Y;
-      mouse.X = mouseArgs.X;
-      mouse.Y = mouseArgs.Y;
+      var deltaX = mouseArgs.X - _mousePos.X;
+      var deltaY = mouseArgs.Y - _mousePos.Y;
+      _mousePos.X = mouseArgs.X;
+      _mousePos.Y = mouseArgs.Y;
 
       foreach (var scene in _scene) {
         if (_isRotationDown) {
@@ -188,9 +236,8 @@ namespace D3D {
 
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = e;
-      var mouse = _layout.GetComponent<CMousePos>();
-      mouse.X = mouseArgs.X;
-      mouse.Y = mouseArgs.Y;
+      _mousePos.X = mouseArgs.X;
+      _mousePos.Y = mouseArgs.Y;
 
       if (mouseArgs.Button == MouseButtons.Left) {
         _isMouseDown = true;
@@ -209,15 +256,13 @@ namespace D3D {
     }
 
     private void CliceGridNewly(object sender, EventArgs e) {
-      var trackBars = _layout.GetComponent<CCliceTrackBar>();
-
-      if (trackBars != null ) {
-        var x = trackBars.XTrackbarObj.Value;
-        var y = trackBars.YTrackbarObj.Value;
-        var z = trackBars.ZTrackbarObj.Value;
-        DrawSystem.CliceGrid(x, y, z);
-
-      }
+      var control = _form.Controls.Find("sliceX", true);
+      var xTrackbar = control[0] as TrackBar;
+      control = _form.Controls.Find("sliceY", true);
+      var yTrackbar = control[0] as TrackBar;
+      control = _form.Controls.Find("sliceZ", true);
+      var zTrackbar = control[0] as TrackBar;
+      DrawSystem.CliceGrid(xTrackbar.Value, yTrackbar.Value, zTrackbar.Value);
     }
   }
 }

@@ -84,6 +84,7 @@ namespace D3D {
     }
 
 
+
     // it is intended that forming of indices array was perfomed in the next way:
     private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
       var indCountInCube = 24;
