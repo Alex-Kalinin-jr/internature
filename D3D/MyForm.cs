@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace D3D {
@@ -20,7 +21,7 @@ namespace D3D {
     public MyForm() {
 
       _layout = new Layout();
-      _scene = new List<Scene> {Generator.CreateGridTestingScene(),
+      _scene = new List<Scene> {Generator.CreateNewGridTestingScene(),
                                 Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
@@ -32,21 +33,22 @@ namespace D3D {
       trackBar.ZTrackbarObj.Scroll += ChangeLightPosition;
 
       var cliceBar = _layout.GetComponent<CCliceTrackBar>();
-      cliceBar.XTrackbarObj.Minimum = 1;
-      cliceBar.YTrackbarObj.Minimum = 1;
-      cliceBar.ZTrackbarObj.Minimum = 1;
+      cliceBar.XTrackbarObj.Minimum = 0;
+      cliceBar.YTrackbarObj.Minimum = 0;
+      cliceBar.ZTrackbarObj.Minimum = 0;
 
       cliceBar.XTrackbarObj.Maximum = 10;
-      cliceBar.YTrackbarObj.Maximum = 5;
-      cliceBar.ZTrackbarObj.Maximum = 2;
+      cliceBar.YTrackbarObj.Maximum = 10;
+      cliceBar.ZTrackbarObj.Maximum = 10;
 
       cliceBar.XTrackbarObj.Value = 10;
-      cliceBar.YTrackbarObj.Value = 5;
-      cliceBar.ZTrackbarObj.Value = 2;
+      cliceBar.YTrackbarObj.Value = 10;
+      cliceBar.ZTrackbarObj.Value = 10;
+      /**/
+      cliceBar.XTrackbarObj.Scroll += CliceGridNewly;
+      cliceBar.YTrackbarObj.Scroll += CliceGridNewly;
+      cliceBar.ZTrackbarObj.Scroll += CliceGridNewly;
 
-      cliceBar.XTrackbarObj.Scroll += CliceGrid;
-      cliceBar.YTrackbarObj.Scroll += CliceGrid;
-      cliceBar.ZTrackbarObj.Scroll += CliceGrid;
 
 
       var radioButton = _layout.GetComponent<CRadioButton>();
@@ -184,11 +186,27 @@ namespace D3D {
     }
 
     private void CliceGrid(object sender, EventArgs e) {
-      var trackBar = _layout.GetComponent<CCliceTrackBar>();
+      var trackBar = (CCliceTrackBar)sender;
       var x = trackBar.XTrackbarObj.Value;
       var y = trackBar.YTrackbarObj.Value;
       var z = trackBar.ZTrackbarObj.Value;
       DrawSystem.CliceGrid(new Vector3(x, y, z));
+    }
+
+    private void CliceGridNewly(object sender, EventArgs e) {
+      var trackBar = (System.Windows.Forms.TrackBar)sender;
+      if ((string)trackBar.Tag == "xSlice") {
+        var x = trackBar.Value;
+        DrawSystem.CliceGridX(x);
+      }
+      if ((string)trackBar.Tag == "ySlice") {
+        var y = trackBar.Value;
+        DrawSystem.CliceGridY(y);
+      }
+      if ((string)trackBar.Tag == "zSlice") {
+        var z = trackBar.Value;
+        DrawSystem.CliceGridZ(z);
+      }
     }
   }
 }

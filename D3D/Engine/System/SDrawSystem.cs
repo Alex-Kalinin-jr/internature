@@ -7,7 +7,8 @@ namespace D3D {
   public enum FigureType {
     General,
     Line,
-    Pipe
+    Pipe,
+    Grid
   };
 
   public class DrawSystem : BaseSystem<CFigure> {
@@ -107,6 +108,7 @@ namespace D3D {
       var lights = figure.EntityObj.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.LightDataObj.ToArray();
       var topology = figure.TopologyObj.TopologyObj;
+
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology);
       renderer.SetLightConstantBuffer(ref light);
@@ -115,6 +117,45 @@ namespace D3D {
       renderer.SetMvpConstantBuffer(ref matrix);
       renderer.Draw(indices.Length);
 
+    }
+
+    public static void CliceGridX(int x) {
+      for (int i = 0; i < Components.Count; ++i) {
+        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
+          var buff = (CNewGridFigure)Components[i];
+          if (buff.XCoord != x) {
+            Visibility[i] = false;
+          } else {
+            Visibility[i] = true;
+          }
+        }
+      }
+    }
+
+    public static void CliceGridY(int x) {
+      for (int i = 0; i < Components.Count; ++i) {
+        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
+          var buff = (CNewGridFigure)Components[i];
+          if (buff.YCoord != x) {
+            Visibility[i] = false;
+          } else {
+            Visibility[i] = true;
+          }
+        }
+      }
+    }
+
+    public static void CliceGridZ(int x) {
+      for (int i = 0; i < Components.Count; ++i) {
+        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
+          var buff = (CNewGridFigure)Components[i];
+          if (buff.ZCoord != x) {
+            Visibility[i] = false;
+          } else {
+            Visibility[i] = true;
+          }
+        }
+      }
     }
   }
 }

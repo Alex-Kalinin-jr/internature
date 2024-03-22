@@ -67,8 +67,8 @@ namespace D3D {
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
       int x = 10;
-      int y = 5;
-      int z = 2;
+      int y = 10;
+      int z = 10;
       var fig = new CGridFigure(CreateTestingGridMesh(x, y, z), buff, default, PrimitiveTopology.LineList);
       fig.CurrentXCount = x;
       fig.CurrentYCount = y;
@@ -79,6 +79,17 @@ namespace D3D {
       scene.AddComponent(fig);
       return scene;
     }
+
+
+    public static Scene CreateNewGridTestingScene() {
+      var scene = new Scene();
+      var figures = CreateNewGridFigures(5, 5, 3);
+      foreach (var figure in figures) {
+        scene.AddComponent(figure);
+      }
+      return scene;
+    }
+
 
 
     public static Scene CreatePipeTestingScene() {
@@ -101,7 +112,7 @@ namespace D3D {
       for (int i = 0; i < 1; ++i) {
         for (int j = 0; j < 1; ++j) {
           // buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(5 * i, 0.0f, 5 * j));
-          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(10.0f, 0.0f, 5.0f));
+          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(2.0f, 0.0f, 2.0f));
           scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
           scene.AddComponent(new CFigure(pipeMesh, buff, FigureType.Pipe, PrimitiveTopology.LineList));
         }
@@ -120,16 +131,17 @@ namespace D3D {
     }
 
 
+    // to be refactored
     public static CMesh CreateTestingGridMesh(int xCount = 30, int yCount = 30, int zCount = 10) {
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
       int p = 0;
       var random = new Random();
+      float r = (float)random.NextDouble(0.0f, 1.0f);
+      float g = (float)random.NextDouble(0.0f, 0.0f);
+      float b = (float)random.NextDouble(0.0f, 1.0f);
       for (int i = 0; i < xCount; ++i) {
-        float r = (float)random.NextDouble(0.0f, 1.0f);
-        float g = (float)random.NextDouble(0.0f, 0.0f);
-        float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
         for (int j = 0; j < yCount; ++j) {
           for (int k = 0; k < zCount; ++k) {
@@ -148,6 +160,49 @@ namespace D3D {
       }
       var mesh = new CMesh(vertices, indices);
       return mesh;
+    }
+
+    public static List<CNewGridFigure> CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
+      List<CNewGridFigure> output = new List<CNewGridFigure>();
+      List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5, 5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1, 1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
+      var random = new Random();
+      float r = 0.0f;
+      float g = 0.0f;
+      float b = 0.0f;
+      for (int i = 0; i < xCount; ++i) {
+        /*
+        float r = (float)random.NextDouble(0.0f, 1.0f);
+        float g = (float)random.NextDouble(0.0f, 0.0f);
+        float b = (float)random.NextDouble(0.0f, 1.0f);
+         */
+        Vector3 color = new Vector3(r, g, b);
+        if (r < 1.0f) {
+          r += 0.05f;
+        }
+        for (int j = 0; j < yCount; ++j) {
+          for (int k = 0; k < zCount; ++k) {
+            List<VsBuffer> vertices = new List<VsBuffer>();
+            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color)); //0
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color)); //1
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color)); //2
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color)); //3
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color)); //4
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color)); //5
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color)); //6
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color)); //7
+            var mesh = new CMesh(vertices, pseudoIndices);
+
+            VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+            buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+            var fig = new CNewGridFigure(mesh, buff, FigureType.General, PrimitiveTopology.TriangleList);
+            fig.XCoord = i;
+            fig.YCoord = j;
+            fig.ZCoord = k;
+            output.Add(fig);
+          }
+        }
+      }
+      return output;
     }
 
 

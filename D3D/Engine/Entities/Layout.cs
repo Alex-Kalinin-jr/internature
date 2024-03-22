@@ -34,6 +34,9 @@ namespace D3D {
       new CLabel(renderForm.RenderFormObj, new Point(25, 510), "slice-y");
       new CLabel(renderForm.RenderFormObj, new Point(25, 560), "slice-z");
       var cliceBar = new CCliceTrackBar(renderForm.RenderFormObj, new System.Drawing.Point(100, 450), 50);
+      cliceBar.XTrackbarObj.Tag = "xSlice";
+      cliceBar.YTrackbarObj.Tag = "ySlice";
+      cliceBar.ZTrackbarObj.Tag = "zSlice";
       AddComponent(cliceBar);
     }
   }

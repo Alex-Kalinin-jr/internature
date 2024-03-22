@@ -33,37 +33,37 @@ namespace D3D {
 
     public static void ShiftUp() {
       foreach (var component in Components) {
-        component.Position += 0.05f * component.Up;
+        component.Position += 0.1f * component.Up;
       }
     }
 
     public static void ShiftDown() {
       foreach (var component in Components) {
-        component.Position -= 0.05f * component.Up;
+        component.Position -= 0.1f * component.Up;
       }
     }
 
     public static void ShiftLeft( ) {
       foreach (var component in Components) {
-        component.Position += 0.05f * component.Right;
+        component.Position += 0.1f * component.Right;
       }
     }
 
     public static void ShiftRight() {
       foreach (var component in Components) {
-        component.Position -= 0.05f * component.Right;
+        component.Position -= 0.1f * component.Right;
       }
     }
 
     public static void ShiftFwd() {
       foreach (var component in Components) {
-        component.Position += 0.05f * component.Front;
+        component.Position += 0.1f * component.Front;
       }
     }
 
     public static void ShiftBack() {
       foreach (var component in Components) {
-        component.Position -= 0.05f * component.Front;
+        component.Position -= 0.1f * component.Front;
       }
     }
 
