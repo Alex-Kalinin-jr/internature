@@ -21,7 +21,6 @@ namespace D3D {
 
     public MyForm() {
       _size = new CScreenSize();
-
       _form = new RenderForm();
       _form.ClientSize = new Size(_size.Width, _size.Height);
       _form.KeyPreview = true;
@@ -29,7 +28,6 @@ namespace D3D {
       _form.SuspendLayout();
       _form.Name = "MyForm";
       _form.ResumeLayout(false);
-
       _mousePos = new CMousePos();
       _scene = new List<Scene> {Generator.CreateNewGridTestingScene(),
                                 Generator.CreateAnotherPipeTestingScene()};
@@ -40,15 +38,14 @@ namespace D3D {
       AddRadioButton("line", "Line", new System.Drawing.Point(20, 30), ChangePipeShowType);
       AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 50), ChangePipeShowType);
 
-
       AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 80), TurnOnOffSliceMode);
       AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 115));
       AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 155));
       AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 195));
 
-      AddCheckBox("checkX", "", new System.Drawing.Point(30, 115), SetXSliceVisibility);
-      AddCheckBox("checkY", "", new System.Drawing.Point(30, 155), SetYSliceVisibility);
-      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 195), SetZSliceVisibility);
+      AddCheckBox("checkX", "", new System.Drawing.Point(30, 115), SetSliceVisibility);
+      AddCheckBox("checkY", "", new System.Drawing.Point(30, 155), SetSliceVisibility);
+      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 195), SetSliceVisibility);
 
       AddTrackbar("sliceX", new System.Drawing.Point(50, 115), CliceGridNewly, 0, 20, 1);
       AddTrackbar("sliceY", new System.Drawing.Point(50, 155), CliceGridNewly, 0, 20, 1);
@@ -66,41 +63,35 @@ namespace D3D {
     }
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
     private void SetVisibility(bool visible, string name) {
       var controls = _form.Controls.Find(name, true);
       foreach (var control in controls) {
         control.Visible = visible;
       }
     }
-
-    private void SetXSliceVisibility(Object Sender, EventArgs e) {
+/// <summary>
+/// Changes visibility of slice trackbars according to related checkbox state
+/// </summary>
+/// <param name="Sender"></param> checkbox emitting the signal
+/// <param name="e"></param> arguments
+    private void SetSliceVisibility(Object Sender, EventArgs e) {
       var box = Sender as CheckBox;
       if (box.Checked) {
-        SetVisibility(true, "sliceX");
+        if (box.Name == "checkX") {
+          SetVisibility(true, "sliceX");
+        } else if (box.Name == "checkY") {
+          SetVisibility(true, "sliceY");
+        } else {
+          SetVisibility(true, "sliceZ");
+        }
       } else {
-        SetVisibility(false, "sliceX");
-      }
-      CliceGridNewly(null, null);
-    }
-
-    private void SetYSliceVisibility(Object Sender, EventArgs e) {
-      var box = Sender as CheckBox;
-      if (box.Checked) {
-        SetVisibility(true, "sliceY");
-      } else {
-        SetVisibility(false, "sliceY");
-      }
-      CliceGridNewly(null, null);
-    }
-
-    private void SetZSliceVisibility(Object Sender, EventArgs e) {
-      var box = Sender as CheckBox;
-      if (box.Checked) {
-        SetVisibility(true, "sliceZ");
-      } else {
-        SetVisibility(false, "sliceZ");
+        if (box.Name == "checkX") {
+          SetVisibility(false, "sliceX");
+        } else if (box.Name =="checkY") {
+          SetVisibility(false, "sliceY");
+        } else {
+          SetVisibility(false, "sliceZ");
+        }
       }
       CliceGridNewly(null, null);
     }
@@ -232,34 +223,23 @@ namespace D3D {
     }
 
     private void CliceGridNewly(object sender, EventArgs e) {
-      int x = -1;
-      int y = -1;
-      int z = -1;
+      int x = GetSlicingValue("checkX", "sliceX");
+      int y = GetSlicingValue("checkY", "sliceY");
+      int z = GetSlicingValue("checkZ", "sliceZ");
+      DrawSystem.CliceGrid(x, y, z);
+    }
 
-      var control = _form.Controls.Find("checkX", true);
+
+    int GetSlicingValue(string controlName, string controlValue) {
+      int val = -1;
+      var control = _form.Controls.Find(controlName, true);
       var box = control[0] as CheckBox;
       if (box.Checked) {
-        control = _form.Controls.Find("sliceX", true);
+        control = _form.Controls.Find(controlValue, true);
         var xTrackbar = control[0] as TrackBar;
-        x = xTrackbar.Value;
+        val = xTrackbar.Value;
       }
-
-      control = _form.Controls.Find("checkY", true);
-      box = control[0] as CheckBox;
-      if (box.Checked) {
-        control = _form.Controls.Find("sliceY", true);
-        var xTrackbar = control[0] as TrackBar;
-        y = xTrackbar.Value;
-      }
-
-      control = _form.Controls.Find("checkZ", true);
-      box = control[0] as CheckBox;
-      if (box.Checked) {
-        control = _form.Controls.Find("sliceZ", true);
-        var xTrackbar = control[0] as TrackBar;
-        z = xTrackbar.Value;
-      }
-      DrawSystem.CliceGrid(x, y, z);
+      return val;
     }
 
     // forming
