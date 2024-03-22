@@ -83,7 +83,7 @@ namespace D3D {
 
     public static Scene CreateNewGridTestingScene() {
       var scene = new Scene();
-      var figures = CreateNewGridFigures(10, 10, 10);
+      var figures = CreateNewGridFigures(20, 20, 10);
       foreach (var figure in figures) {
         scene.AddComponent(figure);
       }

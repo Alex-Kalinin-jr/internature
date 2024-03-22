@@ -130,7 +130,6 @@ namespace D3D {
       }
     }
 
-
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
 
       MouseEventArgs mouseArgs = e;
@@ -161,7 +160,6 @@ namespace D3D {
       }
     }
 
-
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = e;
       var mouse = _layout.GetComponent<CMousePos>();
@@ -175,7 +173,6 @@ namespace D3D {
       }
     }
 
-
     private void MyFormMouseUp(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = (MouseEventArgs)e;
       if (mouseArgs.Button == MouseButtons.Left) {
@@ -185,14 +182,6 @@ namespace D3D {
       }
     }
 
-    private void CliceGrid(object sender, EventArgs e) {
-      var trackBar = (CCliceTrackBar)sender;
-      var x = trackBar.XTrackbarObj.Value;
-      var y = trackBar.YTrackbarObj.Value;
-      var z = trackBar.ZTrackbarObj.Value;
-      DrawSystem.CliceGrid(new Vector3(x, y, z));
-    }
-
     private void CliceGridNewly(object sender, EventArgs e) {
       var trackBars = _layout.GetComponent<CCliceTrackBar>();
 
@@ -200,7 +189,7 @@ namespace D3D {
         var x = trackBars.XTrackbarObj.Value;
         var y = trackBars.YTrackbarObj.Value;
         var z = trackBars.ZTrackbarObj.Value;
-        DrawSystem.CliceGridZ(x, y, z);
+        DrawSystem.CliceGrid(x, y, z);
 
       }
     }

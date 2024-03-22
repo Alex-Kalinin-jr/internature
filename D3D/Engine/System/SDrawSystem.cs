@@ -12,8 +12,6 @@ namespace D3D {
   };
 
   public class DrawSystem : BaseSystem<CFigure> {
-
-
     public static List<bool> Visibility = new List<bool>();
     public static List<FigureType> Types = new List<FigureType>();
 
@@ -64,8 +62,21 @@ namespace D3D {
       }
     }
 
+    public static void CliceGrid(int x, int y, int z) {
+      for (int i = 0; i < Components.Count; ++i) {
+        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
+          var buff = (CNewGridFigure)Components[i];
+          if (buff.XCoord != x && buff.YCoord != y && buff.ZCoord != z) {
+            Visibility[i] = false;
+          } else {
+            Visibility[i] = true;
+          }
+        }
+      }
+    }
 
-// it is intended that forming of indices array was perfomed in the next way:
+
+    // it is intended that forming of indices array was perfomed in the next way:
     private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
       var indCountInCube = 24;
 
@@ -117,45 +128,6 @@ namespace D3D {
       renderer.SetMvpConstantBuffer(ref matrix);
       renderer.Draw(indices.Length);
 
-    }
-
-    public static void CliceGridX(int x) {
-      for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-          var buff = (CNewGridFigure)Components[i];
-          if (buff.XCoord != x) {
-            Visibility[i] = false;
-          } else {
-            Visibility[i] = true;
-          }
-        }
-      }
-    }
-
-    public static void CliceGridY(int x) {
-      for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-          var buff = (CNewGridFigure)Components[i];
-          if (buff.YCoord != x) {
-            Visibility[i] = false;
-          } else {
-            Visibility[i] = true;
-          }
-        }
-      }
-    }
-
-    public static void CliceGridZ(int x, int y, int z) {
-      for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-          var buff = (CNewGridFigure)Components[i];
-          if (buff.XCoord != x && buff.YCoord != y && buff.ZCoord != z) {
-            Visibility[i] = false;
-          } else {
-            Visibility[i] = true;
-          }
-        }
-      }
     }
   }
 }
