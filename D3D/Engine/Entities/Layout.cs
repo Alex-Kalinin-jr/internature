@@ -38,6 +38,13 @@ namespace D3D {
       cliceBar.YTrackbarObj.Tag = "ySlice";
       cliceBar.ZTrackbarObj.Tag = "zSlice";
       AddComponent(cliceBar);
+
+      var checkWholeGrid = new CheckBox();
+      checkWholeGrid.Checked = true;
+      checkWholeGrid.Text = "Slicing";
+      checkWholeGrid.Tag = "Slicing";
+      renderForm.RenderFormObj.Controls.Add(checkWholeGrid);
+      checkWholeGrid.Location = new System.Drawing.Point(225, 450);
     }
   }
 }

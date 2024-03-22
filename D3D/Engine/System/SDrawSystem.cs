@@ -75,6 +75,14 @@ namespace D3D {
       }
     }
 
+    public static void RestoreAllGrids() {
+      for (int i = 0; i < Components.Count; ++i) {
+        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
+            Visibility[i] = true;
+        }
+      }
+    }
+
 
     // it is intended that forming of indices array was perfomed in the next way:
     private static void PrepareClicing(CGridFigure figure, Vector3 vec) {

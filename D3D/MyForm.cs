@@ -57,6 +57,13 @@ namespace D3D {
       var button = _layout.GetComponent<CButton>();
       button.ButtonObj.Click += ChangeLightColor;
 
+      var form = _layout.GetComponent<CRenderForm>().RenderFormObj;
+      foreach(var control in form.Controls) {
+        if (control is CheckBox && ((CheckBox)control).Tag.ToString() == "Slicing") {
+          ((CheckBox)control).CheckedChanged += TurnOnOffSliceMode;
+        }
+      }
+
       Renderer.GetRenderer(renderForm.Handle);
       renderForm.MouseDown += new MouseEventHandler(MyFormMouseDown);
       renderForm.MouseMove += new MouseEventHandler(MyFormMouseMove);
@@ -64,6 +71,25 @@ namespace D3D {
       renderForm.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
 
     }
+
+
+    private void TurnOnOffSliceMode(Object sender, EventArgs e) {
+      var cliceBar = _layout.GetComponent<CCliceTrackBar>();
+      if (((CheckBox)sender).Checked) {
+        CliceGridNewly(null, null);
+        cliceBar.XTrackbarObj.Scroll += CliceGridNewly;
+        cliceBar.YTrackbarObj.Scroll += CliceGridNewly;
+        cliceBar.ZTrackbarObj.Scroll += CliceGridNewly;
+      } else {
+        DrawSystem.RestoreAllGrids();
+        cliceBar.XTrackbarObj.Scroll -= CliceGridNewly;
+        cliceBar.YTrackbarObj.Scroll -= CliceGridNewly;
+        cliceBar.ZTrackbarObj.Scroll -= CliceGridNewly;
+      }
+    }
+
+
+
 
 
     public void Run() {
