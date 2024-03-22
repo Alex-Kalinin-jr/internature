@@ -144,7 +144,7 @@ namespace D3D {
     }
 
     private void RenderCallback() {
-      var renderer = Renderer.GetRenderer();
+      var renderer = Renderer.GetRenderer(_form.Handle);
       renderer.Update();
       CameraSystem.Update();
       TransformSystem.Update();
