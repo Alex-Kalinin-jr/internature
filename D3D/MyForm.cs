@@ -35,32 +35,26 @@ namespace D3D {
                                 Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
-      ////////////////////////////////////////////////////////////////////
-      // string text = "W - move forward\nA - move left\nS - move backward\nD - move right\n= - move up\n- - move down\nRMB - movings\nWheel-Pressed - rotation";
-      // AddLabel("help", text, new System.Drawing.Point(25, 25));
-      // AddLabel("lightXlabel", "x-coord", new System.Drawing.Point(25, 160));
-      // AddLabel("lightYlabel", "y-coord", new System.Drawing.Point(25, 210));
-      // AddLabel("lightZlabel", "z-coord", new System.Drawing.Point(25, 260));
-
-      // AddTrackbar("lightX", new System.Drawing.Point(100, 150), ChangeLightPosition, -100, 100, 10);
-      // AddTrackbar("lightY", new System.Drawing.Point(100, 190), ChangeLightPosition, -100, 100, 10);
-      // AddTrackbar("lightZ", new System.Drawing.Point(100, 230), ChangeLightPosition, -100, 100, 10);
-      // AddButton(new System.Drawing.Point(25, 300), "light color", ChangeLightColor);
 
       AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 10));
       AddRadioButton("line", "Line", new System.Drawing.Point(20, 30), ChangePipeShowType);
       AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 50), ChangePipeShowType);
 
 
-      AddCheckBox("Slice", "Slice", new System.Drawing.Point(50, 70), TurnOnOffSliceMode);
-      AddLabel("sliceXlabel", "X", new System.Drawing.Point(20, 100));
-      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(20, 140));
-      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(20, 180));
+      AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 80), TurnOnOffSliceMode);
+      AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 115));
+      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 155));
+      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 195));
 
-      AddTrackbar("sliceX", new System.Drawing.Point(40, 95), CliceGridNewly, 0, 20, 1);
-      AddTrackbar("sliceY", new System.Drawing.Point(40, 135), CliceGridNewly, 0, 20, 1);
-      AddTrackbar("sliceZ", new System.Drawing.Point(40, 175), CliceGridNewly, 0, 20, 1);
+      AddCheckBox("checkX", "", new System.Drawing.Point(30, 115), SetXSliceVisibility);
+      AddCheckBox("checkY", "", new System.Drawing.Point(30, 155), SetYSliceVisibility);
+      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 195), SetZSliceVisibility);
 
+      AddTrackbar("sliceX", new System.Drawing.Point(50, 115), CliceGridNewly, 0, 20, 1);
+      AddTrackbar("sliceY", new System.Drawing.Point(50, 155), CliceGridNewly, 0, 20, 1);
+      AddTrackbar("sliceZ", new System.Drawing.Point(50, 195), CliceGridNewly, 0, 20, 1);
+
+      HideInvisibleElements();
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
@@ -69,25 +63,50 @@ namespace D3D {
     }
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void AddRadioButton(string name, string text, System.Drawing.Point position, EventHandler handler) {
-      var radioButton = new RadioButton();
-      radioButton.Name = name;
-      radioButton.Text = text;
-      radioButton.Location = position;
-      radioButton.AutoSize = true;
-      radioButton.CheckedChanged += handler;
-      _form.Controls.Add(radioButton);
+    private void HideInvisibleElements() {
+      SetVisibility(false, "checkX");
+      SetVisibility(false, "checkY");
+      SetVisibility(false, "checkZ");
+      SetVisibility(false, "sliceX");
+      SetVisibility(false, "sliceY");
+      SetVisibility(false, "sliceZ");
+      SetVisibility(false, "sliceXlabel");
+      SetVisibility(false, "sliceYlabel");
+      SetVisibility(false, "sliceZlabel");
     }
 
-    private void AddLabel(string name, string text, System.Drawing.Point pos) {
-      Label label = new Label();
-      label.AutoSize = true;
-      label.Location = pos;
-      label.Name = name;
-      label.TabIndex = 0;
-      label.Text = text;
-      label.TextAlign = ContentAlignment.MiddleLeft;
-      _form.Controls.Add(label);
+    private void SetVisibility(bool visible, string name) {
+      var controls = _form.Controls.Find(name, true);
+      foreach (var control in controls) {
+        control.Visible = visible;
+      }
+    }
+
+    private void SetXSliceVisibility(Object Sender, EventArgs e) {
+      var box = Sender as CheckBox;
+      if (box.Checked) {
+        SetVisibility(true, "sliceX");
+      } else {
+        SetVisibility(false, "sliceX");
+      }
+    }
+
+    private void SetYSliceVisibility(Object Sender, EventArgs e) {
+      var box = Sender as CheckBox;
+      if (box.Checked) {
+        SetVisibility(true, "sliceY");
+      } else {
+        SetVisibility(false, "sliceY");
+      }
+    }
+
+    private void SetZSliceVisibility(Object Sender, EventArgs e) {
+      var box = Sender as CheckBox;
+      if (box.Checked) {
+        SetVisibility(true, "sliceZ");
+      } else {
+        SetVisibility(false, "sliceZ");
+      }
     }
 
     private void TurnOnOffSliceMode(Object sender, EventArgs e) {
@@ -99,15 +118,21 @@ namespace D3D {
       var zTrackbar = control[0] as TrackBar;
 
       if (((CheckBox)sender).Checked) {
+        SetVisibility(true, "checkX");
+        SetVisibility(true, "checkY");
+        SetVisibility(true, "checkZ");
+        SetVisibility(true, "sliceXlabel");
+        SetVisibility(true, "sliceYlabel");
+        SetVisibility(true, "sliceZlabel");
         CliceGridNewly(null, null);
-        xTrackbar.Scroll += CliceGridNewly;
-        yTrackbar.Scroll += CliceGridNewly;
-        zTrackbar.Scroll += CliceGridNewly;
       } else {
         DrawSystem.RestoreAllGrids();
-        xTrackbar.Scroll -= CliceGridNewly;
-        yTrackbar.Scroll -= CliceGridNewly;
-        zTrackbar.Scroll -= CliceGridNewly;
+        SetVisibility(false, "checkX");
+        SetVisibility(false, "checkY");
+        SetVisibility(false, "checkZ");
+        SetVisibility(false, "sliceXlabel");
+        SetVisibility(false, "sliceYlabel");
+        SetVisibility(false, "sliceZlabel");
       }
     }
 
@@ -263,11 +288,34 @@ namespace D3D {
     private void AddCheckBox(string name, string text, System.Drawing.Point position, EventHandler handler) {
       var checkBox = new CheckBox();
       checkBox.Checked = false;
-      checkBox.Text = "Slicing";
-      checkBox.Tag = "Slicing";
+      checkBox.AutoSize = true;
+      checkBox.Text = text;
+      checkBox.Name = name;
       checkBox.Location = position;
-      _form.Controls.Add(checkBox);
       checkBox.CheckedChanged += handler;
+      _form.Controls.Add(checkBox);
     }
+
+    private void AddRadioButton(string name, string text, System.Drawing.Point position, EventHandler handler) {
+      var radioButton = new RadioButton();
+      radioButton.Name = name;
+      radioButton.Text = text;
+      radioButton.Location = position;
+      radioButton.AutoSize = true;
+      radioButton.CheckedChanged += handler;
+      _form.Controls.Add(radioButton);
+    }
+
+    private void AddLabel(string name, string text, System.Drawing.Point pos) {
+      Label label = new Label();
+      label.AutoSize = true;
+      label.Location = pos;
+      label.Name = name;
+      label.TabIndex = 0;
+      label.Text = text;
+      label.TextAlign = ContentAlignment.MiddleLeft;
+      _form.Controls.Add(label);
+    }
+
   }
 }
