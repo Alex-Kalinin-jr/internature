@@ -9,7 +9,7 @@ namespace D3D {
     Grid
   };
 
-  public class DrawSystem : BaseSystem<CFigure> {
+  public class DrawSystem : BaseSystem<CMesh> {
     public static List<bool> Visibility = new List<bool>();
     public static List<FigureType> Types = new List<FigureType>();
 
@@ -18,13 +18,13 @@ namespace D3D {
         { FigureType.Pipe, FigureType.Line },
     };
 
-    public static void Register(CFigure figure, FigureType type) {
+    public static void Register(CMesh figure, FigureType type) {
       Components.Add(figure);
       Visibility.Add(true);
       Types.Add(type);
     }
 
-    new public static void Register(CFigure figure) {
+    new public static void Register(CMesh figure) {
       Components.Add(figure);
       Visibility.Add(true);
       Types.Add(FigureType.General);
@@ -40,12 +40,12 @@ namespace D3D {
     }
 
     public static void ChangePipeType(FigureType type) {
-      FigureType antyType = _antitypes[type];
+      FigureType antiType = _antitypes[type];
       foreach (var figure in Components) {
         int ind = Components.IndexOf(figure);
         if (Types[ind] == type) {
           Visibility[ind] = true;
-        } else if (Types[ind] == antyType) {
+        } else if (Types[ind] == antiType) {
           Visibility[ind] = false;
         }
       }
@@ -53,33 +53,22 @@ namespace D3D {
 
     public static void CliceGrid(int x, int y, int z) {
       for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-          var buff = (CNewGridFigure)Components[i];
-          if (buff.XCoord != x && buff.YCoord != y && buff.ZCoord != z) {
-            Visibility[i] = false;
-          } else {
-            Visibility[i] = true;
-          }
-        }
+// here i should adjust light buffer data
       }
     }
 
     public static void RestoreAllGrids() {
       for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-            Visibility[i] = true;
-        }
+// here i should adjust light buffer data
       }
     }
 
-    private static void DrawFigure(CFigure figure) {
-
-      var vertices = figure.MeshObj.Vertices.ToArray();
-      var indices = figure.MeshObj.Indices.ToArray();
+    private static void DrawFigure(CMesh figure) {
+      var vertices = figure.Vertices.ToArray();
+      var indices = figure.Indices.ToArray();
       var matrix = figure.TransformObj.TransformObj;
-      var lights = figure.EntityObj.GetComponent<CLight>();
-      PsLightConstantBuffer[] light = lights.LightDataObj.ToArray();
-      var topology = figure.TopologyObj.TopologyObj;
+      PsLightConstantBuffer[] light = figure.EntityObj.GetComponent<CLight>().LightDataObj.ToArray();
+      var topology = figure.Topology;
 
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology);
