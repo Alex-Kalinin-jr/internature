@@ -43,44 +43,6 @@ namespace D3D {
       return (vertices, indices);
     }
 
-
-    public static Scene CreateTestingScene() {
-      var scene = new Scene();
-      float xVal = 0.0f;
-      float zVal = 0.0f;
-      for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-          VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-          buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(xVal, 0.0f, zVal));
-          scene.AddComponent(new CFigure("Resources/Tree.obj", buff));
-          xVal += 5.0f;
-        }
-        zVal += 5.0f;
-        xVal = 0.0f;
-      }
-      return scene;
-    }
-
-
-    public static Scene CreateGridTestingScene() {
-      var scene = new Scene();
-      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      int x = 10;
-      int y = 10;
-      int z = 10;
-      var fig = new CGridFigure(CreateTestingGridMesh(x, y, z), buff, default, PrimitiveTopology.LineList);
-      fig.CurrentXCount = x;
-      fig.CurrentYCount = y;
-      fig.CurrentZCount = z;
-      fig.XCount = x;
-      fig.YCount = y;
-      fig.ZCount = z;
-      scene.AddComponent(fig);
-      return scene;
-    }
-
-
     public static Scene CreateNewGridTestingScene() {
       var scene = new Scene();
       var figures = CreateNewGridFigures(20, 20, 10);
@@ -90,20 +52,6 @@ namespace D3D {
       return scene;
     }
 
-
-
-    public static Scene CreatePipeTestingScene() {
-      var scene = new Scene();
-      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-      var mesh = Generator.CreateTestingLineMesh();
-      scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
-      scene.AddComponent(new CFigure(MeshConverter.ConvertToPipe(mesh, 0.5f, 30), buff,
-                                     FigureType.Pipe, PrimitiveTopology.LineList));
-      return scene;
-    }
-
-
     public static Scene CreateAnotherPipeTestingScene() {
       var scene = new Scene();
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
@@ -111,7 +59,6 @@ namespace D3D {
       var pipeMesh = MeshConverter.ConvertToPipe(mesh, 0.5f, 40);
       for (int i = 0; i < 1; ++i) {
         for (int j = 0; j < 1; ++j) {
-          // buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(5 * i, 0.0f, 5 * j));
           buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(2.0f, 0.0f, 2.0f));
           scene.AddComponent(new CFigure(mesh, buff, FigureType.Line, PrimitiveTopology.LineStrip));
           scene.AddComponent(new CFigure(pipeMesh, buff, FigureType.Pipe, PrimitiveTopology.LineList));
@@ -120,46 +67,13 @@ namespace D3D {
       }
       return scene;
     }
-
-
+    
     public static CMesh CreateTestingQuadroMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
           new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)), new VsBuffer(new Vector3(1.0f, 0.0f, 0.0f)),
           new VsBuffer(new Vector3(1.0f, 0.0f, 1.0f)), new VsBuffer(new Vector3(0.0f, 0.0f, 1.0f))
       };
       return new CMesh(vertices, new List<short>() { 0, 1, 2, 3, 0 });
-    }
-
-
-    // to be refactored
-    public static CMesh CreateTestingGridMesh(int xCount = 30, int yCount = 30, int zCount = 10) {
-      List<VsBuffer> vertices = new List<VsBuffer>();
-      List<short> indices = new List<short>();
-      List<short> pseudoIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
-      int p = 0;
-      var random = new Random();
-      float r = (float)random.NextDouble(0.0f, 1.0f);
-      float g = (float)random.NextDouble(0.0f, 0.0f);
-      float b = (float)random.NextDouble(0.0f, 1.0f);
-      for (int i = 0; i < xCount; ++i) {
-        Vector3 color = new Vector3(r, g, b);
-        for (int j = 0; j < yCount; ++j) {
-          for (int k = 0; k < zCount; ++k) {
-            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color));
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color));
-            indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
-            p += 8;
-          }
-        }
-      }
-      var mesh = new CMesh(vertices, indices);
-      return mesh;
     }
 
     public static List<CNewGridFigure> CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
@@ -197,17 +111,6 @@ namespace D3D {
       return output;
     }
 
-
-    public static CMesh CreateTestingLineMesh() {
-      List<VsBuffer> vertices = new List<VsBuffer>() {
-          new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
-          new VsBuffer(new Vector3(0.0f, 0.5f, 2.0f)),
-          new VsBuffer(new Vector3(0.0f, 0.0f, 4.0f))
-      };
-      return new CMesh(vertices, new List<short>() { 0, 1, 2 });
-    }
-
-
     public static CMesh CreateAnotherTestingLineMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
           new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
@@ -219,7 +122,6 @@ namespace D3D {
       return new CMesh(vertices, new List<short>() { 0, 1, 2, 3 });
     }
 
-
     public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {
       var output = new List<PsLightConstantBuffer> {
         new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
@@ -228,7 +130,6 @@ namespace D3D {
       };
       return output;
     }
-
 
     public static Matrix ComputeTestingModelMatrix(Vector3 rotations, Vector3 translations) {
       var buff = Matrix.RotationYawPitchRoll(rotations.X, rotations.Y, rotations.Z) * Matrix.Translation(translations);

@@ -10,7 +10,7 @@ namespace D3D {
     public Vector3 Right = Vector3.UnitX;
 
     public float Pitch = 0.0f;
-    public float Yaw = 0.0f;
+    public float Yaw = MathUtil.PiOverTwo;
     public float Fov = MathUtil.PiOverTwo;
 
     public CCamera(Vector3 position, float aspectRatio) {

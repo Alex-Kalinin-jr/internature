@@ -36,6 +36,12 @@ namespace D3D {
 
     private static Renderer _instance;
 
+
+    // depth buffer
+    Texture2DDescription _depthTextureDesc;
+    DepthStencilStateDescription _depthStencilDesc;
+    DepthStencilState _depthStencilState;
+
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
       _verticesCount = 0;
@@ -117,9 +123,11 @@ namespace D3D {
     }
 
     public void Update() {
-      _context3D.ClearDepthStencilView(_depthStencilView, DepthStencilClearFlags.Depth, 1.0f, 0);
       _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
+      _context3D.ClearDepthStencilView(_depthStencilView, 
+                                        DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil,
+                                        1.0f, 0);
     }
 
     
@@ -195,35 +203,41 @@ namespace D3D {
 
     private void InitializeDepthBuffer() {
 
-      var depthStencilDesc = new DepthStencilStateDescription {
-        IsDepthEnabled = true,
-        DepthWriteMask = DepthWriteMask.All,
-        DepthComparison = Comparison.Less,
-        IsStencilEnabled = false
-      };
-
-      var depthStencilState = new DepthStencilState(_device3D, depthStencilDesc);
-      _context3D.OutputMerger.SetDepthStencilState(depthStencilState);
-
-      var depthBufferDesc = new Texture2DDescription {
+      _depthTextureDesc = new Texture2DDescription {
         Width = Width,
         Height = Height,
-        ArraySize = 1,
         MipLevels = 1,
-        Format = Format.D24_UNorm_S8_UInt,
+        ArraySize = 1,
+        Format = Format.D32_Float,
         SampleDescription = new SampleDescription(1, 0),
         Usage = ResourceUsage.Default,
         BindFlags = BindFlags.DepthStencil,
         CpuAccessFlags = CpuAccessFlags.None,
         OptionFlags = ResourceOptionFlags.None
       };
+      var depthBuffer = new Texture2D(_device3D, _depthTextureDesc);
 
-      var depthBuffer = new Texture2D(_device3D, depthBufferDesc);
 
       var depthStencilViewDesc = new DepthStencilViewDescription {
-        Format = depthBufferDesc.Format,
-        Dimension = DepthStencilViewDimension.Texture2D
+        Format = _depthTextureDesc.Format,
+        Dimension = DepthStencilViewDimension.Texture2D,
       };
+      depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+
+
+
+// here
+      _depthStencilDesc = new DepthStencilStateDescription {
+        IsDepthEnabled = true,
+        DepthWriteMask = DepthWriteMask.All,
+        DepthComparison = Comparison.Less,
+        IsStencilEnabled = true
+      };
+
+      _depthStencilState = new DepthStencilState(_device3D, _depthStencilDesc);
+      _context3D.OutputMerger.SetDepthStencilState(_depthStencilState);
+// here
 
       _depthStencilView = new DepthStencilView(_device3D, depthBuffer, depthStencilViewDesc);
       _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);

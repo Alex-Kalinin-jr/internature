@@ -1,6 +1,4 @@
-﻿using SharpDX;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 
 namespace D3D {
 
@@ -19,7 +17,6 @@ namespace D3D {
         { FigureType.Line, FigureType.Pipe },
         { FigureType.Pipe, FigureType.Line },
     };
-
 
     public static void Register(CFigure figure, FigureType type) {
       Components.Add(figure);
@@ -54,14 +51,6 @@ namespace D3D {
       }
     }
 
-    public static void CliceGrid(Vector3 vec) {
-      foreach (var figure in Components) { 
-        if (figure.GetType().Equals(typeof(CGridFigure))) {
-          PrepareClicing((CGridFigure)figure, vec);
-        } 
-      }
-    }
-
     public static void CliceGrid(int x, int y, int z) {
       for (int i = 0; i < Components.Count; ++i) {
         if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
@@ -81,43 +70,6 @@ namespace D3D {
             Visibility[i] = true;
         }
       }
-    }
-
-
-
-    // it is intended that forming of indices array was perfomed in the next way:
-    private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
-      var indCountInCube = 24;
-
-      figure.CurrentXCount = (int)vec.X;
-      figure.CurrentYCount = (int)vec.Y;
-      figure.CurrentZCount = (int)vec.Z;
-
-      int fullY = figure.YCount;
-      int fullZ = figure.ZCount;
-
-      int x = figure.CurrentXCount;
-      int y = figure.CurrentYCount;
-      int z = figure.CurrentZCount;
-
-      var firstFigure = figure.FullIndices.GetRange(0, indCountInCube * fullZ * fullY * x);
-
-      var nextFigure = new List<short>();
-      for (int i = 0; i < x; ++i) {
-        int start = indCountInCube * i * fullZ * fullY;
-        int bias = indCountInCube * fullZ * y;
-        nextFigure.AddRange(firstFigure.GetRange(start, bias));
-      }
-
-      var lastFigure = new List<short>();
-      for (int i = 0; i < y * x; ++i) {
-        int start = indCountInCube * i * fullZ;
-        int bias = indCountInCube * z;
-        lastFigure.AddRange(nextFigure.GetRange(start, bias));
-      }
-
-
-      figure.MeshObj.Indices = lastFigure;
     }
 
     private static void DrawFigure(CFigure figure) {
