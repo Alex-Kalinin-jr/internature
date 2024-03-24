@@ -41,6 +41,8 @@ namespace D3D {
     Texture2DDescription _depthTextureDesc;
     DepthStencilStateDescription _depthStencilDesc;
     DepthStencilState _depthStencilState;
+    Texture2D _depthBuffer;
+    DepthStencilViewDescription _depthStencilViewDesc;
 
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
@@ -191,7 +193,6 @@ namespace D3D {
       _swapChain.Present(1, PresentFlags.None);
     }
 
-
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void Dispose() {
       _renderTargetView.Dispose();
@@ -199,6 +200,8 @@ namespace D3D {
       _device3D.Dispose();
       _context3D.Dispose();
       _depthStencilView.Dispose();
+      _depthStencilState.Dispose();
+      _depthBuffer.Dispose();
     }
 
     private void InitializeDepthBuffer() {
@@ -215,31 +218,20 @@ namespace D3D {
         CpuAccessFlags = CpuAccessFlags.None,
         OptionFlags = ResourceOptionFlags.None
       };
-      var depthBuffer = new Texture2D(_device3D, _depthTextureDesc);
+      _depthBuffer = new Texture2D(_device3D, _depthTextureDesc);
 
 
-      var depthStencilViewDesc = new DepthStencilViewDescription {
+      _depthStencilViewDesc = new DepthStencilViewDescription {
         Format = _depthTextureDesc.Format,
         Dimension = DepthStencilViewDimension.Texture2D,
       };
-      depthStencilViewDesc.Texture2D.MipSlice = 0;
+      _depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-
-
-
-// here
-      _depthStencilDesc = new DepthStencilStateDescription {
-        IsDepthEnabled = true,
-        DepthWriteMask = DepthWriteMask.All,
-        DepthComparison = Comparison.Less,
-        IsStencilEnabled = true
-      };
-
+      _depthStencilDesc = new DepthStencilStateDescription();
       _depthStencilState = new DepthStencilState(_device3D, _depthStencilDesc);
       _context3D.OutputMerger.SetDepthStencilState(_depthStencilState);
-// here
+      _depthStencilView = new DepthStencilView(_device3D, _depthBuffer, _depthStencilViewDesc);
 
-      _depthStencilView = new DepthStencilView(_device3D, depthBuffer, depthStencilViewDesc);
       _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);
     }
   }
