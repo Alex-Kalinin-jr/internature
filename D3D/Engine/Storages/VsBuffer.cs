@@ -15,7 +15,9 @@ public struct VsBuffer {
                   Vector3 norm = default, 
                   Vector2 uv = default,
                   Vector3 color = default,
-                  int x = -1, int y = -1, int z = -1) {
+                  int x = -1, 
+                  int y = -1, 
+                  int z = -1) {
     Position = pos;
     Tex = uv;
     Normal = norm;

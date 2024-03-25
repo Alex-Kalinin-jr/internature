@@ -19,11 +19,12 @@ struct PSIn
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 fragPos : POSITION1;
-    float3 color : COLOR;
+    float4 color : COLOR;
 };
 
 float4 main(PSIn input) : SV_TARGET
 {
+    float alpha = input.color.a;
     float3 volumeColor = input.color;
     float3 result = float3(0.0f, 0.0f, 0.0f);
     
@@ -47,6 +48,6 @@ float4 main(PSIn input) : SV_TARGET
     
     result *= volumeColor;
     
-    // return float4(result, 1.0);
-    return float4(volumeColor, 1.0);
+    // return float4(volumeColor, alpha);
+    return input.color;
 }

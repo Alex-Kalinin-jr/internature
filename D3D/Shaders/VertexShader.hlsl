@@ -4,7 +4,7 @@
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 fragPos : POSITION1;
-    float3 color : COLOR;
+    float4 color : COLOR;
 };
 
 struct VSIn
@@ -44,16 +44,22 @@ VSOut main(VSIn input)
     
     output.tex = input.tex;
     output.normal = normalize(mul(input.normal, (float3x3) world));
-    if (input.coords[0] == -1 && slice[0] == -1)
+    
+    
+    
+    if (input.coords[0] == -1 || input.coords[1] == -1 || input.coords[2] == -1 || 
+        (slice[0] == -1 && slice[1] == -1 && slice[2] == -1))
     {
-        output.color = input.color;
-        
+        output.color = float4(input.color, 1.0); 
     }
     else
     {
-        output.color = float3(1.0, 0.0, 0.0);
+        output.color = float4(0.0, 0.0, 0.0, 0.0);
 
     }
 
+        
+
+    
     return output;
 }

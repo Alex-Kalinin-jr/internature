@@ -82,7 +82,7 @@ namespace D3D {
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
-      VsSliceConstantBuffer buff = new VsSliceConstantBuffer();
+      VsSliceConstantBuffer buff = new VsSliceConstantBuffer(-1, -1, -1);
       renderer.SetSliceConstantBuffer(ref buff);
       renderer.Draw(indices.Length);
 

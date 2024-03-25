@@ -12,7 +12,7 @@ namespace D3D {
       Xcoord = x;
       Ycoord = y;
       Zcoord = z;
-      Bias = 0;
+      Bias = -1;
     }
   }
 
