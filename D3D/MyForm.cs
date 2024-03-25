@@ -115,7 +115,6 @@ namespace D3D {
       renderer.Update();
       CameraSystem.Update();
       TransformSystem.Update();
-      LightSystem.Update();
       DrawSystem.Update();
       renderer.Present();
     }

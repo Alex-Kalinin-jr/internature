@@ -70,15 +70,12 @@ namespace D3D {
       var vertices = figure.Vertices.ToArray();
       var indices = figure.Indices.ToArray();
       var matrix = figure.TransformObj.TransformObj;
-      var lights = figure.EntityObj.GetComponent<CLight>();
-      PsLightConstantBuffer[] light = lights.LightDataObj.ToArray();
       var topology = figure.TopologyObj;
 
 
 
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology); 
-      renderer.SetLightConstantBuffer(ref light);
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
