@@ -76,14 +76,14 @@ namespace D3D {
         for (int j = 0; j < yCount; ++j) {
           for (int k = 0; k < zCount; ++k) {
             List<VsBuffer> pseudoVertices = new List<VsBuffer>();
-            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color)); //0
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color)); //1
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color)); //2
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color)); //3
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color)); //4
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color)); //5
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color)); //6
-            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color)); //7
+            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color, i, j, k)); //1
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color, i, j, k)); //2
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color, i, j, k)); //4
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color, i, j, k)); //5
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, i, j, k)); //6
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, i, j, k)); //7
             vertices.AddRange(pseudoVertices);
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             p += 8;

@@ -13,6 +13,7 @@ struct VSIn
     float2 tex : TEXCOORD0;
     float3 normal : NORMAL;
     float3 color : COLOR;
+    int3 coords : GRIDCOORDS;
 };
 
 cbuffer VsMvpConstantBuffer : register(b0)
@@ -37,7 +38,16 @@ VSOut main(VSIn input)
     
     output.tex = input.tex;
     output.normal = normalize(mul(input.normal, (float3x3) world));
-    output.color = input.color;
+    if (input.coords[0] == -1)
+    {
+        output.color = input.color;
+        
+    }
+    else
+    {
+        output.color = float3(1.0, 0.0, 0.0);
+
+    }
 
     return output;
 }

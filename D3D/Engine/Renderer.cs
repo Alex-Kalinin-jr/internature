@@ -47,7 +47,8 @@ namespace D3D {
         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
         new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
         new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
-        new InputElement("COLOR", 0, Format.R32G32B32_Float, 32, 0, InputClassification.PerVertexData, 0)
+        new InputElement("COLOR", 0, Format.R32G32B32_Float, 32, 0, InputClassification.PerVertexData, 0),
+        new InputElement("GRIDCOORDS", 0, Format.R32G32B32_SInt, 44, 0, InputClassification.PerVertexData, 0)
       };
       InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");

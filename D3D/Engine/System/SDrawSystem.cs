@@ -74,7 +74,7 @@ namespace D3D {
       var topology = figure.TopologyObj;
 
       var renderer = Renderer.GetRenderer();
-      renderer.ChangePrimitiveTopology(topology);
+      renderer.ChangePrimitiveTopology(topology); 
       renderer.SetLightConstantBuffer(ref light);
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
