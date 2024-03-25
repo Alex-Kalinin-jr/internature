@@ -58,13 +58,6 @@ namespace D3D {
       _sliceCoords.Zcoord = -1;
     }
 
-
-
-    // it is intended that forming of indices array was perfomed in the next way:
-    private static void PrepareClicing(CMesh figure, Vector3 vec) {
-// here
-    }
-
     private static void DrawFigure(CMesh figure) {
 
       var vertices = figure.Vertices.ToArray();

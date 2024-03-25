@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Components\Camera\CCamera.cs" />
+    <Compile Include="Engine\Components\CGridMesh.cs" />
     <Compile Include="Engine\Components\CLight.cs" />
     <Compile Include="Engine\Components\Component.cs" />
     <Compile Include="Engine\Components\Camera\CYaw.cs" />

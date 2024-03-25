@@ -60,7 +60,7 @@ namespace D3D {
       return scene;
     }
 
-    public static CMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
+    public static CGridMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
@@ -87,12 +87,10 @@ namespace D3D {
             vertices.AddRange(pseudoVertices);
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             p += 8;
-
-
           }
         }
       }
-      var mesh = new CMesh(vertices, indices, FigureType.Grid);
+      var mesh = new CGridMesh(vertices, indices, FigureType.Grid);
       mesh.TopologyObj = PrimitiveTopology.TriangleList;
 
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
