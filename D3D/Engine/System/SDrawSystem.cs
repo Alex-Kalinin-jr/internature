@@ -13,7 +13,7 @@ namespace D3D {
 
   public class DrawSystem : BaseSystem<CMesh> {
     public static List<bool> Visibility = new List<bool>();
-    public static int slice = -1;
+    static VsSliceConstantBuffer _sliceCoords = new VsSliceConstantBuffer(-1, -1, -1);
 
     private static Dictionary<FigureType, FigureType> _antitypes = new Dictionary<FigureType, FigureType>() {
         { FigureType.Line, FigureType.Pipe },
@@ -47,15 +47,15 @@ namespace D3D {
     }
 
     public static void CliceGrid(int x, int y, int z) {
-      for (int i = 0; i < Components.Count; ++i) {
-// here
-      }
+      _sliceCoords.Xcoord = x;
+      _sliceCoords.Ycoord = y;
+      _sliceCoords.Zcoord = z;
     }
 
     public static void RestoreAllGrids() {
-      for (int i = 0; i < Components.Count; ++i) {
-// here
-      }
+      _sliceCoords.Xcoord = -1;
+      _sliceCoords.Ycoord = -1;
+      _sliceCoords.Zcoord = -1;
     }
 
 
@@ -82,8 +82,8 @@ namespace D3D {
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
-      VsSliceConstantBuffer buff = new VsSliceConstantBuffer(3, 2, 3);
-      renderer.SetSliceConstantBuffer(ref buff);
+
+      renderer.SetSliceConstantBuffer(ref _sliceCoords);
       renderer.Draw(indices.Length);
 
     }
