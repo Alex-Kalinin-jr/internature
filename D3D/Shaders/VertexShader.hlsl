@@ -23,6 +23,7 @@ cbuffer VsMvpConstantBuffer : register(b0)
     Matrix projection;
 };
 
+
 cbuffer VsSliceConstantBuffer : register(b1)
 {
     int4 slice;
