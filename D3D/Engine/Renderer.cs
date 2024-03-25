@@ -398,7 +398,6 @@ namespace D3D {
       }
     }
 
-
     public void SetIndicesBuffer(ref short[] indices) {
       if (_indexBuffer == null || _indicesCount != indices.Length) {
         _indexBuffer?.Dispose();
@@ -411,9 +410,6 @@ namespace D3D {
       }
     }
 
-
-
-
     public void SetMvpConstantBuffer(ref VsMvpConstantBuffer matrices) {
       if (_constantBuffer == null) {
         _constantBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref matrices);
@@ -422,52 +418,6 @@ namespace D3D {
         _context3D.UpdateSubresource(ref matrices, _constantBuffer);
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public void Draw(int count) {
       _context3D.DrawIndexed(count, 0, 0);
@@ -523,3 +473,4 @@ namespace D3D {
     }
   }
 }
+ */

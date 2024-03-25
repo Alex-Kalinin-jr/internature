@@ -83,7 +83,7 @@ namespace D3D {
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, new int[3] { i, j, k })); //6
             vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, new int[3] { i, j, k })); //7
             mesh.Vertices.AddRange(vertices);
-            mesh.Indices.AddRange(pseudoIndices.Select(v => (short)(v + i * 36)));
+            mesh.Indices.AddRange(pseudoIndices.Select(v => (short)(v + i * 36))); // here to be modified
           }
         }
       }

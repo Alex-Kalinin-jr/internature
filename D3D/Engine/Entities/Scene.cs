@@ -8,7 +8,7 @@ namespace D3D {
       AddComponent(lights);
 
       // Define the position of the camera view
-      var viewPosition = new Vector3(20.0f, 5.0f, -5.0f);
+      var viewPosition = new Vector3(0.0f, 0.0f, -5.0f);
 
       // Calculate aspect ratio (to be refactored for flexibility)
       var aspectRatio = 1024.0f / 768.0f; // Aspect ratio calculated based on width and height

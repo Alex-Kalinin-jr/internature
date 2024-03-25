@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SharpDX;
 using SharpDX.Direct3D;
 
 namespace D3D {
@@ -8,20 +9,28 @@ namespace D3D {
     public CTransform TransformObj; 
     public PrimitiveTopology Topology; 
 
-    // Constructor to initialize CMesh with mesh data loaded from a file
+
     public CMesh(string path) {
       // Load mesh data from file using a generator method
       (Vertices, Indices) = Generator.GenerateMeshFromFile(path);
-      TransformObj = new CTransform(new VsMvpConstantBuffer()); // Create a new transform object
+
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      buff.world = Generator.ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      TransformObj = new CTransform(buff);
+
       Topology = PrimitiveTopology.LineList;
-      DrawSystem.Register(this); // Register this mesh with the draw system for rendering
+      DrawSystem.Register(this);
     }
 
-    // Default constructor to initialize an empty mesh
+
     public CMesh() {
       Vertices = new List<VsBuffer>(); 
       Indices = new List<short>();
-      TransformObj = new CTransform(new VsMvpConstantBuffer()); 
+
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      buff.world = Generator.ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      TransformObj = new CTransform(buff);
+
       Topology = PrimitiveTopology.LineList; 
       DrawSystem.Register(this); 
     }
