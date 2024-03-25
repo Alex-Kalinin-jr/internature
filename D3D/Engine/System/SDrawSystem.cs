@@ -11,26 +11,17 @@ namespace D3D {
     Grid
   };
 
-  public class DrawSystem : BaseSystem<CFigure> {
+  public class DrawSystem : BaseSystem<CMesh> {
     public static List<bool> Visibility = new List<bool>();
-    public static List<FigureType> Types = new List<FigureType>();
 
     private static Dictionary<FigureType, FigureType> _antitypes = new Dictionary<FigureType, FigureType>() {
         { FigureType.Line, FigureType.Pipe },
         { FigureType.Pipe, FigureType.Line },
     };
 
-
-    public static void Register(CFigure figure, FigureType type) {
+    new public static void Register(CMesh figure) {
       Components.Add(figure);
       Visibility.Add(true);
-      Types.Add(type);
-    }
-
-    new public static void Register(CFigure figure) {
-      Components.Add(figure);
-      Visibility.Add(true);
-      Types.Add(FigureType.General);
     }
 
     new public static void Update() {
@@ -46,88 +37,41 @@ namespace D3D {
       FigureType antyType = _antitypes[type];
       foreach (var figure in Components) {
         int ind = Components.IndexOf(figure);
-        if (Types[ind] == type) {
+        if (figure.FigureTypeObj == type) {
           Visibility[ind] = true;
-        } else if (Types[ind] == antyType) {
+        } else if (figure.FigureTypeObj == antyType) {
           Visibility[ind] = false;
         }
       }
     }
 
-    public static void CliceGrid(Vector3 vec) {
-      foreach (var figure in Components) { 
-        if (figure.GetType().Equals(typeof(CGridFigure))) {
-          PrepareClicing((CGridFigure)figure, vec);
-        } 
-      }
-    }
-
     public static void CliceGrid(int x, int y, int z) {
       for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-          var buff = (CNewGridFigure)Components[i];
-          if (buff.XCoord != x && buff.YCoord != y && buff.ZCoord != z) {
-            Visibility[i] = false;
-          } else {
-            Visibility[i] = true;
-          }
-        }
+// here
       }
     }
 
     public static void RestoreAllGrids() {
       for (int i = 0; i < Components.Count; ++i) {
-        if (Components[i].GetType().Equals(typeof(CNewGridFigure))) {
-            Visibility[i] = true;
-        }
+// here
       }
     }
 
 
 
     // it is intended that forming of indices array was perfomed in the next way:
-    private static void PrepareClicing(CGridFigure figure, Vector3 vec) {
-      var indCountInCube = 24;
-
-      figure.CurrentXCount = (int)vec.X;
-      figure.CurrentYCount = (int)vec.Y;
-      figure.CurrentZCount = (int)vec.Z;
-
-      int fullY = figure.YCount;
-      int fullZ = figure.ZCount;
-
-      int x = figure.CurrentXCount;
-      int y = figure.CurrentYCount;
-      int z = figure.CurrentZCount;
-
-      var firstFigure = figure.FullIndices.GetRange(0, indCountInCube * fullZ * fullY * x);
-
-      var nextFigure = new List<short>();
-      for (int i = 0; i < x; ++i) {
-        int start = indCountInCube * i * fullZ * fullY;
-        int bias = indCountInCube * fullZ * y;
-        nextFigure.AddRange(firstFigure.GetRange(start, bias));
-      }
-
-      var lastFigure = new List<short>();
-      for (int i = 0; i < y * x; ++i) {
-        int start = indCountInCube * i * fullZ;
-        int bias = indCountInCube * z;
-        lastFigure.AddRange(nextFigure.GetRange(start, bias));
-      }
-
-
-      figure.MeshObj.Indices = lastFigure;
+    private static void PrepareClicing(CMesh figure, Vector3 vec) {
+// here
     }
 
-    private static void DrawFigure(CFigure figure) {
+    private static void DrawFigure(CMesh figure) {
 
-      var vertices = figure.MeshObj.Vertices.ToArray();
-      var indices = figure.MeshObj.Indices.ToArray();
+      var vertices = figure.Vertices.ToArray();
+      var indices = figure.Indices.ToArray();
       var matrix = figure.TransformObj.TransformObj;
       var lights = figure.EntityObj.GetComponent<CLight>();
       PsLightConstantBuffer[] light = lights.LightDataObj.ToArray();
-      var topology = figure.TopologyObj.TopologyObj;
+      var topology = figure.TopologyObj;
 
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology);

@@ -7,9 +7,9 @@ namespace D3D {
     List<Component> _components = new List<Component>();
 
     public void AddComponent(Component component) {
-      _components.Add(component);
       component.EntityObj = this;
       component.UpdateLinks();
+      _components.Add(component);
     }
 
     public void RemoveComponent<T>() {

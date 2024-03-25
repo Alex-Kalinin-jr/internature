@@ -29,8 +29,7 @@ namespace D3D {
       _form.Name = "MyForm";
       _form.ResumeLayout(false);
       _mousePos = new CMousePos();
-      _scene = new List<Scene> {Generator.CreateNewGridTestingScene(),
-                                Generator.CreateAnotherPipeTestingScene()};
+      _scene = new List<Scene> {Generator.CreateAnotherPipeTestingScene()};
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
 
