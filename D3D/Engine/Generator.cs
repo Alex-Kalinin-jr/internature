@@ -67,15 +67,15 @@ namespace D3D {
                                                       5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                       1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       List<short> lineIndices = new List<short>();
-      List<short> pseudoLineIndices = new List<short>() {0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6};
+      List<short> pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6 };
       int p = 0;
       var random = new Random();
-      for (int i = 0; i < xCount; ++i) {
+      for (int j = 0; j < yCount; ++j) {
         float r = (float)random.NextDouble(0.0f, 1.0f);
         float g = (float)random.NextDouble(0.0f, 0.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
-        for (int j = 0; j < yCount; ++j) {
+        for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
             List<VsBuffer> pseudoVertices = new List<VsBuffer>();
             vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
