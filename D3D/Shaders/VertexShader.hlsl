@@ -23,6 +23,11 @@ cbuffer VsMvpConstantBuffer : register(b0)
     Matrix projection;
 };
 
+cbuffer VsSliceConstantBuffer : register(b1)
+{
+    int4 slice;
+};
+
 
 VSOut main(VSIn input)
 {
@@ -38,7 +43,7 @@ VSOut main(VSIn input)
     
     output.tex = input.tex;
     output.normal = normalize(mul(input.normal, (float3x3) world));
-    if (input.coords[0] == -1)
+    if (input.coords[0] == -1 && slice[0] == -1)
     {
         output.color = input.color;
         

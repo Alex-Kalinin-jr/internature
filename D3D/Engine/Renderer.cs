@@ -31,6 +31,7 @@ namespace D3D {
     private Buffer _indexBuffer;
     private Buffer[] _constantLightBuffers;
     private Buffer _constantBuffer;
+    private Buffer _constantSliceBuffer;
 
     private SharpDX.Color _background = SharpDX.Color.White;
 
@@ -173,6 +174,15 @@ namespace D3D {
         _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
       } else {
         _context3D.UpdateSubresource(ref matrices, _constantBuffer);
+      }
+    }
+
+    public void SetSliceConstantBuffer(ref VsSliceConstantBuffer slice) {
+      if (_constantSliceBuffer == null) {
+        _constantSliceBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref slice);
+        _context3D.VertexShader.SetConstantBuffer(1, _constantSliceBuffer);
+      } else {
+        _context3D.UpdateSubresource(ref slice, _constantSliceBuffer);
       }
     }
 

@@ -13,6 +13,7 @@ namespace D3D {
 
   public class DrawSystem : BaseSystem<CMesh> {
     public static List<bool> Visibility = new List<bool>();
+    public static int slice = -1;
 
     private static Dictionary<FigureType, FigureType> _antitypes = new Dictionary<FigureType, FigureType>() {
         { FigureType.Line, FigureType.Pipe },
@@ -73,12 +74,16 @@ namespace D3D {
       PsLightConstantBuffer[] light = lights.LightDataObj.ToArray();
       var topology = figure.TopologyObj;
 
+
+
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology); 
       renderer.SetLightConstantBuffer(ref light);
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
+      VsSliceConstantBuffer buff = new VsSliceConstantBuffer();
+      renderer.SetSliceConstantBuffer(ref buff);
       renderer.Draw(indices.Length);
 
     }

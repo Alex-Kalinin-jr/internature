@@ -83,6 +83,7 @@
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
     <Compile Include="Engine\MeshConverter.cs" />
+    <Compile Include="Engine\Storages\VsSliceConstantBuffer.cs" />
     <Compile Include="Engine\System\SBaseSystem.cs" />
     <Compile Include="Engine\System\SCameraSystem.cs" />
     <Compile Include="Engine\System\SDrawSystem.cs" />
