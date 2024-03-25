@@ -66,10 +66,10 @@ namespace D3D {
       var topology = figure.TopologyObj;
 
       var renderer = Renderer.GetRenderer();
-      renderer.ChangePrimitiveTopology(topology); 
       renderer.SetVerticesBuffer(ref vertices);
-      renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
+      renderer.ChangePrimitiveTopology(topology); 
+      renderer.SetIndicesBuffer(ref indices);
       renderer.SetSliceConstantBuffer(ref _sliceCoords);
       renderer.Draw(indices.Length);
 
