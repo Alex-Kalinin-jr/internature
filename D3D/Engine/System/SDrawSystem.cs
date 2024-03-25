@@ -65,16 +65,23 @@ namespace D3D {
       var matrix = figure.TransformObj.TransformObj;
       var topology = figure.TopologyObj;
 
-
-
       var renderer = Renderer.GetRenderer();
       renderer.ChangePrimitiveTopology(topology); 
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
-
       renderer.SetSliceConstantBuffer(ref _sliceCoords);
       renderer.Draw(indices.Length);
+
+      if (figure is CGridMesh) {
+        _sliceCoords.Bias = 0;
+        var lineIndices = ((CGridMesh)figure).LineIndices.ToArray();
+        renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineList);
+        renderer.SetIndicesBuffer(ref lineIndices);
+        renderer.SetSliceConstantBuffer(ref _sliceCoords);
+        renderer.Draw(lineIndices.Length);
+        _sliceCoords.Bias = -1;
+      }
 
     }
   }

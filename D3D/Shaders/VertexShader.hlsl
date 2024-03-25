@@ -45,15 +45,21 @@ VSOut main(VSIn input)
     output.tex = input.tex;
     output.normal = normalize(mul(input.normal, (float3x3) world));
     
-    
-    
-    if (input.coords[0] == -1 || input.coords[1] == -1 || input.coords[2] == -1 || 
+
+    if (input.coords[0] == -1 || input.coords[1] == -1 || input.coords[2] == -1 ||
         (slice[0] == -1 && slice[1] == -1 && slice[2] == -1) ||
         (slice[0] == input.coords[0] && slice[0] != -1) ||
         (slice[1] == input.coords[1] && slice[1] != -1) ||
         (slice[2] == input.coords[2] && slice[2] != -1))
     {
-        output.color = float4(input.color, 1.0); 
+        if (slice[3] == 0)
+        {
+            output.color = float4(0.0, 0.0, 0.0, 1.0);
+        }
+        else
+        {
+            output.color = float4(input.color, 1.0);
+        }
     }
     else
     {

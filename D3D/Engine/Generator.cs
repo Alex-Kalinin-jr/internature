@@ -66,6 +66,8 @@ namespace D3D {
       List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
                                                       5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                       1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
+      List<short> lineIndices = new List<short>();
+      List<short> pseudoLineIndices = new List<short>() {0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6};
       int p = 0;
       var random = new Random();
       for (int i = 0; i < xCount; ++i) {
@@ -86,11 +88,13 @@ namespace D3D {
             vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, i, j, k)); //7
             vertices.AddRange(pseudoVertices);
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
+            lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
             p += 8;
           }
         }
       }
       var mesh = new CGridMesh(vertices, indices, FigureType.Grid);
+      mesh.LineIndices = lineIndices;
       mesh.TopologyObj = PrimitiveTopology.TriangleList;
 
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
