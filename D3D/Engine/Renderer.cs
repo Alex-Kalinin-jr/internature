@@ -8,6 +8,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
+using System.Drawing;
 
 namespace D3D {
 
@@ -89,6 +90,25 @@ namespace D3D {
       using (Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0)) {
         _renderTargetView = new RenderTargetView(_device3D, backBuffer);
       }
+
+
+      var blendStateDesc = new BlendStateDescription {
+        AlphaToCoverageEnable = false,
+        IndependentBlendEnable = false,
+      };
+
+      blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
+      blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.SourceAlpha;
+      blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
+      blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Add;
+      blendStateDesc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+      blendStateDesc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
+      blendStateDesc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+      blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+      var blendState = new BlendState(_device3D, blendStateDesc);
+      _context3D.OutputMerger.BlendState = blendState;
+
     }
 
     public void SetViewPort() {

@@ -48,7 +48,10 @@ VSOut main(VSIn input)
     
     
     if (input.coords[0] == -1 || input.coords[1] == -1 || input.coords[2] == -1 || 
-        (slice[0] == -1 && slice[1] == -1 && slice[2] == -1))
+        (slice[0] == -1 && slice[1] == -1 && slice[2] == -1) ||
+        (slice[0] == input.coords[0] && slice[0] != -1) ||
+        (slice[1] == input.coords[1] && slice[1] != -1) ||
+        (slice[2] == input.coords[2] && slice[2] != -1))
     {
         output.color = float4(input.color, 1.0); 
     }
