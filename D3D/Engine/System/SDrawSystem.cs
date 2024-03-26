@@ -38,7 +38,7 @@ namespace D3D {
         int ind = Components.IndexOf(figure);
         if (figure.FigureTypeObj == type) {
           Visibility[ind] = true;
-        } else if (figure.FigureTypeObj == antyType) {
+        } else if (figure.FigureTypeObj == antiType) {
           Visibility[ind] = false;
         }
       }

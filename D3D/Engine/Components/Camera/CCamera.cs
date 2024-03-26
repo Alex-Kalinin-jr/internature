@@ -37,7 +37,7 @@ namespace D3D {
     /// <summary>
     /// The yaw angle of the camera (rotation around the y-axis).
     /// </summary>
-    public float Yaw = MathUtil.PiOverTwo;
+    public float Yaw = 0;
 
     /// <summary>
     /// The field of view angle of the camera.
