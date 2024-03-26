@@ -193,10 +193,13 @@ namespace D3D {
     /// </summary>
     private void ChangePipeShowType(object sender, EventArgs e) {
       var bttn = sender as RadioButton;
+      string[] controls = { "pipeParametersLabel", "pipeSegmentsLabel", "pipeRadiusLabel", "pipeSegments", "pipeRadius" };
       if (bttn.Name == "pipe" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Pipe);
+        SetVisibility(true, controls);
       } else {
         DrawSystem.ChangePipeType(FigureType.Line);
+        SetVisibility(false, controls);
       }
     }
 
