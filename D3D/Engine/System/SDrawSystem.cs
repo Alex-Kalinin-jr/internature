@@ -83,6 +83,16 @@ namespace D3D {
       _sliceCoords.Zcoord = z;
     }
 
+
+    public static void ChangeProperty(CGridMesh.PropertyType type) {
+      foreach (var figure in Components) {
+        if (figure is CGridMesh) {
+          ((CGridMesh)figure).SetProperty(type);
+        }
+      }
+    }
+
+
     /// <summary>
     /// Method to restore all grid slices.
     /// </summary>

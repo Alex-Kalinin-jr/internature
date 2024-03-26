@@ -45,6 +45,11 @@ namespace D3D {
       AddRadioButton("line", "Line", new System.Drawing.Point(20, 30), ChangePipeShowType);
       AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 50), ChangePipeShowType);
 
+      AddLabel("Properties", "Properties", new System.Drawing.Point(100, 10));
+      AddRadioButton("Color", "Color", new System.Drawing.Point(100, 30), ChangeProperty);
+      AddRadioButton("Stability", "Stability", new System.Drawing.Point(100, 50), ChangeProperty);
+
+
       AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 80), TurnOnOffSliceMode);
       AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 115));
       AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 155));
@@ -57,6 +62,7 @@ namespace D3D {
       AddTrackbar("sliceX", new System.Drawing.Point(50, 115), CliceGridNewly, 0, 20, 1);
       AddTrackbar("sliceY", new System.Drawing.Point(50, 155), CliceGridNewly, 0, 20, 1);
       AddTrackbar("sliceZ", new System.Drawing.Point(50, 195), CliceGridNewly, 0, 20, 1);
+
 
       SetSlicingVisibility(false);
       SetVisibility(false, "sliceX");
@@ -247,6 +253,15 @@ namespace D3D {
         val = xTrackbar.Value;
       }
       return val;
+    }
+
+    private void ChangeProperty(object sender, EventArgs e) {
+      var s = sender as RadioButton;
+      if (s.Name == "Color") {
+        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Color);
+      } else if (s.Name == "Stability") {
+        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Stability);
+      }
     }
 
     // forming

@@ -105,7 +105,7 @@ namespace D3D {
             float a = (float)random.NextDouble(0.0f, 1.0f);
             float aa = (float)random.NextDouble(0.0f, 0.0f);
             float aaa = (float)random.NextDouble(0.0f, 1.0f);
-            Vector3 stability = new Vector3(r, g, b);
+            Vector3 stability = new Vector3(a, aa, aaa);
 
             var pseudoVertices = new List<VsBuffer>();
             vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
@@ -130,7 +130,7 @@ namespace D3D {
       mesh.LineIndices = lineIndices;
       mesh.TopologyObj = PrimitiveTopology.TriangleList;
       mesh.AddProperty(CGridMesh.PropertyType.Color, propertyColor.ToArray());
-      mesh.AddProperty(CGridMesh.PropertyType.Color, propertyStability.ToArray());
+      mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
 
       var buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));

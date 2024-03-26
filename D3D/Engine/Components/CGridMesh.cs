@@ -44,12 +44,14 @@ namespace D3D {
       if (Properties.ContainsKey(type)) {
         int vertexCountInOneGrid = 8;
         var prop = Properties[type];
+        int counter = 0;
         for (int i = 0; i < Vertices.Count; i += vertexCountInOneGrid) {
           for (int j = 0; j < vertexCountInOneGrid; ++j) {
             var v = Vertices[i + j];
-            v.Color = prop[i];
+            v.Color = prop[counter];
             Vertices[i + j] = v;
           }
+          ++counter;
         }
       }
     }
