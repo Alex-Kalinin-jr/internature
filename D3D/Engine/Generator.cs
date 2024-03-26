@@ -51,9 +51,9 @@ namespace D3D {
     /// Creates a new scene for testing grid figures.
     /// </summary>
     /// <returns>The created scene.</returns>
-    public static Scene CreateNewGridTestingScene() {
+    public static Scene CreateGridTestingScene() {
       var scene = new Scene();
-      var figure = CreateNewGridFigures(20, 20, 10);
+      var figure = CreateGridFigures(20, 20, 10);
       figure.SetProperty(CGridMesh.PropertyType.Stability);
       scene.AddComponent(figure);
       return scene;
@@ -63,9 +63,9 @@ namespace D3D {
     /// Creates another scene for testing pipe figures.
     /// </summary>
     /// <returns>The created scene.</returns>
-    public static Scene CreateAnotherPipeTestingScene() {
+    public static Scene CreatePipeTestingScene() {
       var scene = new Scene();
-      var mesh = CreateAnotherTestingLineMesh();
+      var mesh = CreateTestingLineMesh();
       var pipeMesh = new CPipeMesh(mesh, 0.5f, 40);
       scene.AddComponent(mesh);
       scene.AddComponent(pipeMesh);
@@ -79,7 +79,7 @@ namespace D3D {
     /// <param name="yCount">The number of grid cells along the y-axis.</param>
     /// <param name="zCount">The number of grid cells along the z-axis.</param>
     /// <returns>The created grid mesh.</returns>
-    public static CGridMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
+    public static CGridMesh CreateGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
       List<VsBuffer> vertices = new List<VsBuffer>();
       var indices = new List<short>();
       var pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
@@ -142,28 +142,17 @@ namespace D3D {
     /// Creates a line mesh for testing.
     /// </summary>
     /// <returns>The created line mesh.</returns>
-    public static CMesh CreateAnotherTestingLineMesh() {
+    public static CMesh CreateTestingLineMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
                 new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
-                new VsBuffer(new Vector3(0.0f, 2.5f, 0.0f)),
-                new VsBuffer(new Vector3(0.0f, 5.0f, 0.5f)),
-                new VsBuffer(new Vector3(0.0f, 8.5f, -0.5f)),
-                new VsBuffer(new Vector3(0.0f, 10.5f, 0.5f))
+                new VsBuffer(new Vector3(0.0f, 4.5f, 0.0f)),
+                new VsBuffer(new Vector3(0.0f, 10.0f, 0.5f)),
+                new VsBuffer(new Vector3(0.0f, 16.5f, -0.5f)),
+                new VsBuffer(new Vector3(0.0f, 20.5f, 0.5f))
             };
-      return new CMesh(vertices, new List<short>() { 0, 1, 2, 3 }, FigureType.Line);
-    }
-
-    /// <summary>
-    /// Creates testing pixel shader light constant buffers.
-    /// </summary>
-    /// <returns>The list of created pixel shader light constant buffers.</returns>
-    public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {
-      var output = new List<PsLightConstantBuffer> {
-                new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
-                new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -3.0f)),
-                new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -4.0f))
-            };
-      return output;
+      var mesh = new CMesh(vertices, new List<short>() { 0, 1, 2, 3, 4 }, FigureType.Line);
+      mesh.TransformObj.TransformObj.world = ComputeTestingModelMatrix(new Vector3(0, 0, 0), new Vector3(5, 0, 5));
+      return mesh;
     }
 
     /// <summary>

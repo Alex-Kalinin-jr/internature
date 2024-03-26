@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using SharpDX.Windows;
 using SharpDX;
 using System.Drawing;
+using System.Linq;
+using static System.Windows.Forms.AxHost;
 
 namespace D3D {
 
@@ -35,8 +37,8 @@ namespace D3D {
       _form.ResumeLayout(false);
       _mousePos = new CMousePos();
 
-      _scene = new List<Scene> {Generator.CreateNewGridTestingScene(),
-                                Generator.CreateAnotherPipeTestingScene()};
+      _scene = new List<Scene> {Generator.CreateGridTestingScene(),
+                                Generator.CreatePipeTestingScene()};
 
       DrawSystem.ChangePipeAppearance(0.2f, 10);
 
@@ -48,8 +50,14 @@ namespace D3D {
       AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 50), ChangePipeShowType);
 
       AddLabel("Properties", "Properties", new System.Drawing.Point(100, 10));
-      AddRadioButton("Color", "Color", new System.Drawing.Point(100, 30), ChangeProperty);
-      AddRadioButton("Stability", "Stability", new System.Drawing.Point(100, 50), ChangeProperty);
+      AddRadioButton("color", "Color", new System.Drawing.Point(100, 30), ChangeProperty);
+      AddRadioButton("stability", "Stability", new System.Drawing.Point(100, 50), ChangeProperty);
+
+      AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 10));
+      AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 40));
+      AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 80));
+      AddTrackbar("pipeSegments", new System.Drawing.Point(240, 40), ChangePipeParameters, 10, 40, 1);
+      AddTrackbar("pipeRadius", new System.Drawing.Point(240, 80), ChangePipeParameters, 1, 20, 1);
 
 
       AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 80), TurnOnOffSliceMode);
@@ -65,11 +73,8 @@ namespace D3D {
       AddTrackbar("sliceY", new System.Drawing.Point(50, 155), CliceGridNewly, 0, 20, 1);
       AddTrackbar("sliceZ", new System.Drawing.Point(50, 195), CliceGridNewly, 0, 20, 1);
 
-
-      SetSlicingVisibility(false);
-      SetVisibility(false, "sliceX");
-      SetVisibility(false, "sliceY");
-      SetVisibility(false, "sliceZ");
+      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
+      SetVisibility(false, controls);
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
@@ -79,6 +84,35 @@ namespace D3D {
 
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void ChangePipeParameters(Object sender, EventArgs e) {
+      TrackBar segments = null;
+      TrackBar radius = null;
+
+      var controls = _form.Controls.Find("pipeSegments", true);
+      if (controls.Length != 0) {
+        foreach(var control in controls) {
+          if (control is TrackBar) {
+            segments = (TrackBar) control;
+            break;
+          }
+        }
+      }
+
+      var radiusControls = _form.Controls.Find("pipeRadius", true);
+      if (radiusControls.Length != 0) {
+        foreach (var control in radiusControls) {
+          if (control is TrackBar) {
+            radius = (TrackBar)control;
+            break;
+          }
+        }
+      }
+
+      if (!(segments is null) && !(radius is null)) {
+        DrawSystem.ChangePipeAppearance(radius.Value / 10.0f, segments.Value);
+      }
+    }
 
     /// <summary>
     /// Changes the visibility of a control based on its name.
@@ -125,12 +159,13 @@ namespace D3D {
     /// <param name="sender">The sender object.</param>
     /// <param name="e">Event arguments.</param>
     private void TurnOnOffSliceMode(Object sender, EventArgs e) {
+      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel" };
       if (((CheckBox)sender).Checked) {
-        SetSlicingVisibility(true);
+        SetVisibility(true, controls);
         CliceGridNewly(null, null);
       } else {
         DrawSystem.RestoreAllGrids();
-        SetSlicingVisibility(false);
+        SetVisibility(false, controls);
       }
     }
 
@@ -259,9 +294,9 @@ namespace D3D {
 
     private void ChangeProperty(object sender, EventArgs e) {
       var s = sender as RadioButton;
-      if (s.Name == "Color") {
+      if (s.Name == "color") {
         DrawSystem.ChangeProperty(CGridMesh.PropertyType.Color);
-      } else if (s.Name == "Stability") {
+      } else if (s.Name == "stability") {
         DrawSystem.ChangeProperty(CGridMesh.PropertyType.Stability);
       }
     }
@@ -340,13 +375,10 @@ namespace D3D {
     /// <summary>
     /// Sets the visibility state of slicing controls.
     /// </summary>
-    private void SetSlicingVisibility(bool state) {
-      SetVisibility(state, "checkX");
-      SetVisibility(state, "checkY");
-      SetVisibility(state, "checkZ");
-      SetVisibility(state, "sliceXlabel");
-      SetVisibility(state, "sliceYlabel");
-      SetVisibility(state, "sliceZlabel");
+    private void SetVisibility(bool state, string[] names) {
+      foreach (string name in names) {
+        SetVisibility(state, name);
+      }
     }
 
   }
