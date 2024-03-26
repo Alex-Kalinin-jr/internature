@@ -37,17 +37,17 @@ namespace D3D {
     /// </summary>
     /// <param name="path">The path to the mesh file.</param>
     public CMesh(string path) {
-      (Vertices, Indices) = Generator.GenerateMeshFromFile(path);
       Initialize();
+      (Vertices, Indices) = Generator.GenerateMeshFromFile(path);
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CMesh"/> class.
     /// </summary>
     public CMesh() {
+      Initialize();
       Vertices = new List<VsBuffer>();
       Indices = new List<short>();
-      Initialize();
     }
 
     /// <summary>
@@ -57,9 +57,10 @@ namespace D3D {
     /// <param name="indices">The list of indices.</param>
     /// <param name="figureType">The type of the figure.</param>
     public CMesh(List<VsBuffer> vertices, List<short> indices, FigureType figureType = FigureType.General) {
+      Initialize();
       Vertices = vertices;
       Indices = indices;
-      Initialize();
+      FigureTypeObj = figureType;
     }
 
     /// <summary>
