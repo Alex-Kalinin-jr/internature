@@ -1,6 +1,6 @@
 ﻿using SharpDX;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace D3D {
@@ -8,7 +8,6 @@ namespace D3D {
   /// Class responsible for converting line meshes into pipe meshes.
   /// </summary>
   public class MeshConverter {
-
     /// <summary>
     /// Converts a line mesh into a pipe mesh.
     /// </summary>
@@ -17,8 +16,10 @@ namespace D3D {
     /// <param name="segments">The number of segments to use for generating the pipe.</param>
     /// <returns>The converted pipe mesh.</returns>
     public static CMesh ConvertToPipe(CMesh lineMesh, float pipeRadius, int segments) {
+      // Extract positions of vertices from the line mesh
       var vertices = lineMesh.Vertices.Select(v => v.Position).ToArray();
 
+      // If there are not enough vertices, return null
       if (vertices.Length < 2) {
         return null;
       }
@@ -31,6 +32,9 @@ namespace D3D {
       Vector3 endPoint = vertices[1];
       Vector3 direction = Vector3.Normalize(endPoint - startPoint);
 
+      // Reusable buffer for rotated vertices
+      var rotatedVertices = new Vector3[circleVertices.Count];
+
       for (int i = 0; i < vertices.Length; ++i) {
         startPoint = vertices[i];
 
@@ -39,11 +43,12 @@ namespace D3D {
           direction = Vector3.Normalize(endPoint - startPoint);
         }
 
-        var buffVertices = circleVertices.Select(v => v + startPoint).ToList();
-        var rotatedVertices = RotateVertices(buffVertices, direction);
+        // Rotate circle vertices and add to pipeVertices
+        RotateVertices(circleVertices, startPoint, direction, rotatedVertices);
         pipeVertices.AddRange(rotatedVertices);
       }
 
+      // Convert pipeVertices to VsBuffer list
       List<VsBuffer> points = pipeVertices.Select(v => new VsBuffer(v)).ToList();
 
       var mesh = new CMesh(points, indices, FigureType.Pipe);
@@ -106,9 +111,10 @@ namespace D3D {
     /// Rotates vertices based on the given direction.
     /// </summary>
     /// <param name="vertices">The list of vertices to rotate.</param>
+    /// <param name="startPoint">The start point for rotation.</param>
     /// <param name="direction">The direction vector.</param>
-    /// <returns>The rotated vertices.</returns>
-    private static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
+    /// <param name="result">The array to store the rotated vertices.</param>
+    private static void RotateVertices(List<Vector3> vertices, Vector3 startPoint, Vector3 direction, Vector3[] result) {
       Vector3 normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
       normal.Normalize();
 
@@ -119,13 +125,10 @@ namespace D3D {
 
       Quaternion rotationQuaternion = Quaternion.RotationAxis(rotationAxis, (float)rotationAngle);
 
-      Vector3[] rotatedVertices = new Vector3[vertices.Count];
-      for (int i = 0; i < vertices.Count; i++) {
+      for (int i = 0; i < vertices.Count; ++i) {
         Vector3 rotatedVertex = Vector3.Transform(vertices[i] - vertices[0], rotationQuaternion);
-        rotatedVertices[i] = rotatedVertex + vertices[0];
+        result[i] = rotatedVertex + startPoint;
       }
-
-      return rotatedVertices;
     }
   }
 }
