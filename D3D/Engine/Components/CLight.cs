@@ -1,12 +1,19 @@
 ﻿using System.Collections.Generic;
 
 namespace D3D {
-  // Definition of the CLight component, representing a collection of light data
+  /// <summary>
+  /// Represents a collection of light data associated with an entity.
+  /// </summary>
   public class CLight : Component {
-    // Field to hold a list of light data objects
+    /// <summary>
+    /// List of light data objects.
+    /// </summary>
     public List<PsLightConstantBuffer> LightDataObj;
 
-    // Constructor to initialize CLight with a list of light data and register it with the light system
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CLight"/> class with the specified list of light data.
+    /// </summary>
+    /// <param name="data">The list of light data.</param>
     public CLight(List<PsLightConstantBuffer> data) {
       LightDataObj = data;
       LightSystem.Register(this);

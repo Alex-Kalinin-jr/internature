@@ -2,8 +2,13 @@
 using System;
 
 namespace D3D {
+  /// <summary>
+  /// Class responsible for managing camera components.
+  /// </summary>
   public class CameraSystem : BaseSystem<CCamera> {
-    // Override the Update method of the base class to implement camera-specific update logic
+    /// <summary>
+    /// Overrides the Update method of the base class to implement camera-specific update logic.
+    /// </summary>
     new public static void Update() {
       // Iterate over all CCamera components registered with the system
       foreach (var component in Components) {
@@ -26,6 +31,11 @@ namespace D3D {
       }
     }
 
+    /// <summary>
+    /// Changes the pitch (vertical rotation) of the camera.
+    /// </summary>
+    /// <param name="camera">The camera to adjust.</param>
+    /// <param name="pitch">The pitch angle to apply.</param>
     public static void ChangePitch(CCamera camera, float pitch) {
       // Clamp the pitch angle to avoid gimbal lock issues
       var angle = MathUtil.Clamp(pitch, -89f, 89f);
@@ -34,7 +44,11 @@ namespace D3D {
       camera.EntityObj.RemoveComponent<CPitch>();
     }
 
-    // Method to adjust the yaw of the camera
+    /// <summary>
+    /// Changes the yaw (horizontal rotation) of the camera.
+    /// </summary>
+    /// <param name="camera">The camera to adjust.</param>
+    /// <param name="yaw">The yaw angle to apply.</param>
     public static void ChangeYaw(CCamera camera, float yaw) {
       // Update the camera yaw angle in radians and remove the CYaw component
       camera.Yaw += MathUtil.DegreesToRadians(yaw);
@@ -42,43 +56,65 @@ namespace D3D {
     }
 
     // Methods to shift the camera position in different directions
+
+    /// <summary>
+    /// Moves the camera upwards.
+    /// </summary>
     public static void ShiftUp() {
       foreach (var component in Components) {
         component.Position += 0.1f * component.Up;
       }
     }
 
+    /// <summary>
+    /// Moves the camera downwards.
+    /// </summary>
     public static void ShiftDown() {
       foreach (var component in Components) {
         component.Position -= 0.1f * component.Up;
       }
     }
 
+    /// <summary>
+    /// Moves the camera to the left.
+    /// </summary>
     public static void ShiftLeft() {
       foreach (var component in Components) {
         component.Position += 0.1f * component.Right;
       }
     }
 
+    /// <summary>
+    /// Moves the camera to the right.
+    /// </summary>
     public static void ShiftRight() {
       foreach (var component in Components) {
         component.Position -= 0.1f * component.Right;
       }
     }
 
+    /// <summary>
+    /// Moves the camera forwards.
+    /// </summary>
     public static void ShiftFwd() {
       foreach (var component in Components) {
         component.Position += 0.1f * component.Front;
       }
     }
 
+    /// <summary>
+    /// Moves the camera backwards.
+    /// </summary>
     public static void ShiftBack() {
       foreach (var component in Components) {
         component.Position -= 0.1f * component.Front;
       }
     }
 
-    // Method to update camera data such as front, right, and up vectors based on current pitch and yaw
+    /// <summary>
+    /// Updates camera data such as front, right, and up vectors based on current pitch and yaw.
+    /// </summary>
+    /// <param name="camera">The camera to update.</param>
     private static void UpdateData(CCamera camera) {
       // Calculate the new front vector based on the current pitch and yaw angles
       camera.Front.X = (float)(Math.Cos(camera.Pitch) * Math.Cos(camera.Yaw));
@@ -93,6 +129,7 @@ namespace D3D {
 
       // Calculate the new up vector based on the updated right and front vectors
       camera.Up = Vector3.Normalize(Vector3.Cross(camera.Right, camera.Front));
+
     }
   }
 }

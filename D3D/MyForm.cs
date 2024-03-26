@@ -5,9 +5,11 @@ using SharpDX.Windows;
 using SharpDX;
 using System.Drawing;
 
-
 namespace D3D {
 
+  /// <summary>
+  /// Custom form for rendering DirectX scenes.
+  /// </summary>
   public class MyForm : RenderForm {
 
     private List<Scene> _scene;
@@ -19,6 +21,9 @@ namespace D3D {
     private CScreenSize _size;
     private CMousePos _mousePos;
 
+    /// <summary>
+    /// Constructor for the custom form.
+    /// </summary>
     public MyForm() {
       _size = new CScreenSize();
       _form = new RenderForm();
@@ -63,19 +68,27 @@ namespace D3D {
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
       _form.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
     }
+
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /// <summary>
+    /// Changes the visibility of a control based on its name.
+    /// </summary>
+    /// <param name="visible">Visibility state.</param>
+    /// <param name="name">Name of the control.</param>
     private void SetVisibility(bool visible, string name) {
       var controls = _form.Controls.Find(name, true);
       foreach (var control in controls) {
         control.Visible = visible;
       }
     }
-/// <summary>
-/// Changes visibility of slice trackbars according to related checkbox state
-/// </summary>
-/// <param name="Sender"></param> checkbox emitting the signal
-/// <param name="e"></param> arguments
+
+    /// <summary>
+    /// Changes the visibility of slice trackbars according to the related checkbox state.
+    /// </summary>
+    /// <param name="Sender">The checkbox emitting the signal.</param>
+    /// <param name="e">Event arguments.</param>
     private void SetSliceVisibility(Object Sender, EventArgs e) {
       var box = Sender as CheckBox;
       if (box.Checked) {
@@ -89,7 +102,7 @@ namespace D3D {
       } else {
         if (box.Name == "checkX") {
           SetVisibility(false, "sliceX");
-        } else if (box.Name =="checkY") {
+        } else if (box.Name == "checkY") {
           SetVisibility(false, "sliceY");
         } else {
           SetVisibility(false, "sliceZ");
@@ -98,6 +111,11 @@ namespace D3D {
       CliceGridNewly(null, null);
     }
 
+    /// <summary>
+    /// Toggles the slice mode on/off.
+    /// </summary>
+    /// <param name="sender">The sender object.</param>
+    /// <param name="e">Event arguments.</param>
     private void TurnOnOffSliceMode(Object sender, EventArgs e) {
       if (((CheckBox)sender).Checked) {
         SetSlicingVisibility(true);
@@ -108,10 +126,16 @@ namespace D3D {
       }
     }
 
+    /// <summary>
+    /// Starts the form's rendering loop.
+    /// </summary>
     public void Run() {
       RenderLoop.Run(_form, RenderCallback);
     }
 
+    /// <summary>
+    /// Callback function for rendering the scene.
+    /// </summary>
     private void RenderCallback() {
       var renderer = Renderer.GetRenderer(_form.Handle);
       renderer.Update();
@@ -121,6 +145,9 @@ namespace D3D {
       renderer.Present();
     }
 
+    /// <summary>
+    /// Changes the type of pipe to be displayed.
+    /// </summary>
     private void ChangePipeShowType(object sender, EventArgs e) {
       var bttn = sender as RadioButton;
       if (bttn.Name == "pipe" && bttn.Checked) {
@@ -128,32 +155,6 @@ namespace D3D {
       } else {
         DrawSystem.ChangePipeType(FigureType.Line);
       }
-    }
-
-    private void ChangeLightColor(object sender, EventArgs e) {
-      ColorDialog buff = new ColorDialog();
-      buff.AllowFullOpen = false;
-      buff.ShowHelp = true;
-
-      if (buff.ShowDialog() == DialogResult.OK) {
-        var color = new Vector4(buff.Color.R / 255, buff.Color.G / 255, buff.Color.B / 255, buff.Color.A / 255);
-        LightSystem.ChangeColor(color);
-      }
-    }
-
-    private void ChangeLightPosition(object sender, EventArgs e) {
-      var control = _form.Controls.Find("lightX", true);
-      var xTracbar = control[0] as TrackBar;
-      control = _form.Controls.Find("lightY", true);
-      var yTracbar = control[0] as TrackBar;
-      control = _form.Controls.Find("lightZ", true);
-      var zTracbar = control[0] as TrackBar;
-
-      float xDirection = xTracbar.Value / _movingParams.ShiftDivider;
-      float yDirection = yTracbar.Value / _movingParams.ShiftDivider;
-      float zDirection = zTracbar.Value / _movingParams.ShiftDivider;
-
-      LightSystem.ChangePosition(new Vector3(xDirection, yDirection, zDirection));
     }
 
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
@@ -230,7 +231,12 @@ namespace D3D {
       DrawSystem.CliceGrid(x, y, z);
     }
 
-
+    /// <summary>
+    /// Gets the value of a slicing control.
+    /// </summary>
+    /// <param name="controlName">Name of the checkbox control.</param>
+    /// <param name="controlValue">Name of the trackbar control.</param>
+    /// <returns>The value of the slicing control.</returns>
     int GetSlicingValue(string controlName, string controlValue) {
       int val = -1;
       var control = _form.Controls.Find(controlName, true);
@@ -245,6 +251,10 @@ namespace D3D {
 
     // forming
     // ////////////////////////////////////////////////////////////////////////////////////
+
+    /// <summary>
+    /// Adds a trackbar control to the form.
+    /// </summary>
     private void AddTrackbar(string name, System.Drawing.Point position, EventHandler handler, int bottom, int top, int step) {
       var trackbar = new TrackBar();
       trackbar.Name = name;
@@ -257,6 +267,9 @@ namespace D3D {
       _form.Controls.Add(trackbar);
     }
 
+    /// <summary>
+    /// Adds a button control to the form.
+    /// </summary>
     private void AddButton(System.Drawing.Point position, string text, EventHandler handler) {
       var button = new Button();
       button.Location = position;
@@ -266,6 +279,9 @@ namespace D3D {
       button.Click += handler;
     }
 
+    /// <summary>
+    /// Adds a checkbox control to the form.
+    /// </summary>
     private void AddCheckBox(string name, string text, System.Drawing.Point position, EventHandler handler) {
       var checkBox = new CheckBox();
       checkBox.Checked = false;
@@ -277,6 +293,9 @@ namespace D3D {
       _form.Controls.Add(checkBox);
     }
 
+    /// <summary>
+    /// Adds a radio button control to the form.
+    /// </summary>
     private void AddRadioButton(string name, string text, System.Drawing.Point position, EventHandler handler) {
       var radioButton = new RadioButton();
       radioButton.Name = name;
@@ -287,6 +306,9 @@ namespace D3D {
       _form.Controls.Add(radioButton);
     }
 
+    /// <summary>
+    /// Adds a label control to the form.
+    /// </summary>
     private void AddLabel(string name, string text, System.Drawing.Point pos) {
       Label label = new Label();
       label.AutoSize = true;
@@ -298,6 +320,9 @@ namespace D3D {
       _form.Controls.Add(label);
     }
 
+    /// <summary>
+    /// Sets the visibility state of slicing controls.
+    /// </summary>
     private void SetSlicingVisibility(bool state) {
       SetVisibility(state, "checkX");
       SetVisibility(state, "checkY");
@@ -309,3 +334,4 @@ namespace D3D {
 
   }
 }
+

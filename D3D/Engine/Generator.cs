@@ -6,11 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace D3D {
-  // this is just debugging class. Imagine all generations you want for setting your scene, properties and so on.
+  /// <summary>
+  /// Debugging class for generating scenes, meshes, and properties.
+  /// </summary>
   public class Generator {
-
+    /// <summary>
+    /// Generates mesh data from a file.
+    /// </summary>
+    /// <param name="FileName">The file name of the mesh.</param>
+    /// <returns>A tuple containing lists of vertices and indices.</returns>
     public static (List<VsBuffer>, List<short>) GenerateMeshFromFile(string FileName) {
-
       var vertices = new List<VsBuffer>();
       var indices = new List<short>();
       PostProcessSteps Flags = PostProcessSteps.GenerateSmoothNormals
@@ -21,14 +26,13 @@ namespace D3D {
       Assimp.Scene model = importer.ImportFile(FileName, Flags);
 
       foreach (Mesh mesh in model.Meshes) {
-
         for (int i = 0; i < mesh.VertexCount; ++i) {
           Vector3D Pos = mesh.Vertices[i];
           Vector3D Normal = mesh.Normals[i];
           Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
           vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z),
-                       new Vector3(Normal.X, Normal.Y, Normal.Z),
-                       new Vector2(Tex.X, Tex.Y)));
+                                     new Vector3(Normal.X, Normal.Y, Normal.Z),
+                                     new Vector2(Tex.X, Tex.Y)));
         }
 
         int indexBase = (short)indices.Count();
@@ -43,6 +47,10 @@ namespace D3D {
       return (vertices, indices);
     }
 
+    /// <summary>
+    /// Creates a new scene for testing grid figures.
+    /// </summary>
+    /// <returns>The created scene.</returns>
     public static Scene CreateNewGridTestingScene() {
       var scene = new Scene();
       var figure = CreateNewGridFigures(20, 20, 10);
@@ -50,7 +58,10 @@ namespace D3D {
       return scene;
     }
 
-
+    /// <summary>
+    /// Creates another scene for testing pipe figures.
+    /// </summary>
+    /// <returns>The created scene.</returns>
     public static Scene CreateAnotherPipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateAnotherTestingLineMesh();
@@ -60,12 +71,19 @@ namespace D3D {
       return scene;
     }
 
+    /// <summary>
+    /// Creates grid figures.
+    /// </summary>
+    /// <param name="xCount">The number of grid cells along the x-axis.</param>
+    /// <param name="yCount">The number of grid cells along the y-axis.</param>
+    /// <param name="zCount">The number of grid cells along the z-axis.</param>
+    /// <returns>The created grid mesh.</returns>
     public static CGridMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
       List<VsBuffer> vertices = new List<VsBuffer>();
       List<short> indices = new List<short>();
       List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
-                                                      5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
-                                                      1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
+                                                            5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
+                                                            1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       List<short> lineIndices = new List<short>();
       List<short> pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6 };
       int p = 0;
@@ -103,26 +121,40 @@ namespace D3D {
       return mesh;
     }
 
+    /// <summary>
+    /// Creates a line mesh for testing.
+    /// </summary>
+    /// <returns>The created line mesh.</returns>
     public static CMesh CreateAnotherTestingLineMesh() {
       List<VsBuffer> vertices = new List<VsBuffer>() {
-          new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
-          new VsBuffer(new Vector3(0.0f, 2.5f, 0.0f)),
-          new VsBuffer(new Vector3(0.0f, 5.0f, 0.5f)),
-          new VsBuffer(new Vector3(0.0f, 8.5f, -0.5f)),
-          new VsBuffer(new Vector3(0.0f, 10.5f, 0.5f))
-      };
+                new VsBuffer(new Vector3(0.0f, 0.0f, 0.0f)),
+                new VsBuffer(new Vector3(0.0f, 2.5f, 0.0f)),
+                new VsBuffer(new Vector3(0.0f, 5.0f, 0.5f)),
+                new VsBuffer(new Vector3(0.0f, 8.5f, -0.5f)),
+                new VsBuffer(new Vector3(0.0f, 10.5f, 0.5f))
+            };
       return new CMesh(vertices, new List<short>() { 0, 1, 2, 3 }, FigureType.Line);
     }
 
+    /// <summary>
+    /// Creates testing pixel shader light constant buffers.
+    /// </summary>
+    /// <returns>The list of created pixel shader light constant buffers.</returns>
     public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {
       var output = new List<PsLightConstantBuffer> {
-        new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
-        new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -3.0f)),
-        new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -4.0f))
-      };
+                new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -1.0f)),
+                new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -3.0f)),
+                new PsLightConstantBuffer(new Vector4(0.0f, 0.6f, 0.0f, 1.0f), new Vector3(0, 0.0f, -4.0f))
+            };
       return output;
     }
 
+    /// <summary>
+    /// Computes the testing model matrix.
+    /// </summary>
+    /// <param name="rotations">The rotation vector.</param>
+    /// <param name="translations">The translation vector.</param>
+    /// <returns>The computed model matrix.</returns>
     public static Matrix ComputeTestingModelMatrix(Vector3 rotations, Vector3 translations) {
       var buff = Matrix.RotationYawPitchRoll(rotations.X, rotations.Y, rotations.Z) * Matrix.Translation(translations);
       buff.Transpose();
@@ -131,3 +163,4 @@ namespace D3D {
 
   }
 }
+

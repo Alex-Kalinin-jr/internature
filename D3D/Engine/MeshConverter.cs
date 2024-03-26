@@ -4,8 +4,18 @@ using System;
 using System.Linq;
 
 namespace D3D {
+  /// <summary>
+  /// Class responsible for converting line meshes into pipe meshes.
+  /// </summary>
   public class MeshConverter {
 
+    /// <summary>
+    /// Converts a line mesh into a pipe mesh.
+    /// </summary>
+    /// <param name="lineMesh">The line mesh to convert.</param>
+    /// <param name="pipeRadius">The radius of the pipe.</param>
+    /// <param name="segments">The number of segments to use for generating the pipe.</param>
+    /// <returns>The converted pipe mesh.</returns>
     public static CMesh ConvertToPipe(CMesh lineMesh, float pipeRadius, int segments) {
       var vertices = lineMesh.Vertices.Select(v => v.Position).ToArray();
 
@@ -43,6 +53,12 @@ namespace D3D {
       return mesh;
     }
 
+    /// <summary>
+    /// Generates circle vertices for creating the pipe.
+    /// </summary>
+    /// <param name="pipeRadius">The radius of the pipe.</param>
+    /// <param name="segments">The number of segments to use for generating the pipe.</param>
+    /// <returns>The list of generated circle vertices.</returns>
     private static List<Vector3> GenerateCircleVertices(float pipeRadius, int segments) {
       List<Vector3> circleVertices = new List<Vector3>();
       for (int i = 0; i < segments; ++i) {
@@ -54,7 +70,12 @@ namespace D3D {
       return circleVertices;
     }
 
-
+    /// <summary>
+    /// Generates indices for creating the pipe.
+    /// </summary>
+    /// <param name="verticesLength">The length of the vertices array.</param>
+    /// <param name="numOfSegments">The number of segments to use for generating the pipe.</param>
+    /// <returns>The list of generated indices.</returns>
     private static List<short> GenerateIndices(int verticesLength, int numOfSegments) {
       List<short> indices = new List<short>();
       for (int i = 0; i < verticesLength - 1; ++i) {
@@ -76,13 +97,17 @@ namespace D3D {
             indices.Add((short)((i + 1) * numOfSegments + j));
           }
           indices.Add((short)(i * numOfSegments + j));
-
         }
       }
       return indices;
     }
 
-
+    /// <summary>
+    /// Rotates vertices based on the given direction.
+    /// </summary>
+    /// <param name="vertices">The list of vertices to rotate.</param>
+    /// <param name="direction">The direction vector.</param>
+    /// <returns>The rotated vertices.</returns>
     private static Vector3[] RotateVertices(List<Vector3> vertices, Vector3 direction) {
       Vector3 normal = Vector3.Cross(vertices[1] - vertices[0], vertices[2] - vertices[0]);
       normal.Normalize();

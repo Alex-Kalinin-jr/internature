@@ -1,15 +1,26 @@
 ﻿namespace D3D {
-  // Definition of the CMouseMovingParams class, which holds parameters related to mouse movement
+  /// <summary>
+  /// Definition of the CMouseMovingParams class, which holds parameters related to mouse movement.
+  /// </summary>
   public class CMouseMovingParams {
-    // Fields to hold parameters for mouse movement
-    public float RotDivider = 10.0f; // Parameter for rotation divider
-    public float ShiftDivider = 20.0f; // Parameter for shift divider
+    /// <summary>
+    /// Parameter for rotation divider.
+    /// </summary>
+    public float RotDivider = 10.0f;
 
-    // Constructor to initialize CMouseMovingParams with custom rotation and shift dividers
+    /// <summary>
+    /// Parameter for shift divider.
+    /// </summary>
+    public float ShiftDivider = 20.0f;
+
+    /// <summary>
+    /// Constructor to initialize CMouseMovingParams with custom rotation and shift dividers.
+    /// </summary>
+    /// <param name="iamRotDivider">The rotation divider value to initialize CMouseMovingParams.</param>
+    /// <param name="iamShiftDivider">The shift divider value to initialize CMouseMovingParams.</param>
     public CMouseMovingParams(float iamRotDivider, float iamShiftDivider) {
       RotDivider = iamRotDivider; // Set the rotation divider
       ShiftDivider = iamShiftDivider; // Set the shift divider
     }
   }
 }
-
