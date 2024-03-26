@@ -36,7 +36,11 @@ namespace D3D {
 
       List<VsBuffer> points = pipeVertices.Select(v => new VsBuffer(v)).ToList();
 
-      return new CMesh(points, indices, lineMesh.TransformObj, SharpDX.Direct3D.PrimitiveTopology.LineList);
+      var mesh = new CMesh(points, indices, FigureType.Pipe);
+      mesh.TopologyObj = SharpDX.Direct3D.PrimitiveTopology.LineList;
+      mesh.TransformObj = lineMesh.TransformObj;
+
+      return mesh;
     }
 
     private static List<Vector3> GenerateCircleVertices(float pipeRadius, int segments) {

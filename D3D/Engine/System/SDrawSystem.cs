@@ -11,23 +11,16 @@ namespace D3D {
 
   public class DrawSystem : BaseSystem<CMesh> {
     public static List<bool> Visibility = new List<bool>();
-    public static List<FigureType> Types = new List<FigureType>();
+    static VsSliceConstantBuffer _sliceCoords = new VsSliceConstantBuffer(-1, -1, -1);
 
     private static Dictionary<FigureType, FigureType> _antitypes = new Dictionary<FigureType, FigureType>() {
         { FigureType.Line, FigureType.Pipe },
         { FigureType.Pipe, FigureType.Line },
     };
 
-    public static void Register(CMesh figure, FigureType type) {
-      Components.Add(figure);
-      Visibility.Add(true);
-      Types.Add(type);
-    }
-
     new public static void Register(CMesh figure) {
       Components.Add(figure);
       Visibility.Add(true);
-      Types.Add(FigureType.General);
     }
 
     new public static void Update() {
@@ -43,40 +36,50 @@ namespace D3D {
       FigureType antiType = _antitypes[type];
       foreach (var figure in Components) {
         int ind = Components.IndexOf(figure);
-        if (Types[ind] == type) {
+        if (figure.FigureTypeObj == type) {
           Visibility[ind] = true;
-        } else if (Types[ind] == antiType) {
+        } else if (figure.FigureTypeObj == antyType) {
           Visibility[ind] = false;
         }
       }
     }
 
     public static void CliceGrid(int x, int y, int z) {
-      for (int i = 0; i < Components.Count; ++i) {
-// here i should adjust light buffer data
-      }
+      _sliceCoords.Xcoord = x;
+      _sliceCoords.Ycoord = y;
+      _sliceCoords.Zcoord = z;
     }
 
     public static void RestoreAllGrids() {
-      for (int i = 0; i < Components.Count; ++i) {
-// here i should adjust light buffer data
-      }
+      _sliceCoords.Xcoord = -1;
+      _sliceCoords.Ycoord = -1;
+      _sliceCoords.Zcoord = -1;
     }
 
     private static void DrawFigure(CMesh figure) {
+
       var vertices = figure.Vertices.ToArray();
       var indices = figure.Indices.ToArray();
       var matrix = figure.TransformObj.TransformObj;
-      PsLightConstantBuffer[] light = figure.EntityObj.GetComponent<CLight>().LightDataObj.ToArray();
-      var topology = figure.Topology;
+      var topology = figure.TopologyObj;
 
       var renderer = Renderer.GetRenderer();
-      renderer.ChangePrimitiveTopology(topology);
-      renderer.SetLightConstantBuffer(ref light);
       renderer.SetVerticesBuffer(ref vertices);
-      renderer.SetIndicesBuffer(ref indices);
       renderer.SetMvpConstantBuffer(ref matrix);
+      renderer.ChangePrimitiveTopology(topology); 
+      renderer.SetIndicesBuffer(ref indices);
+      renderer.SetSliceConstantBuffer(ref _sliceCoords);
       renderer.Draw(indices.Length);
+
+      if (figure is CGridMesh) {
+        _sliceCoords.Bias = 0;
+        var lineIndices = ((CGridMesh)figure).LineIndices.ToArray();
+        renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineList);
+        renderer.SetIndicesBuffer(ref lineIndices);
+        renderer.SetSliceConstantBuffer(ref _sliceCoords);
+        renderer.Draw(lineIndices.Length);
+        _sliceCoords.Bias = -1;
+      }
 
     }
   }

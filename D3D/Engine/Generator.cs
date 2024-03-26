@@ -45,9 +45,11 @@ namespace D3D {
 
     public static Scene CreateNewGridTestingScene() {
       var scene = new Scene();
-      scene.AddComponent(CreateNewGridFigures(20, 20, 10));
+      var figure = CreateNewGridFigures(20, 20, 10);
+      scene.AddComponent(figure);
       return scene;
     }
+
 
     public static Scene CreateAnotherPipeTestingScene() {
       var scene = new Scene();
@@ -58,35 +60,46 @@ namespace D3D {
       return scene;
     }
 
-    public static CMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
-
-      List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5, 5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1, 1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
-      var mesh = new CMesh();
-      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
-
+    public static CGridMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
+      List<VsBuffer> vertices = new List<VsBuffer>();
+      List<short> indices = new List<short>();
+      List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
+                                                      5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
+                                                      1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
+      List<short> lineIndices = new List<short>();
+      List<short> pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6 };
+      int p = 0;
       var random = new Random();
-      for (int i = 0; i < xCount; ++i) {
+      for (int j = 0; j < yCount; ++j) {
         float r = (float)random.NextDouble(0.0f, 1.0f);
         float g = (float)random.NextDouble(0.0f, 0.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
-        for (int j = 0; j < yCount; ++j) {
+        for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
-            List<VsBuffer> vertices = new List<VsBuffer>();
-            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, new int[3] { i, j, k })); //0
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color, new int[3] { i, j, k })); //1
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color, new int[3] { i, j, k })); //2
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color, new int[3] { i, j, k })); //3
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color, new int[3] { i, j, k })); //4
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color, new int[3] { i, j, k })); //5
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, new int[3] { i, j, k })); //6
-            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, new int[3] { i, j, k })); //7
-            mesh.Vertices.AddRange(vertices);
-            mesh.Indices.AddRange(pseudoIndices.Select(v => (short)(v + i * 36))); // here to be modified
+            List<VsBuffer> pseudoVertices = new List<VsBuffer>();
+            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color, i, j, k)); //1
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color, i, j, k)); //2
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color, i, j, k)); //4
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color, i, j, k)); //5
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, i, j, k)); //6
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, i, j, k)); //7
+            vertices.AddRange(pseudoVertices);
+            indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
+            lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
+            p += 8;
           }
         }
       }
+      var mesh = new CGridMesh(vertices, indices, FigureType.Grid);
+      mesh.LineIndices = lineIndices;
+      mesh.TopologyObj = PrimitiveTopology.TriangleList;
+
+      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+
       return mesh;
     }
 
@@ -98,11 +111,7 @@ namespace D3D {
           new VsBuffer(new Vector3(0.0f, 8.5f, -0.5f)),
           new VsBuffer(new Vector3(0.0f, 10.5f, 0.5f))
       };
-
-      return new CMesh(vertices,
-                      new List<short>() { 0, 1, 2, 3 },
-                      new CTransform(new VsMvpConstantBuffer()),
-                      PrimitiveTopology.LineStrip);
+      return new CMesh(vertices, new List<short>() { 0, 1, 2, 3 }, FigureType.Line);
     }
 
     public static List<PsLightConstantBuffer> CreateTestingPsLightConstantBuffers() {

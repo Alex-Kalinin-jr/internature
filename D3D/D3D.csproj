@@ -70,12 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\Components\Camera\CCamera.cs" />
+    <Compile Include="Engine\Components\CGridMesh.cs" />
     <Compile Include="Engine\Components\CLight.cs" />
     <Compile Include="Engine\Components\Component.cs" />
     <Compile Include="Engine\Components\Camera\CYaw.cs" />
     <Compile Include="Engine\Components\CMesh.cs" />
     <Compile Include="Engine\Components\Camera\CPitch.cs" />
-    <Compile Include="Engine\Components\CPrimitiveTopology.cs" />
     <Compile Include="Engine\Components\CTransform.cs" />
     <Compile Include="Engine\Components\View\CMouseMovingParams.cs" />
     <Compile Include="Engine\Components\View\CScreenSize.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
     <Compile Include="Engine\MeshConverter.cs" />
+    <Compile Include="Engine\Storages\VsSliceConstantBuffer.cs" />
     <Compile Include="Engine\System\SBaseSystem.cs" />
     <Compile Include="Engine\System\SCameraSystem.cs" />
     <Compile Include="Engine\System\SDrawSystem.cs" />

@@ -8,6 +8,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using Device = SharpDX.Direct3D11.Device;
 using DeviceContext = SharpDX.Direct3D11.DeviceContext;
 using SharpDX.D3DCompiler;
+using System.Drawing;
 
 namespace D3D {
 
@@ -31,6 +32,7 @@ namespace D3D {
     private Buffer _indexBuffer;
     private Buffer[] _constantLightBuffers;
     private Buffer _constantBuffer;
+    private Buffer _constantSliceBuffer;
 
     private SharpDX.Color _background = SharpDX.Color.White;
 
@@ -55,7 +57,8 @@ namespace D3D {
         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
         new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
         new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
-        new InputElement("COLOR", 0, Format.R32G32B32_Float, 32, 0, InputClassification.PerVertexData, 0)
+        new InputElement("COLOR", 0, Format.R32G32B32_Float, 32, 0, InputClassification.PerVertexData, 0),
+        new InputElement("GRIDCOORDS", 0, Format.R32G32B32_SInt, 44, 0, InputClassification.PerVertexData, 0)
       };
       InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");
@@ -95,6 +98,25 @@ namespace D3D {
       using (Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0)) {
         _renderTargetView = new RenderTargetView(_device3D, backBuffer);
       }
+
+
+      var blendStateDesc = new BlendStateDescription {
+        AlphaToCoverageEnable = false,
+        IndependentBlendEnable = false,
+      };
+
+      blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
+      blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.SourceAlpha;
+      blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
+      blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Add;
+      blendStateDesc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+      blendStateDesc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
+      blendStateDesc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+      blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+      var blendState = new BlendState(_device3D, blendStateDesc);
+      _context3D.OutputMerger.BlendState = blendState;
+
     }
 
     public void SetViewPort() {
@@ -182,6 +204,15 @@ namespace D3D {
         _context3D.VertexShader.SetConstantBuffer(0, _constantBuffer);
       } else {
         _context3D.UpdateSubresource(ref matrices, _constantBuffer);
+      }
+    }
+
+    public void SetSliceConstantBuffer(ref VsSliceConstantBuffer slice) {
+      if (_constantSliceBuffer == null) {
+        _constantSliceBuffer = Buffer.Create(_device3D, BindFlags.ConstantBuffer, ref slice);
+        _context3D.VertexShader.SetConstantBuffer(1, _constantSliceBuffer);
+      } else {
+        _context3D.UpdateSubresource(ref slice, _constantSliceBuffer);
       }
     }
 

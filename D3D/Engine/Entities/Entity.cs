@@ -9,9 +9,9 @@ namespace D3D {
 
 
     public void AddComponent(Component component) {
-      _components.Add(component);
-      component.EntityObj = this; // Set the entity reference in the component
+      component.EntityObj = this;
       component.UpdateLinks();
+      _components.Add(component);
     }
 
     // Method to remove a component of type T from the entity
