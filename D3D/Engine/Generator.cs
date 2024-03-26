@@ -54,6 +54,7 @@ namespace D3D {
     public static Scene CreateNewGridTestingScene() {
       var scene = new Scene();
       var figure = CreateNewGridFigures(20, 20, 10);
+      figure.SetProperty(CGridMesh.PropertyType.Stability);
       scene.AddComponent(figure);
       return scene;
     }
@@ -80,22 +81,33 @@ namespace D3D {
     /// <returns>The created grid mesh.</returns>
     public static CGridMesh CreateNewGridFigures(int xCount = 30, int yCount = 30, int zCount = 10) {
       List<VsBuffer> vertices = new List<VsBuffer>();
-      List<short> indices = new List<short>();
-      List<short> pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
+      var indices = new List<short>();
+      var pseudoIndices = new List<short>() { 0, 1, 2, 0, 2, 3, 3, 2, 4, 3, 4, 5,
                                                             5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                             1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
-      List<short> lineIndices = new List<short>();
-      List<short> pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6 };
-      int p = 0;
+      var lineIndices = new List<short>();
+      var pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6 };
+      var propertyColor = new List<Vector3>();
+      var propertyStability = new List<Vector3>();
       var random = new Random();
+      int p = 0;
+
+
       for (int j = 0; j < yCount; ++j) {
+
         float r = (float)random.NextDouble(0.0f, 1.0f);
         float g = (float)random.NextDouble(0.0f, 0.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
+
         for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
-            List<VsBuffer> pseudoVertices = new List<VsBuffer>();
+            float a = (float)random.NextDouble(0.0f, 1.0f);
+            float aa = (float)random.NextDouble(0.0f, 0.0f);
+            float aaa = (float)random.NextDouble(0.0f, 1.0f);
+            Vector3 stability = new Vector3(r, g, b);
+
+            var pseudoVertices = new List<VsBuffer>();
             vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color, i, j, k)); //1
             vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color, i, j, k)); //2
@@ -105,8 +117,11 @@ namespace D3D {
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, i, j, k)); //6
             vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, i, j, k)); //7
             vertices.AddRange(pseudoVertices);
+
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
+            propertyColor.Add(color);
+            propertyStability.Add(stability);
             p += 8;
           }
         }
@@ -114,8 +129,10 @@ namespace D3D {
       var mesh = new CGridMesh(vertices, indices, FigureType.Grid);
       mesh.LineIndices = lineIndices;
       mesh.TopologyObj = PrimitiveTopology.TriangleList;
+      mesh.AddProperty(CGridMesh.PropertyType.Color, propertyColor.ToArray());
+      mesh.AddProperty(CGridMesh.PropertyType.Color, propertyStability.ToArray());
 
-      VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
+      var buff = new VsMvpConstantBuffer();
       buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
 
       return mesh;
