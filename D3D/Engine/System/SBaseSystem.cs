@@ -20,6 +20,14 @@ namespace D3D {
     }
 
     /// <summary>
+    /// Method to unregister a component of type T from the system.
+    /// </summary>
+    /// <param name="component">The component to unregister.</param>
+    public static void Unregister(T component) {
+      Components.Remove(component);
+    }
+
+    /// <summary>
     /// Method to update the system.
     /// </summary>
     public static void Update() {

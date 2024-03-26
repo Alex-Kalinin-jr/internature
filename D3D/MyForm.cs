@@ -38,6 +38,8 @@ namespace D3D {
       _scene = new List<Scene> {Generator.CreateNewGridTestingScene(),
                                 Generator.CreateAnotherPipeTestingScene()};
 
+      DrawSystem.ChangePipeAppearance(0.2f, 10);
+
       _movingParams = new CMouseMovingParams(10.0f, 20.0f);
 
 

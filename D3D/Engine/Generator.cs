@@ -66,7 +66,7 @@ namespace D3D {
     public static Scene CreateAnotherPipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateAnotherTestingLineMesh();
-      var pipeMesh = MeshConverter.ConvertToPipe(mesh, 0.5f, 40);
+      var pipeMesh = new CPipeMesh(mesh, 0.5f, 40);
       scene.AddComponent(mesh);
       scene.AddComponent(pipeMesh);
       return scene;

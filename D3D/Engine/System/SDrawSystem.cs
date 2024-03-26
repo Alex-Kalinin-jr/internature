@@ -83,7 +83,11 @@ namespace D3D {
       _sliceCoords.Zcoord = z;
     }
 
-
+    /// <summary>
+    /// Set the property of Vertex. Property visualisation is the vertex color.
+    /// </summary>
+    /// <param name="type"></param>The type of property to be set. 
+    /// Setting will not be perfomed if property is not presented in figure dictionary
     public static void ChangeProperty(CGridMesh.PropertyType type) {
       foreach (var figure in Components) {
         if (figure is CGridMesh) {
@@ -92,6 +96,13 @@ namespace D3D {
       }
     }
 
+    public static void ChangePipeAppearance(float pipeRadius, int numOfSegments) {
+      for (int i = 0; i < Components.Count; ++i) {
+        if (Components[i] is CPipeMesh) {
+          ((CPipeMesh)Components[i]).ChangePipe(pipeRadius, numOfSegments);
+        }
+      }
+    }
 
     /// <summary>
     /// Method to restore all grid slices.
