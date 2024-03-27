@@ -68,7 +68,7 @@ namespace D3D {
     /// </summary>
     private void Initialize() {
       VsMvpConstantBuffer buff = new VsMvpConstantBuffer();
-      buff.world = Generator.ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0, 0.0f, 0));
+      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0, 0.0f, 0));
       TransformObj = new CTransform(buff);
       TopologyObj = PrimitiveTopology.LineStrip;
       FigureTypeObj = FigureType.General;

@@ -40,5 +40,18 @@ namespace D3D {
       matrix.Transpose(); // Transpose the matrix
       return matrix;
     }
+
+
+    /// <summary>
+    /// Computes the testing model matrix.
+    /// </summary>
+    /// <param name="rotations">The rotation vector.</param>
+    /// <param name="translations">The translation vector.</param>
+    /// <returns>The computed model matrix.</returns>
+    public static Matrix ComputeModelMatrix(Vector3 rotations, Vector3 translations) {
+      var buff = Matrix.RotationYawPitchRoll(rotations.X, rotations.Y, rotations.Z) * Matrix.Translation(translations);
+      buff.Transpose();
+      return buff;
+    }
   }
 }

@@ -133,7 +133,7 @@ namespace D3D {
       mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
 
       var buff = new VsMvpConstantBuffer();
-      buff.world = ComputeTestingModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
 
       return mesh;
     }
@@ -151,20 +151,8 @@ namespace D3D {
                 new VsBuffer(new Vector3(0.0f, 20.5f, 0.5f))
             };
       var mesh = new CMesh(vertices, new List<short>() { 0, 1, 2, 3, 4 }, FigureType.Line);
-      mesh.TransformObj.TransformObj.world = ComputeTestingModelMatrix(new Vector3(0, 0, 0), new Vector3(5, 0, 5));
+      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0, 0, 0), new Vector3(5, 0, 5));
       return mesh;
-    }
-
-    /// <summary>
-    /// Computes the testing model matrix.
-    /// </summary>
-    /// <param name="rotations">The rotation vector.</param>
-    /// <param name="translations">The translation vector.</param>
-    /// <returns>The computed model matrix.</returns>
-    public static Matrix ComputeTestingModelMatrix(Vector3 rotations, Vector3 translations) {
-      var buff = Matrix.RotationYawPitchRoll(rotations.X, rotations.Y, rotations.Z) * Matrix.Translation(translations);
-      buff.Transpose();
-      return buff;
     }
 
   }

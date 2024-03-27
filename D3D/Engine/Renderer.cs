@@ -309,7 +309,7 @@ namespace D3D {
         Height = Height,
         MipLevels = 1,
         ArraySize = 1,
-        Format = Format.D32_Float,
+        Format = Format.D24_UNorm_S8_UInt,
         SampleDescription = new SampleDescription(1, 0),
         Usage = ResourceUsage.Default,
         BindFlags = BindFlags.DepthStencil,
