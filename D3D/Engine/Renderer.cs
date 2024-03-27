@@ -17,8 +17,8 @@ namespace D3D {
   /// </summary>
   public class Renderer : IDisposable {
 
-    private const int Width = 1024;
-    private const int Height = 768;
+    private const int Width = 1024; // just an initial value
+    private const int Height = 768; // just an initial value
 
     private IntPtr _formPtr;
 
@@ -43,11 +43,9 @@ namespace D3D {
 
 
     // depth buffer
-    Texture2DDescription _depthTextureDesc;
-    DepthStencilStateDescription _depthStencilDesc;
-    DepthStencilState _depthStencilState;
-    Texture2D _depthBuffer;
-    DepthStencilViewDescription _depthStencilViewDesc;
+    private DepthStencilState _depthStencilState;
+    private RasterizerState _rasterizerState;
+    private Texture2D _depthBuffer;
 
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
@@ -66,6 +64,8 @@ namespace D3D {
       InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");
       InitializeDepthBuffer();
+      ChangeRasterizerState();
+      ChangeBlendState();
     }
 
     /// <summary>
@@ -114,25 +114,24 @@ namespace D3D {
       using (Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0)) {
         _renderTargetView = new RenderTargetView(_device3D, backBuffer);
       }
+    }
 
-
-      var blendStateDesc = new BlendStateDescription {
-        AlphaToCoverageEnable = false,
-        IndependentBlendEnable = false,
+    private void ChangeRasterizerState() {
+      RasterizerStateDescription rasterizerDesc = new RasterizerStateDescription {
+        CullMode = CullMode.Back,
+        FillMode = FillMode.Solid,
+        IsFrontCounterClockwise = false,
+        DepthBias = 0,
+        DepthBiasClamp = 0,
+        SlopeScaledDepthBias = 0,
+        IsDepthClipEnabled = true,
+        IsScissorEnabled = false,
+        IsMultisampleEnabled = false,
+        IsAntialiasedLineEnabled = false
       };
 
-      blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
-      blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.SourceAlpha;
-      blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
-      blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Add;
-      blendStateDesc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
-      blendStateDesc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
-      blendStateDesc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
-      blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
-
-      var blendState = new BlendState(_device3D, blendStateDesc);
-      _context3D.OutputMerger.BlendState = blendState;
-
+      _rasterizerState = new RasterizerState(_context3D.Device, rasterizerDesc);
+      _context3D.Rasterizer.State = _rasterizerState;
     }
 
     /// <summary>
@@ -297,6 +296,7 @@ namespace D3D {
       _depthStencilView.Dispose();
       _depthStencilState.Dispose();
       _depthBuffer.Dispose();
+      _rasterizerState.Dispose();
     }
 
     /// <summary>
@@ -304,7 +304,7 @@ namespace D3D {
     /// </summary>
     private void InitializeDepthBuffer() {
 
-      _depthTextureDesc = new Texture2DDescription {
+      var depthTextureDesc = new Texture2DDescription {
         Width = Width,
         Height = Height,
         MipLevels = 1,
@@ -316,21 +316,40 @@ namespace D3D {
         CpuAccessFlags = CpuAccessFlags.None,
         OptionFlags = ResourceOptionFlags.None
       };
-      _depthBuffer = new Texture2D(_device3D, _depthTextureDesc);
+      _depthBuffer = new Texture2D(_device3D, depthTextureDesc);
 
 
-      _depthStencilViewDesc = new DepthStencilViewDescription {
-        Format = _depthTextureDesc.Format,
+      var depthStencilViewDesc = new DepthStencilViewDescription {
+        Format = depthTextureDesc.Format,
         Dimension = DepthStencilViewDimension.Texture2D,
       };
-      _depthStencilViewDesc.Texture2D.MipSlice = 0;
+      depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-      _depthStencilDesc = new DepthStencilStateDescription();
-      _depthStencilState = new DepthStencilState(_device3D, _depthStencilDesc);
+      var depthStencilDesc = new DepthStencilStateDescription();
+      _depthStencilState = new DepthStencilState(_device3D, depthStencilDesc);
       _context3D.OutputMerger.SetDepthStencilState(_depthStencilState);
-      _depthStencilView = new DepthStencilView(_device3D, _depthBuffer, _depthStencilViewDesc);
+      _depthStencilView = new DepthStencilView(_device3D, _depthBuffer, depthStencilViewDesc);
 
       _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);
+    }
+
+    private void ChangeBlendState() {
+      var blendStateDesc = new BlendStateDescription {
+        AlphaToCoverageEnable = false,
+        IndependentBlendEnable = false,
+      };
+
+      blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
+      blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.SourceAlpha;
+      blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;
+      blendStateDesc.RenderTarget[0].BlendOperation = BlendOperation.Add;
+      blendStateDesc.RenderTarget[0].SourceAlphaBlend = BlendOption.One;
+      blendStateDesc.RenderTarget[0].DestinationAlphaBlend = BlendOption.Zero;
+      blendStateDesc.RenderTarget[0].AlphaBlendOperation = BlendOperation.Add;
+      blendStateDesc.RenderTarget[0].RenderTargetWriteMask = ColorWriteMaskFlags.All;
+
+      var blendState = new BlendState(_device3D, blendStateDesc);
+      _context3D.OutputMerger.BlendState = blendState;
     }
   }
 }

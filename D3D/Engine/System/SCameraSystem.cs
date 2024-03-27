@@ -6,6 +6,7 @@ namespace D3D {
   /// Class responsible for managing camera components.
   /// </summary>
   public class CameraSystem : BaseSystem<CCamera> {
+    private static float _cameraSpeed = 0.1f;
     /// <summary>
     /// Overrides the Update method of the base class to implement camera-specific update logic.
     /// </summary>
@@ -38,7 +39,7 @@ namespace D3D {
     /// <param name="pitch">The pitch angle to apply.</param>
     public static void ChangePitch(CCamera camera, float pitch) {
       // Clamp the pitch angle to avoid gimbal lock issues
-      var angle = MathUtil.Clamp(pitch, -89f, 89f);
+      var angle = MathUtil.Clamp(pitch, -89f, 89f); // assuming that we can not rotate our head (eyes) backwards over top or down
       // Update the camera pitch angle in radians and remove the CPitch component
       camera.Pitch += MathUtil.DegreesToRadians(angle);
       camera.EntityObj.RemoveComponent<CPitch>();
@@ -62,7 +63,7 @@ namespace D3D {
     /// </summary>
     public static void ShiftUp() {
       foreach (var component in Components) {
-        component.Position += 0.1f * component.Up;
+        component.Position += _cameraSpeed * component.Up;
       }
     }
 
@@ -71,7 +72,7 @@ namespace D3D {
     /// </summary>
     public static void ShiftDown() {
       foreach (var component in Components) {
-        component.Position -= 0.1f * component.Up;
+        component.Position -= _cameraSpeed * component.Up;
       }
     }
 
@@ -80,7 +81,7 @@ namespace D3D {
     /// </summary>
     public static void ShiftLeft() {
       foreach (var component in Components) {
-        component.Position += 0.1f * component.Right;
+        component.Position += _cameraSpeed * component.Right;
       }
     }
 
@@ -89,7 +90,7 @@ namespace D3D {
     /// </summary>
     public static void ShiftRight() {
       foreach (var component in Components) {
-        component.Position -= 0.1f * component.Right;
+        component.Position -= _cameraSpeed * component.Right;
       }
     }
 
@@ -98,7 +99,7 @@ namespace D3D {
     /// </summary>
     public static void ShiftFwd() {
       foreach (var component in Components) {
-        component.Position += 0.1f * component.Front;
+        component.Position += _cameraSpeed * component.Front;
       }
     }
 
@@ -107,7 +108,7 @@ namespace D3D {
     /// </summary>
     public static void ShiftBack() {
       foreach (var component in Components) {
-        component.Position -= 0.1f * component.Front;
+        component.Position -= _cameraSpeed * component.Front;
       }
     }
 

@@ -39,7 +39,6 @@ namespace D3D {
       }
     }
 
-// bad approach
     public void SetProperty(PropertyType type) {
       if (Properties.ContainsKey(type)) {
         int vertexCountInOneGrid = 8;

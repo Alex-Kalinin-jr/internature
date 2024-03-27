@@ -135,7 +135,7 @@ namespace D3D {
       if (figure is CGridMesh) {
         _sliceCoords.Bias = 0;
         var lineIndices = ((CGridMesh)figure).LineIndices.ToArray();
-        renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineList);
+        renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineStrip);
         renderer.SetIndicesBuffer(ref lineIndices);
         renderer.SetSliceConstantBuffer(ref _sliceCoords);
         renderer.Draw(lineIndices.Length);

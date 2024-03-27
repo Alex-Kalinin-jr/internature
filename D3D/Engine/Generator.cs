@@ -86,7 +86,7 @@ namespace D3D {
                                                             5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                             1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       var lineIndices = new List<short>();
-      var pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 2, 4, 4, 5, 5, 3, 4, 6, 6, 7, 7, 5, 0, 7, 1, 6 };
+      var pseudoLineIndices = new List<short>() { 0, 1, 2, 3, 2, 4, 5, 3, 0, 7, 5, 4, 6, 1, 0};
       var propertyColor = new List<Vector3>();
       var propertyStability = new List<Vector3>();
       var random = new Random();

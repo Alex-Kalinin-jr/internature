@@ -33,8 +33,10 @@ namespace D3D {
     /// </summary>
     /// <returns>The calculated projection matrix.</returns>
     private static RawMatrix GetProjectionMatrix() {
+      var frontFace = 0.1f;
+      var backFace = 1000f;
       var camera = Components[0].EntityObj.GetComponent<CCamera>(); // Get the camera associated with the first transform component
-      var matrix = Matrix.PerspectiveFovLH(camera.Fov, camera.AspectRatio, 0.1f, 1000f); // Calculate the projection matrix
+      var matrix = Matrix.PerspectiveFovLH(camera.Fov, camera.AspectRatio, frontFace, backFace); // Calculate the projection matrix
       matrix.Transpose(); // Transpose the matrix
       return matrix;
     }
