@@ -82,7 +82,7 @@ namespace SimpleDrawing.Model {
     public static List<Cube> GenerateVolumes(int countOfSide, float step) {
       var volumes = new List<Cube>();
       float range = countOfSide * step;
-      string[] materials = {"emerald", "obsidian", "chrome", "blackRubber", "bronze"};
+      string[] materials = { "blackRubber", "blackRubber", "blackRubber", "blackRubber", "blackRubber" };
       int count = 0;
       for (float i = -range / 2; i < range / 2; i += step) {
         for (float j = -range / 2; j < range / 2; j += step) {
