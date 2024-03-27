@@ -30,9 +30,7 @@ namespace D3D {
           Vector3D Pos = mesh.Vertices[i];
           Vector3D Normal = mesh.Normals[i];
           Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
-          vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z),
-                                     new Vector3(Normal.X, Normal.Y, Normal.Z),
-                                     new Vector2(Tex.X, Tex.Y)));
+          vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z)));
         }
 
         int indexBase = (short)indices.Count();
@@ -107,14 +105,14 @@ namespace D3D {
             Vector3 stability = new Vector3(a, aa, aaa);
 
             var pseudoVertices = new List<VsBuffer>();
-            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color, i, j, k)); //1
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color, i, j, k)); //2
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color, i, j, k)); //3
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color, i, j, k)); //4
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color, i, j, k)); //5
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, i, j, k)); //6
-            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, i, j, k)); //7
+            vertices.Add(new VsBuffer(new Vector3(i, j, k), color, i, j, k)); //0
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), color, i, j, k)); //1
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), color, i, j, k)); //2
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), color, i, j, k)); //4
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), color, i, j, k)); //5
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), color, i, j, k)); //6
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), color, i, j, k)); //7
             vertices.AddRange(pseudoVertices);
 
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
