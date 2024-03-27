@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SharpDX;
 
 namespace D3D {
   /// <summary>

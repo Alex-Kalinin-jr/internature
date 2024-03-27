@@ -7,7 +7,7 @@ struct PSIn
     float3 fragPos : POSITION1;
     float4 color : COLOR;
 };
-
+ 
 float4 main(PSIn input) : SV_TARGET
 {
     return input.color;

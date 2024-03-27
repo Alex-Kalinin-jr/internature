@@ -53,7 +53,7 @@ namespace D3D {
     /// <returns>The created scene.</returns>
     public static Scene CreateGridTestingScene() {
       var scene = new Scene();
-      var figure = CreateGridFigures(20, 20, 10);
+      var figure = CreateGridFigures(2, 1, 1);
       figure.SetProperty(CGridMesh.PropertyType.Stability);
       scene.AddComponent(figure);
       return scene;
@@ -66,9 +66,8 @@ namespace D3D {
     public static Scene CreatePipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
-      var pipeMesh = new CPipeMesh(mesh, 0.5f, 40);
+      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 2.0f));
       scene.AddComponent(mesh);
-      scene.AddComponent(pipeMesh);
       return scene;
     }
 
@@ -96,14 +95,14 @@ namespace D3D {
       for (int j = 0; j < yCount; ++j) {
 
         float r = (float)random.NextDouble(0.0f, 1.0f);
-        float g = (float)random.NextDouble(0.0f, 0.0f);
+        float g = (float)random.NextDouble(0.0f, 1.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
 
         for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
             float a = (float)random.NextDouble(0.0f, 1.0f);
-            float aa = (float)random.NextDouble(0.0f, 0.0f);
+            float aa = (float)random.NextDouble(0.0f, 1.0f);
             float aaa = (float)random.NextDouble(0.0f, 1.0f);
             Vector3 stability = new Vector3(a, aa, aaa);
 

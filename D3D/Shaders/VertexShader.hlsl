@@ -37,10 +37,8 @@ VSOut main(VSIn input)
     VSOut output;
     
     output.position = mul(input.position, world);
-    output.fragPos = output.position.xyz;
     output.position = mul(output.position, view);
     output.position = mul(output.position, projection);
-    
     
     output.tex = input.tex;
     output.normal = normalize(mul(input.normal, (float3x3) world));
