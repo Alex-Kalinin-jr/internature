@@ -51,7 +51,7 @@ namespace D3D {
     /// <returns>The created scene.</returns>
     public static Scene CreateGridTestingScene() {
       var scene = new Scene();
-      var figure = CreateGridFigures(2, 1, 1);
+      var figure = CreateGridFigures(20, 15, 20);
       figure.SetProperty(CGridMesh.PropertyType.Stability);
       scene.AddComponent(figure);
       return scene;
@@ -65,6 +65,7 @@ namespace D3D {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
       mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 2.0f));
+      var pipeMesh = MeshConverter.ConvertToPipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
       return scene;
     }
