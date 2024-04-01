@@ -1,5 +1,4 @@
-﻿using Assimp;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Direct3D;
 using System;
 using System.Collections.Generic;
@@ -10,40 +9,6 @@ namespace D3D {
   /// Debugging class for generating scenes, meshes, and properties.
   /// </summary>
   public class Generator {
-    /// <summary>
-    /// Generates mesh data from a file.
-    /// </summary>
-    /// <param name="FileName">The file name of the mesh.</param>
-    /// <returns>A tuple containing lists of vertices and indices.</returns>
-    public static (List<VsBuffer>, List<short>) GenerateMeshFromFile(string FileName) {
-      var vertices = new List<VsBuffer>();
-      var indices = new List<short>();
-      PostProcessSteps Flags = PostProcessSteps.GenerateSmoothNormals
-                             | PostProcessSteps.CalculateTangentSpace
-                             | PostProcessSteps.Triangulate;
-
-      AssimpContext importer = new AssimpContext();
-      Assimp.Scene model = importer.ImportFile(FileName, Flags);
-
-      foreach (Mesh mesh in model.Meshes) {
-        for (int i = 0; i < mesh.VertexCount; ++i) {
-          Vector3D Pos = mesh.Vertices[i];
-          Vector3D Normal = mesh.Normals[i];
-          Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
-          vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z)));
-        }
-
-        int indexBase = (short)indices.Count();
-        foreach (Face Faces in mesh.Faces) {
-          if (Faces.IndexCount != 3)
-            continue;
-          indices.Add((short)(indexBase + Faces.Indices[0]));
-          indices.Add((short)(indexBase + Faces.Indices[1]));
-          indices.Add((short)(indexBase + Faces.Indices[2]));
-        }
-      }
-      return (vertices, indices);
-    }
 
     /// <summary>
     /// Creates a new scene for testing grid figures.

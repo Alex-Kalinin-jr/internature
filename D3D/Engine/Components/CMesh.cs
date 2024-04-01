@@ -33,15 +33,6 @@ namespace D3D {
     public FigureType FigureTypeObj;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CMesh"/> class with mesh data loaded from a file.
-    /// </summary>
-    /// <param name="path">The path to the mesh file.</param>
-    public CMesh(string path) {
-      Initialize();
-      (Vertices, Indices) = Generator.GenerateMeshFromFile(path);
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="CMesh"/> class.
     /// </summary>
     public CMesh() {
