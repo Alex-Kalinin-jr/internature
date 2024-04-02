@@ -12,11 +12,6 @@ namespace D3D {
     public List<short> LineIndices;
     public Dictionary<PropertyType, Vector3[]> Properties;
 
-    public CGridMesh(string path) : base(path) {
-      LineIndices = new List<short>();
-      Properties = new Dictionary<PropertyType, Vector3[]>();
-    }
-
     public CGridMesh() : base() {
       LineIndices = new List<short>();
       Properties = new Dictionary<PropertyType, Vector3[]>();

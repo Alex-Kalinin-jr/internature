@@ -56,10 +56,8 @@ namespace D3D {
       SetViewPort();
       InputElement[] element = new[] {
         new InputElement("POSITION", 0, Format.R32G32B32A32_Float, 0, 0, InputClassification.PerVertexData, 0),
-        new InputElement("TEXCOORD", 0, Format.R32G32_Float, 16, 0, InputClassification.PerVertexData, 0),
-        new InputElement("NORMAL", 0, Format.R32G32B32_Float, 24, 0, InputClassification.PerVertexData, 0),
-        new InputElement("COLOR", 0, Format.R32G32B32_Float, 32, 0, InputClassification.PerVertexData, 0),
-        new InputElement("GRIDCOORDS", 0, Format.R32G32B32_SInt, 44, 0, InputClassification.PerVertexData, 0)
+        new InputElement("COLOR", 0, Format.R32G32B32_Float, 12, 0, InputClassification.PerVertexData, 0),
+        new InputElement("GRIDCOORDS", 0, Format.R32G32B32_SInt, 24, 0, InputClassification.PerVertexData, 0)
       };
       InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");
@@ -116,23 +114,6 @@ namespace D3D {
       }
     }
 
-    private void ChangeRasterizerState() {
-      RasterizerStateDescription rasterizerDesc = new RasterizerStateDescription {
-        CullMode = CullMode.Back,
-        FillMode = FillMode.Solid,
-        IsFrontCounterClockwise = false,
-        DepthBias = 0,
-        DepthBiasClamp = 0,
-        SlopeScaledDepthBias = 0,
-        IsDepthClipEnabled = true,
-        IsScissorEnabled = false,
-        IsMultisampleEnabled = false,
-        IsAntialiasedLineEnabled = false
-      };
-
-      _rasterizerState = new RasterizerState(_context3D.Device, rasterizerDesc);
-      _context3D.Rasterizer.State = _rasterizerState;
-    }
 
     /// <summary>
     /// Sets the viewport for rendering.
@@ -323,10 +304,17 @@ namespace D3D {
         Format = depthTextureDesc.Format,
         Dimension = DepthStencilViewDimension.Texture2D,
       };
+
       depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-      var depthStencilDesc = new DepthStencilStateDescription();
+      var depthStencilDesc = new DepthStencilStateDescription {
+        IsDepthEnabled = true, // Enable depth test
+        DepthWriteMask = DepthWriteMask.All,
+        DepthComparison = Comparison.Less
+      };
+
       _depthStencilState = new DepthStencilState(_device3D, depthStencilDesc);
+
       _context3D.OutputMerger.SetDepthStencilState(_depthStencilState);
       _depthStencilView = new DepthStencilView(_device3D, _depthBuffer, depthStencilViewDesc);
 
@@ -350,6 +338,24 @@ namespace D3D {
 
       var blendState = new BlendState(_device3D, blendStateDesc);
       _context3D.OutputMerger.BlendState = blendState;
+    }
+
+    private void ChangeRasterizerState() {
+      RasterizerStateDescription rasterizerDesc = new RasterizerStateDescription {
+        CullMode = CullMode.Back,
+        FillMode = FillMode.Solid,
+        IsFrontCounterClockwise = false,
+        DepthBias = 0,
+        DepthBiasClamp = 0,
+        SlopeScaledDepthBias = 0,
+        IsDepthClipEnabled = true,
+        IsScissorEnabled = false,
+        IsMultisampleEnabled = false,
+        IsAntialiasedLineEnabled = false
+      };
+
+      _rasterizerState = new RasterizerState(_context3D.Device, rasterizerDesc);
+      _context3D.Rasterizer.State = _rasterizerState;
     }
   }
 }

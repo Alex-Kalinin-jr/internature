@@ -1,5 +1,4 @@
-﻿using Assimp;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Direct3D;
 using System;
 using System.Collections.Generic;
@@ -10,42 +9,6 @@ namespace D3D {
   /// Debugging class for generating scenes, meshes, and properties.
   /// </summary>
   public class Generator {
-    /// <summary>
-    /// Generates mesh data from a file.
-    /// </summary>
-    /// <param name="FileName">The file name of the mesh.</param>
-    /// <returns>A tuple containing lists of vertices and indices.</returns>
-    public static (List<VsBuffer>, List<short>) GenerateMeshFromFile(string FileName) {
-      var vertices = new List<VsBuffer>();
-      var indices = new List<short>();
-      PostProcessSteps Flags = PostProcessSteps.GenerateSmoothNormals
-                             | PostProcessSteps.CalculateTangentSpace
-                             | PostProcessSteps.Triangulate;
-
-      AssimpContext importer = new AssimpContext();
-      Assimp.Scene model = importer.ImportFile(FileName, Flags);
-
-      foreach (Mesh mesh in model.Meshes) {
-        for (int i = 0; i < mesh.VertexCount; ++i) {
-          Vector3D Pos = mesh.Vertices[i];
-          Vector3D Normal = mesh.Normals[i];
-          Vector3D Tex = mesh.HasTextureCoords(0) ? mesh.TextureCoordinateChannels[0][i] : new Vector3D();
-          vertices.Add(new VsBuffer(new Vector3(Pos.X, Pos.Y, Pos.Z),
-                                     new Vector3(Normal.X, Normal.Y, Normal.Z),
-                                     new Vector2(Tex.X, Tex.Y)));
-        }
-
-        int indexBase = (short)indices.Count();
-        foreach (Face Faces in mesh.Faces) {
-          if (Faces.IndexCount != 3)
-            continue;
-          indices.Add((short)(indexBase + Faces.Indices[0]));
-          indices.Add((short)(indexBase + Faces.Indices[1]));
-          indices.Add((short)(indexBase + Faces.Indices[2]));
-        }
-      }
-      return (vertices, indices);
-    }
 
     /// <summary>
     /// Creates a new scene for testing grid figures.
@@ -53,7 +16,7 @@ namespace D3D {
     /// <returns>The created scene.</returns>
     public static Scene CreateGridTestingScene() {
       var scene = new Scene();
-      var figure = CreateGridFigures(20, 20, 10);
+      var figure = CreateGridFigures(20, 15, 20);
       figure.SetProperty(CGridMesh.PropertyType.Stability);
       scene.AddComponent(figure);
       return scene;
@@ -66,9 +29,9 @@ namespace D3D {
     public static Scene CreatePipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
-      var pipeMesh = new CPipeMesh(mesh, 0.5f, 40);
+      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 2.0f));
+      MeshConverter.CreatePipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
-      scene.AddComponent(pipeMesh);
       return scene;
     }
 
@@ -96,26 +59,26 @@ namespace D3D {
       for (int j = 0; j < yCount; ++j) {
 
         float r = (float)random.NextDouble(0.0f, 1.0f);
-        float g = (float)random.NextDouble(0.0f, 0.0f);
+        float g = (float)random.NextDouble(0.0f, 1.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
 
         for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
             float a = (float)random.NextDouble(0.0f, 1.0f);
-            float aa = (float)random.NextDouble(0.0f, 0.0f);
+            float aa = (float)random.NextDouble(0.0f, 1.0f);
             float aaa = (float)random.NextDouble(0.0f, 1.0f);
             Vector3 stability = new Vector3(a, aa, aaa);
 
             var pseudoVertices = new List<VsBuffer>();
-            vertices.Add(new VsBuffer(new Vector3(i, j, k), default, default, color, i, j, k)); //0
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), default, default, color, i, j, k)); //1
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), default, default, color, i, j, k)); //2
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), default, default, color, i, j, k)); //3
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), default, default, color, i, j, k)); //4
-            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), default, default, color, i, j, k)); //5
-            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), default, default, color, i, j, k)); //6
-            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), default, default, color, i, j, k)); //7
+            vertices.Add(new VsBuffer(new Vector3(i, j, k), color, i, j, k)); //0
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), color, i, j, k)); //1
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k), color, i, j, k)); //2
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j + 1, k + 1), color, i, j, k)); //4
+            vertices.Add(new VsBuffer(new Vector3(i + 1, j, k + 1), color, i, j, k)); //5
+            vertices.Add(new VsBuffer(new Vector3(i, j + 1, k + 1), color, i, j, k)); //6
+            vertices.Add(new VsBuffer(new Vector3(i, j, k + 1), color, i, j, k)); //7
             vertices.AddRange(pseudoVertices);
 
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));

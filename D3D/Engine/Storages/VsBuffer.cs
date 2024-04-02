@@ -12,16 +12,6 @@ public struct VsBuffer {
   public Vector3 Position;
 
   /// <summary>
-  /// Texture coordinates of the vertex.
-  /// </summary>
-  public Vector2 Tex;
-
-  /// <summary>
-  /// Normal vector of the vertex.
-  /// </summary>
-  public Vector3 Normal;
-
-  /// <summary>
   /// Color of the vertex.
   /// </summary>
   public Vector3 Color;
@@ -52,15 +42,11 @@ public struct VsBuffer {
   /// <param name="y">Y-coordinate of the grid to which the vertex belongs.</param>
   /// <param name="z">Z-coordinate of the grid to which the vertex belongs.</param>
   public VsBuffer(Vector3 pos = default,
-                  Vector3 norm = default,
-                  Vector2 uv = default,
                   Vector3 color = default,
                   int x = -1,
                   int y = -1,
                   int z = -1) {
     Position = pos;
-    Tex = uv;
-    Normal = norm;
     Color = color;
     XGridCoord = x;
     YGridCoord = y;

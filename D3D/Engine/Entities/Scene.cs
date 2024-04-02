@@ -10,7 +10,7 @@ namespace D3D {
     /// </summary>
     public Scene() {
       // Set the initial view position and aspect ratio
-      var viewPosition = new Vector3(-15.0f, 30.0f, 0.0f);
+      var viewPosition = new Vector3(0.0f, 2.0f, -4.0f);
       var aspectRatio = 1024.0f / 768.0f; // to be refactored
 
       // Create a camera component and add it to the scene

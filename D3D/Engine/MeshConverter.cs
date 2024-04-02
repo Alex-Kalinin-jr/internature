@@ -4,12 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace D3D {
+
   /// <summary>
   /// Class responsible for converting line meshes into pipe meshes.
   /// </summary>
   public class MeshConverter {
+
+    public static CPipeMesh CreatePipe(CMesh lineMesh, float pipeRadius, int segments) {
+      return new CPipeMesh(lineMesh, pipeRadius, segments);
+    }
+
     /// <summary>
-    /// Converts a line mesh into a pipe mesh.
+    /// Converts a line mesh into a pipe mesh. BE CAREFUL! THIS FUNCTION ONLY CHANGES THE GEOMETRY! IT DOES NOT REGISTER MESH AS CPIPEMESH
+    /// if you want any static function which return resistered pipe mesh, use CreatePipe instead
     /// </summary>
     /// <param name="lineMesh">The line mesh to convert.</param>
     /// <param name="pipeRadius">The radius of the pipe.</param>
