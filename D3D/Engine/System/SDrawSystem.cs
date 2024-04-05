@@ -21,7 +21,7 @@ namespace D3D {
     /// </summary>
     public static List<bool> Visibility = new List<bool>();
 
-    private static bool _isLineGridVisibe = true;
+    private static bool _isLineGridVisibe = false;
 
     /// <summary>
     /// Constant buffer for slice coordinates.
