@@ -26,7 +26,7 @@ namespace D3D {
     /// <summary>
     /// Constant buffer for slice coordinates.
     /// </summary>
-    static VsSliceConstantBuffer _sliceCoords = new VsSliceConstantBuffer(-1, -1, -1);
+    private static VsSliceConstantBuffer _sliceCoords = new VsSliceConstantBuffer(-1, -1, -1);
 
     /// <summary>
     /// Dictionary to store antitypes of figure types.
