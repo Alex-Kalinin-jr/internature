@@ -240,19 +240,6 @@ namespace D3D {
         if (_isRotationDown) {
           scene.AddComponent(new CPitch(deltaY / _movingParams.RotDivider));
           scene.AddComponent(new CYaw(deltaX / _movingParams.RotDivider));
-        } else if (_isMouseDown) {
-
-          if (deltaX > 0) {
-            CameraSystem.ShiftLeft();
-          } else {
-            CameraSystem.ShiftRight();
-          }
-
-          if (deltaY > 0) {
-            CameraSystem.ShiftUp();
-          } else {
-            CameraSystem.ShiftDown();
-          }
         }
       }
     }
