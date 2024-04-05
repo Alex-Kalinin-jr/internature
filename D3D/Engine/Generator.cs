@@ -103,6 +103,10 @@ namespace D3D {
       var buff = new VsMvpConstantBuffer();
       buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
 
+      mesh.Size[0] = xCount;
+      mesh.Size[1] = yCount;
+      mesh.Size[2] = zCount;
+
       return mesh;
     }
 

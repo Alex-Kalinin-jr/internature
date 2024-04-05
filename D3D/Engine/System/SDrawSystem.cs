@@ -130,9 +130,7 @@ namespace D3D {
       var indices = figure.Indices.ToArray();
       var matrix = figure.TransformObj.TransformObj;
       var topology = figure.TopologyObj;
-
       var renderer = Renderer.GetRenderer();
-
       renderer.SetVerticesBuffer(ref vertices);
       renderer.SetMvpConstantBuffer(ref matrix);
       renderer.ChangePrimitiveTopology(topology);
