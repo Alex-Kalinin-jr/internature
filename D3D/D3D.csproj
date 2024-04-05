@@ -15,6 +15,7 @@
 		<NuGetPackageImportStamp>
 		</NuGetPackageImportStamp>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,7 @@
 		<WarningLevel>4</WarningLevel>
 		<UseVSHostingProcess>true</UseVSHostingProcess>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<DebugType>pdbonly</DebugType>
@@ -35,6 +37,7 @@
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="SharpDX" Version="4.2.0" />
 		<PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
@@ -43,6 +46,7 @@
 		<PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
 		<PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
@@ -56,6 +60,7 @@
 		<Reference Include="System.Windows.Forms" />
 		<Reference Include="System.Xml" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Compile Include="Engine\Components\Camera\CCamera.cs" />
 		<Compile Include="Engine\Components\CGridMesh.cs" />
@@ -117,13 +122,16 @@
 		<None Include="Resources\Squirrel.obj" />
 		<None Include="Resources\Tree.obj" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<None Include="App.config" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Content Include="Shaders\PixelShader.hlsl" />
 		<Content Include="Shaders\VertexShader.hlsl" />
 	</ItemGroup>
+	
 	<ItemGroup>
 		<Content Include="Shaders\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -132,5 +140,6 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
+	
 	<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
