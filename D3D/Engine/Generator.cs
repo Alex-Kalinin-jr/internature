@@ -83,7 +83,12 @@ namespace D3D {
 
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
-            propertyColor.Add(color);
+            if (j < 3) {
+              propertyColor.Add(new Vector3(1.0f, 0.7f, 0.0f));
+
+            } else {
+              propertyColor.Add(color);
+            }
             propertyStability.Add(stability);
             p += 8;
           }
