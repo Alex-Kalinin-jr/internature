@@ -81,6 +81,7 @@ namespace D3D {
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
+      _form.MouseWheel += new MouseEventHandler(ChangeScale);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
       _form.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
 
@@ -114,7 +115,9 @@ namespace D3D {
       textWindow.Show();
     }
 
-
+    private void ChangeScale(object sender, MouseEventArgs e) {
+      TransformSystem.ChangeScale(e.Delta);
+    }
 
 
     private void ChangePipeParameters(Object sender, EventArgs e) {
