@@ -73,6 +73,9 @@ namespace D3D {
       AddTrackbar("sliceY", new System.Drawing.Point(50, 155), CliceGridNewly, 0, 20, 1);
       AddTrackbar("sliceZ", new System.Drawing.Point(50, 195), CliceGridNewly, 0, 20, 1);
 
+      AddLabel("checkLineGridVisibility", "Lines", new System.Drawing.Point(220, 10));
+      AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 10), ChangeLineGridVisibility);
+
       string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
       SetVisibility(false, controls);
 
@@ -84,6 +87,11 @@ namespace D3D {
 
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void ChangeLineGridVisibility(Object sender, EventArgs e) {
+      DrawSystem.ChangeLineGridVisibility(((CheckBox)sender).Checked);
+    }
+
 
     private void ChangePipeParameters(Object sender, EventArgs e) {
       TrackBar segments = null;

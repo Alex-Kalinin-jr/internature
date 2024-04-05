@@ -21,6 +21,8 @@ namespace D3D {
     /// </summary>
     public static List<bool> Visibility = new List<bool>();
 
+    private static bool _isLineGridVisibe = true;
+
     /// <summary>
     /// Constant buffer for slice coordinates.
     /// </summary>
@@ -114,6 +116,11 @@ namespace D3D {
       _sliceCoords.Zcoord = -1;
     }
 
+
+    public static void ChangeLineGridVisibility(bool state) {
+      _isLineGridVisibe = state;
+    }
+
     /// <summary>
     /// Method to draw a figure.
     /// </summary>
@@ -133,7 +140,7 @@ namespace D3D {
       renderer.SetSliceConstantBuffer(ref _sliceCoords);
       renderer.Draw(indices.Length);
 
-      if (figure is CGridMesh) {
+      if (figure is CGridMesh && _isLineGridVisibe) {
         _sliceCoords.Bias = 0;
         var lineIndices = ((CGridMesh)figure).LineIndices.ToArray();
         renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineStrip);
