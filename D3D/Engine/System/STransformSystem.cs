@@ -24,6 +24,7 @@ namespace D3D {
 
     public static void ChangeScale(int delta) {
       var stepFactor = 0.01f;
+      var bottomBorder = 0.1f;
       foreach (var figure in Components) {
         figure.TransformObj.world.Transpose();
         figure.TransformObj.world.M11 /= _scaleFactor;
@@ -32,7 +33,7 @@ namespace D3D {
       }
 
       _scaleFactor += (delta > 0) ? stepFactor : -stepFactor;
-      _scaleFactor = Math.Max(_scaleFactor, 0.1f);
+      _scaleFactor = Math.Max(_scaleFactor, bottomBorder);
       var newScale = _scaleFactor;
 
       foreach (var figure in Components) {

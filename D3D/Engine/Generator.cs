@@ -29,7 +29,7 @@ namespace D3D {
     public static Scene CreatePipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
-      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 2.0f));
+      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
       MeshConverter.CreatePipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
       return scene;
@@ -63,13 +63,13 @@ namespace D3D {
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
 
+        float property_2_r = (float)random.NextDouble(0.0f, 1.0f);
+        float property_2_g = (float)random.NextDouble(0.0f, 1.0f);
+        float property_2_b = (float)random.NextDouble(0.0f, 1.0f);
+        Vector3 stability = new Vector3(property_2_r, property_2_g, property_2_b);
+
         for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
-            float a = (float)random.NextDouble(0.0f, 1.0f);
-            float aa = (float)random.NextDouble(0.0f, 1.0f);
-            float aaa = (float)random.NextDouble(0.0f, 1.0f);
-            Vector3 stability = new Vector3(a, aa, aaa);
-
             var pseudoVertices = new List<VsBuffer>();
             vertices.Add(new VsBuffer(new Vector3(i, j, k), color, i, j, k)); //0
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), color, i, j, k)); //1

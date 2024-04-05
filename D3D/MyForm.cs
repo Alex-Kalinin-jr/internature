@@ -50,8 +50,8 @@ namespace D3D {
       AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
 
       AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      AddRadioButton("color", "Color", new System.Drawing.Point(100, 50), ChangeProperty);
-      AddRadioButton("stability", "Stability", new System.Drawing.Point(100, 70), ChangeProperty);
+      AddRadioButton("color", "Property 1", new System.Drawing.Point(100, 50), ChangeProperty);
+      AddRadioButton("stability", "Property 2", new System.Drawing.Point(100, 70), ChangeProperty);
 
       AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
       AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
@@ -109,7 +109,8 @@ namespace D3D {
       label.AutoSize = true;
       label.Text = "For moving press W A S D\n" +
         "You can rotate camera by pressing Scroll Mouse Button\n" +
-        "You can climb and descend by pressing '=' and '-'\n";
+        "You can climb and descend by pressing '=' and '-'\n" +
+        "You can adjust scale by mouse scrolling.";
       label.Dock = DockStyle.Fill;
       textWindow.Controls.Add(label);
       textWindow.Show();
