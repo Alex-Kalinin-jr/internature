@@ -16,8 +16,8 @@ namespace D3D {
     /// <returns>The created scene.</returns>
     public static Scene CreateGridTestingScene() {
       var scene = new Scene();
-      var figure = CreateGridFigures(20, 15, 20);
-      figure.SetProperty(CGridMesh.PropertyType.Stability);
+      var figure = CreateGridFigures(20, 15, 20); // just an example
+      figure.SetProperty(CGridMesh.PropertyType.Color);
       scene.AddComponent(figure);
       return scene;
     }
