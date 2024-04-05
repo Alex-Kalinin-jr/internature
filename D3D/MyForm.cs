@@ -254,18 +254,13 @@ namespace D3D {
       _mousePos.X = mouseArgs.X;
       _mousePos.Y = mouseArgs.Y;
 
-      if (mouseArgs.Button == MouseButtons.Left) {
-        _isMouseDown = true;
-      } else if (mouseArgs.Button == MouseButtons.Middle) {
+      if (mouseArgs.Button == MouseButtons.Middle) {
         _isRotationDown = true;
       }
     }
 
     private void MyFormMouseUp(object sender, MouseEventArgs e) {
-      MouseEventArgs mouseArgs = (MouseEventArgs)e;
-      if (mouseArgs.Button == MouseButtons.Left) {
-        _isMouseDown = false;
-      } else if (mouseArgs.Button == MouseButtons.Middle) {
+      if (e.Button == MouseButtons.Middle) {
         _isRotationDown = false;
       }
     }
