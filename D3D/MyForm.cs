@@ -16,7 +16,6 @@ namespace D3D {
 
     private List<Scene> _scene;
     private CMouseMovingParams _movingParams;
-    private bool _isMouseDown = false;
     private bool _isRotationDown = false;
 
     private RenderForm _form;

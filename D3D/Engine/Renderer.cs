@@ -62,8 +62,8 @@ namespace D3D {
       InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");
       InitializeDepthBuffer();
-      // ChangeRasterizerState();
-      // ChangeBlendState();
+      ChangeRasterizerState();
+      ChangeBlendState();
     }
 
     /// <summary>
@@ -310,7 +310,7 @@ namespace D3D {
       var depthStencilDesc = new DepthStencilStateDescription {
         IsDepthEnabled = true, // Enable depth test
         DepthWriteMask = DepthWriteMask.All,
-        DepthComparison = Comparison.Less,
+        DepthComparison = Comparison.Less
       };
 
       _depthStencilState = new DepthStencilState(_device3D, depthStencilDesc);

@@ -86,7 +86,10 @@ namespace D3D {
             lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
             if (j < 3) {
               propertyColor.Add(new Vector3(1.0f, 0.7f, 0.0f));
-
+            } else if ( j > 5 && j < 9) {
+              propertyColor.Add(new Vector3(0.3f, 0.9f, 0.4f));
+            } else if ( j > 11 && j < 14) {
+              propertyColor.Add(new Vector3(0.2f, 0.0f, 1.0f));
             } else {
               propertyColor.Add(color);
             }

@@ -53,7 +53,6 @@ VSOut main(VSIn input)
     else
     {
         output.color = float4(0.0, 0.0, 0.0, 0.0);
-
     }
 
     return output;
