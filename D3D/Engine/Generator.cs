@@ -50,7 +50,7 @@ namespace D3D {
                                                             5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                             1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       var lineIndices = new List<short>();
-      var pseudoLineIndices = new List<short>() { 0, 1, 2, 3, 2, 4, 5, 3, 0, 7, 5, 4, 6, 1, 0};
+      var pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 7, 7, 6, 6, 4, 1, 6, 2, 4, 0, 7, 3, 5 };
       var propertyColor = new List<Vector3>();
       var propertyStability = new List<Vector3>();
       var random = new Random();
@@ -85,11 +85,13 @@ namespace D3D {
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
             if (j < 3) {
-              propertyColor.Add(new Vector3(1.0f, 0.7f, 0.0f));
-            } else if ( j > 5 && j < 9) {
-              propertyColor.Add(new Vector3(0.3f, 0.9f, 0.4f));
-            } else if ( j > 11 && j < 14) {
-              propertyColor.Add(new Vector3(0.2f, 0.0f, 1.0f));
+              propertyColor.Add(new Vector3(1.0f, 0.0f, 0.0f));
+            } else if (j > 2 && j < 5) {
+              propertyColor.Add(new Vector3(1.0f, 0.5f, 0.4f));
+            } else if (j > 4 && j < 8) {
+              propertyColor.Add(new Vector3(0.7f, 0.5f, 0.5f));
+            } else if (j > 7 && j < 11) {
+              propertyColor.Add(new Vector3(0.5f, 0.8f, 0.9f));
             } else {
               propertyColor.Add(color);
             }
