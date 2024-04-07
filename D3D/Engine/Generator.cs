@@ -107,7 +107,8 @@ namespace D3D {
       mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
 
       var buff = new VsMvpConstantBuffer();
-      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), 
+                                                      new Vector3(0.0f, 0.0f, 0.0f));
 
       mesh.Size[0] = xCount;
       mesh.Size[1] = yCount;

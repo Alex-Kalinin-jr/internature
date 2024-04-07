@@ -42,7 +42,7 @@ namespace D3D {
     /// </summary>
     /// <param name="figure">The figure to register.</param>
     new public static void Register(CMesh figure) {
-      Components.Add(figure);
+         Components.Add(figure);
       Visibility.Add(true);
     }
 

@@ -16,11 +16,11 @@
     /// <summary>
     /// Constructor to initialize CMouseMovingParams with custom rotation and shift dividers.
     /// </summary>
-    /// <param name="iamRotDivider">The rotation divider value to initialize CMouseMovingParams.</param>
-    /// <param name="iamShiftDivider">The shift divider value to initialize CMouseMovingParams.</param>
-    public CMouseMovingParams(float iamRotDivider, float iamShiftDivider) {
-      RotDivider = iamRotDivider; // Set the rotation divider
-      ShiftDivider = iamShiftDivider; // Set the shift divider
+    /// <param name="rotDivider">The rotation divider value to initialize CMouseMovingParams.</param>
+    /// <param name="shiftDivider">The shift divider value to initialize CMouseMovingParams.</param>
+    public CMouseMovingParams(float rotDivider, float shiftDivider) {
+      RotDivider = rotDivider; // Set the rotation divider
+      ShiftDivider = shiftDivider; // Set the shift divider
     }
   }
 }

@@ -39,9 +39,9 @@ namespace D3D {
       _scene = new List<Scene> {Generator.CreateGridTestingScene(),
                                 Generator.CreatePipeTestingScene()};
 
-      DrawSystem.ChangePipeAppearance(0.2f, 10);
+      DrawSystem.ChangePipeAppearance(0.2f, 10); // just an example. hover function name to reveal meaning.
 
-      _movingParams = new CMouseMovingParams(10.0f, 20.0f);
+      _movingParams = new CMouseMovingParams(10.0f, 20.0f); // just an example. hover function name to reveal meaning.
 
 
       AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
@@ -58,10 +58,10 @@ namespace D3D {
       AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
       AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
 
-
       AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
       AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
       AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
+
       AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
 
       AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
@@ -75,7 +75,8 @@ namespace D3D {
       AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
 
 
-      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
+      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", 
+                            "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
       SetVisibility(false, controls);
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
@@ -90,8 +91,6 @@ namespace D3D {
       toolStripMenuItem.Click += ShowHelpMenu;
 
       menuStrip.Items.Add(toolStripMenuItem);
-
-      // Add the MenuStrip to your form (assuming you are working with Windows Forms)
       _form.Controls.Add(menuStrip);
     }
 
@@ -118,7 +117,6 @@ namespace D3D {
     private void ChangeScale(object sender, MouseEventArgs e) {
       TransformSystem.ChangeScale(e.Delta);
     }
-
 
     private void ChangePipeParameters(Object sender, EventArgs e) {
       TrackBar segments = null;
@@ -232,7 +230,7 @@ namespace D3D {
       if (bttn.Name == "pipe" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Pipe);
         SetVisibility(true, controls);
-      } else {
+      } else if (bttn.Name == "line" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Line);
         SetVisibility(false, controls);
       }
@@ -327,7 +325,8 @@ namespace D3D {
     /// <summary>
     /// Adds a trackbar control to the form.
     /// </summary>
-    private void AddTrackbar(string name, System.Drawing.Point position, EventHandler handler, int bottom, int top, int step) {
+    private void AddTrackbar(string name, System.Drawing.Point position, 
+                             EventHandler handler, int bottom, int top, int step) {
       var trackbar = new TrackBar();
       trackbar.Name = name;
       trackbar.Minimum = bottom;
