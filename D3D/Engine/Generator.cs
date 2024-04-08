@@ -14,9 +14,9 @@ namespace D3D {
     /// Creates a new scene for testing grid figures.
     /// </summary>
     /// <returns>The created scene.</returns>
-    public static Scene CreateGridTestingScene() {
+    public static Scene CreateGridTestingScene(int[] gridSize) {
       var scene = new Scene();
-      var figure = CreateGridFigures(20, 15, 20); // just an example
+      var figure = CreateGridFigures(gridSize[0], gridSize[1], gridSize[2]); // just an example
       figure.SetProperty(CGridMesh.PropertyType.Color);
       scene.AddComponent(figure);
       return scene;
