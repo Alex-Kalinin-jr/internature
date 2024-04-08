@@ -97,7 +97,7 @@ namespace D3D {
         ModeDescription = new ModeDescription(Width, Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
         IsWindowed = true,
         OutputHandle = _formPtr,
-        SampleDescription = new SampleDescription(1, 0),
+        SampleDescription = new SampleDescription(2, 0),
         SwapEffect = SwapEffect.Discard,
         Usage = Usage.RenderTargetOutput
       };

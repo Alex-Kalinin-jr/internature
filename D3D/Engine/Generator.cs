@@ -14,10 +14,10 @@ namespace D3D {
     /// Creates a new scene for testing grid figures.
     /// </summary>
     /// <returns>The created scene.</returns>
-    public static Scene CreateGridTestingScene() {
+    public static Scene CreateGridTestingScene(int[] gridSize) {
       var scene = new Scene();
-      var figure = CreateGridFigures(20, 15, 20);
-      figure.SetProperty(CGridMesh.PropertyType.Stability);
+      var figure = CreateGridFigures(gridSize[0], gridSize[1], gridSize[2]); // just an example
+      figure.SetProperty(CGridMesh.PropertyType.Color);
       scene.AddComponent(figure);
       return scene;
     }
@@ -29,7 +29,8 @@ namespace D3D {
     public static Scene CreatePipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
-      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 2.0f));
+      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), 
+                                                                                new Vector3(0.0f, 0.0f, 0.0f));
       MeshConverter.CreatePipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
       return scene;
@@ -49,7 +50,7 @@ namespace D3D {
                                                             5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                             1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       var lineIndices = new List<short>();
-      var pseudoLineIndices = new List<short>() { 0, 1, 2, 3, 2, 4, 5, 3, 0, 7, 5, 4, 6, 1, 0};
+      var pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 7, 7, 6, 6, 4, 1, 6, 2, 4, 0, 7, 3, 5 };
       var propertyColor = new List<Vector3>();
       var propertyStability = new List<Vector3>();
       var random = new Random();
@@ -63,13 +64,13 @@ namespace D3D {
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
 
+        float property_2_r = (float)random.NextDouble(0.0f, 1.0f);
+        float property_2_g = (float)random.NextDouble(0.0f, 1.0f);
+        float property_2_b = (float)random.NextDouble(0.0f, 1.0f);
+        Vector3 stability = new Vector3(property_2_r, property_2_g, property_2_b);
+
         for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
-            float a = (float)random.NextDouble(0.0f, 1.0f);
-            float aa = (float)random.NextDouble(0.0f, 1.0f);
-            float aaa = (float)random.NextDouble(0.0f, 1.0f);
-            Vector3 stability = new Vector3(a, aa, aaa);
-
             var pseudoVertices = new List<VsBuffer>();
             vertices.Add(new VsBuffer(new Vector3(i, j, k), color, i, j, k)); //0
             vertices.Add(new VsBuffer(new Vector3(i, j + 1, k), color, i, j, k)); //1
@@ -83,7 +84,17 @@ namespace D3D {
 
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
-            propertyColor.Add(color);
+            if (j < 3) {
+              propertyColor.Add(new Vector3(1.0f, 0.0f, 0.0f));
+            } else if (j > 2 && j < 5) {
+              propertyColor.Add(new Vector3(1.0f, 0.5f, 0.4f));
+            } else if (j > 4 && j < 8) {
+              propertyColor.Add(new Vector3(0.7f, 0.5f, 0.5f));
+            } else if (j > 7 && j < 11) {
+              propertyColor.Add(new Vector3(0.5f, 0.8f, 0.9f));
+            } else {
+              propertyColor.Add(color);
+            }
             propertyStability.Add(stability);
             p += 8;
           }
@@ -96,7 +107,12 @@ namespace D3D {
       mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
 
       var buff = new VsMvpConstantBuffer();
-      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
+      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), 
+                                                      new Vector3(0.0f, 0.0f, 0.0f));
+
+      mesh.Size[0] = xCount;
+      mesh.Size[1] = yCount;
+      mesh.Size[2] = zCount;
 
       return mesh;
     }

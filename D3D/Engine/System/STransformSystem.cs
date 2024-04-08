@@ -1,5 +1,6 @@
 ﻿using SharpDX.Mathematics.Interop;
 using SharpDX;
+using System;
 
 namespace D3D {
   /// <summary>
@@ -9,12 +10,41 @@ namespace D3D {
     /// <summary>
     /// Method to update the transform system.
     /// </summary>
+    /// 
+
+    private static float _scaleFactor = 1;
+
     new public static void Update() {
       foreach (var component in Components) {
         // Update the view and projection matrices for each transform component
         component.TransformObj.view = GetViewMatrix();
         component.TransformObj.projection = GetProjectionMatrix();
       }
+    }
+
+    public static void ChangeScale(int delta) {
+      var stepFactor = 0.01f;
+      var bottomBorder = 0.1f;
+      foreach (var figure in Components) {
+        figure.TransformObj.world.Transpose();
+        figure.TransformObj.world.M11 /= _scaleFactor;
+        figure.TransformObj.world.M22 /= _scaleFactor;
+        figure.TransformObj.world.M33 /= _scaleFactor;
+      }
+
+      _scaleFactor += (delta > 0) ? stepFactor : -stepFactor;
+      _scaleFactor = Math.Max(_scaleFactor, bottomBorder);
+      var newScale = _scaleFactor;
+
+      foreach (var figure in Components) {
+        figure.TransformObj.world.M11 *= _scaleFactor;
+        figure.TransformObj.world.M22 *= _scaleFactor;
+        figure.TransformObj.world.M33 *= _scaleFactor;
+        figure.TransformObj.world.Transpose();
+      }
+
+
+
     }
 
     /// <summary>

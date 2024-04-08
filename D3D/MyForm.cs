@@ -6,6 +6,7 @@ using SharpDX;
 using System.Drawing;
 using System.Linq;
 using static System.Windows.Forms.AxHost;
+using System.Runtime.InteropServices;
 
 namespace D3D {
 
@@ -16,7 +17,6 @@ namespace D3D {
 
     private List<Scene> _scene;
     private CMouseMovingParams _movingParams;
-    private bool _isMouseDown = false;
     private bool _isRotationDown = false;
 
     private RenderForm _form;
@@ -37,53 +37,101 @@ namespace D3D {
       _form.ResumeLayout(false);
       _mousePos = new CMousePos();
 
-      _scene = new List<Scene> {Generator.CreateGridTestingScene(),
+      int[] gridSize = { 20, 10, 20 };
+      _scene = new List<Scene> {Generator.CreateGridTestingScene(gridSize),
                                 Generator.CreatePipeTestingScene()};
 
-      DrawSystem.ChangePipeAppearance(0.2f, 10);
+      DrawSystem.ChangePipeAppearance(0.2f, 10); // just an example. hover function name to reveal meaning.
 
-      _movingParams = new CMouseMovingParams(10.0f, 20.0f);
-
-
-      AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 10));
-      AddRadioButton("line", "Line", new System.Drawing.Point(20, 30), ChangePipeShowType);
-      AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 50), ChangePipeShowType);
-
-      AddLabel("Properties", "Properties", new System.Drawing.Point(100, 10));
-      AddRadioButton("color", "Color", new System.Drawing.Point(100, 30), ChangeProperty);
-      AddRadioButton("stability", "Stability", new System.Drawing.Point(100, 50), ChangeProperty);
-
-      AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 10));
-      AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 40));
-      AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 80));
-      AddTrackbar("pipeSegments", new System.Drawing.Point(240, 40), ChangePipeParameters, 10, 40, 1);
-      AddTrackbar("pipeRadius", new System.Drawing.Point(240, 80), ChangePipeParameters, 1, 20, 1);
+      _movingParams = new CMouseMovingParams(10.0f, 20.0f); // just an example. hover function name to reveal meaning.
 
 
-      AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 80), TurnOnOffSliceMode);
-      AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 115));
-      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 155));
-      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 195));
+      AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
+      AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
+      AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
 
-      AddCheckBox("checkX", "", new System.Drawing.Point(30, 115), SetSliceVisibility);
-      AddCheckBox("checkY", "", new System.Drawing.Point(30, 155), SetSliceVisibility);
-      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 195), SetSliceVisibility);
+      AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
+      AddRadioButton("color", "Property 1", new System.Drawing.Point(100, 50), ChangeProperty);
+      AddRadioButton("stability", "Property 2", new System.Drawing.Point(100, 70), ChangeProperty);
 
-      AddTrackbar("sliceX", new System.Drawing.Point(50, 115), CliceGridNewly, 0, 20, 1);
-      AddTrackbar("sliceY", new System.Drawing.Point(50, 155), CliceGridNewly, 0, 20, 1);
-      AddTrackbar("sliceZ", new System.Drawing.Point(50, 195), CliceGridNewly, 0, 20, 1);
+      AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
+      AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
+      AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 100));
+      AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
+      AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
 
-      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
+      AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
+      AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
+      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
+
+      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
+
+      AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
+      AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
+      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 205), SetSliceVisibility);
+
+      AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1);
+      AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1);
+      AddTrackbar("sliceZ", new System.Drawing.Point(50, 205), CliceGridNewly, 0, gridSize[2] - 1, 1);
+
+      var xBar = _form.Controls.Find("sliceX", true);
+      var yBar = _form.Controls.Find("sliceY", true);
+      var zBar = _form.Controls.Find("sliceZ", true);
+
+      TrackBar track = (TrackBar)xBar[0];
+      TrackBar trackY = (TrackBar)yBar[0];
+      TrackBar trackZ = (TrackBar)zBar[0];
+
+      track.Width = 150;
+      trackY.Width = 150;
+      trackZ.Width = 150;
+
+
+      AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
+
+
+      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", 
+                            "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
       SetVisibility(false, controls);
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
+      _form.MouseWheel += new MouseEventHandler(ChangeScale);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
       _form.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
+
+      MenuStrip menuStrip = new MenuStrip();
+
+      ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
+      toolStripMenuItem.Click += ShowHelpMenu;
+
+      menuStrip.Items.Add(toolStripMenuItem);
+      _form.Controls.Add(menuStrip);
     }
 
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void ChangeLineGridVisibility(Object sender, EventArgs e) {
+      DrawSystem.ChangeLineGridVisibility(((CheckBox)sender).Checked);
+    }
+
+    private void ShowHelpMenu(object sender, EventArgs e) {
+      Form textWindow = new Form();
+      Label label = new Label();
+      label.AutoSize = true;
+      label.Text = "For moving press W A S D\n" +
+        "You can rotate camera by pressing Scroll Mouse Button\n" +
+        "You can climb and descend by pressing '=' and '-'\n" +
+        "You can adjust scale by mouse scrolling.";
+      label.Dock = DockStyle.Fill;
+      textWindow.Controls.Add(label);
+      textWindow.Show();
+    }
+
+    private void ChangeScale(object sender, MouseEventArgs e) {
+      TransformSystem.ChangeScale(e.Delta);
+    }
 
     private void ChangePipeParameters(Object sender, EventArgs e) {
       TrackBar segments = null;
@@ -197,7 +245,7 @@ namespace D3D {
       if (bttn.Name == "pipe" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Pipe);
         SetVisibility(true, controls);
-      } else {
+      } else if (bttn.Name == "line" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Line);
         SetVisibility(false, controls);
       }
@@ -232,19 +280,6 @@ namespace D3D {
         if (_isRotationDown) {
           scene.AddComponent(new CPitch(deltaY / _movingParams.RotDivider));
           scene.AddComponent(new CYaw(deltaX / _movingParams.RotDivider));
-        } else if (_isMouseDown) {
-
-          if (deltaX > 0) {
-            CameraSystem.ShiftLeft();
-          } else {
-            CameraSystem.ShiftRight();
-          }
-
-          if (deltaY > 0) {
-            CameraSystem.ShiftUp();
-          } else {
-            CameraSystem.ShiftDown();
-          }
         }
       }
     }
@@ -254,18 +289,13 @@ namespace D3D {
       _mousePos.X = mouseArgs.X;
       _mousePos.Y = mouseArgs.Y;
 
-      if (mouseArgs.Button == MouseButtons.Left) {
-        _isMouseDown = true;
-      } else if (mouseArgs.Button == MouseButtons.Middle) {
+      if (mouseArgs.Button == MouseButtons.Middle) {
         _isRotationDown = true;
       }
     }
 
     private void MyFormMouseUp(object sender, MouseEventArgs e) {
-      MouseEventArgs mouseArgs = (MouseEventArgs)e;
-      if (mouseArgs.Button == MouseButtons.Left) {
-        _isMouseDown = false;
-      } else if (mouseArgs.Button == MouseButtons.Middle) {
+      if (e.Button == MouseButtons.Middle) {
         _isRotationDown = false;
       }
     }
@@ -310,7 +340,8 @@ namespace D3D {
     /// <summary>
     /// Adds a trackbar control to the form.
     /// </summary>
-    private void AddTrackbar(string name, System.Drawing.Point position, EventHandler handler, int bottom, int top, int step) {
+    private void AddTrackbar(string name, System.Drawing.Point position, 
+                             EventHandler handler, int bottom, int top, int step) {
       var trackbar = new TrackBar();
       trackbar.Name = name;
       trackbar.Minimum = bottom;
@@ -383,7 +414,6 @@ namespace D3D {
         SetVisibility(state, name);
       }
     }
-
   }
 }
 

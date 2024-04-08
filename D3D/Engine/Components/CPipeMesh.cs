@@ -7,7 +7,7 @@ namespace D3D {
 
     public CMesh RelatedLineMesh;
 
-    public CPipeMesh(CMesh mesh, float pipeRadius, int segments) : base() {
+    public CPipeMesh(CMesh mesh, float pipeRadius, int segments) :  base() {
       RelatedLineMesh = mesh;
       ChangePipe(pipeRadius, segments);
     }

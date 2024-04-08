@@ -33,6 +33,11 @@ namespace D3D {
     public FigureType FigureTypeObj;
 
     /// <summary>
+    /// Size of the grid along 3 axises
+    /// </summary>
+    public int[] Size = new int[3] { -1, -1, -1};
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CMesh"/> class.
     /// </summary>
     public CMesh() {

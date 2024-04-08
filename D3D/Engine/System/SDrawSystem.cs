@@ -26,6 +26,8 @@ namespace D3D {
     /// </summary>
     static VsSliceConstantBuffer _sliceCoords = new VsSliceConstantBuffer(-1, -1, -1);
 
+    private static bool _isLineGridVisibe = false;
+
     /// <summary>
     /// Dictionary to store antitypes of figure types.
     /// </summary>
@@ -40,7 +42,7 @@ namespace D3D {
     /// </summary>
     /// <param name="figure">The figure to register.</param>
     new public static void Register(CMesh figure) {
-      Components.Add(figure);
+         Components.Add(figure);
       Visibility.Add(true);
     }
 
@@ -114,6 +116,10 @@ namespace D3D {
       _sliceCoords.Zcoord = -1;
     }
 
+    public static void ChangeLineGridVisibility(bool state) {
+      _isLineGridVisibe = state;
+    }
+
     /// <summary>
     /// Method to draw a figure.
     /// </summary>
@@ -133,10 +139,10 @@ namespace D3D {
       renderer.SetSliceConstantBuffer(ref _sliceCoords);
       renderer.Draw(indices.Length);
 
-      if (figure is CGridMesh) {
+      if (figure is CGridMesh && _isLineGridVisibe) {
         _sliceCoords.Bias = 0;
         var lineIndices = ((CGridMesh)figure).LineIndices.ToArray();
-        renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineStrip);
+        renderer.ChangePrimitiveTopology(SharpDX.Direct3D.PrimitiveTopology.LineList);
         renderer.SetIndicesBuffer(ref lineIndices);
         renderer.SetSliceConstantBuffer(ref _sliceCoords);
         renderer.Draw(lineIndices.Length);
