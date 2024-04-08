@@ -6,6 +6,7 @@ using SharpDX;
 using System.Drawing;
 using System.Linq;
 using static System.Windows.Forms.AxHost;
+using System.Runtime.InteropServices;
 
 namespace D3D {
 
@@ -413,7 +414,6 @@ namespace D3D {
         SetVisibility(state, name);
       }
     }
-
   }
 }
 
