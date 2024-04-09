@@ -55,8 +55,7 @@ namespace D3D {
       AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
 
       AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      AddRadioButton("color", "Property 1", new System.Drawing.Point(100, 50), ChangeProperty);
-      AddRadioButton("stability", "Property 2", new System.Drawing.Point(100, 70), ChangeProperty);
+      AddComboBox(new System.Drawing.Point(100, 50), new object[] { "color", "stability" });
 
       AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
       AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
@@ -144,9 +143,9 @@ namespace D3D {
 
       var controls = _form.Controls.Find("pipeSegments", true);
       if (controls.Length != 0) {
-        foreach(var control in controls) {
+        foreach (var control in controls) {
           if (control is TrackBar) {
-            segments = (TrackBar) control;
+            segments = (TrackBar)control;
             break;
           }
         }
@@ -257,18 +256,6 @@ namespace D3D {
       }
     }
 
-    /*
-    private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
-      _pressedKeys.Add(e.KeyChar);
-
-      ProcessInput();
-    }
-
-    private void MyFormKeyRelease(object sender, KeyPressEventArgs e) {
-      _pressedKeys.Remove(e.KeyChar);
-    }
-    */
-
     private void ProcessInput() {
       _keyboard.Poll();
       var keyboardState = _keyboard.GetCurrentState();
@@ -365,13 +352,25 @@ namespace D3D {
       }
     }
 
+    private void ChangeComboProperty(object sender, EventArgs e) {
+      ComboBox comboBox = (ComboBox)sender;
+      string selectedOption = comboBox.SelectedItem.ToString();
+
+      if (selectedOption == "color") {
+        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Color);
+      } else if (selectedOption == "stability") {
+        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Stability);
+      }
+    }
+
+
     // forming
     // ////////////////////////////////////////////////////////////////////////////////////
 
     /// <summary>
     /// Adds a trackbar control to the form.
     /// </summary>
-    private void AddTrackbar(string name, System.Drawing.Point position, 
+    private void AddTrackbar(string name, System.Drawing.Point position,
                              EventHandler handler, int bottom, int top, int step) {
       var trackbar = new TrackBar();
       trackbar.Name = name;
@@ -436,6 +435,17 @@ namespace D3D {
       label.TextAlign = ContentAlignment.MiddleLeft;
       _form.Controls.Add(label);
     }
+
+    private void AddComboBox(System.Drawing.Point pos, object[] obj) {
+      ComboBox comboBox = new ComboBox();
+      comboBox.DropDownWidth = 65;
+      comboBox.Items.AddRange(obj);
+      comboBox.Location = pos;
+      comboBox.Size = new System.Drawing.Size(65, 21);
+      _form.Controls.Add(comboBox);
+      comboBox.SelectedIndexChanged += ChangeComboProperty;
+    }
+
 
     /// <summary>
     /// Sets the visibility state of slicing controls.
