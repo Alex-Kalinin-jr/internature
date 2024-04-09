@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using static System.Windows.Forms.AxHost;
 using System.Runtime.InteropServices;
+using SharpDX.DirectInput;
 
 namespace D3D {
 
@@ -22,6 +23,9 @@ namespace D3D {
     private RenderForm _form;
     private CScreenSize _size;
     private CMousePos _mousePos;
+
+    private HashSet<char> _pressedKeys = new HashSet<char>();
+    private Keyboard _keyboard;
 
     /// <summary>
     /// Constructor for the custom form.
@@ -90,15 +94,13 @@ namespace D3D {
       AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
 
 
-      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", 
-                            "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
+      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
       SetVisibility(false, controls);
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
       _form.MouseWheel += new MouseEventHandler(ChangeScale);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
-      _form.KeyPress += new KeyPressEventHandler(MyFormKeyPress);
 
       MenuStrip menuStrip = new MenuStrip();
 
@@ -107,6 +109,9 @@ namespace D3D {
 
       menuStrip.Items.Add(toolStripMenuItem);
       _form.Controls.Add(menuStrip);
+
+      _keyboard = new Keyboard(new DirectInput());
+      _keyboard.Acquire();
     }
 
     // logic
@@ -122,7 +127,7 @@ namespace D3D {
       label.AutoSize = true;
       label.Text = "For moving press W A S D\n" +
         "You can rotate camera by pressing Scroll Mouse Button\n" +
-        "You can climb and descend by pressing '=' and '-'\n" +
+        "You can climb and descend by pressing 'Q' and 'E'\n" +
         "You can adjust scale by mouse scrolling.";
       label.Dock = DockStyle.Fill;
       textWindow.Controls.Add(label);
@@ -228,6 +233,7 @@ namespace D3D {
     /// Callback function for rendering the scene.
     /// </summary>
     private void RenderCallback() {
+      ProcessInput();
       var renderer = Renderer.GetRenderer(_form.Handle);
       renderer.Update();
       CameraSystem.Update();
@@ -251,23 +257,48 @@ namespace D3D {
       }
     }
 
+    /*
     private void MyFormKeyPress(object sender, KeyPressEventArgs e) {
-      foreach (var scene in _scene) {
-        if (e.KeyChar == 'w') {
-          CameraSystem.ShiftFwd();
-        } else if (e.KeyChar == 's') {
-          CameraSystem.ShiftBack();
-        } else if (e.KeyChar == 'd') {
-          CameraSystem.ShiftRight();
-        } else if (e.KeyChar == 'a') {
-          CameraSystem.ShiftLeft();
-        } else if (e.KeyChar == '=') {
-          CameraSystem.ShiftUp();
-        } else if (e.KeyChar == '-') {
-          CameraSystem.ShiftDown();
+      _pressedKeys.Add(e.KeyChar);
+
+      ProcessInput();
+    }
+
+    private void MyFormKeyRelease(object sender, KeyPressEventArgs e) {
+      _pressedKeys.Remove(e.KeyChar);
+    }
+    */
+
+    private void ProcessInput() {
+      _keyboard.Poll();
+      var keyboardState = _keyboard.GetCurrentState();
+
+      foreach (var key in keyboardState.PressedKeys) {
+        foreach (var scene in _scene) {
+          switch (key) {
+            case Key.W:
+              CameraSystem.ShiftFwd();
+              break;
+            case Key.S:
+              CameraSystem.ShiftBack();
+              break;
+            case Key.D:
+              CameraSystem.ShiftRight();
+              break;
+            case Key.A:
+              CameraSystem.ShiftLeft();
+              break;
+            case Key.Q:
+              CameraSystem.ShiftUp();
+              break;
+            case Key.E:
+              CameraSystem.ShiftDown();
+              break;
+          }
         }
       }
     }
+
 
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = e;
