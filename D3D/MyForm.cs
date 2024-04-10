@@ -66,7 +66,6 @@ namespace D3D {
       AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
       AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
       AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
-
       AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
 
       AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
@@ -74,26 +73,30 @@ namespace D3D {
       AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
 
       AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1);
-      AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1);
-      AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1);
-
       var xBar = _form.Controls.Find("sliceX", true);
-      var yBar = _form.Controls.Find("sliceY", true);
-      var zBar = _form.Controls.Find("sliceZ", true);
-
       TrackBar track = (TrackBar)xBar[0];
-      TrackBar trackY = (TrackBar)yBar[0];
-      TrackBar trackZ = (TrackBar)zBar[0];
-
       track.Width = 150;
+
+      AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1);
+      var yBar = _form.Controls.Find("sliceY", true);
+      TrackBar trackY = (TrackBar)yBar[0];
       trackY.Width = 150;
+
+      AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1);
+      var zBar = _form.Controls.Find("sliceZ", true);
+      TrackBar trackZ = (TrackBar)zBar[0];
       trackZ.Width = 150;
 
+      AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
+      AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
+      AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
 
       AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
 
-
-      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel", "sliceX", "sliceY", "sliceZ" };
+      string[] controls = { "checkX", "checkY", "checkZ", 
+                            "sliceXlabel", "sliceYlabel", "sliceZlabel", 
+                            "sliceX", "sliceY", "sliceZ", 
+                            "sliceXindLabel", "sliceYindLabel", "sliceZindLabel" };
       SetVisibility(false, controls);
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
@@ -102,10 +105,8 @@ namespace D3D {
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
 
       MenuStrip menuStrip = new MenuStrip();
-
       ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
       toolStripMenuItem.Click += ShowHelpMenu;
-
       menuStrip.Items.Add(toolStripMenuItem);
       _form.Controls.Add(menuStrip);
 
@@ -196,19 +197,19 @@ namespace D3D {
       var box = Sender as CheckBox;
       if (box.Checked) {
         if (box.Name == "checkX") {
-          SetVisibility(true, "sliceX");
+          SetVisibility(true, new string[] { "sliceX", "sliceXindLabel" });
         } else if (box.Name == "checkY") {
-          SetVisibility(true, "sliceY");
+          SetVisibility(true, new string[] { "sliceY", "sliceYindLabel" });
         } else {
-          SetVisibility(true, "sliceZ");
+          SetVisibility(true, new string[] { "sliceZ", "sliceZindLabel" });
         }
       } else {
         if (box.Name == "checkX") {
-          SetVisibility(false, "sliceX");
+          SetVisibility(false, new string[] { "sliceX", "sliceXindLabel" });
         } else if (box.Name == "checkY") {
-          SetVisibility(false, "sliceY");
+          SetVisibility(false, new string[] { "sliceY", "sliceYindLabel" });
         } else {
-          SetVisibility(false, "sliceZ");
+          SetVisibility(false, new string[] { "sliceZ", "sliceZindLabel" });
         }
       }
       CliceGridNewly(null, null);
@@ -265,10 +266,13 @@ namespace D3D {
       }
     }
 
+
+    /// <summary>
+    /// Performs actions regarding to keyboard inputs.
+    /// </summary>
     private void ProcessInput() {
       _keyboard.Poll();
       var keyboardState = _keyboard.GetCurrentState();
-
       foreach (var key in keyboardState.PressedKeys) {
         foreach (var scene in _scene) {
           switch (key) {
@@ -331,8 +335,19 @@ namespace D3D {
       int x = GetSlicingValue("checkX", "sliceX");
       int y = GetSlicingValue("checkY", "sliceY");
       int z = GetSlicingValue("checkZ", "sliceZ");
+      SetSlicingValue("sliceXindLabel", x);
+      SetSlicingValue("sliceXindLabel", x);
+      SetSlicingValue("sliceYindLabel", y);
+      SetSlicingValue("sliceZindLabel", z);
       DrawSystem.CliceGrid(x, y, z);
     }
+
+    private void SetSlicingValue(string controlName, int val) {
+      var control = _form.Controls.Find(controlName, true);
+      var lbl = control[0] as Label;
+      lbl.Text = val.ToString();
+    }
+
 
     /// <summary>
     /// Gets the value of a slicing control.
@@ -361,6 +376,7 @@ namespace D3D {
       }
     }
 
+
     private void ChangeComboProperty(object sender, EventArgs e) {
       ComboBox comboBox = (ComboBox)sender;
       string selectedOption = comboBox.SelectedItem.ToString();
@@ -371,7 +387,6 @@ namespace D3D {
         DrawSystem.ChangeProperty(CGridMesh.PropertyType.Stability);
       }
     }
-
 
     // forming
     // ////////////////////////////////////////////////////////////////////////////////////
