@@ -22,12 +22,10 @@ namespace D3D {
     private CMousePos _mousePos;
     private KeyboardSystem _keyboard;
 
-    private HashSet<char> _pressedKeys = new HashSet<char>();
-
     /// <summary>
     /// Constructor for the custom form.
     /// </summary>
-    public MyForm() {
+    public MyForm(CMouseMovingParams movingdivs) {
       _size = new CScreenSize();
       _form = new RenderForm();
       _form.ClientSize = new Size(_size.Width, _size.Height);
@@ -38,64 +36,8 @@ namespace D3D {
       _form.ResumeLayout(false);
       _mousePos = new CMousePos();
       _keyboard = new KeyboardSystem();
-
-      int[] gridSize = { 20, 10, 20 };
-      _scene = new List<Scene> {Generator.CreateGridTestingScene(gridSize),
-                                Generator.CreatePipeTestingScene()};
-
-      DrawSystem.ChangePipeAppearance(0.2f, 10); // just an example. hover function name to reveal meaning.
-
-      _movingParams = new CMouseMovingParams(10.0f, 20.0f); // just an example. hover function name to reveal meaning.
-
-
-      AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
-      AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
-      AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
-
-      AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      AddComboBox(new System.Drawing.Point(100, 50), new object[] { "color", "stability" });
-
-      AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
-      AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
-      AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 100));
-      AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
-      AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
-
-      AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
-      AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
-      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
-      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
-
-      AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
-      AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
-      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
-
-      AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1);
-      var xBar = _form.Controls.Find("sliceX", true);
-      TrackBar track = (TrackBar)xBar[0];
-      track.Width = 150;
-
-      AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1);
-      var yBar = _form.Controls.Find("sliceY", true);
-      TrackBar trackY = (TrackBar)yBar[0];
-      trackY.Width = 150;
-
-      AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1);
-      var zBar = _form.Controls.Find("sliceZ", true);
-      TrackBar trackZ = (TrackBar)zBar[0];
-      trackZ.Width = 150;
-
-      AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
-      AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
-      AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
-
-      AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
-
-      string[] controls = { "checkX", "checkY", "checkZ", 
-                            "sliceXlabel", "sliceYlabel", "sliceZlabel", 
-                            "sliceX", "sliceY", "sliceZ", 
-                            "sliceXindLabel", "sliceYindLabel", "sliceZindLabel" };
-      SetVisibility(false, controls);
+      _scene = new List<Scene>();
+      _movingParams = movingdivs;
 
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
@@ -109,13 +51,89 @@ namespace D3D {
       _form.Controls.Add(menuStrip);
     }
 
+
+    public void AddScene(Scene scene) {
+      _scene.Add(scene);
+    }
+
+
+    public void AddPipeScene(Scene scene) {
+      _scene.Add(scene);
+      AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
+      AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
+      AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
+
+      AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
+      AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
+      AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 100));
+
+      AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
+      AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
+    }
+
+
+    public void AddGridScene(Scene scene, int[] gridSize) {
+      _scene.Add(scene);
+
+      AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
+      AddComboBox(new System.Drawing.Point(100, 50), new object[] { "color", "stability" });
+
+      AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
+      AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
+      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
+      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
+
+      AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
+      AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
+      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
+
+      AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      var xBar = _form.Controls.Find("sliceX", true);
+      TrackBar track = (TrackBar)xBar[0];
+      track.Width = 150;
+
+      AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      var yBar = _form.Controls.Find("sliceY", true);
+      TrackBar trackY = (TrackBar)yBar[0];
+      trackY.Width = 150;
+
+      AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      var zBar = _form.Controls.Find("sliceZ", true);
+      TrackBar trackZ = (TrackBar)zBar[0];
+      trackZ.Width = 150;
+
+      AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
+      AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
+      AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
+
+      AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
+
+      string[] controls = { "checkX", "checkY", "checkZ",
+                            "sliceXlabel", "sliceYlabel", "sliceZlabel",
+                            "sliceX", "sliceY", "sliceZ",
+                            "sliceXindLabel", "sliceYindLabel", "sliceZindLabel" };
+      SetVisibility(false, controls);
+    }
+
+
+
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /// <summary>
+    /// Changes the visibility of the line grid based on the checkbox state.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event (checkbox).</param>
+    /// <param name="e">The event arguments.</param>
     private void ChangeLineGridVisibility(Object sender, EventArgs e) {
       DrawSystem.ChangeLineGridVisibility(((CheckBox)sender).Checked);
     }
 
+    /// <summary>
+    /// Displays a help menu with instructions for controls.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void ShowHelpMenu(object sender, EventArgs e) {
       Form textWindow = new Form();
       Label label = new Label();
@@ -129,6 +147,11 @@ namespace D3D {
       textWindow.Show();
     }
 
+    /// <summary>
+    /// Changes the scale of the camera based on mouse wheel movement.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event (camera scale change).</param>
+    /// <param name="e">The mouse event arguments.</param>
     private void ChangeScale(object sender, MouseEventArgs e) {
       int factor = 7; // example
       if (e.Delta > 0) {
@@ -142,6 +165,11 @@ namespace D3D {
       }
     }
 
+    /// <summary>
+    /// Changes the parameters of a pipe based on the trackbars for segments and radius.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The event arguments.</param>
     private void ChangePipeParameters(Object sender, EventArgs e) {
       TrackBar segments = null;
       TrackBar radius = null;
@@ -261,6 +289,11 @@ namespace D3D {
       }
     }
 
+    /// <summary>
+    /// Handles the mouse move event to calculate the delta values and apply rotation to the scenes.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The mouse event arguments.</param>
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = e;
       var deltaX = mouseArgs.X - _mousePos.X;
@@ -276,6 +309,11 @@ namespace D3D {
       }
     }
 
+    /// <summary>
+    /// Handles the mouse down event to set the initial mouse position and start rotation if middle button is pressed.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The mouse event arguments.</param>
     private void MyFormMouseDown(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = e;
       _mousePos.X = mouseArgs.X;
@@ -286,23 +324,39 @@ namespace D3D {
       }
     }
 
+    /// <summary>
+    /// Handles the mouse up event to stop rotation when the middle button is released.
+    /// </summary>
+    /// <param name="sender">The object that triggered the event.</param>
+    /// <param name="e">The mouse event arguments.</param>
     private void MyFormMouseUp(object sender, MouseEventArgs e) {
       if (e.Button == MouseButtons.Middle) {
         _isRotationDown = false;
       }
     }
 
+    /// <summary>
+    /// Gets values of slicing controls and sets theese values to apporpriate objects.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void CliceGridNewly(object sender, EventArgs e) {
       int x = GetSlicingValue("checkX", "sliceX");
       int y = GetSlicingValue("checkY", "sliceY");
       int z = GetSlicingValue("checkZ", "sliceZ");
-      SetSlicingValue("sliceXindLabel", x);
+
       SetSlicingValue("sliceXindLabel", x);
       SetSlicingValue("sliceYindLabel", y);
       SetSlicingValue("sliceZindLabel", z);
+
       DrawSystem.CliceGrid(x, y, z);
     }
 
+    /// <summary>
+    /// Sets the control value to the text of control (CONTROL SHOULD BE LABEL)
+    /// </summary>
+    /// <param name="controlName">name of label</param>
+    /// <param name="val">value to be set</param>
     private void SetSlicingValue(string controlName, int val) {
       var control = _form.Controls.Find(controlName, true);
       var lbl = control[0] as Label;
@@ -328,16 +382,11 @@ namespace D3D {
       return val;
     }
 
-    private void ChangeProperty(object sender, EventArgs e) {
-      var s = sender as RadioButton;
-      if (s.Name == "color") {
-        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Color);
-      } else if (s.Name == "stability") {
-        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Stability);
-      }
-    }
-
-
+    /// <summary>
+    /// Changes property of registered GridMeshes
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void ChangeComboProperty(object sender, EventArgs e) {
       ComboBox comboBox = (ComboBox)sender;
       string selectedOption = comboBox.SelectedItem.ToString();
@@ -421,6 +470,9 @@ namespace D3D {
       _form.Controls.Add(label);
     }
 
+    /// <summary>
+    /// Adds a ComboBox control to the form.
+    /// </summary>
     private void AddComboBox(System.Drawing.Point pos, object[] obj) {
       ComboBox comboBox = new ComboBox();
       comboBox.DropDownWidth = 65;
