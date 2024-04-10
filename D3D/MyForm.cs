@@ -51,11 +51,9 @@ namespace D3D {
       _form.Controls.Add(menuStrip);
     }
 
-
     public void AddScene(Scene scene) {
       _scene.Add(scene);
     }
-
 
     public void AddPipeScene(Scene scene) {
       _scene.Add(scene);
@@ -70,7 +68,6 @@ namespace D3D {
       AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
       AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
     }
-
 
     public void AddGridScene(Scene scene, int[] gridSize) {
       _scene.Add(scene);
@@ -115,7 +112,12 @@ namespace D3D {
       SetVisibility(false, controls);
     }
 
-
+    /// <summary>
+    /// Starts the form's rendering loop.
+    /// </summary>
+    public void Run() {
+      RenderLoop.Run(_form, RenderCallback);
+    }
 
     // logic
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -252,13 +254,6 @@ namespace D3D {
         DrawSystem.RestoreAllGrids();
         SetVisibility(false, controls);
       }
-    }
-
-    /// <summary>
-    /// Starts the form's rendering loop.
-    /// </summary>
-    public void Run() {
-      RenderLoop.Run(_form, RenderCallback);
     }
 
     /// <summary>
