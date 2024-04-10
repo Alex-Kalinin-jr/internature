@@ -17,8 +17,7 @@ namespace D3D {
     public static Scene CreateGridTestingScene(int[] gridSize) {
       var scene = new Scene();
       var figure = CreateGridFigures(gridSize[0], gridSize[1], gridSize[2]); // just an example
-      figure.SetProperty(CGridMesh.PropertyType.Color);
-      scene.AddComponent(figure);
+        scene.AddComponent(figure);
       return scene;
     }
 
@@ -29,7 +28,7 @@ namespace D3D {
     public static Scene CreatePipeTestingScene() {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
-      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), 
+      mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
                                                                                 new Vector3(0.0f, 0.0f, 0.0f));
       MeshConverter.CreatePipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
@@ -63,12 +62,10 @@ namespace D3D {
         float g = (float)random.NextDouble(0.0f, 1.0f);
         float b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 color = new Vector3(r, g, b);
-
         float property_2_r = (float)random.NextDouble(0.0f, 1.0f);
         float property_2_g = (float)random.NextDouble(0.0f, 1.0f);
         float property_2_b = (float)random.NextDouble(0.0f, 1.0f);
         Vector3 stability = new Vector3(property_2_r, property_2_g, property_2_b);
-
         for (int i = 0; i < xCount; ++i) {
           for (int k = 0; k < zCount; ++k) {
             var pseudoVertices = new List<VsBuffer>();
@@ -107,7 +104,7 @@ namespace D3D {
       mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
 
       var buff = new VsMvpConstantBuffer();
-      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), 
+      buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
                                                       new Vector3(0.0f, 0.0f, 0.0f));
 
       mesh.Size[0] = xCount;

@@ -43,7 +43,7 @@ VSOut main(VSIn input)
     {
         if (slice[3] == 0)
         {
-            output.color = float4(0.8, 0.8, 0.8, 0.3);
+            output.color = float4(0.0, 0.0, 0.0, 1.0);
         }
         else
         {

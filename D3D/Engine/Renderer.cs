@@ -61,8 +61,7 @@ namespace D3D {
       };
       InitializeVertexShader("Shaders/VertexShader.hlsl", ref element);
       InitializePixelShader("Shaders/PixelShader.hlsl");
-      InitializeDepthBuffer();
-      ChangeRasterizerState();
+      ChangeRasterizerState(FillMode.Solid);
       ChangeBlendState();
     }
 
@@ -92,26 +91,55 @@ namespace D3D {
     /// Initializes the device resources for rendering.
     /// </summary>
     private void InitializeDeviceResources() {
-      var description = new SwapChainDescription {
+
+      // Define the buffer description
+      var bufferDesc = new ModeDescription {
+        Width = Width,
+        Height = Height,
+        RefreshRate = new Rational(60, 1),
+        Format = Format.R8G8B8A8_UNorm,
+        ScanlineOrdering = DisplayModeScanlineOrder.Unspecified,
+        Scaling = DisplayModeScaling.Unspecified
+      };
+
+      var swapChainDesc = new SwapChainDescription {
         BufferCount = 1,
-        ModeDescription = new ModeDescription(Width, Height, new Rational(60, 1), Format.R8G8B8A8_UNorm),
-        IsWindowed = true,
         OutputHandle = _formPtr,
-        SampleDescription = new SampleDescription(2, 0),
-        SwapEffect = SwapEffect.Discard,
-        Usage = Usage.RenderTargetOutput
+        SampleDescription = new SampleDescription(1, 0),
+        ModeDescription = bufferDesc,
+        Usage = Usage.RenderTargetOutput,
+        IsWindowed = true,
+        SwapEffect = SwapEffect.Discard
       };
 
       Device.CreateWithSwapChain(DriverType.Hardware,
                                  DeviceCreationFlags.None,
-                                 description,
+                                 swapChainDesc,
                                  out _device3D,
                                  out _swapChain);
       _context3D = _device3D.ImmediateContext;
 
-      using (Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0)) {
-        _renderTargetView = new RenderTargetView(_device3D, backBuffer);
-      }
+      Texture2D backBuffer = _swapChain.GetBackBuffer<Texture2D>(0);
+      _renderTargetView = new RenderTargetView(_device3D, backBuffer);
+      backBuffer.Dispose();
+
+      // Define the depth stencil description
+      var depthStencilDesc = new Texture2DDescription {
+        Width = Width,
+        Height = Height,
+        MipLevels = 1,
+        ArraySize = 1,
+        Format = Format.D24_UNorm_S8_UInt,
+        SampleDescription = new SampleDescription(1, 0),
+        Usage = ResourceUsage.Default,
+        BindFlags = BindFlags.DepthStencil,
+        CpuAccessFlags = CpuAccessFlags.None,
+        OptionFlags = ResourceOptionFlags.None
+      };
+
+      var depthStencilBuffer = new Texture2D(_device3D, depthStencilDesc);
+      _depthStencilView = new DepthStencilView(_device3D, depthStencilBuffer);
+      _context3D.OutputMerger.SetRenderTargets(_depthStencilView, _renderTargetView);
     }
 
 
@@ -164,7 +192,6 @@ namespace D3D {
     /// Updates the renderer before drawing.
     /// </summary>
     public void Update() {
-      _context3D.OutputMerger.SetRenderTargets(_renderTargetView);
       _context3D.ClearRenderTargetView(_renderTargetView, _background);
       _context3D.ClearDepthStencilView(_depthStencilView,
                                         DepthStencilClearFlags.Depth | DepthStencilClearFlags.Stencil,
@@ -283,43 +310,6 @@ namespace D3D {
     /// <summary>
     /// Initializes the depth buffer for rendering.
     /// </summary>
-    private void InitializeDepthBuffer() {
-
-      var depthTextureDesc = new Texture2DDescription {
-        Width = Width,
-        Height = Height,
-        MipLevels = 1,
-        ArraySize = 1,
-        Format = Format.D24_UNorm_S8_UInt,
-        SampleDescription = new SampleDescription(1, 0),
-        Usage = ResourceUsage.Default,
-        BindFlags = BindFlags.DepthStencil,
-        CpuAccessFlags = CpuAccessFlags.None,
-        OptionFlags = ResourceOptionFlags.None
-      };
-      _depthBuffer = new Texture2D(_device3D, depthTextureDesc);
-
-
-      var depthStencilViewDesc = new DepthStencilViewDescription {
-        Format = depthTextureDesc.Format,
-        Dimension = DepthStencilViewDimension.Texture2D,
-      };
-
-      depthStencilViewDesc.Texture2D.MipSlice = 0;
-
-      var depthStencilDesc = new DepthStencilStateDescription {
-        IsDepthEnabled = true, // Enable depth test
-        DepthWriteMask = DepthWriteMask.All,
-        DepthComparison = Comparison.Less
-      };
-
-      _depthStencilState = new DepthStencilState(_device3D, depthStencilDesc);
-
-      _context3D.OutputMerger.SetDepthStencilState(_depthStencilState);
-      _depthStencilView = new DepthStencilView(_device3D, _depthBuffer, depthStencilViewDesc);
-
-      _context3D.OutputMerger.SetTargets(_depthStencilView, _renderTargetView);
-    }
 
     private void ChangeBlendState() {
       var blendStateDesc = new BlendStateDescription {
@@ -340,10 +330,10 @@ namespace D3D {
       _context3D.OutputMerger.BlendState = blendState;
     }
 
-    private void ChangeRasterizerState() {
+    private void ChangeRasterizerState(FillMode mode) {
       RasterizerStateDescription rasterizerDesc = new RasterizerStateDescription {
         CullMode = CullMode.Back,
-        FillMode = FillMode.Solid,
+        FillMode = mode,
         IsFrontCounterClockwise = false,
         DepthBias = 0,
         DepthBiasClamp = 0,
@@ -351,7 +341,7 @@ namespace D3D {
         IsDepthClipEnabled = true,
         IsScissorEnabled = false,
         IsMultisampleEnabled = false,
-        IsAntialiasedLineEnabled = false
+        IsAntialiasedLineEnabled = true
       };
 
       _rasterizerState = new RasterizerState(_context3D.Device, rasterizerDesc);

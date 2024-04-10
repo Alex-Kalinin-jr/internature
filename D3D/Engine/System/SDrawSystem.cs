@@ -56,6 +56,7 @@ namespace D3D {
           DrawFigure(figure);
         }
       }
+      var renderer = Renderer.GetRenderer();
     }
 
     /// <summary>

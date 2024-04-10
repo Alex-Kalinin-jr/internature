@@ -14,7 +14,6 @@ namespace D3D {
 
     public CGridMesh() : base() {
       LineIndices = new List<short>();
-      
       Properties = new Dictionary<PropertyType, Vector3[]>();
     }
 

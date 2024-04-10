@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -75,6 +75,7 @@
     <Compile Include="Engine\Entities\Scene.cs" />
     <Compile Include="Engine\Components\CMouse.cs" />
     <Compile Include="Engine\Generator.cs" />
+    <Compile Include="Engine\Loader.cs" />
     <Compile Include="Engine\MeshConverter.cs" />
     <Compile Include="Engine\Storages\VsSliceConstantBuffer.cs" />
     <Compile Include="Engine\System\SBaseSystem.cs" />
