@@ -80,6 +80,7 @@
     <Compile Include="Engine\System\SBaseSystem.cs" />
     <Compile Include="Engine\System\SCameraSystem.cs" />
     <Compile Include="Engine\System\SDrawSystem.cs" />
+    <Compile Include="Engine\System\FKeyboardSystem.cs" />
     <Compile Include="Engine\System\SLightSystem.cs" />
     <Compile Include="Engine\System\STransformSystem.cs" />
     <Compile Include="MyForm.cs">

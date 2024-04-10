@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.Windows;
-using SharpDX;
 using System.Drawing;
-using System.Linq;
-using static System.Windows.Forms.AxHost;
-using System.Runtime.InteropServices;
 using SharpDX.DirectInput;
+using D3D.Engine.System;
 
 namespace D3D {
 
@@ -23,9 +20,9 @@ namespace D3D {
     private RenderForm _form;
     private CScreenSize _size;
     private CMousePos _mousePos;
+    private KeyboardSystem _keyboard;
 
     private HashSet<char> _pressedKeys = new HashSet<char>();
-    private Keyboard _keyboard;
 
     /// <summary>
     /// Constructor for the custom form.
@@ -40,6 +37,7 @@ namespace D3D {
       _form.Name = "MyForm";
       _form.ResumeLayout(false);
       _mousePos = new CMousePos();
+      _keyboard = new KeyboardSystem();
 
       int[] gridSize = { 20, 10, 20 };
       _scene = new List<Scene> {Generator.CreateGridTestingScene(gridSize),
@@ -109,9 +107,6 @@ namespace D3D {
       toolStripMenuItem.Click += ShowHelpMenu;
       menuStrip.Items.Add(toolStripMenuItem);
       _form.Controls.Add(menuStrip);
-
-      _keyboard = new Keyboard(new DirectInput());
-      _keyboard.Acquire();
     }
 
     // logic
@@ -242,7 +237,7 @@ namespace D3D {
     /// Callback function for rendering the scene.
     /// </summary>
     private void RenderCallback() {
-      ProcessInput();
+      _keyboard.ProcessInput();
       var renderer = Renderer.GetRenderer(_form.Handle);
       renderer.Update();
       CameraSystem.Update();
@@ -265,40 +260,6 @@ namespace D3D {
         SetVisibility(false, controls);
       }
     }
-
-
-    /// <summary>
-    /// Performs actions regarding to keyboard inputs.
-    /// </summary>
-    private void ProcessInput() {
-      _keyboard.Poll();
-      var keyboardState = _keyboard.GetCurrentState();
-      foreach (var key in keyboardState.PressedKeys) {
-        foreach (var scene in _scene) {
-          switch (key) {
-            case Key.W:
-              CameraSystem.ShiftFwd();
-              break;
-            case Key.S:
-              CameraSystem.ShiftBack();
-              break;
-            case Key.D:
-              CameraSystem.ShiftRight();
-              break;
-            case Key.A:
-              CameraSystem.ShiftLeft();
-              break;
-            case Key.Q:
-              CameraSystem.ShiftUp();
-              break;
-            case Key.E:
-              CameraSystem.ShiftDown();
-              break;
-          }
-        }
-      }
-    }
-
 
     private void MyFormMouseMove(object sender, MouseEventArgs e) {
       MouseEventArgs mouseArgs = e;
