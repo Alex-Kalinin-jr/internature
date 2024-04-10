@@ -134,7 +134,16 @@ namespace D3D {
     }
 
     private void ChangeScale(object sender, MouseEventArgs e) {
-      TransformSystem.ChangeScale(e.Delta);
+      int factor = 7; // example
+      if (e.Delta > 0) {
+        for (int i = 0; i < factor; ++i) {
+          CameraSystem.ShiftFwd();
+        }
+      } else {
+        for (int i = 0; i < factor; ++i) {
+          CameraSystem.ShiftBack();
+        }
+      }
     }
 
     private void ChangePipeParameters(Object sender, EventArgs e) {
