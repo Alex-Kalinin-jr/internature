@@ -71,11 +71,11 @@ namespace D3D {
 
       AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
       AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
-      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 205), SetSliceVisibility);
+      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
 
       AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1);
       AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1);
-      AddTrackbar("sliceZ", new System.Drawing.Point(50, 205), CliceGridNewly, 0, gridSize[2] - 1, 1);
+      AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1);
 
       var xBar = _form.Controls.Find("sliceX", true);
       var yBar = _form.Controls.Find("sliceY", true);
