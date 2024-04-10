@@ -313,10 +313,9 @@ namespace D3D {
 
     private void ChangeBlendState() {
       var blendStateDesc = new BlendStateDescription {
-        AlphaToCoverageEnable = false,
+        AlphaToCoverageEnable = true,
         IndependentBlendEnable = false,
       };
-
       blendStateDesc.RenderTarget[0].IsBlendEnabled = true;
       blendStateDesc.RenderTarget[0].SourceBlend = BlendOption.SourceAlpha;
       blendStateDesc.RenderTarget[0].DestinationBlend = BlendOption.InverseSourceAlpha;

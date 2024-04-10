@@ -29,7 +29,7 @@ namespace D3D {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
       mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
-                                                                                new Vector3(0.0f, 0.0f, 0.0f));
+                                                                                new Vector3(2.0f, 0.0f, 2.0f));
       MeshConverter.CreatePipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
       return scene;
