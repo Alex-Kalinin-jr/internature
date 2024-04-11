@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using System.Drawing;
-using SharpDX.DirectInput;
 
 namespace D3D {
 
