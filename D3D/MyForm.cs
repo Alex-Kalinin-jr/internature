@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using SharpDX.Windows;
 using System.Drawing;
 using SharpDX.DirectInput;
-using D3D.Engine.System;
 
 namespace D3D {
 

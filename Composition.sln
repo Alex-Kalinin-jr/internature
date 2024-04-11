@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "D3D", "D3D\D3D.csproj", "{7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleDrawing", "SimpleDrawing\SimpleDrawing.csproj", "{88092D4C-E76E-47C8-8458-105B127273F9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawingEngine", "DrawingEngine\DrawingEngine.csproj", "{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{88092D4C-E76E-47C8-8458-105B127273F9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{88092D4C-E76E-47C8-8458-105B127273F9}.Release|x64.ActiveCfg = Release|x64
 		{88092D4C-E76E-47C8-8458-105B127273F9}.Release|x64.Build.0 = Release|x64
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Debug|x64.Build.0 = Debug|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Release|x64.ActiveCfg = Release|Any CPU
+		{E9BFF4E3-A27D-43DF-8470-E70E7C34218F}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
