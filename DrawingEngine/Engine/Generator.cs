@@ -26,11 +26,11 @@ namespace D3D {
     /// Creates another scene for testing pipe figures.
     /// </summary>
     /// <returns>The created scene.</returns>
-    public static Scene CreatePipeTestingScene() {
+    public static Scene CreatePipeTestingScene(float worldX, float worldY, float worldZ) {
       var scene = new Scene();
       var mesh = CreateTestingLineMesh();
       mesh.TransformObj.TransformObj.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
-                                                                                new Vector3(2.0f, 0.0f, 2.0f));
+                                                                                new Vector3(worldX, worldY, worldZ));
       MeshConverter.CreatePipe(mesh, 0.3f, 15);
       scene.AddComponent(mesh);
       return scene;
@@ -50,7 +50,7 @@ namespace D3D {
                                                             5, 4, 7, 7, 4, 6, 7, 6, 0, 0, 6, 1,
                                                             1, 4, 2, 1, 6, 4, 3, 5, 0, 0, 5, 7 };
       var lineIndices = new List<short>();
-      var pseudoLineIndices = new List<short>() { 0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 7, 7, 6, 6, 4, 1, 6, 2, 4, 0, 7, 3, 5 };
+      var pseudoLineIndices = new List<short>() { 0, 1, 2, 3, 4, 5, 6, 7, 0, 2, 1, 3, 6, 4, 7, 5, 0, 6, 2, 4, 1, 7, 3, 5 };
       var propertyColor = new List<Vector3>();
       var propertyStability = new List<Vector3>();
       var random = new Random();

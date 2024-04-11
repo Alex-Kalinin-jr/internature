@@ -8,7 +8,7 @@ namespace D3D {
       var mouseParams = new CMouseMovingParams(10.0f, 20.0f);
       
       using (var temp = new MyForm(mouseParams)) {
-        var pipeScene = Generator.CreatePipeTestingScene();
+        var pipeScene = Generator.CreatePipeTestingScene(0.0f, 0.0f, 0.0f);
         DrawSystem.ChangePipeAppearance(0.2f, 10);
         temp.AddPipeScene(pipeScene);
 
