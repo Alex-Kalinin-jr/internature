@@ -93,7 +93,13 @@
 	<ItemGroup>
 		<Content Include="..\DrawingEngine\EngineShaders\**" />
 	</ItemGroup>
-
+	
+	<ItemGroup>
+		<Content Include="grid/grid.bin">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\DrawingEngine\DrawingEngine.csproj">
       <Project>{e9bff4e3-a27d-43df-8470-e70e7c34218f}</Project>

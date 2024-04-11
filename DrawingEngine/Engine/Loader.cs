@@ -1,4 +1,8 @@
-﻿using System;
+﻿using D3D;
+using SharpDX.Direct3D;
+using SharpDX;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 class Program {
@@ -28,16 +32,6 @@ class Program {
 
       // Write the modified integers and floats back to the file
       using (StreamWriter writer = new StreamWriter(File.Open(filePath2, FileMode.Create))) {
-        writer.Write(i);
-        writer.Write("\n");
-        writer.Write(j);
-        writer.Write("\n");
-        writer.Write(k);
-        writer.Write("\n");
-        writer.Write("\n");
-
-
-
         foreach (var num in floats) {
           writer.Write(num * (1 / 39.0f));
           writer.Write("--");
@@ -48,3 +42,4 @@ class Program {
     }
   }
 }
+

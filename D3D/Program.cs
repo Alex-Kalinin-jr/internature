@@ -12,10 +12,8 @@ namespace D3D {
         DrawSystem.ChangePipeAppearance(0.2f, 10);
         temp.AddPipeScene(pipeScene);
 
-        int[] gridSize = { 20, 10, 20 };
-        var gridScene = Generator.CreateGridTestingScene(gridSize);
-        temp.AddGridScene(gridScene, gridSize);
-
+        var grid = Generator.GenerateFromBinary("grid/grid.bin");
+        temp.AddGridScene(Generator.CreateGridScene(grid), grid.Size);
         temp.Run();
       }
     }
