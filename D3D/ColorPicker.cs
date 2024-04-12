@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace D3D {
   class ColorRangePicker : Form {
-    private NumericUpDown bottomRedNumericUpDown;
-    private NumericUpDown bottomGreenNumericUpDown;
-    private NumericUpDown bottomBlueNumericUpDown;
-    private NumericUpDown topRedNumericUpDown;
-    private NumericUpDown topGreenNumericUpDown;
-    private NumericUpDown topBlueNumericUpDown;
-    private Label colorLabel;
+    private NumericUpDown _bottomRed;
+    private NumericUpDown _bottomGreen;
+    private NumericUpDown _bottomBlue;
+    private NumericUpDown _topRed;
+    private NumericUpDown _topGreen;
+    private NumericUpDown _topBlue;
 
     public ColorRangePicker() {
-      bottomRedNumericUpDown = new NumericUpDown {
+      _bottomRed = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
         Value = 0,
@@ -26,7 +20,7 @@ namespace D3D {
         Location = new Point(50, 50)
       };
 
-      bottomGreenNumericUpDown = new NumericUpDown {
+      _bottomGreen = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
         Value = 0,
@@ -34,7 +28,7 @@ namespace D3D {
         Location = new Point(110, 50)
       };
 
-      bottomBlueNumericUpDown = new NumericUpDown {
+      _bottomBlue = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
         Value = 0,
@@ -42,7 +36,7 @@ namespace D3D {
         Location = new Point(170, 50)
       };
 
-      topRedNumericUpDown = new NumericUpDown {
+      _topRed = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
         Value = 255,
@@ -50,7 +44,7 @@ namespace D3D {
         Location = new Point(50, 100)
       };
 
-      topGreenNumericUpDown = new NumericUpDown {
+      _topGreen = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
         Value = 255,
@@ -58,7 +52,7 @@ namespace D3D {
         Location = new Point(110, 100)
       };
 
-      topBlueNumericUpDown = new NumericUpDown {
+      _topBlue = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
         Value = 255,
@@ -66,71 +60,61 @@ namespace D3D {
         Location = new Point(170, 100)
       };
 
-      colorLabel = new Label {
-        Text = "Selected Color Range: Black - White",
-        Location = new Point(50, 150)
-      };
-
-      bottomRedNumericUpDown.ValueChanged += (sender, e) => {
+      _bottomRed.ValueChanged += (sender, e) => {
         UpdateColor();
       };
 
-      bottomGreenNumericUpDown.ValueChanged += (sender, e) => {
+      _bottomGreen.ValueChanged += (sender, e) => {
         UpdateColor();
       };
 
-      bottomBlueNumericUpDown.ValueChanged += (sender, e) => {
+      _bottomBlue.ValueChanged += (sender, e) => {
         UpdateColor();
       };
 
-      topRedNumericUpDown.ValueChanged += (sender, e) => {
+      _topRed.ValueChanged += (sender, e) => {
         UpdateColor();
       };
 
-      topGreenNumericUpDown.ValueChanged += (sender, e) => {
+      _topGreen.ValueChanged += (sender, e) => {
         UpdateColor();
       };
 
-      topBlueNumericUpDown.ValueChanged += (sender, e) => {
+      _topBlue.ValueChanged += (sender, e) => {
         UpdateColor();
       };
 
-      Controls.Add(bottomRedNumericUpDown);
-      Controls.Add(bottomGreenNumericUpDown);
-      Controls.Add(bottomBlueNumericUpDown);
-      Controls.Add(topRedNumericUpDown);
-      Controls.Add(topGreenNumericUpDown);
-      Controls.Add(topBlueNumericUpDown);
-      Controls.Add(colorLabel);
+      Controls.Add(_bottomRed);
+      Controls.Add(_bottomGreen);
+      Controls.Add(_bottomBlue);
+      Controls.Add(_topRed);
+      Controls.Add(_topGreen);
+      Controls.Add(_topBlue);
+
 
       Paint += (sender, e) => {
         Rectangle gradientRect = new Rectangle(50, 200, 200, 50);
         using (LinearGradientBrush brush = new LinearGradientBrush(gradientRect,
-                                                                   Color.FromArgb((int)bottomRedNumericUpDown.Value,
-                                                                   (int)bottomGreenNumericUpDown.Value,
-                                                                   (int)bottomBlueNumericUpDown.Value),
-                                                                   Color.FromArgb((int)topRedNumericUpDown.Value,
-                                                                   (int)topGreenNumericUpDown.Value,
-                                                                   (int)topBlueNumericUpDown.Value),
+                                                                   Color.FromArgb((int)_bottomRed.Value,
+                                                                   (int)_bottomGreen.Value,
+                                                                   (int)_bottomBlue.Value),
+                                                                   Color.FromArgb((int)_topRed.Value,
+                                                                   (int)_topGreen.Value,
+                                                                   (int)_topBlue.Value),
                                                                    LinearGradientMode.Vertical)) {
           e.Graphics.FillRectangle(brush, gradientRect);
         }
       };
 
+      FormClosing += (sender, e) => {
+
+        ColorSystem.ChangeColors(new float[3] { (float)_bottomRed.Value, (float)_bottomGreen.Value, (float)_bottomBlue.Value },
+                                 new float[3] { (float)_bottomRed.Value, (float)_bottomGreen.Value, (float)_bottomBlue.Value });
+      };
+
     }
 
     private void UpdateColor() {
-
-      Color startColor = Color.FromArgb((int)bottomRedNumericUpDown.Value,
-                                        (int)bottomGreenNumericUpDown.Value,
-                                        (int)bottomBlueNumericUpDown.Value);
-      Color endColor = Color.FromArgb((int)topRedNumericUpDown.Value,
-                                      (int)topGreenNumericUpDown.Value,
-                                      (int)topBlueNumericUpDown.Value);
-      colorLabel.Text = $"Selected Color Range: {startColor.Name} - {endColor.Name}";
-      colorLabel.ForeColor = startColor;
-      colorLabel.BackColor = endColor;
-
       Invalidate();
     }
   }
