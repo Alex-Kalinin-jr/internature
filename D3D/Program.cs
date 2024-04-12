@@ -12,7 +12,7 @@ namespace D3D {
         DrawSystem.ChangePipeAppearance(0.2f, 10);
         temp.AddPipeScene(pipeScene);
 
-        var grid = Generator.GenerateFromBinary("grid/grid.bin");
+        var grid = Reader.GenerateFromBinary("grid/grid.bin", "grid/grid.binprops.txt", 0.005f);
         temp.AddGridScene(Generator.CreateGridScene(grid), grid.Size);
         temp.Run();
       }
