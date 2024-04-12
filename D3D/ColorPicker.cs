@@ -11,6 +11,8 @@ namespace D3D {
     private NumericUpDown _topGreen;
     private NumericUpDown _topBlue;
 
+
+
     public ColorRangePicker() {
       _bottomRed = new NumericUpDown {
         Minimum = 0,
@@ -61,6 +63,7 @@ namespace D3D {
       };
 
       _bottomRed.ValueChanged += (sender, e) => {
+        _bottomGreen.Value = ((NumericUpDown)sender).Value;
         UpdateColor();
       };
 
@@ -107,9 +110,17 @@ namespace D3D {
       };
 
       FormClosing += (sender, e) => {
+        float[] bottom = new float[3];
+        bottom[0] = (float)_bottomRed.Value;
+        bottom[1] = (float)_bottomGreen.Value;
+        bottom[2] = (float)_bottomBlue.Value;
 
-        ColorSystem.ChangeColors(new float[3] { (float)_bottomRed.Value, (float)_bottomGreen.Value, (float)_bottomBlue.Value },
-                                 new float[3] { (float)_bottomRed.Value, (float)_bottomGreen.Value, (float)_bottomBlue.Value });
+        float[] top = new float[3];
+        top[0] = (float)_topRed.Value;
+        top[1] = (float)_topGreen.Value;
+        top[2] = (float)_topBlue.Value;
+
+        ColorSystem.ChangeColors(bottom, top);
       };
 
     }

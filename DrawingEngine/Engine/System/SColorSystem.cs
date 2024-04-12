@@ -17,7 +17,7 @@ namespace D3D {
     }
 
     public static (Vector3, Vector3) GetColors() {
-      return (_topColor, _bottomColor);
+      return (_bottomColor, _topColor);
     }
   }
 }
