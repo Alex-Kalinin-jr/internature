@@ -36,16 +36,13 @@ namespace D3D {
     private Buffer[] _constantLightBuffers;
     private Buffer _constantBuffer;
     private Buffer _constantSliceBuffer;
+    private RasterizerState _rasterizerState;
+    private Texture2D _depthBuffer;
 
     private SharpDX.Color _background = SharpDX.Color.White;
 
     private static Renderer _instance;
 
-
-    // depth buffer
-    private DepthStencilState _depthStencilState;
-    private RasterizerState _rasterizerState;
-    private Texture2D _depthBuffer;
 
     private Renderer(IntPtr ptr) {
       _formPtr = ptr;
@@ -302,7 +299,6 @@ namespace D3D {
       _device3D.Dispose();
       _context3D.Dispose();
       _depthStencilView.Dispose();
-      _depthStencilState.Dispose();
       _depthBuffer.Dispose();
       _rasterizerState.Dispose();
     }
