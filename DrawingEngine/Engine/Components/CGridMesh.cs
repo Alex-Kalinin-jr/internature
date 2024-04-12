@@ -38,30 +38,5 @@ namespace D3D {
       }
       return result;
     }
-
-    public void SetProperty(string type) {
-      if (Properties.ContainsKey(type)) {
-        int vertexCountInOneGrid = 8;
-        var prop = Properties[type];
-        int counter = 0;
-        System.Numerics.Vector3 botCol;
-        System.Numerics.Vector3 topCol;
-        (botCol, topCol) = ColorSystem.GetColors();
-        for (int i = 0; i < Vertices.Count; i += vertexCountInOneGrid) {
-          for (int j = 0; j < vertexCountInOneGrid; ++j) {
-
-            var val = prop[counter];
-            var r = botCol.X + (topCol.X - botCol.X) * val;
-            var g = botCol.Y + (topCol.Y - botCol.Y) * val;
-            var b = botCol.Z + (topCol.Z - botCol.Z) * val;
-
-            var v = Vertices[i + j];
-            v.Color = new Vector3(r, g, b);
-            Vertices[i + j] = v;
-          }
-          ++counter;
-        }
-      }
-    }
   }
 }

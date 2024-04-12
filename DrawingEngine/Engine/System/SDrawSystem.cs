@@ -95,10 +95,36 @@ namespace D3D {
     public static void ChangeProperty(string type) {
       foreach (var figure in Components) {
         if (figure is CGridMesh) {
-          ((CGridMesh)figure).SetProperty(type);
+          SetProperty(type, (CGridMesh)figure);
         }
       }
     }
+
+    public static void SetProperty(string type, CGridMesh mesh) {
+      if (mesh.Properties.ContainsKey(type)) {
+        int vertexCountInOneGrid = 8;
+        var prop = mesh.Properties[type];
+        int counter = 0;
+        System.Numerics.Vector3 botCol;
+        System.Numerics.Vector3 topCol;
+        (botCol, topCol) = ColorSystem.GetColors();
+        for (int i = 0; i < mesh.Vertices.Count; i += vertexCountInOneGrid) {
+          for (int j = 0; j < vertexCountInOneGrid; ++j) {
+
+            var val = prop[counter];
+            var r = botCol.X + (topCol.X - botCol.X) * val;
+            var g = botCol.Y + (topCol.Y - botCol.Y) * val;
+            var b = botCol.Z + (topCol.Z - botCol.Z) * val;
+
+            var v = mesh.Vertices[i + j];
+            v.Color = new Vector3(r, g, b);
+            mesh.Vertices[i + j] = v;
+          }
+          ++counter;
+        }
+      }
+    }
+
     public static List<string> GetAllGridsProperties() {
       var list = new List<string>();
       foreach (var figure in Components) {

@@ -12,8 +12,9 @@ namespace D3D {
     private static Vector3 _topColor = new Vector3(1.0f, 1.0f, 1.0f);
 
     public static void ChangeColors(float[] bottom, float[] top) {
-      _bottomColor = new Vector3(bottom[0] / 255.0f, bottom[1] / 255.0f, bottom[2] / 255.0f);
-      _topColor = new Vector3(top[0] / 255.0f, top[1] / 255.0f, top[2] / 255.0f);
+      var divider = 255.0f;
+      _bottomColor = new Vector3(bottom[0] / divider, bottom[1] / divider, bottom[2] / divider);
+      _topColor = new Vector3(top[0] / divider, top[1] / divider, top[2] / divider);
     }
 
     public static (Vector3, Vector3) GetColors() {
