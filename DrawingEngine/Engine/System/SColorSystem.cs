@@ -10,6 +10,7 @@ namespace D3D {
 
     private static Vector3 _bottomColor = new Vector3(0.0f, 0.0f, 0.0f);
     private static Vector3 _topColor = new Vector3(1.0f, 1.0f, 1.0f);
+    private static string _currentProperty = "color";
 
     public static void ChangeColors(float[] bottom, float[] top) {
       var divider = 255.0f;
@@ -20,5 +21,11 @@ namespace D3D {
     public static (Vector3, Vector3) GetColors() {
       return (_bottomColor, _topColor);
     }
+
+    public static new void ChangeProperty(string property) {
+      _currentProperty = property;
+    }
+
+    public static string GetCurrentProperty() { return _currentProperty; }
   }
 }

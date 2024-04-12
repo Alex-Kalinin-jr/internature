@@ -92,10 +92,10 @@ namespace D3D {
     /// </summary>
     /// <param name="type"></param>The type of property to be set. 
     /// Setting will not be perfomed if property is not presented in figure dictionary
-    public static void ChangeProperty(string type) {
+    public static void ChangeProperty() {
       foreach (var figure in Components) {
         if (figure is CGridMesh) {
-          SetProperty(type, (CGridMesh)figure);
+          SetProperty(ColorSystem.GetCurrentProperty(), (CGridMesh)figure);
         }
       }
     }

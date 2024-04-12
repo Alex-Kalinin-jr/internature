@@ -385,7 +385,8 @@ namespace D3D {
     /// <param name="e"></param>
     private void ChangeComboProperty(object sender, EventArgs e) {
       ComboBox comboBox = (ComboBox)sender;
-      DrawSystem.ChangeProperty(comboBox.SelectedItem.ToString());
+      ColorSystem.ChangeProperty(comboBox.SelectedItem.ToString());
+      DrawSystem.ChangeProperty();
     }
 
     private new void SetVisibility(bool state, string[] names) {

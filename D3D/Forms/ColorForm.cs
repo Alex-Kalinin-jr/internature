@@ -123,17 +123,6 @@ namespace D3D {
       };
 
       FormClosing += (sender, e) => {
-        float[] bottom = new float[3];
-        bottom[0] = (float)_bottomRed.Value;
-        bottom[1] = (float)_bottomGreen.Value;
-        bottom[2] = (float)_bottomBlue.Value;
-
-        float[] top = new float[3];
-        top[0] = (float)_topRed.Value;
-        top[1] = (float)_topGreen.Value;
-        top[2] = (float)_topBlue.Value;
-
-        ColorSystem.ChangeColors(bottom, top);
         e.Cancel = true;
         Hide();
       };
@@ -141,6 +130,18 @@ namespace D3D {
     }
 
     private void UpdateColor() {
+      float[] bottom = new float[3];
+      bottom[0] = (float)_bottomRed.Value;
+      bottom[1] = (float)_bottomGreen.Value;
+      bottom[2] = (float)_bottomBlue.Value;
+
+      float[] top = new float[3];
+      top[0] = (float)_topRed.Value;
+      top[1] = (float)_topGreen.Value;
+      top[2] = (float)_topBlue.Value;
+
+      ColorSystem.ChangeColors(bottom, top);
+      DrawSystem.ChangeProperty();
       Invalidate();
     }
   }

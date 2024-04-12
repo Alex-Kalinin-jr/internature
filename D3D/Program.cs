@@ -14,7 +14,7 @@ namespace D3D {
 
         var grid = Reader.GenerateFromBinary("grid/grid.bin", "grid/grid.binprops.txt", 0.005f); // hover func name to reveal values meaning
         temp.AddGridScene(Generator.CreateGridScene(grid), grid.Size);
-        DrawSystem.ChangeProperty("color");
+        DrawSystem.ChangeProperty();
 
         temp.Run();
       }
