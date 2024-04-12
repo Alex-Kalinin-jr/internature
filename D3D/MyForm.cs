@@ -152,6 +152,7 @@ namespace D3D {
       textWindow.Show();
     }
 
+
     private void ShowColorMenu(object sender, EventArgs e) {
       ColorRangePicker colorRangePicker = new ColorRangePicker();
       colorRangePicker.Show();
