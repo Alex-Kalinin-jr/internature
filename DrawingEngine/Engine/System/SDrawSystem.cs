@@ -42,7 +42,7 @@ namespace D3D {
     /// </summary>
     /// <param name="figure">The figure to register.</param>
     new public static void Register(CMesh figure) {
-         Components.Add(figure);
+      Components.Add(figure);
       Visibility.Add(true);
     }
 
@@ -98,6 +98,20 @@ namespace D3D {
           ((CGridMesh)figure).SetProperty(type);
         }
       }
+    }
+    public static List<string> GetAllGridsProperties() {
+      var list = new List<string>();
+      foreach (var figure in Components) {
+        if (figure is CGridMesh) {
+          var figProperties = ((CGridMesh)figure).GetProperties();
+          foreach (var prop in figProperties) {
+            if (!list.Contains(prop)) {
+              list.Add(prop);
+            }
+          }
+        }
+      }
+      return list;
     }
 
     public static void ChangePipeAppearance(float pipeRadius, int numOfSegments) {

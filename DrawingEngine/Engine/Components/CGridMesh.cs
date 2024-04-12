@@ -30,6 +30,14 @@ namespace D3D {
       }
     }
 
+    public List<string> GetProperties() {
+      List<string> result = new List<string>();
+      foreach (var prop in Properties.Keys) {
+        result.Add(prop);
+      }
+      return result;
+    }
+
     public void SetProperty(string type) {
       if (Properties.ContainsKey(type)) {
         int vertexCountInOneGrid = 8;

@@ -71,7 +71,7 @@ namespace D3D {
       _scene.Add(scene);
 
       AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      AddComboBox(new System.Drawing.Point(100, 50), new object[] { "color", "stability" });
+      AddComboBox("properties", new System.Drawing.Point(100, 50), DrawSystem.GetAllGridsProperties().ToArray());
 
       AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
       AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
@@ -382,9 +382,7 @@ namespace D3D {
     /// <param name="e"></param>
     private void ChangeComboProperty(object sender, EventArgs e) {
       ComboBox comboBox = (ComboBox)sender;
-      string selectedOption = comboBox.SelectedItem.ToString();
-
-        DrawSystem.ChangeProperty(selectedOption);
+      DrawSystem.ChangeProperty(comboBox.SelectedItem.ToString());
     }
 
     // forming
@@ -462,8 +460,9 @@ namespace D3D {
     /// <summary>
     /// Adds a ComboBox control to the form.
     /// </summary>
-    private void AddComboBox(System.Drawing.Point pos, object[] obj) {
+    private void AddComboBox(string name, System.Drawing.Point pos, object[] obj) {
       ComboBox comboBox = new ComboBox();
+      comboBox.Name = name;
       comboBox.DropDownWidth = 65;
       comboBox.Items.AddRange(obj);
       comboBox.Location = pos;
