@@ -29,7 +29,6 @@ public class Reader {
 
           string key = "property " + i.ToString();
           float max = property.Max();
-          float step = 255.0f / max;
           var propList = new List<Vector3>();
           foreach (var prop in property) {
             propList.Add(new Vector3(prop / max, prop / max, prop / max));
