@@ -22,7 +22,7 @@ namespace D3D {
       return (_bottomColor, _topColor);
     }
 
-    public static new void ChangeProperty(string property) {
+    public static void ChangeProperty(string property) {
       _currentProperty = property;
     }
 
