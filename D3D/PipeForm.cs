@@ -1,31 +1,35 @@
 ﻿using System.Windows.Forms;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
-using System.Runtime.InteropServices;
 using System;
+using System.Drawing;
 
 namespace D3D {
   class PipeForm : MainForm {
+    private Label _label1;
+    private TrackBar _bar1;
+
 
     public PipeForm() {
-      var lbl = AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
-      var btn1 = AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
+      this.AutoSize = true;
+      this.AllowUserResizing = false;
+      this.ClientSize = new Size(300, 200);
+
+      _label1 = AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 10));
+      Controls.Add(_label1);
+      var btn1 = AddRadioButton("line", "Line", new System.Drawing.Point(20, 30), ChangePipeShowType);
       Controls.Add(btn1);
-      var btn2 = AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
+      var btn2 = AddRadioButton("pipe", "Pipe", new System.Drawing.Point(70, 30), ChangePipeShowType);
       Controls.Add(btn2);
 
-      var lbl1 = AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(80, 30));
+      var lbl1 = AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(20, 70));
       Controls.Add(lbl1);
-      var lbl2 = AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(80, 60));
+      var lbl2 = AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(20, 90));
       Controls.Add(lbl2);
-      var lbl3 = AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(80, 100));
+      var lbl3 = AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(130, 90));
       Controls.Add(lbl3);
 
-      var bar1 = AddTrackbar("pipeSegments", new System.Drawing.Point(130, 60), ChangePipeParameters, 10, 40, 1);
-      Controls.Add(bar1);
-      var bar2 = AddTrackbar("pipeRadius", new System.Drawing.Point(130, 100), ChangePipeParameters, 1, 20, 1);
+      _bar1 = AddTrackbar("pipeSegments", new System.Drawing.Point(20, 110), ChangePipeParameters, 10, 40, 1);
+      Controls.Add(_bar1);
+      var bar2 = AddTrackbar("pipeRadius", new System.Drawing.Point(130, 110), ChangePipeParameters, 1, 20, 1);
       Controls.Add(bar2);
 
       FormClosing += (sender, e) => {
@@ -39,10 +43,10 @@ namespace D3D {
       string[] controls = { "pipeParametersLabel", "pipeSegmentsLabel", "pipeRadiusLabel", "pipeSegments", "pipeRadius" };
       if (bttn.Name == "pipe" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Pipe);
-        SetVisibility(true, controls);
+        this.SetVisibility(true, controls);
       } else if (bttn.Name == "line" && bttn.Checked) {
         DrawSystem.ChangePipeType(FigureType.Line);
-        SetVisibility(false, controls);
+        this.SetVisibility(false, controls);
       }
     }
 
@@ -79,8 +83,5 @@ namespace D3D {
         DrawSystem.ChangePipeAppearance(radius.Value / 10.0f, segments.Value);
       }
     }
-
-
-
   }
 }

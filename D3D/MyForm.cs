@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace D3D {
 
@@ -10,22 +11,39 @@ namespace D3D {
   /// Custom form for rendering DirectX scenes.
   /// </summary>
   public class MyForm : MainForm {
-
+    private WhiteRectangle _control;
     private List<Scene> _scene;
     private CMouseMovingParams _movingParams;
-    private bool _isRotationDown = false;
-
     private RenderForm _form;
     private CScreenSize _size;
     private CMousePos _mousePos;
     private KeyboardSystem _keyboard;
     private ColorRangePicker _colorRangePicker;
     private PipeForm _pipeChanger;
+    private bool _isRotationDown = false;
+
+    private Label _propLabel;
+    private ComboBox _propComboBox;
+    private CheckBox _sliceheckBox;
+    private Label _sliceXlabel;
+    private Label _sliceYlabel;
+    private Label _sliceZlabel;
+    private CheckBox _xCheckBox;
+    private CheckBox _yCheckBox;
+    private CheckBox _zCheckBox;
+    private TrackBar _xTrackBar;
+    private TrackBar _yTrackBar;
+    private TrackBar _zTrackBar;
+    private Label _xLabel;
+    private Label _yLabel;
+    private Label _zLabel;
+    private CheckBox _lineBox;
 
     /// <summary>
     /// Constructor for the custom form.
     /// </summary>
     public MyForm(CMouseMovingParams movingdivs) {
+
       _size = new CScreenSize();
       _form = new RenderForm();
       _form.ClientSize = new Size(_size.Width, _size.Height);
@@ -34,35 +52,35 @@ namespace D3D {
       _form.SuspendLayout();
       _form.Name = "MyForm";
       _form.ResumeLayout(false);
-      _mousePos = new CMousePos();
-      _keyboard = new KeyboardSystem();
-      _scene = new List<Scene>();
-      _movingParams = movingdivs;
-
       _form.MouseDown += new MouseEventHandler(MyFormMouseDown);
       _form.MouseMove += new MouseEventHandler(MyFormMouseMove);
       _form.MouseWheel += new MouseEventHandler(ChangeScale);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
 
+
+
+
+      _mousePos = new CMousePos();
+      _keyboard = new KeyboardSystem();
+      _scene = new List<Scene>();
+      _movingParams = movingdivs;
       _colorRangePicker = new ColorRangePicker();
       _pipeChanger = new PipeForm();
 
 
+
+
       MenuStrip menuStrip = new MenuStrip();
       _form.Controls.Add(menuStrip);
-
       ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
       toolStripMenuItem.Click += ShowHelpMenu;
       menuStrip.Items.Add(toolStripMenuItem);
-
       ToolStripMenuItem colorPicker = new ToolStripMenuItem("Color");
       colorPicker.Click += ShowColorMenu;
       menuStrip.Items.Add(colorPicker);
-
       ToolStripMenuItem pipeChanger = new ToolStripMenuItem("Pipe");
       pipeChanger.Click += ShowPipeMenu;
       menuStrip.Items.Add(pipeChanger);
-
     }
 
     public void AddScene(Scene scene) {
@@ -76,55 +94,81 @@ namespace D3D {
     public void AddGridScene(Scene scene, int[] gridSize) {
       _scene.Add(scene);
 
-      var f = AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      _form.Controls.Add(f);
-      var g = AddComboBox("properties", new System.Drawing.Point(100, 50), DrawSystem.GetAllGridsProperties().ToArray());
-      _form.Controls.Add(g);
-      g.SelectedIndexChanged += ChangeComboProperty;
+      _control = new WhiteRectangle();
+      _control.Width = 250;
+      _control.Height = 2550;
+      _control.BackColor = Color.White;
+      _control.Location = new Point(0, 0);
+      _form.Controls.Add(_control);
+      _form.Controls.SetChildIndex(_control, 0);
 
-      var h = AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
-      _form.Controls.Add(h);
-      var i = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
-      _form.Controls.Add(i);
-      var j = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
-      _form.Controls.Add(j);
-      var k = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
-      _form.Controls.Add(k);
+      _propLabel = AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
+      _form.Controls.Add(_propLabel);
+      _form.Controls.SetChildIndex(_propLabel, 0);
 
-      var l = AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
-      _form.Controls.Add(l);
-      var m = AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
-      _form.Controls.Add(m);
-      var n = AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
-      _form.Controls.Add(n);
+      _propComboBox = AddComboBox("properties", new System.Drawing.Point(100, 50), DrawSystem.GetAllGridsProperties().ToArray());
+      _form.Controls.Add(_propComboBox);
+      _form.Controls.SetChildIndex(_propComboBox, 1);
+      _propComboBox.SelectedIndexChanged += ChangeComboProperty;
 
-      var o = AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
-      _form.Controls.Add(o);
-      var xBar = _form.Controls.Find("sliceX", true);
-      TrackBar track = (TrackBar)xBar[0];
-      track.Width = 150;
+      _sliceheckBox = AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
+      _form.Controls.Add(_sliceheckBox);
+      _form.Controls.SetChildIndex(_sliceheckBox, 1);
 
-      var p = AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
-      _form.Controls.Add(p);
-      var yBar = _form.Controls.Find("sliceY", true);
-      TrackBar trackY = (TrackBar)yBar[0];
-      trackY.Width = 150;
+      _sliceXlabel = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
+      _form.Controls.Add(_sliceXlabel);
+      _form.Controls.SetChildIndex(_sliceXlabel, 1);
 
-      var q = AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
-      _form.Controls.Add(q);
-      var zBar = _form.Controls.Find("sliceZ", true);
-      TrackBar trackZ = (TrackBar)zBar[0];
-      trackZ.Width = 150;
+      _sliceYlabel = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
+      _form.Controls.Add(_sliceYlabel);
+      _form.Controls.SetChildIndex(_sliceYlabel, 1);
 
-      var r = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
-      _form.Controls.Add(r);
-      var s = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
-      _form.Controls.Add(s);
-      var t = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
-      _form.Controls.Add(t);
+      _sliceZlabel = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
+      _form.Controls.Add(_sliceZlabel);
+      _form.Controls.SetChildIndex(_sliceZlabel, 1);
 
-      var u = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
-      _form.Controls.Add(u);
+      _xCheckBox = AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
+      _form.Controls.Add(_xCheckBox);
+      _form.Controls.SetChildIndex(_xCheckBox, 1);
+
+      _yCheckBox = AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
+      _form.Controls.Add(_yCheckBox);
+      _form.Controls.SetChildIndex(_yCheckBox, 1);
+
+      _zCheckBox = AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
+      _form.Controls.Add(_zCheckBox);
+      _form.Controls.SetChildIndex(_zCheckBox, 1);
+
+      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      _xTrackBar.Width = 150;
+      _form.Controls.Add(_xTrackBar);
+      _form.Controls.SetChildIndex(_xTrackBar, 1);
+
+      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      _yTrackBar.Width = 150;
+      _form.Controls.Add(_yTrackBar);
+      _form.Controls.SetChildIndex(_yTrackBar, 1);
+
+      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      _zTrackBar.Width = 150;
+      _form.Controls.Add(_zTrackBar);
+      _form.Controls.SetChildIndex(_zTrackBar, 1);
+
+      _xLabel = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
+      _form.Controls.Add(_xLabel);
+      _form.Controls.SetChildIndex(_xLabel, 1);
+
+      _yLabel = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
+      _form.Controls.Add(_yLabel);
+      _form.Controls.SetChildIndex(_yLabel, 1);
+
+      _zLabel = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
+      _form.Controls.Add(_zLabel);
+      _form.Controls.SetChildIndex(_zLabel, 1);
+
+      _lineBox = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
+      _form.Controls.Add(_lineBox);
+      _form.Controls.SetChildIndex(_lineBox, 1);
 
       string[] controls = { "checkX", "checkY", "checkZ",
                             "sliceXlabel", "sliceYlabel", "sliceZlabel",
@@ -139,9 +183,6 @@ namespace D3D {
     public void Run() {
       RenderLoop.Run(_form, RenderCallback);
     }
-
-    // logic
-    // //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /// <summary>
     /// Changes the visibility of the line grid based on the checkbox state.
@@ -195,7 +236,6 @@ namespace D3D {
         }
       }
     }
-
 
     /// <summary>
     /// Changes the visibility of slice trackbars according to the related checkbox state.
@@ -251,21 +291,6 @@ namespace D3D {
       TransformSystem.Update();
       DrawSystem.Update();
       renderer.Present();
-    }
-
-    /// <summary>
-    /// Changes the type of pipe to be displayed.
-    /// </summary>
-    private void ChangePipeShowType(object sender, EventArgs e) {
-      var bttn = sender as RadioButton;
-      string[] controls = { "pipeParametersLabel", "pipeSegmentsLabel", "pipeRadiusLabel", "pipeSegments", "pipeRadius" };
-      if (bttn.Name == "pipe" && bttn.Checked) {
-        DrawSystem.ChangePipeType(FigureType.Pipe);
-        SetVisibility(true, controls);
-      } else if (bttn.Name == "line" && bttn.Checked) {
-        DrawSystem.ChangePipeType(FigureType.Line);
-        SetVisibility(false, controls);
-      }
     }
 
     /// <summary>
@@ -342,7 +367,6 @@ namespace D3D {
       lbl.Text = val.ToString();
     }
 
-
     /// <summary>
     /// Gets the value of a slicing control.
     /// </summary>
@@ -371,9 +395,18 @@ namespace D3D {
       DrawSystem.ChangeProperty(comboBox.SelectedItem.ToString());
     }
 
-    // forming
-    // ////////////////////////////////////////////////////////////////////////////////////
+    private new void SetVisibility(bool state, string[] names) {
+      foreach (string name in names) {
+        SetVisibility(state, name);
+      }
+    }
 
+    private new void SetVisibility(bool visible, string name) {
+      var controls = _form.Controls.Find(name, true);
+      foreach (var control in controls) {
+        control.Visible = visible;
+      }
+    }
   }
 }
 
