@@ -60,9 +60,6 @@ namespace D3D {
             Vertices[i + j] = v;
           }
           ++counter;
-          if (counter > 800) {
-            var a = 0;
-          }
         }
       }
     }

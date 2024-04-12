@@ -12,8 +12,8 @@ namespace D3D {
     private static Vector3 _topColor = new Vector3(1.0f, 1.0f, 1.0f);
 
     public static void ChangeColors(float[] bottom, float[] top) {
-      _bottomColor = new Vector3(bottom[0], bottom[1], bottom[2]);
-      _topColor = new Vector3(top[0], top[1], top[2]);
+      _bottomColor = new Vector3(bottom[0] / 255.0f, bottom[1] / 255.0f, bottom[2] / 255.0f);
+      _topColor = new Vector3(top[0] / 255.0f, top[1] / 255.0f, top[2] / 255.0f);
     }
 
     public static (Vector3, Vector3) GetColors() {

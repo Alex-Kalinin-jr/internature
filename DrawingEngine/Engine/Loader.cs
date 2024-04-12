@@ -67,14 +67,14 @@ public class Reader {
           for (int j = 0; j < yCount; ++j) {
             reader.ReadBoolean();
             var pseudoVertices = new List<VsBuffer>();
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //0
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //1
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //2
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
-            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, -reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //0
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //1
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //2
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
+            vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale, reader.ReadSingle() * scale, reader.ReadSingle() * scale), color, i, j, k)); //3
 
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
             lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));

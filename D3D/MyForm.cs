@@ -476,6 +476,7 @@ namespace D3D {
       comboBox.Name = name;
       comboBox.DropDownWidth = 80;
       comboBox.Items.AddRange(obj);
+      comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
       comboBox.Location = pos;
       comboBox.Size = new System.Drawing.Size(65, 21);
       _form.Controls.Add(comboBox);
