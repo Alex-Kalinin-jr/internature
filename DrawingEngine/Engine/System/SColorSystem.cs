@@ -9,7 +9,7 @@ namespace D3D {
   public class ColorSystem : DrawSystem {
 
     private static Vector3 _bottomColor = new Vector3(0.0f, 0.0f, 0.0f);
-    private static Vector3 _topColor = new Vector3(0.0f, 0.0f, 0.0f);
+    private static Vector3 _topColor = new Vector3(1.0f, 1.0f, 1.0f);
 
     public static void ChangeColors(float[] bottom, float[] top) {
       _bottomColor = new Vector3(bottom[0], bottom[1], bottom[2]);
