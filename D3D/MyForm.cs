@@ -43,10 +43,15 @@ namespace D3D {
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
 
       MenuStrip menuStrip = new MenuStrip();
+      _form.Controls.Add(menuStrip);
+
       ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
       toolStripMenuItem.Click += ShowHelpMenu;
       menuStrip.Items.Add(toolStripMenuItem);
-      _form.Controls.Add(menuStrip);
+
+      ToolStripMenuItem colorPicker = new ToolStripMenuItem("Color");
+      colorPicker.Click += ShowColorMenu;
+      menuStrip.Items.Add(colorPicker);
     }
 
     public void AddScene(Scene scene) {
@@ -145,6 +150,11 @@ namespace D3D {
       label.Dock = DockStyle.Fill;
       textWindow.Controls.Add(label);
       textWindow.Show();
+    }
+
+    private void ShowColorMenu(object sender, EventArgs e) {
+      ColorRangePicker colorRangePicker = new ColorRangePicker();
+      colorRangePicker.Show();
     }
 
     /// <summary>
@@ -463,7 +473,7 @@ namespace D3D {
     private void AddComboBox(string name, System.Drawing.Point pos, object[] obj) {
       ComboBox comboBox = new ComboBox();
       comboBox.Name = name;
-      comboBox.DropDownWidth = 65;
+      comboBox.DropDownWidth = 80;
       comboBox.Items.AddRange(obj);
       comboBox.Location = pos;
       comboBox.Size = new System.Drawing.Size(65, 21);
@@ -479,30 +489,6 @@ namespace D3D {
       foreach (string name in names) {
         SetVisibility(state, name);
       }
-    }
-
-    public void AddDualColorTrackBar(System.Drawing.Point pos) {
-      var trackBar = new TrackBar {
-        Minimum = 0,
-        Maximum = 255,
-        TickFrequency = 5,
-        Orientation = Orientation.Horizontal,
-        Width = 300,
-        Location = pos
-    };
-
-      trackBar.Scroll += (sender, e) =>
-      {
-        int value = trackBar.Value;
-        /*
-        color1 = Color.FromArgb(value, value, value);
-        color2 = Color.FromArgb(255 - value, 255 - value, 255 - value);
-
-        colorLabel1.Text = $"Color 1: {color1.Name}";
-        colorLabel2.Text = $"Color 2: {color2.Name}";
-        */
-      };
-      _form.Controls.Add(trackBar);
     }
   }
 }
