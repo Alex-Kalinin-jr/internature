@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.Windows;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 
 namespace D3D {
 
@@ -57,18 +56,12 @@ namespace D3D {
       _form.MouseWheel += new MouseEventHandler(ChangeScale);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
 
-
-
-
       _mousePos = new CMousePos();
       _keyboard = new KeyboardSystem();
       _scene = new List<Scene>();
       _movingParams = movingdivs;
       _colorRangePicker = new ColorRangePicker();
       _pipeChanger = new PipeForm();
-
-
-
 
       MenuStrip menuStrip = new MenuStrip();
       _form.Controls.Add(menuStrip);
@@ -98,77 +91,77 @@ namespace D3D {
       _control.Width = 250;
       _control.Height = 2550;
       _control.BackColor = Color.White;
-      _control.Location = new Point(0, 0);
+      _control.Location = new Point(0, 20);
       _form.Controls.Add(_control);
       _form.Controls.SetChildIndex(_control, 0);
 
-      _propLabel = AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      _form.Controls.Add(_propLabel);
-      _form.Controls.SetChildIndex(_propLabel, 0);
+      _lineBox = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(70, 50), ChangeLineGridVisibility);
+      _form.Controls.Add(_lineBox);
+      _form.Controls.SetChildIndex(_lineBox, 0);
 
-      _propComboBox = AddComboBox("properties", new System.Drawing.Point(100, 50), DrawSystem.GetAllGridsProperties().ToArray());
-      _form.Controls.Add(_propComboBox);
-      _form.Controls.SetChildIndex(_propComboBox, 1);
-      _propComboBox.SelectedIndexChanged += ChangeComboProperty;
-
-      _sliceheckBox = AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
+      _sliceheckBox = AddCheckBox("Slice", "Slice", new System.Drawing.Point(20, 50), TurnOnOffSliceMode);
       _form.Controls.Add(_sliceheckBox);
-      _form.Controls.SetChildIndex(_sliceheckBox, 1);
+      _form.Controls.SetChildIndex(_sliceheckBox, 0);
 
-      _sliceXlabel = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
+      _sliceXlabel = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 70));
       _form.Controls.Add(_sliceXlabel);
       _form.Controls.SetChildIndex(_sliceXlabel, 1);
 
-      _sliceYlabel = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
+      _sliceYlabel = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 110));
       _form.Controls.Add(_sliceYlabel);
       _form.Controls.SetChildIndex(_sliceYlabel, 1);
 
-      _sliceZlabel = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
+      _sliceZlabel = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 150));
       _form.Controls.Add(_sliceZlabel);
       _form.Controls.SetChildIndex(_sliceZlabel, 1);
 
-      _xCheckBox = AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
+      _xCheckBox = AddCheckBox("checkX", "", new System.Drawing.Point(30, 70), SetSliceVisibility);
       _form.Controls.Add(_xCheckBox);
       _form.Controls.SetChildIndex(_xCheckBox, 1);
 
-      _yCheckBox = AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
+      _yCheckBox = AddCheckBox("checkY", "", new System.Drawing.Point(30, 110), SetSliceVisibility);
       _form.Controls.Add(_yCheckBox);
       _form.Controls.SetChildIndex(_yCheckBox, 1);
 
-      _zCheckBox = AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
+      _zCheckBox = AddCheckBox("checkZ", "", new System.Drawing.Point(30, 150), SetSliceVisibility);
       _form.Controls.Add(_zCheckBox);
       _form.Controls.SetChildIndex(_zCheckBox, 1);
 
-      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, 70), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
       _xTrackBar.Width = 150;
       _form.Controls.Add(_xTrackBar);
       _form.Controls.SetChildIndex(_xTrackBar, 1);
 
-      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, 110), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
       _yTrackBar.Width = 150;
       _form.Controls.Add(_yTrackBar);
       _form.Controls.SetChildIndex(_yTrackBar, 1);
 
-      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, 150), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
       _zTrackBar.Width = 150;
       _form.Controls.Add(_zTrackBar);
       _form.Controls.SetChildIndex(_zTrackBar, 1);
 
-      _xLabel = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
+      _xLabel = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 70));
       _form.Controls.Add(_xLabel);
       _form.Controls.SetChildIndex(_xLabel, 1);
 
-      _yLabel = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
+      _yLabel = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 110));
       _form.Controls.Add(_yLabel);
       _form.Controls.SetChildIndex(_yLabel, 1);
 
-      _zLabel = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
+      _zLabel = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 150));
       _form.Controls.Add(_zLabel);
       _form.Controls.SetChildIndex(_zLabel, 1);
 
-      _lineBox = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
-      _form.Controls.Add(_lineBox);
-      _form.Controls.SetChildIndex(_lineBox, 1);
+      _propLabel = AddLabel("Properties", "Properties", new System.Drawing.Point(140, 30));
+      _form.Controls.Add(_propLabel);
+      _form.Controls.SetChildIndex(_propLabel, 0);
+
+      _propComboBox = AddComboBox("properties", new System.Drawing.Point(140, 50), DrawSystem.GetAllGridsProperties().ToArray());
+      _form.Controls.Add(_propComboBox);
+      _form.Controls.SetChildIndex(_propComboBox, 1);
+      _propComboBox.SelectedIndexChanged += ChangeComboProperty;
 
       string[] controls = { "checkX", "checkY", "checkZ",
                             "sliceXlabel", "sliceYlabel", "sliceZlabel",

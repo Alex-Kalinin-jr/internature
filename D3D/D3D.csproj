@@ -49,19 +49,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColorForm.cs">
+    <Compile Include="Forms\ColorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MyForm.cs">
+    <Compile Include="Forms\MyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MyForm.Designer.cs">
+    <Compile Include="Forms\MyForm.Designer.cs">
       <DependentUpon>MyForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PipeForm.cs">
+    <Compile Include="Forms\PipeForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -72,7 +72,7 @@
     <Compile Include="WhiteRectangle.Designer.cs">
       <DependentUpon>WhiteRectangle.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MyForm.resx">
+    <EmbeddedResource Include="Forms\MyForm.resx">
       <DependentUpon>MyForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
