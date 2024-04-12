@@ -11,9 +11,16 @@ namespace D3D {
     private NumericUpDown _topGreen;
     private NumericUpDown _topBlue;
 
-
+    private Label _botLabel;
+    private Label _topLabel;
 
     public ColorRangePicker() {
+
+      _botLabel = new Label();
+      _botLabel.Text = "Bottom border color (rgb)";
+      _botLabel.Location = new Point(50, 30);
+      _botLabel.Size = new Size(200, 20);
+
       _bottomRed = new NumericUpDown {
         Minimum = 0,
         Maximum = 255,
@@ -37,6 +44,11 @@ namespace D3D {
         Width = 50,
         Location = new Point(170, 50)
       };
+
+      _topLabel = new Label();
+      _topLabel.Text = "Top border color (rgb)";
+      _topLabel.Location = new Point(50, 80);
+      _topLabel.Size = new Size(200, 20);
 
       _topRed = new NumericUpDown {
         Minimum = 0,
@@ -63,7 +75,6 @@ namespace D3D {
       };
 
       _bottomRed.ValueChanged += (sender, e) => {
-        _bottomGreen.Value = ((NumericUpDown)sender).Value;
         UpdateColor();
       };
 
@@ -94,6 +105,8 @@ namespace D3D {
       Controls.Add(_topGreen);
       Controls.Add(_topBlue);
 
+      Controls.Add(_botLabel);
+      Controls.Add(_topLabel);
 
       Paint += (sender, e) => {
         Rectangle gradientRect = new Rectangle(50, 200, 200, 50);
@@ -104,7 +117,7 @@ namespace D3D {
                                                                    Color.FromArgb((int)_topRed.Value,
                                                                    (int)_topGreen.Value,
                                                                    (int)_topBlue.Value),
-                                                                   LinearGradientMode.Vertical)) {
+                                                                   LinearGradientMode.Horizontal)) {
           e.Graphics.FillRectangle(brush, gradientRect);
         }
       };
@@ -121,6 +134,8 @@ namespace D3D {
         top[2] = (float)_topBlue.Value;
 
         ColorSystem.ChangeColors(bottom, top);
+        e.Cancel = true;
+        Hide();
       };
 
     }

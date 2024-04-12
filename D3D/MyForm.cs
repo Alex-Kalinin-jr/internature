@@ -19,6 +19,7 @@ namespace D3D {
     private CScreenSize _size;
     private CMousePos _mousePos;
     private KeyboardSystem _keyboard;
+    private ColorRangePicker _colorRangePicker;
 
     /// <summary>
     /// Constructor for the custom form.
@@ -48,6 +49,8 @@ namespace D3D {
       ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
       toolStripMenuItem.Click += ShowHelpMenu;
       menuStrip.Items.Add(toolStripMenuItem);
+
+      _colorRangePicker = new ColorRangePicker();
 
       ToolStripMenuItem colorPicker = new ToolStripMenuItem("Color");
       colorPicker.Click += ShowColorMenu;
@@ -154,8 +157,7 @@ namespace D3D {
 
 
     private void ShowColorMenu(object sender, EventArgs e) {
-      ColorRangePicker colorRangePicker = new ColorRangePicker();
-      colorRangePicker.Show();
+      _colorRangePicker.Show();
     }
 
     /// <summary>
