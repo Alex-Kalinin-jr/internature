@@ -384,11 +384,7 @@ namespace D3D {
       ComboBox comboBox = (ComboBox)sender;
       string selectedOption = comboBox.SelectedItem.ToString();
 
-      if (selectedOption == "color") {
-        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Color);
-      } else if (selectedOption == "stability") {
-        DrawSystem.ChangeProperty(CGridMesh.PropertyType.Stability);
-      }
+        DrawSystem.ChangeProperty(selectedOption);
     }
 
     // forming

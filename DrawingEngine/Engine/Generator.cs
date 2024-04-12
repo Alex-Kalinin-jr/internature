@@ -91,8 +91,8 @@ namespace D3D {
       var mesh = new CGridMesh(vertices, indices, FigureType.Grid);
       mesh.LineIndices = lineIndices;
       mesh.TopologyObj = PrimitiveTopology.TriangleList;
-      mesh.AddProperty(CGridMesh.PropertyType.Color, propertyColor.ToArray());
-      mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
+      mesh.AddProperty("color", propertyColor.ToArray());
+      mesh.AddProperty("stability", propertyStability.ToArray());
 
       var buff = new VsMvpConstantBuffer();
       buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f),
@@ -156,8 +156,8 @@ namespace D3D {
         var mesh = new CGridMesh(vertices, indices, FigureType.Grid);
         mesh.LineIndices = lineIndices;
         mesh.TopologyObj = PrimitiveTopology.TriangleList;
-        mesh.AddProperty(CGridMesh.PropertyType.Color, propertyColor.ToArray());
-        mesh.AddProperty(CGridMesh.PropertyType.Stability, propertyStability.ToArray());
+        mesh.AddProperty("color", propertyColor.ToArray());
+        mesh.AddProperty("stability", propertyStability.ToArray());
 
         var buff = new VsMvpConstantBuffer();
         buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
@@ -176,6 +176,7 @@ namespace D3D {
       scene.AddComponent(grid);
       return scene;
     }
+
 
     /// <summary>
     /// Creates a line mesh for testing.

@@ -98,6 +98,9 @@
 		<Content Include="grid/grid.bin">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<Content Include="grid/grid.binprops.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 	
   <ItemGroup>

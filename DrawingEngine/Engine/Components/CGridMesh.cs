@@ -4,37 +4,33 @@ using SharpDX.Direct3D;
 
 namespace D3D {
   public class CGridMesh : CMesh {
-    public enum PropertyType {
-      Color,
-      Stability
-    }
 
     public List<short> LineIndices;
-    public Dictionary<PropertyType, Vector3[]> Properties;
+    public Dictionary<string, Vector3[]> Properties;
 
     public CGridMesh() : base() {
       LineIndices = new List<short>();
-      Properties = new Dictionary<PropertyType, Vector3[]>();
+      Properties = new Dictionary<string, Vector3[]>();
     }
 
     public CGridMesh(List<VsBuffer> vertices, List<short> indices, FigureType figureType = FigureType.Grid) 
         : base (vertices, indices, figureType) {
       LineIndices = new List<short>();
-      Properties = new Dictionary<PropertyType, Vector3[]>();
+      Properties = new Dictionary<string, Vector3[]>();
     }
 
     public override void UpdateLinks() {
       TransformObj.EntityObj = EntityObj;
     }
 
-    public void AddProperty(PropertyType type, Vector3[] values) {
+    public void AddProperty(string type, Vector3[] values) {
       int vertexCountInOneGrid = 8;
       if (!Properties.ContainsKey(type) && Vertices.Count == values.Length * vertexCountInOneGrid) {
         Properties.Add(type, values);
       }
     }
 
-    public void SetProperty(PropertyType type) {
+    public void SetProperty(string type) {
       if (Properties.ContainsKey(type)) {
         int vertexCountInOneGrid = 8;
         var prop = Properties[type];
