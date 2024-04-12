@@ -71,25 +71,6 @@ namespace D3D {
 
     public void AddPipeScene(Scene scene) {
       _scene.Add(scene);
-      var lbl = AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
-      _form.Controls.Add(lbl);
-      var btn1 = AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
-      _form.Controls.Add(btn1);
-      var btn2 = AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
-      _form.Controls.Add(btn2);
-
-      
-      var a = AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
-      _form.Controls.Add(a);
-      var b = AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
-      _form.Controls.Add(b);
-      var c = AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 100));
-      _form.Controls.Add(c);
-
-      var d = AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
-      _form.Controls.Add(d);
-      var e = AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
-      _form.Controls.Add(e);
     }
 
     public void AddGridScene(Scene scene, int[] gridSize) {
@@ -215,39 +196,6 @@ namespace D3D {
       }
     }
 
-    /// <summary>
-    /// Changes the parameters of a pipe based on the trackbars for segments and radius.
-    /// </summary>
-    /// <param name="sender">The object that triggered the event.</param>
-    /// <param name="e">The event arguments.</param>
-    private void ChangePipeParameters(Object sender, EventArgs e) {
-      TrackBar segments = null;
-      TrackBar radius = null;
-
-      var controls = _form.Controls.Find("pipeSegments", true);
-      if (controls.Length != 0) {
-        foreach (var control in controls) {
-          if (control is TrackBar) {
-            segments = (TrackBar)control;
-            break;
-          }
-        }
-      }
-
-      var radiusControls = _form.Controls.Find("pipeRadius", true);
-      if (radiusControls.Length != 0) {
-        foreach (var control in radiusControls) {
-          if (control is TrackBar) {
-            radius = (TrackBar)control;
-            break;
-          }
-        }
-      }
-
-      if (!(segments is null) && !(radius is null)) {
-        DrawSystem.ChangePipeAppearance(radius.Value / 10.0f, segments.Value);
-      }
-    }
 
     /// <summary>
     /// Changes the visibility of slice trackbars according to the related checkbox state.
