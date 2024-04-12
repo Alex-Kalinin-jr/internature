@@ -37,7 +37,6 @@ namespace D3D {
     private Buffer _constantBuffer;
     private Buffer _constantSliceBuffer;
     private RasterizerState _rasterizerState;
-    private Texture2D _depthBuffer;
 
     private SharpDX.Color _background = SharpDX.Color.White;
 
@@ -299,7 +298,6 @@ namespace D3D {
       _device3D.Dispose();
       _context3D.Dispose();
       _depthStencilView.Dispose();
-      _depthBuffer.Dispose();
       _rasterizerState.Dispose();
     }
 
