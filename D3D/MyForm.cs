@@ -9,7 +9,7 @@ namespace D3D {
   /// <summary>
   /// Custom form for rendering DirectX scenes.
   /// </summary>
-  public class MyForm : RenderForm {
+  public class MyForm : MainForm {
 
     private List<Scene> _scene;
     private CMouseMovingParams _movingParams;
@@ -20,6 +20,7 @@ namespace D3D {
     private CMousePos _mousePos;
     private KeyboardSystem _keyboard;
     private ColorRangePicker _colorRangePicker;
+    private PipeForm _pipeChanger;
 
     /// <summary>
     /// Constructor for the custom form.
@@ -43,6 +44,10 @@ namespace D3D {
       _form.MouseWheel += new MouseEventHandler(ChangeScale);
       _form.MouseUp += new MouseEventHandler(MyFormMouseUp);
 
+      _colorRangePicker = new ColorRangePicker();
+      _pipeChanger = new PipeForm();
+
+
       MenuStrip menuStrip = new MenuStrip();
       _form.Controls.Add(menuStrip);
 
@@ -50,11 +55,14 @@ namespace D3D {
       toolStripMenuItem.Click += ShowHelpMenu;
       menuStrip.Items.Add(toolStripMenuItem);
 
-      _colorRangePicker = new ColorRangePicker();
-
       ToolStripMenuItem colorPicker = new ToolStripMenuItem("Color");
       colorPicker.Click += ShowColorMenu;
       menuStrip.Items.Add(colorPicker);
+
+      ToolStripMenuItem pipeChanger = new ToolStripMenuItem("Pipe");
+      pipeChanger.Click += ShowPipeMenu;
+      menuStrip.Items.Add(pipeChanger);
+
     }
 
     public void AddScene(Scene scene) {
@@ -63,53 +71,79 @@ namespace D3D {
 
     public void AddPipeScene(Scene scene) {
       _scene.Add(scene);
-      AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
-      AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
-      AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
+      var lbl = AddLabel("pipeMod", "Pipe mod", new System.Drawing.Point(20, 30));
+      _form.Controls.Add(lbl);
+      var btn1 = AddRadioButton("line", "Line", new System.Drawing.Point(20, 50), ChangePipeShowType);
+      _form.Controls.Add(btn1);
+      var btn2 = AddRadioButton("pipe", "Pipe", new System.Drawing.Point(20, 70), ChangePipeShowType);
+      _form.Controls.Add(btn2);
 
-      AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
-      AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
-      AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 100));
+      
+      var a = AddLabel("pipeParametersLabel", "Pipe parameters", new System.Drawing.Point(190, 30));
+      _form.Controls.Add(a);
+      var b = AddLabel("pipeSegmentsLabel", "Segments", new System.Drawing.Point(190, 60));
+      _form.Controls.Add(b);
+      var c = AddLabel("pipeRadiusLabel", "Radius", new System.Drawing.Point(190, 100));
+      _form.Controls.Add(c);
 
-      AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
-      AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
+      var d = AddTrackbar("pipeSegments", new System.Drawing.Point(240, 60), ChangePipeParameters, 10, 40, 1);
+      _form.Controls.Add(d);
+      var e = AddTrackbar("pipeRadius", new System.Drawing.Point(240, 100), ChangePipeParameters, 1, 20, 1);
+      _form.Controls.Add(e);
     }
 
     public void AddGridScene(Scene scene, int[] gridSize) {
       _scene.Add(scene);
 
-      AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
-      AddComboBox("properties", new System.Drawing.Point(100, 50), DrawSystem.GetAllGridsProperties().ToArray());
+      var f = AddLabel("Properties", "Properties", new System.Drawing.Point(100, 30));
+      _form.Controls.Add(f);
+      var g = AddComboBox("properties", new System.Drawing.Point(100, 50), DrawSystem.GetAllGridsProperties().ToArray());
+      _form.Controls.Add(g);
+      g.SelectedIndexChanged += ChangeComboProperty;
 
-      AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
-      AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
-      AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
-      AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
+      var h = AddCheckBox("Slice", "Slice", new System.Drawing.Point(30, 100), TurnOnOffSliceMode);
+      _form.Controls.Add(h);
+      var i = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 135));
+      _form.Controls.Add(i);
+      var j = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 175));
+      _form.Controls.Add(j);
+      var k = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 205));
+      _form.Controls.Add(k);
 
-      AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
-      AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
-      AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
+      var l = AddCheckBox("checkX", "", new System.Drawing.Point(30, 135), SetSliceVisibility);
+      _form.Controls.Add(l);
+      var m = AddCheckBox("checkY", "", new System.Drawing.Point(30, 175), SetSliceVisibility);
+      _form.Controls.Add(m);
+      var n = AddCheckBox("checkZ", "", new System.Drawing.Point(30, 215), SetSliceVisibility);
+      _form.Controls.Add(n);
 
-      AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      var o = AddTrackbar("sliceX", new System.Drawing.Point(50, 135), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      _form.Controls.Add(o);
       var xBar = _form.Controls.Find("sliceX", true);
       TrackBar track = (TrackBar)xBar[0];
       track.Width = 150;
 
-      AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      var p = AddTrackbar("sliceY", new System.Drawing.Point(50, 175), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      _form.Controls.Add(p);
       var yBar = _form.Controls.Find("sliceY", true);
       TrackBar trackY = (TrackBar)yBar[0];
       trackY.Width = 150;
 
-      AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      var q = AddTrackbar("sliceZ", new System.Drawing.Point(50, 215), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      _form.Controls.Add(q);
       var zBar = _form.Controls.Find("sliceZ", true);
       TrackBar trackZ = (TrackBar)zBar[0];
       trackZ.Width = 150;
 
-      AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
-      AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
-      AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
+      var r = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 135));
+      _form.Controls.Add(r);
+      var s = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 175));
+      _form.Controls.Add(s);
+      var t = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 215));
+      _form.Controls.Add(t);
 
-      AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
+      var u = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(300, 30), ChangeLineGridVisibility);
+      _form.Controls.Add(u);
 
       string[] controls = { "checkX", "checkY", "checkZ",
                             "sliceXlabel", "sliceYlabel", "sliceZlabel",
@@ -155,9 +189,12 @@ namespace D3D {
       textWindow.Show();
     }
 
-
     private void ShowColorMenu(object sender, EventArgs e) {
       _colorRangePicker.Show();
+    }
+
+    private void ShowPipeMenu(object sender, EventArgs e) {
+      _pipeChanger.Show();
     }
 
     /// <summary>
@@ -209,18 +246,6 @@ namespace D3D {
 
       if (!(segments is null) && !(radius is null)) {
         DrawSystem.ChangePipeAppearance(radius.Value / 10.0f, segments.Value);
-      }
-    }
-
-    /// <summary>
-    /// Changes the visibility of a control based on its name.
-    /// </summary>
-    /// <param name="visible">Visibility state.</param>
-    /// <param name="name">Name of the control.</param>
-    private void SetVisibility(bool visible, string name) {
-      var controls = _form.Controls.Find(name, true);
-      foreach (var control in controls) {
-        control.Visible = visible;
       }
     }
 
@@ -401,99 +426,6 @@ namespace D3D {
     // forming
     // ////////////////////////////////////////////////////////////////////////////////////
 
-    /// <summary>
-    /// Adds a trackbar control to the form.
-    /// </summary>
-    private void AddTrackbar(string name, System.Drawing.Point position,
-                             EventHandler handler, int bottom, int top, int step) {
-      var trackbar = new TrackBar();
-      trackbar.Name = name;
-      trackbar.Minimum = bottom;
-      trackbar.Maximum = top;
-      trackbar.TickFrequency = step;
-      trackbar.LargeChange = step * 3;
-      trackbar.Location = position;
-      trackbar.Scroll += handler;
-      _form.Controls.Add(trackbar);
-    }
-
-    /// <summary>
-    /// Adds a button control to the form.
-    /// </summary>
-    private void AddButton(System.Drawing.Point position, string text, EventHandler handler) {
-      var button = new Button();
-      button.Location = position;
-      button.AutoSize = true;
-      button.Text = text;
-      _form.Controls.Add(button);
-      button.Click += handler;
-    }
-
-    /// <summary>
-    /// Adds a checkbox control to the form.
-    /// </summary>
-    private void AddCheckBox(string name, string text, System.Drawing.Point position, EventHandler handler) {
-      var checkBox = new CheckBox();
-      checkBox.Checked = false;
-      checkBox.AutoSize = true;
-      checkBox.Text = text;
-      checkBox.Name = name;
-      checkBox.Location = position;
-      checkBox.CheckedChanged += handler;
-      _form.Controls.Add(checkBox);
-    }
-
-    /// <summary>
-    /// Adds a radio button control to the form.
-    /// </summary>
-    private void AddRadioButton(string name, string text, System.Drawing.Point position, EventHandler handler) {
-      var radioButton = new RadioButton();
-      radioButton.Name = name;
-      radioButton.Text = text;
-      radioButton.Location = position;
-      radioButton.AutoSize = true;
-      radioButton.CheckedChanged += handler;
-      _form.Controls.Add(radioButton);
-    }
-
-    /// <summary>
-    /// Adds a label control to the form.
-    /// </summary>
-    private void AddLabel(string name, string text, System.Drawing.Point pos) {
-      Label label = new Label();
-      label.AutoSize = true;
-      label.Location = pos;
-      label.Name = name;
-      label.TabIndex = 0;
-      label.Text = text;
-      label.TextAlign = ContentAlignment.MiddleLeft;
-      _form.Controls.Add(label);
-    }
-
-    /// <summary>
-    /// Adds a ComboBox control to the form.
-    /// </summary>
-    private void AddComboBox(string name, System.Drawing.Point pos, object[] obj) {
-      ComboBox comboBox = new ComboBox();
-      comboBox.Name = name;
-      comboBox.DropDownWidth = 80;
-      comboBox.Items.AddRange(obj);
-      comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-      comboBox.Location = pos;
-      comboBox.Size = new System.Drawing.Size(65, 21);
-      _form.Controls.Add(comboBox);
-      comboBox.SelectedIndexChanged += ChangeComboProperty;
-    }
-
-
-    /// <summary>
-    /// Sets the visibility state of slicing controls.
-    /// </summary>
-    private void SetVisibility(bool state, string[] names) {
-      foreach (string name in names) {
-        SetVisibility(state, name);
-      }
-    }
   }
 }
 
