@@ -127,10 +127,6 @@ namespace D3D {
           float g = (float)random.NextDouble(0.0f, 1.0f);
           float b = (float)random.NextDouble(0.0f, 1.0f);
           Vector3 color = new Vector3(r, g, b);
-          float property_2_r = (float)random.NextDouble(0.0f, 1.0f);
-          float property_2_g = (float)random.NextDouble(0.0f, 1.0f);
-          float property_2_b = (float)random.NextDouble(0.0f, 1.0f);
-          Vector3 stability = new Vector3(property_2_r, property_2_g, property_2_b);
           for (int i = 0; i < xCount; ++i) {
             for (int j = 0; j < yCount; ++j) {
               reader.ReadBoolean();
@@ -147,7 +143,6 @@ namespace D3D {
               indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
               lineIndices.AddRange(pseudoLineIndices.Select(v => (short)(p + v)));
               propertyColor.Add(color);
-              propertyStability.Add(stability);
               p += 8;
 
             }
@@ -157,14 +152,11 @@ namespace D3D {
         mesh.LineIndices = lineIndices;
         mesh.TopologyObj = PrimitiveTopology.TriangleList;
         mesh.AddProperty("color", propertyColor.ToArray());
-        mesh.AddProperty("stability", propertyStability.ToArray());
-
-        var buff = new VsMvpConstantBuffer();
-        buff.world = TransformSystem.ComputeModelMatrix(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(0.0f, 0.0f, 0.0f));
 
         mesh.Size[0] = xCount;
         mesh.Size[1] = yCount;
         mesh.Size[2] = zCount;
+        PropertiesReader.LoadProperties(ref mesh, "grid/grid.binprops.txt");
 
         return mesh;
       }

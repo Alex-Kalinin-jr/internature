@@ -480,6 +480,30 @@ namespace D3D {
         SetVisibility(state, name);
       }
     }
+
+    public void AddDualColorTrackBar(System.Drawing.Point pos) {
+      var trackBar = new TrackBar {
+        Minimum = 0,
+        Maximum = 255,
+        TickFrequency = 5,
+        Orientation = Orientation.Horizontal,
+        Width = 300,
+        Location = pos
+    };
+
+      trackBar.Scroll += (sender, e) =>
+      {
+        int value = trackBar.Value;
+        /*
+        color1 = Color.FromArgb(value, value, value);
+        color2 = Color.FromArgb(255 - value, 255 - value, 255 - value);
+
+        colorLabel1.Text = $"Color 1: {color1.Name}";
+        colorLabel2.Text = $"Color 2: {color2.Name}";
+        */
+      };
+      _form.Controls.Add(trackBar);
+    }
   }
 }
 
