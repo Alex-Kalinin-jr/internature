@@ -17,8 +17,8 @@ public class Reader {
       if (int.TryParse(reader.ReadLine(), out int numberOfProperties)) {
         for (int i = 0; i < numberOfProperties; ++i) {
           float[] property = new float[size];
-          string name = reader.ReadLine();
 
+          string name = reader.ReadLine();
           for (int j = 0; j < size; ++j) {
             float val;
             while (!float.TryParse(reader.ReadLine(), NumberStyles.Float, culture, out val)) { }
@@ -32,7 +32,23 @@ public class Reader {
             property[k] /= max;
           }
 
-          mesh.AddProperty(key, property);
+
+          int sizeX = mesh.Size[0];
+          int sizeY = mesh.Size[2];
+          int sizeZ = mesh.Size[1];
+          float[] newProp = new float[sizeX * sizeY * sizeZ];
+          int index = 0;
+
+          for (int a = 0; a < sizeX; ++a) {
+            for (int b = 0; b < sizeY; ++b) {
+              for (int c = 0; c < sizeZ; ++c) {
+                newProp[index] = property[a + b * sizeY + c * sizeZ * sizeY];
+                ++index;
+              }
+            }
+          }
+
+          mesh.AddProperty(key, newProp);
         }
       } else {
         return false;
@@ -53,7 +69,7 @@ public class Reader {
                                               4, 5, 7, 4, 7, 6, 6, 7, 1, 6, 1, 0,
                                               1, 7, 5, 1, 5, 3, 0, 2, 6, 2, 4, 6 };
       var lineIndices = new List<short>();
-      var pseudoLineIndices = new List<short>() { 0, 1, 2, 3, 4, 5, 6, 7, 0, 2, 1, 3, 6, 4, 7, 5 };
+      var pseudoLineIndices = new List<short>() { 0, 1, 2, 3, 4, 5, 6, 7, 0, 2, 1, 3, 6, 4, 7, 5, 1, 7, 3, 5, 0, 6, 2, 4 };
       var propertyColor = new List<float>();
       var random = new Random();
       int p = 0;
@@ -68,7 +84,7 @@ public class Reader {
             for (int v = 0; v < 8; v++) {
               vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale,
                                                     -reader.ReadSingle() * scale,
-                                                    reader.ReadSingle() * scale), color, i, j, k));
+                                                    reader.ReadSingle() * scale), color, j, i, k));
             }
 
             indices.AddRange(pseudoIndices.Select(v => (short)(v + p)));
@@ -89,11 +105,12 @@ public class Reader {
       mesh.Size[2] = zCount;
 
       if (filePropertiesPath != "") {
-        LoadProperties(ref mesh, "grid/grid.binprops.txt");
+        LoadProperties(ref mesh, filePropertiesPath);
       }
 
       return mesh;
     }
   }
 }
+
 
