@@ -128,17 +128,20 @@ namespace D3D {
       _form.Controls.Add(_zCheckBox);
       _form.Controls.SetChildIndex(_zCheckBox, 1);
 
-      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, sliceBlockStartY + 20), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, sliceBlockStartY + 20), 
+                               CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
       _xTrackBar.Width = 150;
       _form.Controls.Add(_xTrackBar);
       _form.Controls.SetChildIndex(_xTrackBar, 1);
 
-      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, sliceBlockStartY + 60), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, sliceBlockStartY + 60), 
+                               CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
       _yTrackBar.Width = 150;
       _form.Controls.Add(_yTrackBar);
       _form.Controls.SetChildIndex(_yTrackBar, 1);
 
-      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, sliceBlockStartY + 100), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, sliceBlockStartY + 100), 
+                               CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
       _zTrackBar.Width = 150;
       _form.Controls.Add(_zTrackBar);
       _form.Controls.SetChildIndex(_zTrackBar, 1);
