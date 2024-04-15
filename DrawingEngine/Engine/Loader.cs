@@ -17,6 +17,7 @@ public class Reader {
       if (int.TryParse(reader.ReadLine(), out int numberOfProperties)) {
         for (int i = 0; i < numberOfProperties; ++i) {
           float[] property = new float[size];
+          string name = reader.ReadLine();
 
           for (int j = 0; j < size; ++j) {
             float val;
@@ -24,7 +25,7 @@ public class Reader {
             property[j] = val;
           }
 
-          string key = "property " + i.ToString();
+          string key = name + i.ToString();
           float max = property.Max();
 
           for (int k = 0; k < property.Length; ++k) {

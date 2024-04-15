@@ -65,8 +65,8 @@ namespace D3D {
     protected ComboBox AddComboBox(string name, System.Drawing.Point pos, object[] obj) {
       ComboBox comboBox = new ComboBox();
       comboBox.Name = name;
-      comboBox.Width = 80;
-      comboBox.DropDownWidth = 80;
+      comboBox.Width = 150;
+      comboBox.DropDownWidth = 150;
       comboBox.Items.AddRange(obj);
       comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
       comboBox.Location = pos;
