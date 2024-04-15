@@ -10,6 +10,7 @@ namespace D3D {
     private NumericUpDown _topRed;
     private NumericUpDown _topGreen;
     private NumericUpDown _topBlue;
+    private CheckBox _jet;
 
     private Label _botLabel;
     private Label _topLabel;
@@ -74,6 +75,16 @@ namespace D3D {
         Location = new Point(170, 100)
       };
 
+      _jet = new CheckBox();
+      _jet.Location = new Point(170, 120);
+      _jet.Text = "JET";
+      _jet.Checked = false;
+
+      _jet.CheckedChanged += (sender, e) => {
+        ColorSystem.ChangeMethod(_jet.Checked);
+        UpdateColor();
+      };
+
       _bottomRed.ValueChanged += (sender, e) => {
         UpdateColor();
       };
@@ -104,6 +115,7 @@ namespace D3D {
       Controls.Add(_topRed);
       Controls.Add(_topGreen);
       Controls.Add(_topBlue);
+      Controls.Add(_jet);
 
       Controls.Add(_botLabel);
       Controls.Add(_topLabel);
@@ -141,7 +153,7 @@ namespace D3D {
       top[2] = (float)_topBlue.Value;
 
       ColorSystem.ChangeColors(bottom, top);
-      DrawSystem.ChangeProperty();
+      ColorSystem.ChangeProperty();
       Invalidate();
     }
   }

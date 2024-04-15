@@ -87,44 +87,6 @@ namespace D3D {
       _sliceCoords.Zcoord = z;
     }
 
-    /// <summary>
-    /// Set the property of Vertex. Property visualisation is the vertex color.
-    /// </summary>
-    /// <param name="type"></param>The type of property to be set. 
-    /// Setting will not be perfomed if property is not presented in figure dictionary
-    public static void ChangeProperty() {
-      foreach (var figure in Components) {
-        if (figure is CGridMesh) {
-          SetProperty(ColorSystem.GetCurrentProperty(), (CGridMesh)figure);
-        }
-      }
-    }
-
-    public static void SetProperty(string type, CGridMesh mesh) {
-      if (mesh.Properties.ContainsKey(type)) {
-        int vertexCountInOneGrid = 8;
-        var prop = mesh.Properties[type];
-        int counter = 0;
-        System.Numerics.Vector3 botCol;
-        System.Numerics.Vector3 topCol;
-        (botCol, topCol) = ColorSystem.GetColors();
-        for (int i = 0; i < mesh.Vertices.Count; i += vertexCountInOneGrid) {
-          for (int j = 0; j < vertexCountInOneGrid; ++j) {
-
-            var val = prop[counter];
-            var r = botCol.X + (topCol.X - botCol.X) * val;
-            var g = botCol.Y + (topCol.Y - botCol.Y) * val;
-            var b = botCol.Z + (topCol.Z - botCol.Z) * val;
-
-            var v = mesh.Vertices[i + j];
-            v.Color = new Vector3(r, g, b);
-            mesh.Vertices[i + j] = v;
-          }
-          ++counter;
-        }
-      }
-    }
-
     public static List<string> GetAllGridsProperties() {
       var list = new List<string>();
       foreach (var figure in Components) {
