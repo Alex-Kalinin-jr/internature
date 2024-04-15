@@ -66,7 +66,7 @@ public class Reader {
             var pseudoVertices = new List<VsBuffer>();
             for (int v = 0; v < 8; v++) {
               vertices.Add(new VsBuffer(new Vector3(reader.ReadSingle() * scale,
-                                                    reader.ReadSingle() * scale,
+                                                    -reader.ReadSingle() * scale,
                                                     reader.ReadSingle() * scale), color, i, j, k));
             }
 
