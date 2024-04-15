@@ -263,15 +263,13 @@ namespace D3D {
     /// <param name="sender">The sender object.</param>
     /// <param name="e">Event arguments.</param>
     private void TurnOnOffSliceMode(Object sender, EventArgs e) {
-      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel"};
+      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel" };
       if (((CheckBox)sender).Checked) {
         SetVisibility(true, controls);
         CliceGridNewly(null, null);
       } else {
         DrawSystem.RestoreAllGrids();
-        string[] additionalControls = { "sliceX", "sliceY", "sliceZ", "sliceXindLabel", "sliceYindLabel", "sliceZindLabel" };
         SetVisibility(false, controls);
-        SetVisibility(false, additionalControls);
       }
     }
 
@@ -404,4 +402,3 @@ namespace D3D {
     }
   }
 }
-
