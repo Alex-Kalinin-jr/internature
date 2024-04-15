@@ -23,7 +23,7 @@ namespace D3D {
 
     private Label _propLabel;
     private ComboBox _propComboBox;
-    private CheckBox _sliceheckBox;
+    private Label _sliceLabel;
     private Label _sliceXlabel;
     private Label _sliceYlabel;
     private Label _sliceZlabel;
@@ -95,62 +95,63 @@ namespace D3D {
       _form.Controls.Add(_control);
       _form.Controls.SetChildIndex(_control, 0);
 
-      _lineBox = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(70, 50), ChangeLineGridVisibility);
+      _lineBox = AddCheckBox("linesVisibility", "Line Grid", new System.Drawing.Point(20, 50), ChangeLineGridVisibility);
       _form.Controls.Add(_lineBox);
       _form.Controls.SetChildIndex(_lineBox, 0);
 
-      _sliceheckBox = AddCheckBox("Slice", "Slice", new System.Drawing.Point(20, 50), TurnOnOffSliceMode);
-      _form.Controls.Add(_sliceheckBox);
-      _form.Controls.SetChildIndex(_sliceheckBox, 0);
+      int sliceBlockStartY = 100;
+      _sliceLabel = AddLabel("sliceLabel", "Slice", new Point(100, sliceBlockStartY));
+      _form.Controls.Add(_sliceLabel);
+      _form.Controls.SetChildIndex(_sliceLabel, 0);
 
-      _sliceXlabel = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, 70));
+      _sliceXlabel = AddLabel("sliceXlabel", "X", new System.Drawing.Point(15, sliceBlockStartY + 20));
       _form.Controls.Add(_sliceXlabel);
       _form.Controls.SetChildIndex(_sliceXlabel, 1);
 
-      _sliceYlabel = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, 110));
+      _sliceYlabel = AddLabel("sliceYlabel", "Y", new System.Drawing.Point(15, sliceBlockStartY + 60));
       _form.Controls.Add(_sliceYlabel);
       _form.Controls.SetChildIndex(_sliceYlabel, 1);
 
-      _sliceZlabel = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, 150));
+      _sliceZlabel = AddLabel("sliceZlabel", "Z", new System.Drawing.Point(15, sliceBlockStartY + 100));
       _form.Controls.Add(_sliceZlabel);
       _form.Controls.SetChildIndex(_sliceZlabel, 1);
 
-      _xCheckBox = AddCheckBox("checkX", "", new System.Drawing.Point(30, 70), SetSliceVisibility);
+      _xCheckBox = AddCheckBox("checkX", "", new System.Drawing.Point(30, sliceBlockStartY + 20), SetSliceVisibility);
       _form.Controls.Add(_xCheckBox);
       _form.Controls.SetChildIndex(_xCheckBox, 1);
 
-      _yCheckBox = AddCheckBox("checkY", "", new System.Drawing.Point(30, 110), SetSliceVisibility);
+      _yCheckBox = AddCheckBox("checkY", "", new System.Drawing.Point(30, sliceBlockStartY + 60), SetSliceVisibility);
       _form.Controls.Add(_yCheckBox);
       _form.Controls.SetChildIndex(_yCheckBox, 1);
 
-      _zCheckBox = AddCheckBox("checkZ", "", new System.Drawing.Point(30, 150), SetSliceVisibility);
+      _zCheckBox = AddCheckBox("checkZ", "", new System.Drawing.Point(30, sliceBlockStartY + 100), SetSliceVisibility);
       _form.Controls.Add(_zCheckBox);
       _form.Controls.SetChildIndex(_zCheckBox, 1);
 
-      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, 70), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
+      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, sliceBlockStartY + 20), CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
       _xTrackBar.Width = 150;
       _form.Controls.Add(_xTrackBar);
       _form.Controls.SetChildIndex(_xTrackBar, 1);
 
-      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, 110), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
+      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, sliceBlockStartY + 60), CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
       _yTrackBar.Width = 150;
       _form.Controls.Add(_yTrackBar);
       _form.Controls.SetChildIndex(_yTrackBar, 1);
 
-      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, 150), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
+      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, sliceBlockStartY + 100), CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
       _zTrackBar.Width = 150;
       _form.Controls.Add(_zTrackBar);
       _form.Controls.SetChildIndex(_zTrackBar, 1);
 
-      _xLabel = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, 70));
+      _xLabel = AddLabel("sliceXindLabel", "0", new System.Drawing.Point(200, sliceBlockStartY + 20));
       _form.Controls.Add(_xLabel);
       _form.Controls.SetChildIndex(_xLabel, 1);
 
-      _yLabel = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, 110));
+      _yLabel = AddLabel("sliceYindLabel", "0", new System.Drawing.Point(200, sliceBlockStartY + 60));
       _form.Controls.Add(_yLabel);
       _form.Controls.SetChildIndex(_yLabel, 1);
 
-      _zLabel = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, 150));
+      _zLabel = AddLabel("sliceZindLabel", "0", new System.Drawing.Point(200, sliceBlockStartY + 100));
       _form.Controls.Add(_zLabel);
       _form.Controls.SetChildIndex(_zLabel, 1);
 
@@ -163,9 +164,7 @@ namespace D3D {
       _form.Controls.SetChildIndex(_propComboBox, 1);
       _propComboBox.SelectedIndexChanged += ChangeComboProperty;
 
-      string[] controls = { "checkX", "checkY", "checkZ",
-                            "sliceXlabel", "sliceYlabel", "sliceZlabel",
-                            "sliceX", "sliceY", "sliceZ",
+      string[] controls = { "sliceX", "sliceY", "sliceZ",
                             "sliceXindLabel", "sliceYindLabel", "sliceZindLabel" };
       SetVisibility(false, controls);
     }
@@ -255,22 +254,6 @@ namespace D3D {
         }
       }
       CliceGridNewly(null, null);
-    }
-
-    /// <summary>
-    /// Toggles the slice mode on/off.
-    /// </summary>
-    /// <param name="sender">The sender object.</param>
-    /// <param name="e">Event arguments.</param>
-    private void TurnOnOffSliceMode(Object sender, EventArgs e) {
-      string[] controls = { "checkX", "checkY", "checkZ", "sliceXlabel", "sliceYlabel", "sliceZlabel" };
-      if (((CheckBox)sender).Checked) {
-        SetVisibility(true, controls);
-        CliceGridNewly(null, null);
-      } else {
-        DrawSystem.RestoreAllGrids();
-        SetVisibility(false, controls);
-      }
     }
 
     /// <summary>
