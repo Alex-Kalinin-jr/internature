@@ -38,7 +38,7 @@ namespace D3D {
     private Buffer _constantSliceBuffer;
     private RasterizerState _rasterizerState;
 
-    private SharpDX.Color _background = SharpDX.Color.White;
+    private SharpDX.Color _background = SharpDX.Color.CadetBlue;
 
     private static Renderer _instance;
 
