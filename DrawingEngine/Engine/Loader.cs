@@ -38,10 +38,10 @@ public class Reader {
           float[] newProp = new float[sizeX * sizeY * sizeZ];
           int index = 0;
 
-          for (int a = 0; a < sizeX; ++a) {
-            for (int b = 0; b < sizeY; ++b) {
-              for (int c = 0; c < sizeZ; ++c) {
-                newProp[index] = property[a + b * sizeY + c * sizeZ * sizeY];
+          for (int a = 0; a < sizeY; ++a) {
+            for (int b = 0; b < sizeZ; ++b) {
+              for (int c = 0; c < sizeX; ++c) {
+                newProp[index] = property[a + b * sizeY + c * sizeX * sizeY];
                 ++index;
               }
             }
