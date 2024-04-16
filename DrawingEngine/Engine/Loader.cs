@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 
 public class Reader {
-
   public static bool LoadProperties(ref CGridMesh mesh, string filePath) {
     using (StreamReader reader = new StreamReader(File.Open(filePath, FileMode.Open))) {
       var size = mesh.Size[0] * mesh.Size[1] * mesh.Size[2];

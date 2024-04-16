@@ -6,6 +6,7 @@ using System.Drawing;
 
 namespace D3D {
 
+
   /// <summary>
   /// Custom form for rendering DirectX scenes.
   /// </summary>
