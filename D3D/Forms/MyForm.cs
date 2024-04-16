@@ -66,15 +66,18 @@ namespace D3D {
 
       MenuStrip menuStrip = new MenuStrip();
       _form.Controls.Add(menuStrip);
-      ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
-      toolStripMenuItem.Click += ShowHelpMenu;
-      menuStrip.Items.Add(toolStripMenuItem);
+      ToolStripMenuItem fileChanger = new ToolStripMenuItem("File");
+      fileChanger.Click += LoadGridWithProperties;
+      menuStrip.Items.Add(fileChanger);
       ToolStripMenuItem colorPicker = new ToolStripMenuItem("Color");
       colorPicker.Click += ShowColorMenu;
       menuStrip.Items.Add(colorPicker);
       ToolStripMenuItem pipeChanger = new ToolStripMenuItem("Pipe");
       pipeChanger.Click += ShowPipeMenu;
       menuStrip.Items.Add(pipeChanger);
+      ToolStripMenuItem toolStripMenuItem = new ToolStripMenuItem("Help");
+      toolStripMenuItem.Click += ShowHelpMenu;
+      menuStrip.Items.Add(toolStripMenuItem);
     }
 
     public void AddScene(Scene scene) {
@@ -83,6 +86,25 @@ namespace D3D {
 
     public void AddPipeScene(Scene scene) {
       _scene.Add(scene);
+    }
+
+    private void LoadGridWithProperties(object sender, EventArgs e) {
+      OpenFileDialog openFileDialog = new OpenFileDialog();
+      openFileDialog.Filter = "Binary files (*.bin)|*.bin";
+      string selectedFilePath = "";
+      string optionsPath = "";
+
+      if (openFileDialog.ShowDialog() == DialogResult.OK) {
+        selectedFilePath = openFileDialog.FileName;
+        openFileDialog.Filter = "Text files (*.txt)|*.txt";
+        if (openFileDialog.ShowDialog() == DialogResult.OK) {
+          optionsPath = openFileDialog.FileName;
+        }
+
+        var grid = Reader.GenerateFromBinary(selectedFilePath, optionsPath, 0.005f);
+        AddGridScene(Generator.CreateGridScene(grid), grid.Size);
+        ColorSystem.ChangeProperty();
+      }
     }
 
     public void AddGridScene(Scene scene, int[] gridSize) {
@@ -129,19 +151,19 @@ namespace D3D {
       _form.Controls.Add(_zCheckBox);
       _form.Controls.SetChildIndex(_zCheckBox, 1);
 
-      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, sliceBlockStartY + 20), 
+      _xTrackBar = AddTrackbar("sliceX", new System.Drawing.Point(50, sliceBlockStartY + 20),
                                CliceGridNewly, 0, gridSize[0] - 1, 1); // to be refactored
       _xTrackBar.Width = 150;
       _form.Controls.Add(_xTrackBar);
       _form.Controls.SetChildIndex(_xTrackBar, 1);
 
-      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, sliceBlockStartY + 60), 
+      _yTrackBar = AddTrackbar("sliceY", new System.Drawing.Point(50, sliceBlockStartY + 60),
                                CliceGridNewly, 0, gridSize[1] - 1, 1); // to be refactored
       _yTrackBar.Width = 150;
       _form.Controls.Add(_yTrackBar);
       _form.Controls.SetChildIndex(_yTrackBar, 1);
 
-      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, sliceBlockStartY + 100), 
+      _zTrackBar = AddTrackbar("sliceZ", new System.Drawing.Point(50, sliceBlockStartY + 100),
                                CliceGridNewly, 0, gridSize[2] - 1, 1); // to be refactored
       _zTrackBar.Width = 150;
       _form.Controls.Add(_zTrackBar);
