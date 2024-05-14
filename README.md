@@ -1,7 +1,6 @@
-## Internature process.
+## Internature.
+
+Go into **develop branch** to get actual version.
 
 intern - Alexey Kalinin
-
 mentor - Arakadiy Hisink
-
-current step: basics of C#.
