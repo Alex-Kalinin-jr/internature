@@ -14,7 +14,7 @@ Consist of 3 parts:
 
 OpenGL implementation does not have clear architecture, developed only for investigation of OpenGL
 
-Direct-X implementation is a full engine with most major systems: simple to wide and readjust. Simplified implementation is:
+Direct-X implementation is a full engine with most major systems: simple to wide and readjust. ECS paradigm is used. Simplified implementation is:
 
 <img src="resources/arch.png" alt="Example Image" width="800"> 
 
