@@ -2,7 +2,7 @@
 
 Application for interaction with 3D-objects.
 Used on Windows.
-<p>
+<p text-align="center">
 <img src="resources/1.png" alt="Example Image" width="400"> 
 <img src="resources/2.png" alt="Example Image" width="400"> 
 </p>
@@ -16,7 +16,7 @@ OpenGL implementation does not have clear architecture, developed only for inves
 
 Direct-X implementation is a full engine with most major systems: simple to wide and readjust. Simplified implementation is:
 
-<img src="resources/arch.png" alt="Example Image" width="500"> 
+<img src="resources/arch.png" alt="Example Image" width="800"> 
 
 Go into **develop branch** to get actual version.
 
