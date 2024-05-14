@@ -3,8 +3,8 @@
 Application for interaction with 3D-objects.
 Used on Windows.
 
-<img src="resources/1.png" alt="Example Image" width="350"> 
-<img src="resources/2.png" alt="Example Image" width="350"> 
+<img src="resources/1.png" alt="Example Image" width="300"> 
+<img src="resources/2.png" alt="Example Image" width="300"> 
 
 Consist of 3 parts:
 1) OpenGL implementation (Imgui as GUI, OpenTK as c# wrapper).
