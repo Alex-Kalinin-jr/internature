@@ -3,8 +3,8 @@
 Application for interaction with 3D-objects.
 Used on Windows.
 <p>
-<img src="resources/1.png" alt="Example Image" width="300"> 
-<img src="resources/2.png" alt="Example Image" width="300"> 
+<img src="resources/1.png" alt="Example Image" width="400"> 
+<img src="resources/2.png" alt="Example Image" width="400"> 
 </p>
 
 Consist of 3 parts:
